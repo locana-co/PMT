@@ -1,5 +1,11 @@
 Portfolio Management Tool (PMT)
 ===============================
+The Portfolio Managment Tool data model is a general purpose data model that supports the modeling of 
+international Aid Activities around the globe. Although it is highly generalized it supports the IATI
+XML specification or can be used for derivitive data designs. 
+
+The data model includes advanced geoprocessing by assigning X,Y locations to global administrative unit boundaries. 
+
 
 Using [PostgreSQL](http://www.postgresql.org/) 9.3 and [PostGIS] (http://postgis.net/) 2.1.0 
 
