@@ -4,7 +4,7 @@ Portfolio Management Tool (PMT)
 
 The new PMT Database. Using [PostgreSQL](http://www.postgresql.org/) 9.2 and [PostGIS] (http://postgis.net/) 2.0.3  
 
-Instructions for the installation of a _new PMT_ database
+Instructions - Installation of a _new PMT_ database
 ---------------------------------------------------------
 **_Follow these instructions to install a brand new instance of PMT._**
 
@@ -61,14 +61,21 @@ Instructions - Installation of the _Application Database_
 	COMMENT ON DATABASE app IS 'application support for PMT database instances';
 ```
 2. Execute **CreateAPPDatabase.sql**. (_Creates the application database model_)
-3. Execute **LoadAppData.sql**. (_Loads existing PMT 1.0 data_)
-4. Execute the following sql commands, one at a time:
+3. Execute the following sql commands, one at a time:
 ```
 	VACUUM;
 
 	ANALYZE;
 ```
-5. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
+4. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
+
+
+Instructions - Loading IATI XML formatted data into PMT
+----------------------------------------------------------
+**_Follow these instructions to load data that is formatted using the IATI standards for reporting activities._**
+
+1.  Open **LoadIATIFiles.sql** and follow the steps outlined within.
+
 
 <br />  
 	
@@ -77,10 +84,8 @@ Documentation
 **_Documents referenced below can be found in the Documentation folder._**
 
 1. **PMT-Framework** - High level PMT Framework (Database & API) diagram
-2. **PMT-ERD** - Entity Relationship Diagram using Chen method describing the relationships between the entities in the database
-3. **PMT-Schema** - Database schema diagram of the physical structure of the database
-4. **PMT Database Development Process** - Describes the development process for the PMT database model and concurrent development activities
-5. **Understanding the Data Model** - Describes the PMT data model and taxonomy
+2. **PMT-Schema** - Database schema diagram of the physical structure of the database
+3. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 
 <br />
 Instructions for setting up Postgres 9.2.2 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
