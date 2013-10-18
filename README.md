@@ -88,7 +88,7 @@ Documentation
 3. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 
 <br />
-Instructions for setting up Postgres 9.2.2 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
+Instructions for setting up Postgres 9.30 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
 ----------------------------------------------------------------------------------
 
 ### Install the core dependcies
@@ -101,12 +101,11 @@ Instructions for setting up Postgres 9.2.2 and PostGIS 2.0.3 on Ubuntu 12.04 (EC
 	cd /home/ubuntu/installs
 
 ### Download and Install PostgreSQL database server
-	sudo wget http://ftp.postgresql.org/pub/source/v9.2.2/postgresql-9.2.2.tar.bz2
-	bzip2 -d postgresql-9.2.2.tar.bz2
-	tar -xf postgresql-9.2.2.tar
-	cd postgresql-9.2.2
+	sudo wget http://ftp.postgresql.org/pub/source/v9.3.0/postgresql-9.3.0.tar.bz2 
+	tar xvjf postgresql-9.3.0.tar.bz2
+	cd postgresql-9.3.0
 	./configure --with-libxml --with-libxslt
-	make
+	make -j2
 	sudo make install
 
 
@@ -263,4 +262,4 @@ Connect to postgres DB either thru pgAdmin3 or psql and execute the following SQ
 	Create extension postgis
 
 <br />
-You should be good to go….
+You should be good to go.
