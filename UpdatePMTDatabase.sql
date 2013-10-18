@@ -66,6 +66,7 @@ DROP FUNCTION IF EXISTS pmt_data_groups() CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_tax(integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_locations(integer, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_projects(character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_tax_inuse(integer)  CASCADE;
 
 --Drop Types  (if it exists)
 DROP TYPE IF EXISTS entity;
@@ -74,6 +75,7 @@ DROP TYPE IF EXISTS pmt_data_groups_result_type;
 DROP TYPE IF EXISTS pmt_locations_by_tax_result_type;
 DROP TYPE IF EXISTS pmt_filter_locations_result;
 DROP TYPE IF EXISTS pmt_filter_projects_result;
+DROP TYPE IF EXISTS pmt_tax_inuse_result_type;
 
 /*****************************************************************
 ENTITY -- a thing with distinct and independent existence.
@@ -1337,6 +1339,10 @@ Create FUNCTIONS:
 	organizations and date ranges.	
 	8. pmt_countries - returns json of all countries or a filtered
 	list of countries
+	9. pmt_tax_inuse - returns nested json of all taxonomy/classifications
+	in use. accepts a data group classification id. if null gives all 
+	in use, otherwise just taxonomy/classification in use by given 
+	data group.
 	
 **Citations:
 Douglas, Jack. "SQL to read XML from file into PostgreSQL database." 
@@ -1351,6 +1357,8 @@ CREATE TYPE pmt_locations_by_tax_result_type AS (l_id integer, x integer, y inte
 CREATE TYPE pmt_filter_locations_result AS (l_id integer, g_id character varying(20),  c_ids text); 
 CREATE TYPE pmt_filter_projects_result AS (p_id integer, a_ids text);  
 CREATE TYPE pmt_countries_result_type AS (response json);
+CREATE TYPE pmt_tax_inuse_result_type AS (response json);
+
 
 -- bytea_import for importing xml documents as xml type
 CREATE OR REPLACE FUNCTION bytea_import(p_path TEXT, p_result OUT bytea) 
@@ -1749,6 +1757,79 @@ BEGIN
   END IF;		
 END;$$ LANGUAGE plpgsql;
 
+-- pmt in-use taxonomies
+CREATE OR REPLACE FUNCTION pmt_tax_inuse(data_group_id integer)
+RETURNS SETOF pmt_tax_inuse_result_type AS 
+$$
+DECLARE
+  data_group_id integer;
+  rec record;
+BEGIN
+  -- confirm the passed id is a valid data group
+  SELECT INTO data_group_id classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' AND classification_id = $1;
+
+  -- if data group exists filter	
+  IF data_group_id IS NOT NULL THEN
+    FOR rec IN (      
+	select row_to_json(t)
+	from (
+	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
+	  select array_to_json(array_agg(row_to_json(c)))
+	   from (
+	    select distinct tl.classification_id as c_id, c.name
+	    from (select distinct taxonomy_id, classification_id
+	    from taxonomy_lookup
+	    where project_id IN (
+		select distinct project_id
+		from taxonomy_lookup
+		where classification_id = data_group_id)) tl
+	    join classification c
+	    on tl.classification_id = c.classification_id
+	    where tl.taxonomy_id = taxonomy.taxonomy_id
+	    order by c.name
+	    ) c ) as classifications
+	from (select tl.taxonomy_id, t.name 
+	from (select distinct taxonomy_id   
+	from taxonomy_lookup
+	where project_id IN (
+		select distinct project_id
+		from taxonomy_lookup
+		where classification_id = data_group_id)) tl
+	join taxonomy t
+	on tl.taxonomy_id = t.taxonomy_id
+	order by t.name) as taxonomy
+	) t
+    ) LOOP
+      RETURN NEXT rec;
+    END LOOP;
+  -- else, give all in-use taxonomy/classifications  
+  ELSE				
+    FOR rec IN (      
+	select row_to_json(t)
+	from (
+	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
+	  select array_to_json(array_agg(row_to_json(c)))
+	   from (
+	    select distinct tl.classification_id as c_id, c.name
+	    from (select distinct taxonomy_id, classification_id
+	    from taxonomy_lookup) tl
+	    join classification c
+	    on tl.classification_id = c.classification_id
+	    where tl.taxonomy_id = taxonomy.taxonomy_id
+	    order by c.name
+	    ) c ) as classifications
+	from (select tl.taxonomy_id, t.name 
+	from (select distinct taxonomy_id   
+	from taxonomy_lookup) tl
+	join taxonomy t
+	on tl.taxonomy_id = t.taxonomy_id
+	order by t.name) as taxonomy
+	) t
+    ) LOOP
+      RETURN NEXT rec;
+    END LOOP;
+  END IF;	
+END;$$ LANGUAGE plpgsql;
 /*****************************************************************
 VIEWS -- under development and not final. Currently for the 
 purpose checking validitiy of data migration.
