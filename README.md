@@ -94,7 +94,7 @@ Documentation
 3. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 
 <br />
-Instructions for setting up Postgres 9.30 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
+Instructions for setting up Postgres 9.3.0 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
 ----------------------------------------------------------------------------------
 
 ### Install the core dependcies
