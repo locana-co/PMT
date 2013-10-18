@@ -66,7 +66,7 @@ DROP FUNCTION IF EXISTS pmt_data_groups() CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_tax(integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_locations(integer, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_projects(character varying, character varying, date, date) CASCADE;
-DROP FUNCTION IF EXISTS pmt_tax_inuse(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_tax_inuse(integer, character varying)  CASCADE;
 
 --Drop Types  (if it exists)
 DROP TYPE IF EXISTS entity;
@@ -1758,19 +1758,56 @@ BEGIN
 END;$$ LANGUAGE plpgsql;
 
 -- pmt in-use taxonomies
-CREATE OR REPLACE FUNCTION pmt_tax_inuse(data_group_id integer)
+CREATE OR REPLACE FUNCTION pmt_tax_inuse(data_group_id integer, taxonomy_ids character varying)
 RETURNS SETOF pmt_tax_inuse_result_type AS 
 $$
 DECLARE
   data_group_id integer;
+  filter_taxids int[];
   rec record;
 BEGIN
   -- confirm the passed id is a valid data group
   SELECT INTO data_group_id classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' AND classification_id = $1;
-
+  
   -- if data group exists filter	
   IF data_group_id IS NOT NULL THEN
-    FOR rec IN (      
+    IF $2 IS NOT NULL OR $2 <> '' THEN
+      filter_taxids := string_to_array($2, ',')::int[];
+      FOR rec IN (      
+	select row_to_json(t)
+	from (
+	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
+	  select array_to_json(array_agg(row_to_json(c)))
+	   from (
+	    select distinct tl.classification_id as c_id, c.name
+	    from (select distinct taxonomy_id, classification_id
+	    from taxonomy_lookup
+	    where project_id IN (
+		select distinct project_id
+		from taxonomy_lookup
+		where classification_id = data_group_id)) tl
+	    join classification c
+	    on tl.classification_id = c.classification_id
+	    where tl.taxonomy_id = taxonomy.taxonomy_id
+	    order by c.name
+	    ) c ) as classifications
+	from (select tl.taxonomy_id, t.name 
+	from (select distinct taxonomy_id   
+	from taxonomy_lookup
+	where project_id IN (
+		select distinct project_id
+		from taxonomy_lookup
+		where classification_id = data_group_id)
+		and taxonomy_id = ANY(filter_taxids)) tl
+	join taxonomy t
+	on tl.taxonomy_id = t.taxonomy_id
+	order by t.name) as taxonomy
+	) t
+      ) LOOP
+        RETURN NEXT rec;
+      END LOOP;
+    ELSE  
+      FOR rec IN (      
 	select row_to_json(t)
 	from (
 	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
@@ -1799,12 +1836,41 @@ BEGIN
 	on tl.taxonomy_id = t.taxonomy_id
 	order by t.name) as taxonomy
 	) t
-    ) LOOP
-      RETURN NEXT rec;
-    END LOOP;
+      ) LOOP
+        RETURN NEXT rec;
+      END LOOP;
+    END IF;
   -- else, give all in-use taxonomy/classifications  
-  ELSE				
-    FOR rec IN (      
+  ELSE	
+    IF $2 IS NOT NULL OR $2 <> '' THEN
+      filter_taxids := string_to_array($2, ',')::int[];      	
+      FOR rec IN (      
+	select row_to_json(t)
+	from (
+	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
+	  select array_to_json(array_agg(row_to_json(c)))
+	   from (
+	    select distinct tl.classification_id as c_id, c.name
+	    from (select distinct taxonomy_id, classification_id
+	    from taxonomy_lookup) tl
+	    join classification c
+	    on tl.classification_id = c.classification_id
+	    where tl.taxonomy_id = taxonomy.taxonomy_id
+	    order by c.name
+	    ) c ) as classifications
+	from (select tl.taxonomy_id, t.name 
+	from (select distinct taxonomy_id   
+	from taxonomy_lookup
+	where taxonomy_id = ANY(filter_taxids)) tl
+	join taxonomy t
+	on tl.taxonomy_id = t.taxonomy_id
+	order by t.name) as taxonomy
+	) t
+      ) LOOP
+        RETURN NEXT rec;
+      END LOOP;
+    ELSE
+      FOR rec IN (      
 	select row_to_json(t)
 	from (
 	 select taxonomy.taxonomy_id as t_id, taxonomy.name,(
@@ -1825,11 +1891,13 @@ BEGIN
 	on tl.taxonomy_id = t.taxonomy_id
 	order by t.name) as taxonomy
 	) t
-    ) LOOP
-      RETURN NEXT rec;
-    END LOOP;
+      ) LOOP
+        RETURN NEXT rec;
+      END LOOP;
+    END IF;
   END IF;	
 END;$$ LANGUAGE plpgsql;
+
 /*****************************************************************
 VIEWS -- under development and not final. Currently for the 
 purpose checking validitiy of data migration.
