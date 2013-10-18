@@ -1,8 +1,8 @@
 Portfolio Management Tool (PMT)
 ===============================
 
+Using [PostgreSQL](http://www.postgresql.org/) 9.2 and [PostGIS] (http://postgis.net/) 2.0.3  
 
-The new PMT Database. Using [PostgreSQL](http://www.postgresql.org/) 9.2 and [PostGIS] (http://postgis.net/) 2.0.3  
 
 Instructions - Installation of a _new PMT_ database
 ---------------------------------------------------------
