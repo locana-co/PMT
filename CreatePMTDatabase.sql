@@ -1435,15 +1435,11 @@ BEGIN
 	SELECT INTO data_group_id classification_id FROM classification WHERE classification_id = $2 AND classification.taxonomy_id = (SELECT taxonomy.taxonomy_id FROM taxonomy WHERE name = 'Data Group');
 	RAISE NOTICE 'data group: %', data_group_id;
 	
-	IF data_group_id IS NOT NULL THEN
-	  -- cast the data group id as string	
-	  data_group_text := data_group_id::text;
-	  -- collect the applicable location ids in an array
-	  SELECT INTO filter_locids array_agg(l_id)::int[] from pmt_filter_locations(1,data_group_text,'',null,null);	
+	IF data_group_id IS NOT NULL THEN	
 	  -- collect locations 
 	  FOR rec IN (SELECT t2.location_id as l_id, t2.x, t2.y,  array_to_string(array_agg(DISTINCT report_by.classification_id), ',') AS c_ids
 	    FROM
-	    (SELECT DISTINCT location_id, x, y, georef, classification_id FROM taxonomy_lookup WHERE location_id = ANY(filter_locids) ORDER BY georef) AS t2
+	    (SELECT DISTINCT location_id, x, y, georef, classification_id FROM taxonomy_lookup WHERE classification_id = data_group_id ORDER BY georef) AS t2
 	    LEFT JOIN
 	    (SELECT * FROM taxonomy_lookup WHERE taxonomy_lookup.taxonomy_id = $1  ORDER BY georef) AS report_by 
 	    ON t2.location_id = report_by.location_id
