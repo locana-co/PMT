@@ -48,3 +48,15 @@ CREATE INDEX taxonomy_lookup_start_date_idx on taxonomy_lookup(start_date);
 CREATE INDEX taxonomy_lookup_end_date_idx on taxonomy_lookup(end_date);
 CREATE INDEX taxonomy_lookup_classification_id_idx on taxonomy_lookup(classification_id);
 
+-- Create index for organization_lookup
+CREATE INDEX organization_lookup_project_id_idx on organization_lookup(project_id);
+CREATE INDEX organization_lookup_activity_id_idx on organization_lookup(activity_id);
+CREATE INDEX organization_lookup_location_id_idx on organization_lookup(organization_id);
+
+-- Create index for location_lookup
+CREATE INDEX location_lookup_project_id_idx on location_lookup(project_id);
+CREATE INDEX location_lookup_activity_id_idx on location_lookup(activity_id);
+CREATE INDEX location_lookup_location_id_idx on location_lookup(location_id);
+CREATE INDEX location_lookup_start_date_idx on location_lookup(start_date);
+CREATE INDEX location_lookup_end_date_idx on location_lookup(end_date);
+

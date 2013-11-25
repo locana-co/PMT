@@ -1,6 +1,6 @@
 /************************************************************
  Load a IATI Activity xml document into PMT from the Postgres 
- data directory.
+ data directory manually.
 ************************************************************/
 ---------
 -- STEP 1
@@ -25,7 +25,7 @@ SHOW data_directory;
 -- If the data group you specify in the below statement does not exist it will be created
 -- during the loading process.
 
-INSERT INTO xml (action, xml, data_group) VALUES('insert',convert_from(bytea_import('file.xml'), 'utf-8')::xml, <data group name>);
+INSERT INTO xml (action, xml, data_group) VALUES('insert',convert_from(pmt_bytea_import('file.xml'), 'utf-8')::xml, <data group name>);
 
 ---------
 -- STEP 4

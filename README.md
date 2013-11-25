@@ -1,17 +1,10 @@
-Portfolio Management Tool (PMT)
-===============================
-The Portfolio Managment Tool data model is a general purpose data model that supports the modeling of 
-international Aid Activities around the globe. Although it is highly generalized it supports the IATI
-XML specification or can be used for derivitive data designs. 
+﻿PMT-Database
+============
 
-The data model includes advanced geoprocessing by assigning X,Y locations to global administrative unit boundaries. 
+The new PMT Database. Using [PostgreSQL](http://www.postgresql.org/) 9.2 and [PostGIS] (http://postgis.net/) 2.0.3  
 
-
-Using [PostgreSQL](http://www.postgresql.org/) 9.3 and [PostGIS] (http://postgis.net/) 2.1.0 
-
-
-Instructions - Installation of a _new PMT_ database
----------------------------------------------------------
+Instructions - Installation of a _new PMT_
+-------------------------------------------
 **_Follow these instructions to install a brand new instance of PMT._**
 
 1. Create a database called pmt:
@@ -22,7 +15,7 @@ Instructions - Installation of a _new PMT_ database
 
 	CREATE EXTENSION POSTGIS; --(if using pgadmin change the connection to the new pmt database)
 ```  
-2. Execute **CreatePMTDatabase.sql**. (_Creates the database model_)
+2. Execute **PMTCreateDatabase.sql**. (_Creates the database model_)
 3. Execute all spatial scripts in the **_PMTSpatialData_** folder in **the order listed below**. (_Populates the database with spatial data_)
 	
 	1.  LoadPMTSpatialData0.sql	
@@ -43,9 +36,9 @@ Instructions - Installation of a _new PMT_ database
 	16. LoadPMTSpatialData15.sql
 	17. LoadPMTSpatialData16.sql
 
-4. Execute **UpdatePMTSpatialData.sql**. (_Creates a reference table from the spatial data loaded in step 3_)
-5. Open **LoadIATIStandards.sql** and follow the steps outlined within.  (_Adds IATI Standards_)
-6. Execute **AddTaxonomyGAUL0.sql**. (_Links the spatial data to the IATI Statndards_)
+4. Execute **PMTUpdateSpatialData.sql**. (_Repairs spatial data loaded in step 3_)
+5. Open **PMTIATIStandards.sql** and follow the steps outlined within.  (_Adds IATI Standards_)
+6. Execute **PMTTaxonomyGAUL0.sql**. (_Links the spatial data to the IATI Statndards_)
 7. Execute **PMTPerformanceTuning.sql**.
 8. Execute the following sql commands, one at a time:
 ```
@@ -54,35 +47,6 @@ Instructions - Installation of a _new PMT_ database
 	ANALYZE;
 ```
 9. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
-
-
-Instructions - Installation of the _Application Database_
-----------------------------------------------------------
-**_Follow these instructions to install the application database, which supports applications using PMT instances._**
-
-1. Create a database called app:
-```
-	CREATE DATABASE app WITH OWNER = postgres ENCODING = 'UTF8'TABLESPACE = pg_default LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8' CONNECTION LIMIT = -1;
-
-	COMMENT ON DATABASE app IS 'application support for PMT database instances';
-```
-2. Execute **CreateAPPDatabase.sql**. (_Creates the application database model_)
-3. Execute the following sql commands, one at a time:
-```
-	VACUUM;
-
-	ANALYZE;
-```
-4. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
-
-
-Instructions - Loading IATI XML formatted data into PMT
-----------------------------------------------------------
-**_Follow these instructions to load data that is formatted using the IATI standards for reporting activities._**
-
-1.  Open **LoadIATIFiles.sql** and follow the steps outlined within.
-
-
 <br />  
 	
 Documentation
@@ -90,11 +54,13 @@ Documentation
 **_Documents referenced below can be found in the Documentation folder._**
 
 1. **PMT-Framework** - High level PMT Framework (Database & API) diagram
-2. **PMT-Schema** - Database schema diagram of the physical structure of the database
-3. **Understanding the Data Model** - Describes the PMT data model and taxonomy
+2. **PMT-ERD** - Entity Relationship Diagram using Chen method describing the relationships between the entities in the database
+3. **PMT-Schema** - Database schema diagram of the physical structure of the database
+4. **PMT Database Development Process** - Describes the development process for the PMT database model and concurrent development activities
+5. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 
 <br />
-Instructions for setting up Postgres 9.3.0 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
+Instructions for setting up Postgres 9.2.2 and PostGIS 2.0.3 on Ubuntu 12.04 (EC2)
 ----------------------------------------------------------------------------------
 
 ### Install the core dependcies
@@ -107,11 +73,12 @@ Instructions for setting up Postgres 9.3.0 and PostGIS 2.0.3 on Ubuntu 12.04 (EC
 	cd /home/ubuntu/installs
 
 ### Download and Install PostgreSQL database server
-	sudo wget http://ftp.postgresql.org/pub/source/v9.3.0/postgresql-9.3.0.tar.bz2 
-	tar xvjf postgresql-9.3.0.tar.bz2
-	cd postgresql-9.3.0
+	sudo wget http://ftp.postgresql.org/pub/source/v9.2.2/postgresql-9.2.2.tar.bz2
+	bzip2 -d postgresql-9.2.2.tar.bz2
+	tar -xf postgresql-9.2.2.tar
+	cd postgresql-9.2.2
 	./configure --with-libxml --with-libxslt
-	make -j2
+	make
 	sudo make install
 
 
@@ -268,4 +235,9 @@ Connect to postgres DB either thru pgAdmin3 or psql and execute the following SQ
 	Create extension postgis
 
 <br />
-You should be good to go.
+You should be good to go….
+
+
+
+
+
