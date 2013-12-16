@@ -1,7 +1,7 @@
 ﻿PMT-Database
 ============
 
-The new PMT Database. Using [PostgreSQL](http://www.postgresql.org/) 9.2 and [PostGIS] (http://postgis.net/) 2.0.3  
+The new Portfolio Mapping Database. Using [PostgreSQL](http://www.postgresql.org/) 9.3.0 and [PostGIS] (http://postgis.net/) 2.1.0  
 
 Instructions - Installation of a _new PMT_
 -------------------------------------------
