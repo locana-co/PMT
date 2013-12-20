@@ -4,6 +4,8 @@
 
 ##### Contents
 
+[bmgf\_filter\_csv](#bmgf_filter_csv)
+
 [pmt\_activities\_by\_tax](#activities_by_tax)
 
 [pmt\_activity\_details](#activity_details)
@@ -11,6 +13,8 @@
 [pmt\_activity\_listview](#activity_listview)
 
 [pmt\_activity\_listview\_ct](#activity_listview_ct)
+
+[pmt\_auth\_user](#auth_user)
 
 [pmt\_auto\_complete](#auto_complete)
 
@@ -20,9 +24,11 @@
 
 [pmt\_countries](#countries)
 
+[pmt\_create\_user](#create_user)
+
 [pmt\_data\_groups](#data_groups)
 
-[pmt\_filter\_cvs](#filter_cvs)
+[pmt\_filter\_csv](#filter_csv)
 
 [pmt\_filter\_iati](#filter_iati)
 
@@ -31,6 +37,22 @@
 [pmt\_filter\_orgs](#filter_orgs)
 
 [pmt\_filter\_projects](#filter_projects)
+
+[pmt\_iati\_import](#iati_import)
+
+[pmt\_infobox\_activity\_stats](#infobox_activity_stats)
+
+[pmt\_infobox\_activity\_desc](#infobox_activity_desc)
+
+[pmt\_infobox\_activity\_contact](#infobox_activity_contact)
+
+[pmt\_infobox\_project\_info](#infobox_project_info)
+
+[pmt\_infobox\_project\_stats](#infobox_project_stats)
+
+[pmt\_infobox\_project\_desc](#infobox_project_desc)
+
+[pmt\_infobox\_project\_contact](#infobox_project_contact)
 
 [pmt\_isdate](#isdate)
 
@@ -46,6 +68,10 @@
 
 [pmt\_project\_listview\_ct](#project_listview_ct)
 
+[pmt\_purge\_activity](#purge_activity)
+
+[pmt\_purge\_project](#purge_project)
+
 [pmt\_tax\_inuse](#tax_inuse)
 
 [pmt\_stat\_counts](#stat_counts)
@@ -56,9 +82,51 @@
 
 [pmt\_stat\_orgs\_by\_activity](#stat_orgs_by_activity)
 
+[pmt\_update\_user](#update_user)
+
+[pmt\_users](#users)
+
 [pmt\_version](#version)
 
 * * * * *
+
+<a name="bmgf_filter_csv"/>
+bmgf\_filter\_csv
+=================
+
+##### Description
+
+**In BMGF PMT Only!** Create and email a csv of data filtered by classification, organization and date range,
+reporting associated organization(s).
+
+##### Parameter(s)
+
+1.  classification\_ids (character varying) – Optional. Restrict data to
+    classification(s).
+2.  organization\_ids (character varying) – Optional. Restrict data to
+    organization(s)
+3.  unassigned\_tax\_ids (character varying) – Optional. Include data
+    without assignments to specified taxonomy(ies).
+4.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+5.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
+6.  email (text) - **Required**. Email address to send the created csv to.
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due to the filter
+resulting in no data. A csv document of filtered data is created and emailed to the email
+address passed.
+
+##### Example(s)
+
+-   Data export for AGRA data group (classification\_id:769):
+
+```SELECT * FROM bmgf_filter_csv('769','','',null,null, 'sparadee@spatialdev.com');```
+
+	TRUE
+
 
 <a name="activities_by_tax"/>
 pmt\_activities\_by\_tax
@@ -70,7 +138,7 @@ Filter activities by classification reporting by a specified taxonomy.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     activities.
 2.  data\_group (integer) -  Optional. Restrict data to a single data
     group.
@@ -111,7 +179,7 @@ date range, reporting a specified taxonomy with pagination.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     activities.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -176,7 +244,7 @@ Activity details for a single activity.
 
 ##### Parameter(s)
 
-1.  a\_id (integer) – Required. activity\_id.
+1.  a\_id (integer) – **Required**. activity\_id.
 
 ##### Result
 
@@ -260,6 +328,68 @@ Integer of number of records.
 
 888
 
+<a name="auth_user"/>
+pmt\_auth\_user
+=============================
+
+##### Description
+
+Authenticate user.
+
+##### Parameter(s)
+
+1.  username (character varying) - **Required**. User's username.
+2.  password (character varying) - **Required**. User's password.
+
+##### Result
+
+Json with the following:
+
+1.  user\_id (integer) – user id.
+2.  first\_name (character varying) – first name of user.
+3.  last\_name (character varying) – last name of user.
+4.  username (character varying) – username of user.
+5.  email (character varying) – email address of user.
+6.  organization\_id (integer) – organization id for organization of user.
+7.  roles (json object):
+
+1.  role\_id (integer) – role id user is assigned to.
+2.  name (character varying) – name of role user is assigned to.
+
+##### Example(s)
+
+- Authenticate Jane Doe passing her username and password.
+
+```SELECT * FROM pmt_auth_user('janedoe', 'supersecret');```
+
+```
+{
+	"user_id":315,
+	"first_name":"Jane",
+	"last_name":"Doe",
+	"username":"myusername",
+	"email":"jane.doe@email.com",
+	"organization_id":13,
+	"organization": "BMGF",
+	"data_group_id":768,
+	"data_group": "BMGF",
+	"roles":[
+		{
+			"role_id":2,
+			"name":"Editor"
+		}
+		]
+}
+```
+- Authenticate Jane Doe passing her username and an invalid password.
+
+```SELECT * FROM pmt_auth_user('janedoe', 'superduper');```
+
+```
+{
+	"message":"Invalid username or password."
+}
+```
 
 <a name="auto_complete"/>
 pmt\_auto\_complete
@@ -336,7 +466,7 @@ of any taxonomy.
 
 ##### Parameter(s)
 
-1.  id (integer) – Required. The category taxonomy.
+1.  id (integer) – **Required**. The category taxonomy.
 2.  data\_group (integer) – Optional. The data group classification id.
 
 ##### Result
@@ -397,6 +527,39 @@ Json with the following:
 }
 ```
 
+<a name="create_user"/>
+pmt\_create\_user
+================
+
+##### Description
+
+Create new user.
+
+##### Parameter(s)
+
+1.  organization\_id (integer) – **Required**. Organization id user will be assigned to.
+2.  data\_group\_id (integer) - **Required**. Data group id user will be assigned to.
+3.  role\_id (integer) – **Required**. Role id user will be assigned to.
+4.  username (character varying(255)) - **Required**. User username.
+5.  password (character varying(255)) - **Required**. User password.
+6.  email (character varying(255)) - **Required**. User email address.
+7.  first\_name (character varying(150)) - Optional. User first name.
+8.  last\_name (character varying(150)) - Optional. User last name.
+
+##### Result
+
+Boolean. Successful (true). Unsuccessful (false).
+
+##### Example(s)
+
+-   Create new user for Jane Doe as a Reader (role_id:1) for BMGF organization (organization_id:13) in  data group BMGF(classification_id:768):
+
+```SELECT * FROM pmt_create_user(13, 768, 1, 'janedoe', 'secretpassword', 'jane.doe@email.com', 'Jane', 'Doe');```
+
+```
+TRUE
+```
+
 <a name="data_groups"/>
 pmt\_data\_groups
 =================
@@ -430,13 +593,13 @@ None.
 | …                                    | …                                    |
 
 
-<a name="filter_cvs"/>
-pmt\_filter\_cvs
+<a name="filter_csv"/>
+pmt\_filter\_csv
 =================
 
 ##### Description
 
-**In BMGF PMT Only!** Create and email a csv of data filtered by classification, organization and date range,
+Create and email a csv of data filtered by classification, organization and date range,
 reporting associated organization(s).
 
 ##### Parameter(s)
@@ -451,17 +614,20 @@ reporting associated organization(s).
     with end\_date parameter.
 5.  end\_date (date) – Optional. Restrict data to a data range. Used
     with start\_date parameter.
-6.  email (text) - Required. Email address to send the created csv to.
+6.  email (text) - **Required**. Email address to send the created csv to.
 
 ##### Result
 
-A csv document of filtered data. 
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due to the filter
+resulting in no data. A csv document of filtered data is created and emailed to the email
+address passed.
 
 ##### Example(s)
 
--   Data export for AGRA data group (classification\_id:769):
+-   Data export for Nepal data group (classification\_id:771) activities for Sector - Education
+Policy and Administrative Management (classificatoin\_id:564):
 
-```SELECT * FROM pmt_filter_cvs('769','','',null,null, 'sparadee@spatialdev.com');```
+```SELECT * FROM pmt_filter_csv('771,564','','',null,null, 'sparadee@spatialdev.com');```
 
 	TRUE
 
@@ -487,7 +653,7 @@ reporting associated organization(s).
     with end\_date parameter.
 5.  end\_date (date) – Optional. Restrict data to a data range. Used
     with start\_date parameter.
-6.  email (text) - Required. Email address to send the created csv to.
+6.  email (text) - **Required**. Email address to send the created csv to.
 
 ##### Result
 
@@ -497,7 +663,7 @@ A xml document of in the IATI Activity Schema.
 
 -   Data export for AGRA data group (classification\_id:769):
 
-```SELECT * FROM pmt_filter_cvs('769','','',null,null, 'sparadee@spatialdev.com');```
+```SELECT * FROM pmt_filter_iati('769','','',null,null, 'sparadee@spatialdev.com');```
 
 	TRUE
 
@@ -512,7 +678,7 @@ reporting a specified taxonomy.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     locations.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -641,6 +807,300 @@ Ordered  by project\_id.
 | 663                                  | "13147,13151"                        |
 | …                                    | …                                    |
 
+<a name="iati_import"/>
+pmt\_iati\_import
+=================
+
+##### Description
+
+Imports an IATI Activities formatted xml document, with the option to replace or append. 
+
+* **Depending on the size of the document
+and the size of the database this function could take several minutes to run!!**
+
+##### Parameter(s)
+
+1. file_path (text) – **Required**. Path to IATI Activities formated xml document.
+2. data_group_name (character varying) - **Required**. Name of the data group. If data group does not exist it will be created.
+3. replace_all (boolean) **Required**. **True - delete all data in the data group and replace with imported file data.** False - just add the imported data to the data group.
+
+
+##### Result
+
+True (success) or false (unsuccessful).
+
+##### Example(s)
+
+```SELECT * FROM pmt_iati_import('/usr/local/pmt_iati/BoliviaIATI.xml', 'Bolivia', true);```
+
+TRUE
+
+<a name="infobox_activity_stats"/>
+pmt\_infobox\_activity\_stats
+=============================
+
+##### Description
+
+Quick stats for a given activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity\_id.
+2.  start\_date (date) - start date of activity.
+3.  end\_date (date) - end date of activity.
+4.  sector (character varying) - Sector taxonomy assignement.
+5.  status (character varying) - Activity Status taxonomy assignment.
+6.  location (character varying) - List of GAUL administrative boundaries for all locations (format gaul_2, gaul_1, gaul_0)
+7.  keywords (character varying) - List of keywords assigned to activity.
+
+
+##### Example(s)
+
+```select * from pmt_infobox_activity_stats(1);```
+
+```
+{
+	"activity_id":1
+	,"start_date":"2009-10-01"
+	,"end_date":"2013-12-31"
+	,"sector":"Environmental policy and administrative management"
+	,"status":"No Data Entered"
+	,"location":"Manyoni, Singida, United Republic of Tanzania"
+	,"keywords":"No Data Entered"
+}
+```
+
+<a name="infobox_activity_desc"/>
+pmt\_infobox\_activity\_desc
+=============================
+
+##### Description
+
+Description for a given activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity\_id.
+2.  description (character varying) - description of activity
+
+
+##### Example(s)
+
+```select * from pmt_infobox_activity_desc(1);```
+
+```
+{
+	"activity_id":1
+	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions 
+			from Deforestation and forest Degradation (REDD) as a component of the Governments 
+			evolving REDD Strategy, and integrate it with other REDD activities in the country"
+}
+```
+
+<a name="infobox_activity_contact"/>
+pmt\_infobox\_activity\_contact
+=============================
+
+##### Description
+
+Contacts and partners for a given activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity\_id.
+2.  partners(character varying) - List of activity parners (Organizations having a Implementing or Funding Role in a activity)
+3.  contacts (character varying) - List of activity contacts.
+
+
+##### Example(s)
+
+```select * from pmt_infobox_activity_contact(1);```
+
+```
+{
+	"activity_id":1
+	,"partners":"FAO/ UNEP/ UNDP,MNRT, TFS,Tanzania Forestry Service (TFS)"
+	,"contacts":"Almas Kashindye"
+}
+```
+
+<a name="infobox_project_info"/>
+pmt\_infobox\_project\_info
+=============================
+
+##### Description
+
+Information for a given project.
+
+##### Parameter(s)
+
+1. project_id (integer) - **Required.** Project id.
+2. taxonomy_id (integer) - Optional. Default is Data Group. Taxonomy used to report locations by.
+
+##### Result
+
+Json with the following:
+
+1.  project\_id (integer) – project\_id.
+2.  title (character varying) - Project title.
+3.  org_name (character varying) - Organization name participating in project.
+4.  org_url (character varying) - Organization url of organization participating in project.
+5.  sector (character varying) - Sector taxonomy assignement
+5.  keywords (character varying) - List of keywords assigned to project
+5.  project_url (character varying) - Project url
+5.  l_ids (object) - json object of locations
+	1. lat (decimal) - latitude
+	2. long (decimal) - longitude
+	3. c_id (integer) - classification_ids assigned from taxonomy id provided or default (Data Group)
+
+
+##### Example(s)
+
+```select * from pmt_infobox_project_info(2, 15);```
+
+```
+{
+	"project_id":2
+	,"title":"IATI Activities XML Import"
+	,"org_name":"LGAs"
+	,"org_url":""
+	,"sector":"No Data Entered"
+	,"keywords":"No Data Entered"
+	,"project_url":"No Data Entered"
+	,"l_ids":
+		[
+			...
+			{
+			"lat":-11.316670
+			,"long":34.83333
+			,"c_id":"624,658,661,662,663,665,669,672"	
+			}
+			...
+		]
+}
+```
+
+<a name="infobox_project_stats"/>
+pmt\_infobox\_project\_stats
+=============================
+
+##### Description
+
+Quick stats for a given project.
+
+##### Parameter(s)
+
+1. project_id (integer) - **Required.** Project id.
+
+##### Result
+
+Json with the following:
+
+1.  project\_id (integer) – project\_id.
+2.  start\_date (date) - start date of project
+3.  end\_date (date) - end date of project
+4.  sector (character varying) - Sector taxonomy assignement.
+5.  grant (decimal) - total amount of money associated to activity.
+
+
+
+##### Example(s)
+
+```select * from pmt_infobox_project_stats(1);```
+
+```
+{
+	"project_id":1
+	,"start_date":null
+	,"end_date":null
+	,"sector":"No Data Entered"
+	,"grant":null
+}
+```
+
+<a name="infobox_project_desc"/>
+pmt\_infobox\_project\_desc
+=============================
+
+##### Description
+
+Description for a given project.
+
+##### Parameter(s)
+
+1. project_id (integer) - **Required.** Project id.
+
+##### Result
+
+Json with the following:
+
+1.  project\_id (integer) – project\_id.
+2.  title (character varying) - title of project
+2.  description (character varying) - description of project
+
+##### Example(s)
+
+```select * from pmt_infobox_project_desc(1);```
+
+```
+{
+	"project_id":1
+	,"title":"IATI Activities XML Import"
+	,"description":"No Data Entered"
+}
+```
+
+<a name="infobox_project_contact"/>
+pmt\_infobox\_project\_contact
+=============================
+
+##### Description
+
+Contacts and partners for a given project.
+
+##### Parameter(s)
+
+1. project_id (integer) - **Required.** Project id.
+
+##### Result
+
+Json with the following:
+
+1.  project\_id (integer) – project\_id.
+2.  partners(character varying) - List of project parners (Organizations having a Implementing or Funding Role in a activity)
+3.  contacts (character varying) - List of project contacts.
+
+
+##### Example(s)
+
+```select * from pmt_infobox_project_contact(1);```
+
+```
+{
+	"project_id":1
+	,"partners":"No Data Entered"
+	,"contacts":"No Data Entered"
+}
+```
+
 <a name="isdate"/>
 pmt\_isdate
 ===========
@@ -747,7 +1207,7 @@ reporting a specified taxonomy.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     locations.
 2.  data\_group (integer) -  Optional. Restrict data to a single data
     group.
@@ -828,7 +1288,7 @@ taxonomy with pagination.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     projects.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -836,9 +1296,13 @@ taxonomy with pagination.
     organization(s)
 4.  unassigned\_tax\_ids (character varying) – Optional. Include data
     without assignments to specified taxonomy(ies).
-5.  orderby (text) – Optional. Order by result columns.
-6.  limit\_rec (integer) – Optional. Maximum number of returned records.
-7.  offset\_rec (integer) – Optional. Number of records to offset the
+5.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+6.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
+7.  orderby (text) – Optional. Order by result columns.
+8.  limit\_rec (integer) – Optional. Maximum number of returned records.
+9.  offset\_rec (integer) – Optional. Number of records to offset the
     return records by.
 
 ##### Result
@@ -859,9 +1323,10 @@ Json with the following:
     (taxonomy\_id:23).  Order the data by project title (title). Limit
     the number of rows returned to 10 with an offset of 20 records:
 
-```SELECT * FROM  pmt_project_listview(23, '768', '', '','title', 10, 20);```
+```SELECT * FROM  pmt_project_listview(23, '768', '', '', '1-1-1990','12-31-2014', 'title', 10, 20);```
 
 ```
+...
 {
 
     "p_id":615,
@@ -898,6 +1363,10 @@ count. Used to assist with pagination.
     organization(s)
 3.  unassigned\_tax\_ids (character varying) – Optional. Include data
     without assignments to specified taxonomy(ies).
+4.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+5.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
 
 ##### Result
 
@@ -908,9 +1377,67 @@ Integer of number of records.
 -   Number of Project records for BMGF data group
     (classification\_id:768):
 
-```SELECT * FROM pmt_project_listview_ct('768', '', '');```
+```SELECT * FROM pmt_project_listview_ct('768', '', '', '1-1-1990','12-31-2014');```
 
-73
+56
+
+<a name="purge_activity"/>
+pmt\_purge\_activity
+==========================
+
+##### Description
+
+Deletes all records assoicated to an activity. **Warning!! This function 
+permanently deletes ALL data associated to the given activity id**
+
+*On large PMT instances (i.e. OAM) this function can take 2-3 minutes. This will
+recieve an huge performance improvement when editing functions are added to 
+the model.*
+
+##### Parameter(s)
+
+1.  a\_id (integer) – **Required**. Activity_id of activity to be deleted.
+
+##### Result
+ 
+Boolean. True/False successful.
+
+##### Example(s)
+
+-   Remove activity_id 101:
+
+```SELECT * FROM pmt_purge_activity(101);```
+
+TRUE
+
+<a name="purge_project"/>
+pmt\_purge\_project
+==========================
+
+##### Description
+
+Deletes all records assoicated to a project. **Warning!! This function 
+permanently deletes ALL data associated to the given project id**
+
+*On large PMT instances (i.e. OAM) this function can take 2-3 minutes. This will
+recieve an huge performance improvement when editing functions are added to 
+the model.*
+
+##### Parameter(s)
+
+1.  p\_id (integer) – **Required**. Project_id of project to be deleted.
+
+##### Result
+ 
+Boolean. True/False successful.
+
+##### Example(s)
+
+-   Remove project_id 1:
+
+```SELECT * FROM pmt_purge_project(1);```
+
+TRUE
 
 <a name="tax_inuse"/>
 pmt\_tax\_inuse
@@ -1096,7 +1623,7 @@ Statistics function providing filterable counts for project by taxonomy
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     project counts.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -1150,7 +1677,7 @@ taxonomy.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     activity counts.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -1218,7 +1745,7 @@ organizations by activity classified by taxonomy.
 
 ##### Parameter(s)
 
-1.  tax\_id (integer) – Required. Taxonomy\_id to classify returned
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
     activity counts.
 2.  classification\_ids (character varying) – Optional. Restrict data to
     classification(s).
@@ -1278,6 +1805,93 @@ Json with the following:
 
 	]
 
+}
+...
+```
+
+<a name="update_user"/>
+pmt\_update\_user
+================
+
+##### Description
+
+Update existing user information and/or role.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User id for user being updated.
+2.  organization\_id (integer) – Optional. Organization id user will be assigned to.
+3.  data\_group\_id (integer) - Optional. Data group id user will be assigned to.
+4.  role\_id (integer) – Optional. Role id user will be assigned to.
+5.  username (character varying(255)) - Optional. User username.
+6.  password (character varying(255)) - Optional. User password.
+7.  email (character varying(255)) - Optional. User email address.
+8.  first\_name (character varying(150)) - Optional. User first name.
+9.  last\_name (character varying(150)) - Optional. User last name.
+
+##### Result
+
+Boolean. Successful (true). Unsuccessful (false).
+
+##### Example(s)
+
+-   Update email for user Jane Doe(user_id:315):
+
+```SELECT * FROM pmt_update_user(315, null, null, null, null, 'jane.doe1234@email.com',  null, null);```
+
+```
+TRUE
+```
+
+<a name="users"/>
+pmt\_users
+=============================
+
+##### Description
+
+Get all user and role information.
+
+##### Parameter(s)
+
+No parameters.
+
+##### Result
+
+Json with the following:
+
+1.  user\_id (integer) – user id.
+2.  first\_name (character varying) – first name of user.
+3.  last\_name (character varying) – last name of user.
+4.  username (character varying) – username of user.
+5.  email (character varying) – email address of user.
+6.  organization\_id (integer) – organization id for organization of user.
+7.  roles (json object):
+
+1.  role\_id (integer) – role id user is assigned to.
+2.  name (character varying) – name of role user is assigned to.
+
+##### Example(s)
+
+```SELECT * FROM pmt_users();```
+
+```
+...
+{
+	"user_id":315,
+	"first_name":"Jane",
+	"last_name":"Doe",
+	"username":"myusername",
+	"email":"jane.doe@email.com",
+	"organization_id":13,
+	"organization": "BMGF",
+	"data_group_id":768,
+	"data_group": "BMGF",
+	"roles":[
+		{
+			"role_id":2,
+			"name":"Editor"
+		}
+		]
 }
 ...
 ```
