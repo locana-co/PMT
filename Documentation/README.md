@@ -4,8 +4,6 @@
 
 ##### Contents
 
-[bmgf\_filter\_csv](#bmgf_filter_csv)
-
 [pmt\_activities\_by\_tax](#activities_by_tax)
 
 [pmt\_activity\_details](#activity_details)
@@ -89,44 +87,6 @@
 [pmt\_version](#version)
 
 * * * * *
-
-<a name="bmgf_filter_csv"/>
-bmgf\_filter\_csv
-=================
-
-##### Description
-
-**In BMGF PMT Only!** Create and email a csv of data filtered by classification, organization and date range,
-reporting associated organization(s).
-
-##### Parameter(s)
-
-1.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-2.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-3.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-4.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-5.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-6.  email (text) - **Required**. Email address to send the created csv to.
-
-##### Result
-
-Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due to the filter
-resulting in no data. A csv document of filtered data is created and emailed to the email
-address passed.
-
-##### Example(s)
-
--   Data export for AGRA data group (classification\_id:769):
-
-```SELECT * FROM bmgf_filter_csv('769','','',null,null, 'sparadee@spatialdev.com');```
-
-	TRUE
-
 
 <a name="activities_by_tax"/>
 pmt\_activities\_by\_tax
