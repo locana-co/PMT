@@ -1,11 +1,12 @@
 ﻿PMT-Database
 ============
 
-The new Portfolio Mapping Database. Using [PostgreSQL](http://www.postgresql.org/) 9.3.0 and [PostGIS] (http://postgis.net/) 2.1.0  
+The Portfolio Management Tool (PMT) Database. Using [PostgreSQL](http://www.postgresql.org/) 9.3.0 and [PostGIS] (http://postgis.net/) 2.1.0  
 
 Instructions - Installation of a _new PMT_
 -------------------------------------------
-**_Follow these instructions to install a brand new instance of PMT._**
+**_Follow these instructions to install a brand new database instance of PMT. These instructions assume that you have PostgreSQL 9.3.0 and PostGIS 2.1.0 installed. 
+For instructions on installing PostgreSQL and PostGIS see Instructions - Installation of PostgreSQL 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2) below._**
 
 1. Create a database called pmt:
 ```
@@ -64,16 +65,13 @@ Documentation
 5. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 
 <br />
-Install a new database. Using [PostgreSQL](http://www.postgresql.org/) 9.3.0 and [PostGIS] (http://postgis.net/) 2.1.0
-
-Instructions (installation)
----------------------------
 
 
-<br />
-Instructions for setting up Postgres 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2)
-This version installs everything from the source packages includeing all the dependices on a fresh EC2. 
-----------------------------------------------------------------------------------
+Instructions - Installation of _PostgreSQL 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2)_
+------------------------------------------------------------------------------------------
+**_Instructions for setting up Postgres 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2)
+This version installs everything from the source packages including all the dependices on a fresh EC2._** 
+
 ```
 	sudo apt-get update
 	sudo apt-get -y upgrade 
