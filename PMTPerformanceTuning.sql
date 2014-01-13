@@ -38,6 +38,17 @@ CREATE INDEX project_taxonomy_classification_id_idx on project_taxonomy(classifi
 CREATE INDEX result_taxonomy_classification_id_idx on result_taxonomy(classification_id);
 
 
+CREATE INDEX activity_taxonomy_activity_id_idx on activity_taxonomy(activity_id);
+CREATE INDEX contact_taxonomy_contact_id_idx on contact_taxonomy(contact_id);
+CREATE INDEX feature_taxonomy_feature_id_idx on feature_taxonomy(feature_id);
+CREATE INDEX financial_taxonomy_financial_id_idx on financial_taxonomy(financial_id);
+CREATE INDEX location_taxonomy_location_id_idx on location_taxonomy(location_id);
+CREATE INDEX location_taxonomy_classification_id_idx on location_taxonomy(classification_id);
+CREATE INDEX organization_taxonomy_organization_id_idx on organization_taxonomy(organization_id);
+CREATE INDEX participation_taxonomy_participation_id_idx on participation_taxonomy(participation_id);
+CREATE INDEX project_taxonomy_project_id_idx on project_taxonomy(project_id);
+CREATE INDEX result_taxonomy_result_id_idx on result_taxonomy(result_id);
+
 -- Create index for taxonomy_lookup
 CREATE INDEX taxonomy_lookup_project_id_idx on taxonomy_lookup(project_id);
 CREATE INDEX taxonomy_lookup_activity_id_idx on taxonomy_lookup(activity_id);
@@ -47,11 +58,14 @@ CREATE INDEX taxonomy_lookup_participation_id_idx on taxonomy_lookup(participati
 CREATE INDEX taxonomy_lookup_start_date_idx on taxonomy_lookup(start_date);
 CREATE INDEX taxonomy_lookup_end_date_idx on taxonomy_lookup(end_date);
 CREATE INDEX taxonomy_lookup_classification_id_idx on taxonomy_lookup(classification_id);
+CREATE INDEX taxonomy_lookup_taxonomy_id_idx on taxonomy_lookup(taxonomy_id);
 
 -- Create index for organization_lookup
 CREATE INDEX organization_lookup_project_id_idx on organization_lookup(project_id);
 CREATE INDEX organization_lookup_activity_id_idx on organization_lookup(activity_id);
 CREATE INDEX organization_lookup_location_id_idx on organization_lookup(organization_id);
+CREATE INDEX organization_lookup_start_date_idx on organization_lookup(start_date);
+CREATE INDEX organization_lookup_end_date_idx on organization_lookup(end_date);
 
 -- Create index for location_lookup
 CREATE INDEX location_lookup_project_id_idx on location_lookup(project_id);
@@ -59,4 +73,12 @@ CREATE INDEX location_lookup_activity_id_idx on location_lookup(activity_id);
 CREATE INDEX location_lookup_location_id_idx on location_lookup(location_id);
 CREATE INDEX location_lookup_start_date_idx on location_lookup(start_date);
 CREATE INDEX location_lookup_end_date_idx on location_lookup(end_date);
+CREATE INDEX location_lookup_gaul0_name_idx on location_lookup(gaul0_name);
+CREATE INDEX location_lookup_gaul1_name_idx on location_lookup(gaul1_name);
+CREATE INDEX location_lookup_gaul2_name_idx on location_lookup(gaul2_name);
 
+-- Create index for taxonomy_classifications
+CREATE INDEX taxonomy_classifications_taxonomy_id_idx on taxonomy_classifications(taxonomy_id);
+CREATE INDEX taxonomy_classifications_taxonomy_idx on taxonomy_classifications(taxonomy);
+CREATE INDEX taxonomy_classifications_classification_id_idx on taxonomy_classifications(classification_id);
+CREATE INDEX taxonomy_classifications_classification_idx on taxonomy_classifications(classification);

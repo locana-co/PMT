@@ -33,10 +33,8 @@ DROP TABLE IF EXISTS  financial CASCADE;
 DROP TABLE IF EXISTS  financial_taxonomy CASCADE;
 DROP TABLE IF EXISTS  location CASCADE;
 DROP TABLE IF EXISTS  location_boundary CASCADE;
-DROP TABLE IF EXISTS  location_lookup CASCADE;
 DROP TABLE IF EXISTS  location_taxonomy CASCADE;
 DROP TABLE IF EXISTS  organization CASCADE;
-DROP TABLE IF EXISTS  organization_lookup CASCADE;
 DROP TABLE IF EXISTS  organization_taxonomy CASCADE;
 DROP TABLE IF EXISTS  participation CASCADE;
 DROP TABLE IF EXISTS  participation_taxonomy CASCADE;
@@ -46,31 +44,35 @@ DROP TABLE IF EXISTS  project_taxonomy CASCADE;
 DROP TABLE IF EXISTS  result CASCADE;
 DROP TABLE IF EXISTS  result_taxonomy CASCADE;
 DROP TABLE IF EXISTS  taxonomy CASCADE;
-DROP TABLE IF EXISTS  taxonomy_lookup CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS  xml CASCADE;
 
 --Drop Views  (if they exist)
-DROP VIEW IF EXISTS accountable_project_participants;
-DROP VIEW IF EXISTS accountable_organizations;
-DROP VIEW IF EXISTS active_project_activities;
-DROP VIEW IF EXISTS activity_contacts;
-DROP VIEW IF EXISTS activity_taxonomies;
-DROP VIEW IF EXISTS gaul_lookup;
-DROP VIEW IF EXISTS location_boundary_features;
-DROP VIEW IF EXISTS organization_participation; 
-DROP VIEW IF EXISTS project_activity_points; 
-DROP VIEW IF EXISTS project_contacts; 
-DROP VIEW IF EXISTS project_taxonomies;
-DROP VIEW IF EXISTS tags; 
-DROP VIEW IF EXISTS taxonomy_classifications; 
+DROP VIEW IF EXISTS accountable_project_participants CASCADE;
+DROP VIEW IF EXISTS accountable_organizations CASCADE;
+DROP VIEW IF EXISTS active_project_activities CASCADE;
+DROP VIEW IF EXISTS activity_contacts CASCADE;
+DROP VIEW IF EXISTS activity_taxonomies CASCADE;
+DROP VIEW IF EXISTS gaul_lookup CASCADE;
+DROP VIEW IF EXISTS location_boundary_features CASCADE;
+DROP VIEW IF EXISTS organization_participation CASCADE;
+DROP VIEW IF EXISTS project_activity_points CASCADE;
+DROP VIEW IF EXISTS project_contacts CASCADE;
+DROP VIEW IF EXISTS project_taxonomies CASCADE;
+DROP VIEW IF EXISTS tags CASCADE; 
+
+DROP MATERIALIZED VIEW IF EXISTS location_lookup CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS organization_lookup CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS taxonomy_classifications CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS taxonomy_lookup CASCADE;
 
 --Drop Functions
 DROP FUNCTION IF EXISTS refresh_taxonomy_lookup() CASCADE;
 DROP FUNCTION IF EXISTS pmt_activities_by_tax(Integer, Integer, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity_details(integer) CASCADE;
-DROP FUNCTION IF EXISTS pmt_activity_listview(integer, character varying, character varying, character varying, text, integer, integer) CASCADE;
-DROP FUNCTION IF EXISTS pmt_activity_listview_ct(character varying, character varying, character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_activity_listview(character varying, character varying, character varying, date, date, character varying, text, integer, integer) CASCADE;
+DROP FUNCTION IF EXISTS pmt_activity_listview_ct(character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_auth_user(character varying, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_auto_complete(character varying, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_bytea_import(TEXT, OUT bytea) CASCADE;
 DROP FUNCTION IF EXISTS pmt_iati_import(text, character varying, boolean) CASCADE;
@@ -102,13 +104,18 @@ DROP FUNCTION IF EXISTS pmt_project_listview_ct(character varying, character var
 DROP FUNCTION IF EXISTS pmt_purge_activity(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_project(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_counts(character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_stat_activity_by_district(integer, character varying, character varying, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_activity_by_tax(integer, character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_locations(character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_stat_pop_by_district(character varying, character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_project_by_tax(integer, character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_orgs_by_activity(integer, character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_stat_orgs_by_district(integer, character varying, character varying, integer, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_tax_inuse(integer, character varying, character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_taxonomies(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_update_user(integer, integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
+DROP FUNCTION IF EXISTS pmt_user_auth(character varying, character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_user_salt(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_users();
 DROP FUNCTION IF EXISTS pmt_validate_activities(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_activity(integer)  CASCADE;
@@ -137,12 +144,16 @@ DROP TYPE IF EXISTS pmt_locations_by_tax_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_org_inuse_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_project_listview_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_counts_result CASCADE;
+DROP TYPE IF EXISTS pmt_stat_activity_by_district_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_activity_by_tax_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_locations_result CASCADE;
+DROP TYPE IF EXISTS pmt_stat_pop_by_district_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_project_by_tax_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_orgs_by_activity_result CASCADE;
+DROP TYPE IF EXISTS pmt_stat_orgs_by_district_result CASCADE;
 DROP TYPE IF EXISTS pmt_tax_inuse_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_taxonomies_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_user_auth_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_users_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_version_result_type CASCADE;
 
@@ -218,7 +229,7 @@ CREATE TABLE "config"
 );
 -- add the current configuration information
 INSERT INTO config(version, iteration, changeset, download_dir) 
-VALUES (2.0, 7, 4, '/var/lib/postgresql/9.3/main/');
+VALUES (2.0, 7, 23, '/var/lib/postgresql/9.3/main/');
 --Contact
 CREATE TABLE "contact"
 (
@@ -347,6 +358,7 @@ CREATE TABLE "gaul2"
 	,"pop_poverty" 		numeric(500,2)
 	,"pop_rural" 		numeric(500,2)
 	,"pop_poverty_rural" 	numeric(500,2)
+	,"pop_source"		text
 	,"active"		boolean				NOT NULL DEFAULT TRUE
 	,"retired_by"		integer
 	,"created_by" 		character varying(50)
@@ -382,6 +394,33 @@ CREATE TABLE "location"
 	,CONSTRAINT location_id PRIMARY KEY(location_id)
 );
 CREATE INDEX idx_location_geom ON public.location USING GIST(point);
+--Map
+CREATE TABLE "map"
+(
+	"map_id"		SERIAL				NOT NULL
+	,"user_id"		integer 			NOT NULL		
+	,"title"		character varying		
+	,"description"		character varying
+	,"extent"		character varying
+	,"filters"		json
+	,"taxonomy_id"		integer
+	,"organization_ids"	character varying
+	,"classification_ids"	character varying
+	,"unassigned_ids"	character varying
+	,"location_ids"		character varying
+	,"start_date"		date
+	,"end_date"		date
+	,"overlays"		character varying
+	,"data_sources"		character varying
+	,"public"		boolean				NOT NULL DEFAULT TRUE
+	,"active"		boolean				NOT NULL DEFAULT TRUE
+	,"retired_by"		integer	
+	,"created_by" 		character varying(50)
+	,"created_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
+	,"updated_by" 		character varying(50)
+	,"updated_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
+	,CONSTRAINT map_id PRIMARY KEY(map_id)
+);
 --Organization
 CREATE TABLE "organization"
 (
@@ -694,119 +733,79 @@ designed to support this database functionality until PMT is upgraded
 to a version supporting materialized views (Postgres 9.3 or higher)
 Create MATERIALIZED VIEWS:
 	1. taxonomy_lookup
+	2. location_lookup
+	3. organization_lookup
+	4. taxonomy_classifications
 ******************************************************************/
-CREATE TABLE "taxonomy_lookup"
-(
-	"taxonomy_lookup_id"	SERIAL				NOT NULL
-	,"project_id"		integer 					
-	,"activity_id"		integer 
-	,"location_id"		integer 
-	,"organization_id"	integer 
-	,"participation_id"	integer 
-	,"start_date"		date
-	,"end_date"		date
-	,"x"			integer
-	,"y"			integer
-	,"georef"		character varying(20)
-	,"taxonomy_id"		integer 
-	,"classification_id"	integer 
-	,CONSTRAINT taxonomy_lookup_id PRIMARY KEY(taxonomy_lookup_id)
-);
-CREATE TABLE "location_lookup"
-(
-	"location_lookup_id"	SERIAL				NOT NULL
-	,"project_id"		integer 					
-	,"activity_id"		integer 
-	,"location_id"		integer 	
-	,"start_date"		date
-	,"end_date"		date
-	,"x"			integer
-	,"y"			integer
-	,"georef"		character varying(20)
-	,"gaul0_name" 		character varying
-	,"gaul1_name" 		character varying
-	,"gaul2_name" 		character varying
-	,"taxonomy_ids"		integer[] 
-	,"classification_ids"	integer[] 
-	,"organization_ids"	integer[] 
-	,CONSTRAINT location_lookup_id PRIMARY KEY(location_lookup_id)
-);
-CREATE TABLE "organization_lookup"
-(
-	"organization_lookup_id" SERIAL				NOT NULL
-	,"project_id"		integer 					
-	,"activity_id"		integer 
-	,"start_date"		date
-	,"end_date"		date
-	,"organization_id"	integer 	
-	,"taxonomy_ids"		integer[] 
-	,"classification_ids"	integer[] 
-	,"location_ids"		integer[] 
-	,CONSTRAINT organization_lookup_id PRIMARY KEY(organization_lookup_id)
-);
+-- taxonomy_lookup
+CREATE MATERIALIZED VIEW taxonomy_lookup AS
+(SELECT project_id, activity_id, location_id, organization_id, participation_id, start_date, end_date, x, y, georef, t.taxonomy_id, foo.classification_id
+FROM(SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
+FROM active_project_activities pa
+JOIN project_taxonomy pt
+ON pa.project_id = pt.project_id AND field ='project_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, at.classification_id
+FROM active_project_activities pa
+JOIN activity_taxonomy at
+ON pa.activity_id = at.activity_id AND field ='activity_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, lt.classification_id
+FROM active_project_activities pa
+JOIN location_taxonomy lt
+ON pa.location_id = lt.location_id AND field ='location_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, ot.classification_id 
+FROM active_project_activities pa
+JOIN organization_taxonomy ot
+ON pa.organization_id = ot.organization_id AND field ='organization_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
+FROM active_project_activities pa
+JOIN participation_taxonomy pt
+ON pa.participation_id = pt.participation_id AND field ='participation_id'
+) as foo
+JOIN classification c
+ON foo.classification_id = c.classification_id
+JOIN taxonomy t
+ON c.taxonomy_id = t.taxonomy_id);
+
+-- location_lookup
+CREATE MATERIALIZED VIEW location_lookup AS
+(SELECT project_id, activity_id, location_id, start_date, end_date, x, y, georef, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 1 LIMIT 1) as gaul0_name,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 2 LIMIT 1) as gaul1_name,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 3 LIMIT 1) as gaul2_name
+FROM taxonomy_lookup
+GROUP BY project_id, activity_id, location_id, start_date, end_date, x, y, georef);
+
+-- organization_lookup
+CREATE MATERIALIZED VIEW organization_lookup AS
+(SELECT project_id, activity_id, organization_id, start_date, end_date, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct location_id) as location_ids
+FROM taxonomy_lookup
+GROUP BY project_id, activity_id, organization_id, start_date, end_date);
 
 -- function to support the taxonomy_lookup table
 CREATE OR REPLACE FUNCTION refresh_taxonomy_lookup() RETURNS integer AS $$
 BEGIN
-    RAISE NOTICE 'Refreshing taxonomy_lookup...';
-
-        EXECUTE 'TRUNCATE TABLE taxonomy_lookup';
-        EXECUTE 'INSERT INTO taxonomy_lookup(project_id, activity_id, location_id, organization_id, participation_id, start_date, end_date, x, y, georef, taxonomy_id, classification_id) '
-                || 'SELECT project_id, activity_id, location_id, organization_id, participation_id, activity_start, activity_end, x, y, georef, t.taxonomy_id, foo.classification_id ' 
-		|| 'FROM(SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start, pa.activity_end, pa.x, pa.y, pa.georef, et.classification_id '
-		|| 'FROM active_project_activities pa '
-		|| 'JOIN entity_taxonomy et '
-		|| 'ON pa.project_id = et.id AND field = ''project_id'' '
-		|| 'UNION '
-		|| 'SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start, pa.activity_end, pa.x, pa.y, pa.georef, et.classification_id '
-		|| 'FROM active_project_activities pa '
-		|| 'JOIN entity_taxonomy et '
-		|| 'ON pa.activity_id = et.id AND field = ''activity_id'' '
-		|| 'UNION '
-		|| 'SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start, pa.activity_end, pa.x, pa.y, pa.georef, et.classification_id '
-		|| 'FROM active_project_activities pa '
-		|| 'JOIN entity_taxonomy et '
-		|| 'ON pa.location_id = et.id AND field = ''location_id'' '
-		|| 'UNION '
-		|| 'SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start, pa.activity_end, pa.x, pa.y, pa.georef, et.classification_id ' 
-		|| 'FROM active_project_activities pa '
-		|| 'JOIN entity_taxonomy et '
-		|| 'ON pa.organization_id = et.id AND field = ''organization_id'' '
-		|| 'UNION '
-		|| 'SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start, pa.activity_end, pa.x, pa.y, pa.georef, et.classification_id '
-		|| 'FROM active_project_activities pa '
-		|| 'JOIN entity_taxonomy et '
-		|| 'ON pa.participation_id = et.id AND field = ''participation_id'' '
-		|| ') as foo '
-		|| 'JOIN classification c '
-		|| 'ON foo.classification_id = c.classification_id '
-		|| 'JOIN taxonomy t '
-		|| 'ON c.taxonomy_id = t.taxonomy_id ';
-
-    	EXECUTE 'TRUNCATE TABLE location_lookup';	
-
-    	EXECUTE 'INSERT INTO location_lookup(project_id, activity_id, location_id, start_date, end_date, x, y, georef, taxonomy_ids, classification_ids, organization_ids) ' ||
-		'SELECT project_id, activity_id, location_id, start_date, end_date, x, y, georef, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids ' ||
-		'FROM taxonomy_lookup ' ||
-		'GROUP BY project_id, activity_id, location_id, start_date, end_date, x, y, georef';
-
-	EXECUTE 'UPDATE location_lookup SET gaul0_name = lbf.name FROM location_boundary_features lbf WHERE location_lookup.location_id = lbf.location_id AND lbf.boundary_id = 1;';
-	EXECUTE 'UPDATE location_lookup SET gaul1_name = lbf.name FROM location_boundary_features lbf WHERE location_lookup.location_id = lbf.location_id AND lbf.boundary_id = 2;';
-	EXECUTE 'UPDATE location_lookup SET gaul2_name = lbf.name FROM location_boundary_features lbf WHERE location_lookup.location_id = lbf.location_id AND lbf.boundary_id = 3;';
-
-	EXECUTE 'TRUNCATE TABLE organization_lookup';
-
-	EXECUTE 'INSERT INTO organization_lookup(project_id, activity_id, organization_id, start_date, end_date, taxonomy_ids,classification_ids,location_ids) ' ||
-		'SELECT project_id, activity_id, organization_id, start_date, end_date, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct location_id) as location_ids ' ||
-		'FROM taxonomy_lookup  ' ||
-		'GROUP BY project_id, activity_id, organization_id, start_date, end_date';
-
-	
-    RAISE NOTICE 'Done refreshing taxonomy_lookup.';
+    RAISE NOTICE 'Refreshing lookup views...';
+    REFRESH MATERIALIZED VIEW taxonomy_lookup;
+    REFRESH MATERIALIZED VIEW location_lookup;  
+    REFRESH MATERIALIZED VIEW organization_lookup;
+    RAISE NOTICE 'Done refreshing lookup views.';
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 -- SELECT refresh_taxonomy_lookup();
+
+-- taxonomy_classifications
+CREATE MATERIALIZED VIEW taxonomy_classifications AS
+(SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, c.classification_id, c.name as classification, c.category_id as classification_category_id, c.iati_code, c.iati_name
+FROM taxonomy t
+JOIN classification c
+ON t.taxonomy_id = c.taxonomy_id
+WHERE t.active = true and c.active = true
+ORDER BY t.taxonomy_id, c.classification_id);
 /*****************************************************************
 TRIGGERS -- is procedural code that is automatically executed in 
 response to certain events on a particular table or view. Possible 
@@ -1607,18 +1606,22 @@ CREATE TYPE pmt_data_groups_result_type AS (c_id integer, name text);
 CREATE TYPE pmt_infobox_result_type AS (response json);
 CREATE TYPE pmt_locations_by_org_result_type AS (l_id integer, x integer, y integer, r_ids text);
 CREATE TYPE pmt_locations_by_tax_result_type AS (l_id integer, x integer, y integer, r_ids text);
-CREATE TYPE pmt_filter_locations_result AS (l_id integer, g_id character varying(20),  r_ids text); 
+CREATE TYPE pmt_filter_locations_result AS (l_id integer, r_ids text);
 CREATE TYPE pmt_filter_projects_result AS (p_id integer, a_ids text);  
-CREATE TYPE pmt_filter_orgs_result AS (l_id integer, g_id character varying(20),  r_ids text); 
+CREATE TYPE pmt_filter_orgs_result AS (l_id integer, r_ids text); 
 CREATE TYPE pmt_org_inuse_result_type AS (response json);
 CREATE TYPE pmt_project_listview_result AS (response json);
 CREATE TYPE pmt_stat_counts_result AS (response json);
+CREATE TYPE pmt_stat_activity_by_district_result AS (response json);
 CREATE TYPE pmt_stat_activity_by_tax_result AS (response json);
 CREATE TYPE pmt_stat_locations_result AS (response json);
+CREATE TYPE pmt_stat_pop_by_district_result AS (response json);
 CREATE TYPE pmt_stat_project_by_tax_result AS (response json);
 CREATE TYPE pmt_stat_orgs_by_activity_result AS (response json);
+CREATE TYPE pmt_stat_orgs_by_district_result AS (response json);
 CREATE TYPE pmt_tax_inuse_result_type AS (response json);
 CREATE TYPE pmt_taxonomies_result_type AS (response json);
+CREATE TYPE pmt_user_auth_result_type AS (response json);
 CREATE TYPE pmt_users_result_type AS (response json);
 CREATE TYPE pmt_version_result_type AS (version text, last_update date, created date);
 
@@ -1644,22 +1647,24 @@ BEGIN
 	    SELECT row_to_json(j)
 	    FROM
 	    (			
-		SELECT a.activity_id AS a_id, coalesce(a.label, a.title) AS title, a.description AS desc,a.start_date, a.end_date, a.tags
+				SELECT a.activity_id AS a_id, coalesce(a.label, a.title) AS title, a.description AS desc,a.start_date, a.end_date, a.tags
 		, f.amount
 		-- taxonomy
 		,(
 			SELECT array_to_json(array_agg(row_to_json(t))) FROM (
-				SELECT tc.taxonomy, tc.classification
-				FROM taxonomy_lookup tl
+				SELECT DISTINCT tc.taxonomy, tc.classification,
+				(select name from organization where organization_id = ol.organization_id and tc.taxonomy = 'Organisation Role') as org
+				FROM organization_lookup ol
 				JOIN taxonomy_classifications  tc
-				ON tl.classification_id = tc.classification_id
-				WHERE tl.activity_id = a.activity_id
+				ON tc.classification_id = ANY(ARRAY[ol.classification_ids])		
+				WHERE ol.activity_id = a.activity_id
+				ORDER BY taxonomy
 				) t
-		) as taxonomy		
+		) as taxonomy				
 		-- locations
 		,(
 			SELECT array_to_json(array_agg(row_to_json(l))) FROM (
-				SELECT ll.location_id, gaul0_name, gaul1_name, gaul2_name, l.lat_dd as lat, l.long_dd as long
+				SELECT DISTINCT ll.location_id, gaul0_name, gaul1_name, gaul2_name, l.lat_dd as lat, l.long_dd as long
 				FROM location_lookup ll
 				LEFT JOIN location l
 				ON ll.location_id = l.location_id
@@ -1684,20 +1689,21 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_activity_listview
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_activity_listview(tax_id integer, classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-orderby text, limit_rec integer, offset_rec integer)
+CREATE OR REPLACE FUNCTION pmt_activity_listview(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
+start_date date, end_date date, report_taxonomy_ids character varying, orderby text, limit_rec integer, offset_rec integer)
 RETURNS SETOF pmt_activity_listview_result AS 
 $$
-DECLARE
-  valid_taxonomy_id boolean;
-  report_by_category boolean; 
-  report_taxonomy_id integer;
+DECLARE  
   filter_classids integer array;
   filter_orgids integer array;
   include_taxids integer array;  
+  reporting_taxids integer array;
   rec record;  
   dynamic_where1 text array;
   dynamic_where2 text;
+  dynamic_join text;
+  dynamic_select text;
+  join_ct integer;
   built_where text array; 
   execute_statement text;
   count_statement text;
@@ -1706,33 +1712,11 @@ DECLARE
   i integer;
 BEGIN
 
--- validate and process taxonomy_id parameter
-SELECT INTO valid_taxonomy_id * FROM pmt_validate_taxonomy($1); 
-
--- Must have valid taxonomy_id parameter to continue
-IF NOT valid_taxonomy_id THEN
-  RAISE NOTICE '   + A taxonomy is required.';
--- Has a valid taxonomy_id parameter 
-ELSE
-  report_taxonomy_id := $1;
-  -- is this taxonomy a category?
-  SELECT INTO report_by_category is_category FROM taxonomy WHERE taxonomy_id = (report_taxonomy_id);      
-  -- yes, this is a category taxonomy
-  IF report_by_category THEN
-    -- what are the root taxonomy(ies) of the category taxonomy
-    SELECT INTO report_taxonomy_id * FROM pmt_category_root(report_taxonomy_id, null);		    
-    IF report_taxonomy_id IS NULL THEN
-      -- there is no root taxonomy
-      report_taxonomy_id := $1;
-      report_by_category := false;
-    END IF;
-  END IF;
-
     -- filter by classification ids
-    IF ($2 is not null AND $2 <> '') THEN
-      RAISE NOTICE '   + The classification filter is: %.', string_to_array($2, ',')::int[];
+    IF ($1 is not null AND $1 <> '') THEN
+      RAISE NOTICE '   + The classification filter is: %.', string_to_array($1, ',')::int[];
 
-	SELECT INTO filter_classids * FROM pmt_validate_classifications($2);
+	SELECT INTO filter_classids * FROM pmt_validate_classifications($1);
 
 	IF filter_classids IS NOT NULL THEN
 	  -- Loop through each taxonomy classification group to contruct the where statement 
@@ -1751,16 +1735,16 @@ ELSE
     END IF;
    
     -- filter by organization ids
-    IF ($3 is not null AND $3 <> '') THEN
-      RAISE NOTICE '   + The organization filter is: %.', string_to_array($3, ',')::int[];
+    IF ($2 is not null AND $2 <> '') THEN
+      RAISE NOTICE '   + The organization filter is: %.', string_to_array($2, ',')::int[];
 
       -- Create an int array from organization ids list
-	filter_orgids := string_to_array($3, ',')::int[];
+	filter_orgids := string_to_array($2, ',')::int[];
 
       -- Loop through the organization_ids and construct the where statement
 	built_where := null;
 	FOREACH i IN ARRAY filter_orgids LOOP
-		built_where :=  array_append(built_where, 'organization_ids @> ARRAY['|| i ||']');
+		built_where :=  array_append(built_where, 't1.organization_id = '|| i );
 	END LOOP;
 	-- Add the complied org statements to the where
 	dynamic_where1 := array_append(dynamic_where1, '(' || array_to_string(built_where, ' OR ') || ')');
@@ -1768,11 +1752,11 @@ ELSE
    END IF;
 
     -- include values with unassigned taxonomy(ies)
-    IF ($4 is not null AND $4 <> '') THEN
-      RAISE NOTICE '   + The include unassigned is: %.', string_to_array($4, ',')::int[];
+    IF ($3 is not null AND $3 <> '') THEN
+      RAISE NOTICE '   + The include unassigned is: %.', string_to_array($3, ',')::int[];
 
       -- Create an int array from unassigned ids list
-      include_taxids := string_to_array($4, ',')::int[];				
+      include_taxids := string_to_array($3, ',')::int[];				
 
       -- Loop through the organization_ids and construct the where statement
       built_where := null;
@@ -1783,48 +1767,87 @@ ELSE
       dynamic_where2 := '(' || array_to_string(built_where, ' OR ') || ')';
 	
     END IF;
-   
+    
+    -- filter by date range
+    IF ($4 is not null AND $5 is not null) THEN
+	dynamic_where1 := array_append(dynamic_where1, '(t1.start_date > ''' || $4 || ''' AND t1.end_date < ''' || $5 || ''')');
+    END IF;	
+
+    -- -- report by taxonomy(ies)
+    IF $7 IS NOT NULL AND $7 <> '' THEN      
+      -- validate taxonomy ids
+      SELECT INTO reporting_taxids * FROM pmt_validate_taxonomies($6);
+
+      join_ct := 1;
+
+      IF reporting_taxids IS NOT NULL THEN
+        -- Loop through the reporting taxonomy_ids and construct the join statements      
+        FOREACH i IN ARRAY reporting_taxids LOOP
+          -- prepare join statements
+	  IF dynamic_join IS NOT NULL THEN
+            dynamic_join := dynamic_join || ' LEFT JOIN (SELECT  ot.activity_id, array_to_string(array_agg(DISTINCT tc.classification), '','') as classes ' ||
+					'FROM organization_lookup ot  JOIN taxonomy_classifications tc ON tc.classification_id = ANY(ot.classification_ids) ' ||
+					'WHERE taxonomy_id = ' || i || ' GROUP BY ot.activity_id ) tax' || join_ct || ' ON tax' || join_ct || '.activity_id = filter.activity_id';
+          ELSE
+            dynamic_join := ' LEFT JOIN (SELECT  ot.activity_id, array_to_string(array_agg(DISTINCT tc.classification), '','') as classes ' ||
+					'FROM organization_lookup ot  JOIN taxonomy_classifications tc ON tc.classification_id = ANY(ot.classification_ids) ' ||
+					'WHERE taxonomy_id = ' || i || ' GROUP BY ot.activity_id ) tax' || join_ct || ' ON tax' || join_ct || '.activity_id = filter.activity_id';
+          END IF;
+          -- prepare select statements
+          IF dynamic_select IS NOT NULL THEN
+            dynamic_select := dynamic_select || ', tax' || join_ct || '.classes as tax' || join_ct || ' ';
+          ELSE
+            dynamic_select := ', tax' || join_ct || '.classes as tax' || join_ct || ' ';
+          END IF;
+          join_ct := join_ct + 1;
+        END LOOP;			
+      END IF;
+    END IF;
+    
     -- create dynamic paging statment
-    IF $5 IS NOT NULL AND $5 <> '' THEN
+    IF $7 IS NOT NULL AND $7 <> '' THEN      
       IF paging_statement IS NOT NULL THEN
-        paging_statement := paging_statement || 'ORDER BY ' || $5 || ' ';
+        paging_statement := paging_statement || 'ORDER BY ' || $7 || ' ';
       ELSE
-        paging_statement := ' ORDER BY ' || $5 || ' ';
+        paging_statement := ' ORDER BY ' || $7 || ' ';
       END IF;
     END IF;		    
-    IF $6 IS NOT NULL AND $6 > 0 THEN
+    IF $8 IS NOT NULL AND $8 > 0 THEN
       IF paging_statement IS NOT NULL THEN
-        paging_statement := paging_statement || 'LIMIT ' || $6 || ' ';
+        paging_statement := paging_statement || 'LIMIT ' || $8 || ' ';
       ELSE
-        paging_statement := ' LIMIT ' || $6 || ' ';
+        paging_statement := ' LIMIT ' || $8 || ' ';
       END IF;
     END IF;		
-    IF $7 IS NOT NULL AND $7 > 0 THEN
+    IF $9 IS NOT NULL AND $9 > 0 THEN
       IF paging_statement IS NOT NULL THEN
-        paging_statement := paging_statement || 'OFFSET ' || $7 || ' ';
+        paging_statement := paging_statement || 'OFFSET ' || $9 || ' ';
       ELSE
-        paging_statement := ' OFFSET ' || $7 || ' ';
+        paging_statement := ' OFFSET ' || $9 || ' ';
       END IF;      
     END IF;		
 
-    -- prepare statement				
-    RAISE NOTICE '   + The reporting taxonomy is: %', $1;
-    RAISE NOTICE '   + The base taxonomy is: % ', report_taxonomy_id;												
+    -- prepare statement																
     RAISE NOTICE '   + First where statement: %', array_to_string(dynamic_where1, ' AND ');
     RAISE NOTICE '   + Second where statement: %', dynamic_where2;
+    RAISE NOTICE '   + The join statement: %', dynamic_join;
+    RAISE NOTICE '   + The select statement: %', dynamic_select;
     RAISE NOTICE '   + The paging statement: %', paging_statement;
 		
     -- prepare statement for the selection
-    execute_statement := 'SELECT filter.activity_id AS a_id, filter.title AS a_name, filter.description AS a_desc, filter.start_date as a_date1, f.amount, filter.name as o_name, l.gaul, report_by.name as r_name   ' ||
-			'FROM ( SELECT t1.activity_id, a.title, a.description, a.start_date, t1.organization_id, o.name FROM  ' ||
-			-- filter 
+    execute_statement := 'SELECT filter.activity_id AS a_id, filter.title AS a_name, f_orgs.orgs as f_orgs, i_orgs.orgs as i_orgs ';
+
+    IF dynamic_select IS NOT NULL THEN
+      execute_statement := execute_statement || dynamic_select;
+    END IF;
+
+    execute_statement := execute_statement ||			
+			-- filter
+			'FROM ( SELECT DISTINCT t1.activity_id, a.title FROM  ' ||			
 			'(SELECT * FROM organization_lookup ) as t1 ' ||
-			-- activity
-			'JOIN (SELECT activity_id, title, description, start_date, end_date from activity) as a ' ||
-			'ON t1.activity_id = a.activity_id ' ||
-			-- organization
-			'JOIN (SELECT organization_id, name from organization) as o ' ||
-			'ON t1.organization_id = o.organization_id ';			
+				-- activity
+			'JOIN (SELECT activity_id, title from activity) as a ' ||
+			'ON t1.activity_id = a.activity_id ';			
 			
     -- append where statements			
     IF dynamic_where1 IS NOT NULL THEN          
@@ -1837,32 +1860,23 @@ ELSE
       IF dynamic_where2 IS NOT NULL THEN
         execute_statement := execute_statement || ' WHERE ' || dynamic_where2 || ' ';                       
       END IF;
-    END IF;	
+    END IF;		
 
-    IF report_by_category THEN
-      execute_statement := execute_statement || ') as filter ' ||
-			-- report by
-			'LEFT JOIN (SELECT DISTINCT tl.activity_id, cc.name FROM taxonomy_lookup tl ' ||
-			'JOIN classification c ON tl.classification_id = c.classification_id ' ||
-			'JOIN classification cc ON c.category_id = cc.classification_id ' ||
-			-- dynamic where
-			'WHERE tl.taxonomy_id = ' || report_taxonomy_id ||') as report_by ' ||			
-			'ON filter.activity_id = report_by.activity_id ' ||
-			'GROUP BY filter.activity_id, filter.title, filter.organization_id, filter.name ';
-    ELSE
-      execute_statement := execute_statement || ') as filter ' ||
-			-- report by
-			'LEFT JOIN (SELECT DISTINCT tl.activity_id, array_to_string(array_agg(distinct c.name), '','') as name FROM taxonomy_lookup tl ' ||
-			'JOIN classification c ON tl.classification_id = c.classification_id ' ||
-			-- dynamic where
-			'WHERE tl.taxonomy_id = ' || report_taxonomy_id ||' GROUP BY tl.activity_id ) as report_by ' ||			
-			'ON filter.activity_id = report_by.activity_id ';
-    END IF;	
-
-    execute_statement := execute_statement || 'LEFT JOIN (SELECT activity_id, array_to_string(array_agg(gaul0_name || '', '' || gaul1_name), ''; '') as gaul FROM location_lookup GROUP BY activity_id) as l ' ||
-			'ON filter.activity_id = l.activity_id ' ||
-			'LEFT JOIN (SELECT activity_id, sum(amount) as amount FROM financial GROUP BY activity_id) as f ' ||
-			'ON filter.activity_id = f.activity_id'; 			
+    execute_statement := execute_statement || ') as filter ' ||
+			-- organiztions (funding)
+			'LEFT JOIN (SELECT ot.activity_id, array_to_string(array_agg(DISTINCT o.name), '','') as orgs ' ||
+			'FROM organization_lookup ot JOIN taxonomy_classifications tc ON tc.classification_id = ANY(ot.classification_ids) ' ||
+			'JOIN organization o ON ot.organization_id = o.organization_id WHERE taxonomy = ''Organisation Role'' AND classification = ''Funding'' ' ||
+			'GROUP BY ot.activity_id ) f_orgs ON f_orgs.activity_id = filter.activity_id ' ||
+			-- organiztions (implementing); 	
+			'LEFT JOIN (SELECT ot.activity_id, array_to_string(array_agg(DISTINCT o.name), '','') as orgs ' ||
+			'FROM organization_lookup ot JOIN taxonomy_classifications tc ON tc.classification_id = ANY(ot.classification_ids) ' ||
+			'JOIN organization o ON ot.organization_id = o.organization_id WHERE taxonomy = ''Organisation Role'' AND classification = ''Implementing'' '||
+			'GROUP BY ot.activity_id) i_orgs ON i_orgs.activity_id = filter.activity_id ';
+    		
+     IF dynamic_join IS NOT NULL THEN
+      execute_statement := execute_statement || dynamic_join;
+    END IF;
     
     -- if there is a paging request then add it
     IF paging_statement IS NOT NULL THEN 
@@ -1876,13 +1890,11 @@ ELSE
 	RETURN NEXT rec;
     END LOOP;	
 
-END IF; -- Must have valid taxonomy_id parameter to continue
-
 END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_activity_listview_ct
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_activity_listview_ct(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying)
+CREATE OR REPLACE FUNCTION pmt_activity_listview_ct(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, start_date date, end_date date)
 RETURNS INT AS 
 $$
 DECLARE
@@ -1959,7 +1971,12 @@ BEGIN
       dynamic_where2 := '(' || array_to_string(built_where, ' OR ') || ')';
 	
     END IF;
-   
+
+     -- filter by date range
+    IF ($4 is not null AND $5 is not null) THEN
+	dynamic_where1 := array_append(dynamic_where1, '(start_date > ''' || $4 || ''' AND end_date < ''' || $5 || ''')');
+    END IF;
+    
     -- prepare statement																
     RAISE NOTICE '   + First where statement: %', array_to_string(dynamic_where1, ' AND ');
     RAISE NOTICE '   + Second where statement: %', dynamic_where2;
@@ -1967,8 +1984,8 @@ BEGIN
     -- prepare the statement for the record count (can be leaner for faster exectution)
     count_statement := 'SELECT COUNT(DISTINCT a_id) FROM(SELECT DISTINCT filter.activity_id AS a_id, filter.organization_id as o_id ' ||
 			'FROM (SELECT t1.activity_id, t1.organization_id FROM ' ||
-			'(SELECT activity_id, organization_id, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids ' ||
-			'FROM taxonomy_lookup GROUP BY activity_id, organization_id ) as t1 ';			
+			'(SELECT activity_id, organization_id, start_date, end_date, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids ' ||
+			'FROM taxonomy_lookup GROUP BY activity_id, organization_id, start_date, end_date ) as t1 ';			
    
     -- append where statements			
     IF dynamic_where1 IS NOT NULL THEN          
@@ -1991,7 +2008,6 @@ BEGIN
     RETURN record_count;
 
 END;$$ LANGUAGE plpgsql;
-
 /******************************************************************
   pmt_auto_complete
 ******************************************************************/
@@ -2773,7 +2789,7 @@ BEGIN
 		   RAISE NOTICE '   + Second where statement: %', array_to_string(dynamic_where2, ' AND ');
 		   RAISE NOTICE '   + Forth where statement: %', dynamic_where4;
 
-		   execute_statement := 'SELECT t2.location_id as l_id, t2.georef as g_id, array_to_string(array_agg(DISTINCT report_by.classification_id), '','') as cl_id ' ||
+		   execute_statement := 'SELECT t2.location_id as l_id, array_to_string(array_agg(DISTINCT report_by.classification_id), '','') as cl_id ' ||
 				'FROM( ' ||
 				'SELECT location_id, georef, classification_ids FROM location_lookup ';
 				
@@ -3011,7 +3027,7 @@ BEGIN
   RAISE NOTICE '   + Where2 statement: %', dynamic_where2;
   
   -- prepare statement
-  execute_statement := 'SELECT t1.location_id as l_id, t1.georef as g_id, array_to_string(t1.organization_ids, '','') as r_id  ' ||
+  execute_statement := 'SELECT t1.location_id as l_id, array_to_string(t1.organization_ids, '','') as r_id  ' ||
 			'FROM ( SELECT DISTINCT location_id, georef, start_date, end_date, array_agg(DISTINCT taxonomy_id) as taxonomy_ids, ' || 
 			'array_agg(DISTINCT classification_id) as classification_ids, array_agg(DISTINCT organization_id) as organization_ids ' ||
 			'FROM taxonomy_lookup GROUP BY location_id, georef, start_date, end_date ) AS t1  ';
@@ -3074,17 +3090,16 @@ BEGIN
   
   -- prepare statement
   execute_statement := 'select row_to_json(j) from ( select org_order.organization_id as o_id, o.name ' ||
-			'from ( select organization_id, count(distinct location_id) as location_count ' ||
-			'from taxonomy_lookup '; 
+			'from ( select organization_id, count(distinct activity_id) as a_ct ' ||
+			'from organization_lookup '; 
   IF dynamic_where1 IS NOT NULL THEN          
-    execute_statement := execute_statement || 'where location_id in (select location_id from (select location_id, array_agg(classification_id) as classification_ids from taxonomy_lookup group by location_id) as lookup ' ||
-			'where ' ||  array_to_string(dynamic_where1, ' AND ') || ') ';
+    execute_statement := execute_statement || 'where ' ||  array_to_string(dynamic_where1, ' AND ') ;
   END IF;
 
   execute_statement := execute_statement ||'group by organization_id ' ||
 			') as org_order ' ||				 
 			'join organization o on org_order.organization_id = o.organization_id ' || 
-			'order by org_order.location_count desc ) j';
+			'order by org_order.a_ct desc ) j';
   
   RAISE NOTICE 'Where: %', dynamic_where1;	
   RAISE NOTICE 'Execute: %', execute_statement;
@@ -4674,7 +4689,7 @@ ELSE
       -- Loop through the organization_ids and construct the where statement
 	built_where := null;
 	FOREACH i IN ARRAY filter_orgids LOOP
-		built_where :=  array_append(built_where, 'organization_ids @> ARRAY['|| i ||']');
+		built_where :=  array_append(built_where, 'organization_id = '|| i );
 	END LOOP;
 	-- Add the complied org statements to the where
 	dynamic_where1 := array_append(dynamic_where1, '(' || array_to_string(built_where, ' OR ') || ')');
@@ -5379,7 +5394,191 @@ EXCEPTION
      WHEN others THEN RETURN FALSE;  
 END; 
 $$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_user_auth
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_user_auth(username character varying(255), password character varying(255)) RETURNS 
+SETOF pmt_user_auth_result_type AS $$
+DECLARE 
+  valid_user_id integer;
+  rec record;
+BEGIN 
+  SELECT INTO valid_user_id "user".user_id FROM "user" WHERE "user".username = $1 AND "user".password = $2;
+  IF valid_user_id IS NOT NULL THEN
+    FOR rec IN (SELECT row_to_json(j) FROM( 
+	SELECT user_id, first_name, last_name, "user".username, email, "user".organization_id
+	, (SELECT name FROM organization WHERE organization_id = "user".organization_id) as organization, "user".data_group_id
+	, (SELECT classification FROM taxonomy_classifications WHERE classification_id = "user".data_group_id) as data_group,(
+	SELECT array_to_json(array_agg(row_to_json(r))) FROM ( SELECT r.role_id, r.name FROM role r 
+	JOIN user_role ur ON r.role_id = ur.role_id WHERE ur.user_id = "user".user_id) r ) as roles 
+	FROM "user" WHERE "user".user_id = valid_user_id
+      ) j ) LOOP		
+        RETURN NEXT rec;
+    END LOOP;			  
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM( SELECT 'Invalid username or password.' AS message ) j ) LOOP		
+        RETURN NEXT rec;
+    END LOOP;	
+  END IF;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_user_salt
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_user_salt(id integer) RETURNS text AS $$
+DECLARE 
+  salt text;
+BEGIN 
+  SELECT INTO salt substring(password from 1 for 29) from "user" where user_id = $1;
+  RETURN salt;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_stat_orgs_by_district
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_stat_orgs_by_district(data_group_id integer, country character varying, region character varying, org_role_id integer, top_limit integer)
+RETURNS SETOF pmt_stat_orgs_by_district_result AS 
+$$
+DECLARE
+  limit_by integer;
+  org_c_id integer;
+  valid_data_group_id integer;
+  execute_statement text;
+  rec record;
+BEGIN
+-- country & region is required
+IF ($2 IS NOT NULL AND $2 <> '') AND ($3 IS NOT NULL AND $3 <> '') THEN
 
+   -- validate data group id
+   IF $1 IS NOT NULL THEN
+	SELECT INTO valid_data_group_id classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' AND classification_id = $1;
+   END IF;
+   
+   -- set default organization role classification to 'Accountable'  
+   IF $4 IS NULL THEN
+     org_c_id := (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role' and classification = 'Accountable');
+   -- validate classification_id
+   ELSE
+     select into org_c_id classification_id from taxonomy_classifications where taxonomy = 'Organisation Role' and classification_id = $4;
+     IF org_c_id IS NULL THEN
+       org_c_id := (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role' and classification = 'Accountable');
+     END IF;
+   END IF;
+
+   -- set default limit to 3
+   IF $5 IS NULL OR $5 < 1 THEN
+     limit_by := 3;
+   ELSE
+     limit_by := $5;
+   END IF;
+   
+   execute_statement :=  'select row_to_json(j) from (select gaul1_name as region, name as district,(SELECT array_to_json(array_agg(row_to_json(b))) FROM ( ' ||
+				'select ol.organization_id as o_id, o.name, count(l.activity_id) as a_ct ' ||
+				'from organization_lookup ol ' ||
+				'join ' ||
+				'(select distinct activity_id, gaul1_name, gaul2_name  ' ||
+				'from location_lookup where lower(gaul1_name) = trim(lower('|| quote_literal($3) ||')) and lower(gaul0_name) = trim(lower('|| quote_literal($2) ||'))';
+
+  IF valid_data_group_id IS NOT NULL THEN
+    execute_statement :=  execute_statement || ' AND classification_ids @> ARRAY[' || valid_data_group_id || '] ';
+  END IF;
+
+  execute_statement :=  execute_statement || ') as l ' ||
+				'on ol.activity_id = l.activity_id ' ||
+				'join organization o ' ||
+				'on ol.organization_id = o.organization_id ' ||
+				'where ol.classification_ids @> ARRAY[' || org_c_id || '] ' ||
+				'and l.gaul2_name = g.name ' ||
+				'group by ol.organization_id, o.name ' ||
+				'order by a_ct desc ' ||
+				'limit ' || limit_by ||
+				') b) as orgs  ' ||
+			'from gaul2 g ' ||
+			'where lower(gaul1_name) = trim(lower('|| quote_literal($3) ||')) and lower(gaul0_name) = trim(lower('|| quote_literal($2) ||')) order by name) j';
+
+   RAISE NOTICE 'Execute statement: %', execute_statement;
+   FOR rec IN EXECUTE execute_statement LOOP
+     RETURN NEXT rec; 
+   END LOOP;   
+END IF;   
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_stat_activity_by_district
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_stat_activity_by_district(data_group_id integer, country character varying, region character varying, activity_taxonomy_id integer)
+RETURNS SETOF pmt_stat_activity_by_district_result AS 
+$$
+DECLARE
+  valid_data_group_id integer;
+  is_valid_taxonomy boolean;
+  execute_statement text;
+  rec record;
+BEGIN
+-- country, region and activity_taxonomy_id are required
+IF ($2 IS NOT NULL AND $2 <> '') AND ($3 IS NOT NULL AND $3 <> '') AND ($4 IS NOT NULL) THEN
+   -- validate data group id
+   IF $1 IS NOT NULL THEN
+	SELECT INTO valid_data_group_id classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' AND classification_id = $1;
+   END IF;
+  -- validate taxonomy id
+  select into is_valid_taxonomy * from pmt_validate_taxonomy($4);
+  -- must have valid taxonomy id
+  IF is_valid_taxonomy THEN	
+
+    execute_statement :=  'select row_to_json(j) from (select gaul1_name as region, name as district,(SELECT array_to_json(array_agg(row_to_json(b))) FROM ( ' ||
+				'select tl.classification_id as c_id, c.name, count(distinct tl.activity_id) as a_ct ' ||
+				'from taxonomy_lookup tl ' ||
+				'join ' ||
+				'(select distinct activity_id, gaul1_name, gaul2_name  ' ||
+				'from location_lookup where lower(gaul1_name) = trim(lower('|| quote_literal($3) ||')) and lower(gaul0_name) = trim(lower('|| quote_literal($2) ||')) ';
+
+  IF valid_data_group_id IS NOT NULL THEN
+    execute_statement :=  execute_statement || ' AND classification_ids @> ARRAY[' || valid_data_group_id || '] ';
+  END IF;
+
+  execute_statement :=  execute_statement || ') as l ' ||
+				'on tl.activity_id = l.activity_id ' ||
+				'join classification c ' ||
+				'on tl.classification_id = c.classification_id ' ||
+				'where tl.taxonomy_id = ' || $4 ||
+				'and l.gaul2_name = g.name ' ||
+				'group by tl.classification_id, c.name ' ||
+				'order by a_ct desc ' ||
+				') b) as activities   ' ||
+			'from gaul2 g ' ||
+			'where lower(gaul1_name) = trim(lower('|| quote_literal($3) ||')) and lower(gaul0_name) = trim(lower('|| quote_literal($2) ||')) order by name) j';
+
+     RAISE NOTICE 'Execute statement: %', execute_statement;
+     FOR rec IN EXECUTE execute_statement LOOP
+       RETURN NEXT rec; 
+     END LOOP;   
+   END IF;
+END IF;   
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_stat_pop_by_district
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_stat_pop_by_district(country character varying, region character varying)
+RETURNS SETOF pmt_stat_pop_by_district_result AS 
+$$
+DECLARE
+  valid_data_group_id integer;
+  execute_statement text;
+  rec record;
+BEGIN
+-- country & region are required
+IF ($1 IS NOT NULL AND $1 <> '') AND ($2 IS NOT NULL AND $2 <> '') THEN
+   
+   execute_statement :=  'select row_to_json(j) from (select gaul1_name as region, name as district, pop_total, pop_poverty, pop_rural, pop_poverty_rural, pop_source ' ||
+				'from gaul2 ' ||
+				'where lower(gaul0_name) = trim(lower('|| quote_literal($1) ||')) and lower(gaul1_name) = trim(lower('|| quote_literal($2) ||')) order by name) j';
+
+   RAISE NOTICE 'Execute statement: %', execute_statement;
+   FOR rec IN EXECUTE execute_statement LOOP
+     RETURN NEXT rec; 
+   END LOOP;   
+END IF;   
+END;$$ LANGUAGE plpgsql;
 /*****************************************************************
 VIEWS -- under development and not final. Currently for the 
 purpose checking validitiy of data migration.
@@ -5423,14 +5622,6 @@ ORDER BY project_id, activity_id, location_id, organization_id;
 -------------------------------------------------------------------
 -- taxonomy
 -------------------------------------------------------------------
--- available taxonomy
-CREATE OR REPLACE VIEW taxonomy_classifications
-AS SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, c.classification_id, c.name as classification, c.category_id as classification_category_id, c.iati_code, c.iati_name
-FROM taxonomy t
-JOIN classification c
-ON t.taxonomy_id = c.taxonomy_id
-WHERE t.active = true and c.active = true
-ORDER BY t.taxonomy_id, c.classification_id;
 -- project taxonomy
 CREATE OR REPLACE VIEW project_taxonomies
 AS SELECT p.project_id, p.title as project_title, t.name as taxonomy, c.name as classification

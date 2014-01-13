@@ -72,15 +72,25 @@
 
 [pmt\_tax\_inuse](#tax_inuse)
 
-[pmt\_stat\_counts](#stat_counts)
-
-[pmt\_stat\_project\_by\_tax](#stat_project_by_tax)
+[pmt\_stat\_activity\_by\_district](#stat_activity_by_district)
 
 [pmt\_stat\_activity\_by\_tax](#stat_activity_by_tax)
 
+[pmt\_stat\_counts](#stat_counts)
+
 [pmt\_stat\_orgs\_by\_activity](#stat_orgs_by_activity)
 
+[pmt\_stat\_orgs\_by\_district](#stat_orgs_by_district)
+
+[pmt\_stat\_pop\_by\_district](#stat_pop_by_district)
+
+[pmt\_stat\_project\_by\_tax](#stat_project_by_tax)
+
 [pmt\_update\_user](#update_user)
+
+[pmt\_user\_auth](#user_auth)
+
+[pmt\_user\_salt](#user_salt)
 
 [pmt\_users](#users)
 
@@ -128,72 +138,6 @@ Filter activities by classification reporting by a specified taxonomy.
 |...|...|...|
 
 
-<a name="activity_listview"/>
-pmt\_activity\_listview
-=======================
-
-##### Description
-
-Filter activity and organization by classification, organization and
-date range, reporting a specified taxonomy with pagination.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    activities.
-2.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-3.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-4.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-5.  orderby (text) – Optional. Order by result columns.
-6.  limit\_rec (integer) – Optional. Maximum number of returned records.
-7.  offset\_rec (integer) – Optional. Number of records to offset the
-    return records by.
-
-##### Result
-
-Json with the following:
-
-1.  a\_id (integer) – activity\_id.
-2.  a\_name (character varying) – title of activity.
-3.  a\_desc (character varying) – description of activity.
-4.  a\_date1 (date) – start date of activity.
-5.  o\_id (integer) – organization\_id.
-6.  o\_name (character varying) – name of organization.
-7.  r\_name (character varying) – classification name of classification
-    related to activity from the taxonomy specified in tax\_id.
-
-##### Example(s)
-
--   Activity & Organization by Sector (taxonomy\_id:15) in Nepal
-    (classification\_id:771) and organization participant is Funding
-    (classification\_id:496).  Order the data by activity title
-    (a\_name). Limit the number of rows returned to 10 with an offset of
-    100:
-
-```SELECT * FROM  pmt_activity_listview(15, '771,496', '', '','a_name', 10, 100);```
-
-```
-{        
-
-    "a_id":16664,
-
-    "a_name":"Action for Social Inclusion of Children Affected by Armed Conflict in Nepal (ASIC)",
-
-    "a_desc":"Children and families affected by Armed conflict got support",
-
-    "a_date1":"2010-01-01",
-
-    "o_id":389,
-
-    "o_name":"European Union",
-
-    "r_name":"Servicios sociales o de bienestar"
-
-}
-```
 <a name="activity_details"/>
 pmt\_activity\_details
 =======================
@@ -217,42 +161,155 @@ Json with the following:
 4.  end\_date (date) – end date of activity.
 5.  tags (character varying) – tags of activity.
 6.  amount (integer) - total amount of activity.
-7.  taxonomy (object) – object containing taxonomy/classification for all related taxonomies.
+7.  taxonomy (object) – object containing taxonomy/classification for all related taxonomies
+	1. taxonomy (character varying) – name of taxonomy
+	2. classification (character varying) – name of classifcation
+	3. org (character varying) – name of organization (provided only where taxonomy is *Organisation Role*)
 7.  locations (object) – object containing all related locations.
+	1. location_id (integer) - location_id of location
+	2. gaul0\_name (character varying) - name of GAUL 0 administrative boundary
+	3. gaul1\_name (character varying) - name of GAUL 1 administrative boundary
+	3. gaul2\_name (character varying) - name of GAUL 2 administrative boundary
+	3. lat (decimal degrees) - latitude of location
+	3. long (decimal degrees) - longitude of location
+##### Example(s)
+
+-   Activity_id 2039:
+
+```SELECT * FROM  pmt_activity_details(2039);```
+
+```
+{	"a_id":2039
+	,"title":"ASDP"
+	,"desc":"repair of hides and skin banda"
+	,"start_date":"2011-01-01"
+	,"end_date":"2012-12-31"
+	,"tags":null
+	,"amount":3500000.00
+	,"taxonomy":
+		[{	"taxonomy":"Country"
+			,"classification":"TANZANIA, UNITED REPUBLIC OF"
+			,"org":null
+		  }
+ 		 ,{	"taxonomy":"Data Group"
+			,"classification":"ASDP"
+			,"org":null
+		  }
+		 ,{	"taxonomy":"Category"
+			,"classification":"Post Harvest"
+			,"org":null
+		  }
+		 ,{	"taxonomy":"Organisation Role"
+			,"classification":"Implementing"
+			,"org":"LGAs"
+		  }
+		 ,{	"taxonomy":"Organisation Role"
+			,"classification":"Funding"
+			,"org":"DLDF (District Local Development Fund)"
+		  }
+		 ,{	"taxonomy":"Sector"
+			,"classification":"Plant and post-harvest protection and pest control"
+			,"org":null
+		  }
+		 ,{	"taxonomy":"Sector Category"
+			,"classification":"AGRICULTURE"
+			,"org":null
+		  }
+	 	 ,{	"taxonomy":"Sub-Category"
+			,"classification":"Commodity Value Chain"
+			,"org":null
+		  }]
+	,"locations":
+		  [{	"location_id":2039
+			,"gaul0_name":"United Republic of Tanzania"
+			,"gaul1_name":"Shinyanga"
+			,"gaul2_name":"Kahama"
+			,"lat":-3.950000
+			,"long":32.03333
+		  }]
+}
+```
+
+<a name="activity_listview"/>
+pmt\_activity\_listview
+=======================
+
+##### Description
+
+Filter activity and organization by classification, organization and
+date range, reporting a specified taxonomy(ies) with pagination.
+
+##### Parameter(s)
+
+1.  classification\_ids (character varying) – Optional. Restrict data to
+    classification(s).
+2.  organization\_ids (character varying) – Optional. Restrict data to
+    organization(s)
+3.  unassigned\_tax\_ids (character varying) – Optional. Include data
+    without assignments to specified taxonomy(ies).
+4.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+5.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
+6.  report\_taxonomy\_ids (character varying) – Optional. Report activities by one or 
+    more taxonomies.
+7.  orderby (text) – Optional. Order by result columns (a\_id, a\_name, f\_orgs, i\_orgs, tax1, tax2, etc.).
+8.  limit\_rec (integer) – Optional. Maximum number of returned records.
+9.  offset\_rec (integer) – Optional. Number of records to offset the
+    return records by.
+
+##### Result
+
+Json with the following:
+
+1.  a\_id (integer) – activity\_id.
+2.  a\_name (character varying) – title of activity.
+3.  f\_orgs (character varying) - comma seperated list of funding organizations.
+4.  i\_orgs (character varying) - comma seperated list of implementing organizations.
+5.  tax (character varying) - comma seperated list of classifications based on requested 
+    reporting taxonomy(ies). **Note:** report\_taxonomy\_ids accepts multiple taxonomy ids. The ids
+    are sorted by ascending order and returned as tax1, tax2, tax3, etc.
 
 ##### Example(s)
 
--   Activity_id 1234:
+-   Activities for Bolivia (classification\_id:769) between the dates of 1-1-1990 and 12-31-2014. Report
+    activities by Sector (taxonomy\_id:15) and include activities that do NOT have an assignement to Sector (taxonomy\_id:15).  
+    Order the data by activity title (a\_name). Limit the number of rows returned to 10 with an offset of
+    100:
 
-```SELECT * FROM  pmt_activity_details(1234);```
+```select * from  pmt_activity_listview('769', '', '15', null,null, '15', 'a_name', 10, 100);```
 
 ```
+...
 {
-	"a_id":1234,
-	"title":"SUPPLEMENTARY LOAN TO MONTEPUEZ - LICHINGA ROAD PROJECT",
-	"desc":null,
-	"start_date":"2010-05-30",
-	"end_date":"2014-12-31",
-	"tags":null,
-	"amount":57810000.00,
-	,"taxonomy":
-		[
-		{"taxonomy":"Data Group","classification":"AFDB"}
-		,{"taxonomy":"Sector","classification":"Transporte por carretera"}
-		,{"taxonomy":"Sector Category","classification":"TRANSPORT AND STORAGE"}
-		,{"taxonomy":"Organisation Role","classification":"Financiamiento"}
-		,{"taxonomy":"Country","classification":"MOZAMBIQUE"}
-		]
-	,"locations":
-		[
-		{"location_id":1234
-		,"gaul0_name":"Mozambique"	
-		,"gaul1_name":"Niassa"
-		,"gaul2_name":"Cidade de Lichinga"
-		,"lat":-13.312778
-		,"long":35.24055
-		}]
+	"a_id":5089
+	,"a_name":"AMPL. MEJ. SIST. AGUA POTABLE ANTOFAGASTA  (SAN CARLOS)"
+	,"f_orgs":"Donaciones - HIPC II"
+	,"i_orgs":"Fondo Nacional de InversiСn Productiva y Social"
+	,"tax1":"Water supply and sanitation - large systems"
 }
+...
+```
+
+-   Activities for ASDP (classification\_id:769). Report activities by Sector (taxonomy\_id:15) and by Country (taxonomy\_id:5) 
+    and include activities that do NOT have an assignement to Sector (taxonomy\_id:15).  
+    Order the data by Sector (tax2). Limit the number of rows returned to 10 no offset:  
+    **Note:** Sector is first in the parameter list, but is returned as tax2. This is because they are returned in numerical order 
+    and Country (taxonomy\_id 5) is before Sector (taxonomy\_id 15):
+
+```select * from  pmt_activity_listview('769', '', '15', null,null, '15,5', 'tax2', 10, null);;```
+
+```
+...
+{
+	"a_id":970
+	,"a_name":"ASDP"
+	,"f_orgs":"ACBG (Agriculture Capacity Building Grant)"
+	,"i_orgs":"LGAs"
+	,"tax1":"TANZANIA, UNITED REPUBLIC OF"
+	,"tax2":"Agricultural co-operatives"
+}
+...
 ```
 
 <a name="activity_listview_ct"/>
@@ -273,6 +330,10 @@ count. Used to assist with pagination.
     organization(s)
 3.  unassigned\_tax\_ids (character varying) – Optional. Include data
     without assignments to specified taxonomy(ies).
+4.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+5.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
 
 ##### Result
 
@@ -282,11 +343,11 @@ Integer of number of records.
 
 -   Number of Activity & Organization records in Nepal
     (classification\_id:771) and organization participant is Funding
-    (classification\_id:496):
+    (classification\_id:496) between the dates of 1-1-1990 and 12-31-2014:
 
-```SELECT * FROM  pmt_activity_listview_ct('771,496', '', '');```
+```select * from  pmt_activity_listview_ct('771,496', '', '', '1-1-1990','12-31-2014');```
 
-888
+1613
 
 <a name="auth_user"/>
 pmt\_auth\_user
@@ -294,7 +355,7 @@ pmt\_auth\_user
 
 ##### Description
 
-Authenticate user.
+Authenticate user using a plain text password.
 
 ##### Parameter(s)
 
@@ -312,9 +373,8 @@ Json with the following:
 5.  email (character varying) – email address of user.
 6.  organization\_id (integer) – organization id for organization of user.
 7.  roles (json object):
-
-1.  role\_id (integer) – role id user is assigned to.
-2.  name (character varying) – name of role user is assigned to.
+	1.  role\_id (integer) – role id user is assigned to.
+	2.  name (character varying) – name of role user is assigned to.
 
 ##### Example(s)
 
@@ -471,19 +531,12 @@ Json with the following:
 
 ```
 {        
-
     "c_id":24,
-
     "name":"afghanistan",
-
     "bounds":"{
-
     	\"type\":\"Polygon\",
-
         \"coordinates\":[[[60.4758911132812,29.3773193359375],[60.4758911132812,38.49072265625],[74.889892578125,38.49072265625],[74.889892578125,29.3773193359375],[60.4758911132812,29.3773193359375]]]
-
     }                
-
 }
 ```
 
@@ -656,9 +709,7 @@ reporting a specified taxonomy.
 Ordered  by georef.
 
 1.  l\_id (integer) – Location\_id.
-2.  g\_id (character varying(20)) – geo-reference format of the
-    location.
-3.  r\_ids (text) – comma separated list of classification\_ids
+2.  r\_ids (text) – comma separated list of classification\_ids
     associated to location from taxonomy specified by tax\_id.
 
 ##### Example(s)
@@ -669,12 +720,12 @@ Ordered  by georef.
 
 ```SELECT * FROM pmt_filter_locations(22, '816', '13', '22', null, null);```
 
-| l\_id                   | g\_id                   | r\_ids                  |
-|-------------------------|-------------------------|-------------------------|
-| 2690                    | "HDKM37051601"          | "816,818,819,820,822,841"|
-| 2710                    | "HDLM27305730"          | "816,818,819,820,822,841"|
-| 4674                    | "HDLM27305730"          | "816,818,819,820,822,841"|
-| …                       | …                       | …                       |
+| l\_id                   | r\_ids                  |
+|-------------------------|-------------------------|
+| 2690                    |"816,818,819,820,822,841"|
+| 2710                    |"816,818,819,820,822,841"|
+| 4674                    |"816,818,819,820,822,841"|
+| …                       | …                       |
 
 <a name="filter_orgs"/>
 pmt\_filter\_orgs
@@ -703,9 +754,7 @@ reporting associated organization(s).
 Ordered  by georef.
 
 1.  l\_id (integer) – Location\_id.
-2.  g\_id (character varying(20)) – geo-reference format of the
-    location.
-3.  r\_ids (text) – comma separated list of organization\_ids related to
+2.  r\_ids (text) – comma separated list of organization\_ids related to
     location.
 
 ##### Example(s)
@@ -716,12 +765,12 @@ Ordered  by georef.
 
 ```SELECT * FROM pmt_filter_orgs('772,50', '', '', null, null);```
 
-| l\_id                   | g\_id                   | r\_ids                  |
-|-------------------------|-------------------------|-------------------------|
-| 35814                   | "HEFN40004660"          | "365,443,939"           |
-| 35919                   | "HEFP49605860"          | "365,443,941"           |
-| 35539                   | "HEFP55005100"          | "365,443,933"           |
-| …                       | …                       | …                       |
+| l\_id                   | r\_ids                  |
+|-------------------------|-------------------------|
+| 35814                   | "365,443,939"           |
+| 35919                   | "365,443,941"           |
+| 35539                   | "365,443,933"           |
+| …                       | …                       |
 
 <a name="filter_projects"/>
 pmt\_filter\_projects
@@ -981,7 +1030,6 @@ Json with the following:
 5.  grant (decimal) - total amount of money associated to activity.
 
 
-
 ##### Example(s)
 
 ```select * from pmt_infobox_project_stats(1);```
@@ -1228,11 +1276,8 @@ Ordered by most used. Json with the following:
 
 ```
 {
-
-    "o_id":1,
-    
-    "name":"AfDB"
-    
+    "o_id":1,    
+    "name":"AfDB"   
 }
 ```
 
@@ -1288,17 +1333,11 @@ Json with the following:
 ```
 ...
 {
-
-    "p_id":615,
-
-    "title":"Community knowledge workers for Ugandan agriculture",
-
-    "a_ids":[11946,11947,11948,11949,11950,11951,11952,11953,11954,11955,11956,11957,11958,11959,11960,11961,11962,11963,11964,11965,11966,11967,11968,11969,11970,11971],
-
+    	"p_id":615,
+    	"title":"Community knowledge workers for Ugandan agriculture",
+	"a_ids":[11946,11947,11948,11949,11950,11951,11952,11953,11954,11955,11956,11957,11958,11959,11960,11961,11962,11963,11964,11965,11966,11967,11968,11969,11970,11971],
 	"org":"Grameen Foundation USA",
-
 	"f_orgs":"BMGF",
-
 	"c_name":"Access & Markets"        
 
 }
@@ -1426,11 +1465,10 @@ Ordered by most used. Json with the following:
 4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
     taxonomy.
 5.  classifications (object) – classifications in use for this taxonomy.
-
-1.  c\_id (integer) – classification\_id.
-2.  cat\_id (integer) – classification\_id for the category
+	1.  c\_id (integer) – classification\_id.
+	2.  cat\_id (integer) – classification\_id for the category
     classification.
-3.  name (character varying(255)) – the name of the classification.
+	3.  name (character varying(255)) – the name of the classification.
 
 ##### Example(s)
 
@@ -1442,83 +1480,151 @@ Ordered by most used. Json with the following:
 ```
 ...
 {
-
     "t_id":15,
-
     "name":"Sector",
-
     "is_cat":false,
-
     "cat_id":14,
-
     "classifications":
-
         [
-
             {
-
                 "c_id":731,
-
                 "cat_id":552,
-
                 "name":"Desarrollo rural"
-
             },
-
             {
-
                 "c_id":636,
-
                 "cat_id":540,
-
                 "name":"Power generation/renewable sources"
-
             },
-
             ...
-
         ]
-
 },
-
 {
-
     "t_id":14,
-
     "name":"Sector Category",
-
     "is_cat":true,
-
     "cat_id":16,
-
     "classifications":
-
         [
-
             {
-
                 "c_id":552,
-
                 "cat_id":765,
-
                 "name":"Other multisector"
-
             },
-
             ...
-
             {
-
                 "c_id":540,
-
                 "cat_id":764,
-
                 "name":"ENERGY GENERATION AND SUPPLY"},
-
             ...
-
         ]
+}
+```
 
+<a name="stat_activity_by_district"/>
+pmt\_stat\_activity\_by\_district
+=============================
+
+##### Description
+
+Statistics function providing activity counts by taxonomy per district for a region.
+
+##### Parameter(s)
+
+1.  data\_group\_id (integer) – Optional. Classification_id of data group to restrict results to.
+2.  country (character varying) – **Required**. Name of country (GAUL 0 Administrive Name)
+3.  region (character varying) – **Required**. Name of region (GAUL 1 Administrive Name)
+4.  activity\_taxonomy\_id (integer) – **Required**. Taxonomy_id of taxonomy to group activity counts by per district.
+
+##### Result
+
+Json with the following:
+
+1.  region (character varying) – name of the region.
+2.  district (character varying) – name of the district within region.
+3.  activities (json object):
+	1.  c\_id (integer) – classification_id of classification within provided activity taxonomy_id.
+	2.  name (character varying) – name of classification within provided activity taxonomy_id.
+	3.  a\_ct (integer) - number of activities assigned classification within district.
+
+##### Example(s)
+
+-   AGRA data (classification\_id:769) activity counts by Initiative (taxonomy\_id:23) per district for the Morogoro Region:
+
+```select * from pmt_stat_activity_by_district(769, 'United Republic of Tanzania', 'Morogoro', 23);```
+
+```
+...
+,{
+	"region":"Morogoro"
+	,"district":"Morogoro Rural"
+	,"activities":
+		[{
+			"c_id":823
+			,"name":"Access & Markets"
+			,"a_ct":4
+		},
+		{
+			"c_id":831
+			,"name":"Research & Development"
+			,"a_ct":3
+		}]
+}
+...
+```
+
+<a name="stat_activity_by_tax"/>
+pmt\_stat\_activity\_by\_tax
+============================
+
+##### Description
+
+Statistics function providing filterable counts for activity by
+taxonomy.
+
+##### Parameter(s)
+
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
+    activity counts.
+2.  classification\_ids (character varying) – Optional. Restrict data to
+    classification(s).
+3.  organization\_ids (character varying) – Optional. Restrict data to
+    organization(s)
+4.  unassigned\_tax\_ids (character varying) – Optional. Include data
+    without assignments to specified taxonomy(ies).
+5.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+6.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
+
+##### Result
+
+Json with the following:
+
+1.  c\_id (integer) – classification\_id.
+2.  a\_ct (integer) – activity count.
+
+##### Example(s)
+
+-   Activity counts for BMGF data group (classification\_id:768) by
+    Sub-Initiative taxonomy (taxonomy\_id:17):
+
+```SELECT * FROM pmt_stat_activity_by_tax(17, '768', '', '17', null, null);```
+
+```
+{
+    {"c_id":771,"a_ct":220}
+    {"c_id":773,"a_ct":297}
+    {"c_id":774,"a_ct":155}
+    {"c_id":778,"a_ct":18}
+    {"c_id":779,"a_ct":16}
+    {"c_id":780,"a_ct":1060}
+    {"c_id":783,"a_ct":378}
+    {"c_id":784,"a_ct":432}
+    {"c_id":786,"a_ct":378}
+    {"c_id":788,"a_ct":2337}
+    {"c_id":791,"a_ct":20}
+    {"c_id":null,"a_ct":345}
 }
 ```
 
@@ -1563,14 +1669,174 @@ Json with the following:
 {
 
     "p_ct":80,
-
     "a_ct":6112,
-
     "o_ct":602,
-
     "d_ct":1405
-
 }
+```
+<a name="stat_orgs_by_activity"/>
+pmt\_stat\_orgs\_by\_activity
+=============================
+
+##### Description
+
+Statistics function providing filterable counts for TOP TEN implementing
+organizations by activity classified by taxonomy.
+
+##### Parameter(s)
+
+1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
+    activity counts.
+2.  classification\_ids (character varying) – Optional. Restrict data to
+    classification(s).
+3.  organization\_ids (character varying) – Optional. Restrict data to
+    organization(s)
+4.  unassigned\_tax\_ids (character varying) – Optional. Include data
+    without assignments to specified taxonomy(ies).
+5.  start\_date (date) – Optional. Restrict data to a data range. Used
+    with end\_date parameter.
+6.  end\_date (date) – Optional. Restrict data to a data range. Used
+    with start\_date parameter.
+
+##### Result
+
+Json with the following:
+
+1.  o\_id (integer) – organization\_id.
+2.  a\_ct (integer) – activity count.
+3.  a\_by\_tax (json object):
+	1.  c\_id (integer) – classification id.
+	2.  a\_ct (integer) – number of activities with classification id in
+    a\_ct above.
+
+##### Example(s)
+
+-   Top ten implementing organizations by activity counts for BMGF data
+    group (classification\_id:768) by Initiative taxonomy
+    (taxonomy\_id:23):
+
+```SELECT * FROM pmt_stat_orgs_by_activity(23, '768', '', '', null, null);```
+
+```
+{
+    "o_id":334,
+    "a_ct":646,
+    "a_by_tax":[
+		{
+			"c_id":823,
+			"a_ct":625
+		},       
+		{
+			"c_id":831,
+			"a_ct":21
+		}
+	]
+}
+...
+```
+
+<a name="stat_orgs_by_district"/>
+pmt\_stat\_orgs\_by\_district
+=============================
+
+##### Description
+
+Statistics function providing organizations with activity counts by district for a region.
+
+##### Parameter(s)
+
+1.  data\_group\_id (integer) – Optional. Classification_id of data group to restrict results to.
+2.  country (character varying) – **Required**. Name of country (GAUL 0 Administrive Name)
+3.  region (character varying) – **Required**. Name of region (GAUL 1 Administrive Name)
+4.  org\_role\_id (integer) – Optional. Classification_id for taxonomy 'Organisation Role'. Default is 'Accountable'. 
+5.  top\_limit (integer) – Optional. Limits the number of returned organizations per district to number requested ordered by number of activities. Default is 3. 
+
+##### Result
+
+Json with the following:
+
+1.  region (character varying) – name of the region.
+2.  district (character varying) – name of the district within region.
+3.  orgs (json object):
+	1.  o\_id (integer) – organization id.
+	2.  name (character varying) – name of organization.
+	3.  a\_ct (integer) - number of activities the organization participates within the 'Organisation Role' classification.
+
+##### Example(s)
+
+-   Top three accountable (classification\_id:494) organizations for AGRA (classification\_id:769) per district 
+    for the Morogoro Region:
+
+```select * from pmt_stat_orgs_by_district(769, 'United Republic of Tanzania', 'Morogoro', 494, 3);```
+
+```
+...
+,{
+	"region":"Morogoro"
+	,"district":"Morogoro Urban"
+	,"orgs":
+		[{
+			"o_id":27
+			,"name":"Alliance for a Green Revolution in Africa (AGRA)"
+			,"a_ct":6
+		}
+		,{
+			"o_id":10
+			,"name":"Kickstart International"
+			,"a_ct":3
+		}
+		,{
+			"o_id":269
+			,"name":"Board of Regents of the University of Nebraska"
+			,"a_ct":2
+		}]
+}
+...
+```
+
+<a name="stat_pop_by_district"/>
+pmt\_stat\_pop\_by\_district
+=============================
+
+##### Description
+
+Statistics function providing population data by district for a region.
+
+##### Parameter(s)
+
+1.  country (character varying) – **Required**. Name of country (GAUL 0 Administrive Name)
+2.  region (character varying) – **Required**. Name of region (GAUL 1 Administrive Name)
+
+##### Result
+
+Json with the following:
+
+1.  region (character varying) – name of the region.
+2.  district (character varying) – name of the district within region.
+3.  pop_total (numeric(500,2)): total population of the district.
+4.  pop_poverty (numeric(500,2)): poverty population of the district.
+5.  pop_rural (numeric(500,2)): rural population of the district.
+6.  pop_poverty_rural (numeric(500,2)): rural poverty population of the district.
+7.  pop_source (text): source of population data for the district.
+
+##### Example(s)
+
+-   Population data per district for the Morogoro Region:
+
+```select * from pmt_stat_pop_by_district('United Republic of Tanzania', 'morogoro');```
+
+```
+...
+,{
+	"region":"Morogoro",
+	"district":"Morogoro Urban",
+	"pop_total":307356.00,
+	"pop_poverty":50573.40,
+	"pop_rural":124967.00,
+	"pop_poverty_rural":50573.40,
+	"pop_source":"WorldPop"
+}
+...
 ```
 
 <a name="stat_project_by_tax"/>
@@ -1612,161 +1878,12 @@ Json with the following:
 
 ```
 {
-
     {"c_id":823,"p_ct":34}
-
     {"c_id":824,"p_ct":13}
-
     {"c_id":829,"p_ct":2}
-
     {"c_id":831,"p_ct":23}
-
     {"c_id":839,"p_ct":8}
-
 }
-```
-
-<a name="stat_activity_by_tax"/>
-pmt\_stat\_activity\_by\_tax
-============================
-
-##### Description
-
-Statistics function providing filterable counts for activity by
-taxonomy.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    activity counts.
-2.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-3.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-4.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-5.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-6.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-
-##### Result
-
-Json with the following:
-
-1.  c\_id (integer) – classification\_id.
-2.  a\_ct (integer) – activity count.
-
-##### Example(s)
-
--   Activity counts for BMGF data group (classification\_id:768) by
-    Sub-Initiative taxonomy (taxonomy\_id:17):
-
-```SELECT * FROM pmt_stat_activity_by_tax(17, '768', '', '17', null, null);```
-
-```
-{
-
-    {"c_id":771,"a_ct":220}
-
-    {"c_id":773,"a_ct":297}
-
-    {"c_id":774,"a_ct":155}
-
-    {"c_id":778,"a_ct":18}
-
-    {"c_id":779,"a_ct":16}
-
-    {"c_id":780,"a_ct":1060}
-
-    {"c_id":783,"a_ct":378}
-
-    {"c_id":784,"a_ct":432}
-
-    {"c_id":786,"a_ct":378}
-
-    {"c_id":788,"a_ct":2337}
-
-    {"c_id":791,"a_ct":20}
-
-    {"c_id":null,"a_ct":345}
-
-}
-```
-
-<a name="stat_orgs_by_activity"/>
-pmt\_stat\_orgs\_by\_activity
-=============================
-
-##### Description
-
-Statistics function providing filterable counts for TOP TEN implementing
-organizations by activity classified by taxonomy.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    activity counts.
-2.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-3.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-4.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-5.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-6.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-
-##### Result
-
-Json with the following:
-
-1.  o\_id (integer) – organization\_id.
-2.  a\_ct (integer) – activity count.
-3.  a\_by\_tax (json object):
-
-1.  c\_id (integer) – classification id.
-2.  a\_ct (integer) – number of activities with classification id in
-    a\_ct above.
-
-##### Example(s)
-
--   Top ten implementing organizations by activity counts for BMGF data
-    group (classification\_id:768) by Initiative taxonomy
-    (taxonomy\_id:23):
-
-```SELECT * FROM pmt_stat_orgs_by_activity(23, '768', '', '', null, null);```
-
-```
-{
-
-    "o_id":334,
-
-    "a_ct":646,
-
-    "a_by_tax":[
-
-		{
-
-			"c_id":823,
-
-			"a_ct":625
-
-		},
-        
-		{
-
-			"c_id":831,
-
-			"a_ct":21
-
-		}
-
-	]
-
-}
-...
 ```
 
 <a name="update_user"/>
@@ -1803,6 +1920,92 @@ Boolean. Successful (true). Unsuccessful (false).
 TRUE
 ```
 
+<a name="user_auth"/>
+pmt\_user\_auth
+=============================
+
+##### Description
+
+Authenticate user using a salted and hashed password.
+
+##### Parameter(s)
+
+1.  username (character varying) - **Required**. User's username.
+2.  password (character varying) - **Required**. User's password salted and hashed.
+
+##### Result
+
+Json with the following:
+
+1.  user\_id (integer) – user id.
+2.  first\_name (character varying) – first name of user.
+3.  last\_name (character varying) – last name of user.
+4.  username (character varying) – username of user.
+5.  email (character varying) – email address of user.
+6.  organization\_id (integer) – organization id for organization of user.
+7.  roles (json object):
+	1.  role\_id (integer) – role id user is assigned to.
+	2.  name (character varying) – name of role user is assigned to.
+
+##### Example(s)
+
+- Authenticate Reader test user passing its username and hashed and salted password.
+
+```SELECT * FROM pmt_user_auth('reader', '$2a$10$.V0ETMIAW6O9z2wekwMG1.PuaYpuJmZTO1W3GCwOOF3UyfjoXKiea');```
+
+```
+{
+	"user_id":1,
+	"first_name":"reader",
+	"last_name":"(pmt testing user)",
+	"username":"reader",
+	"email":"test@email.com",
+	"organization_id":3,
+	"organization":"spatial dev",
+	"data_group_id":769,
+	"data_group":"ASDP",
+	"roles":
+		[{
+			"role_id":1,
+			"name":"Reader"
+		}]
+}
+```
+- Authenticate Reader test user passing its username and an invalid hashed and salted password.
+
+```SELECT * FROM pmt_user_auth('reader', '$2a$10$.V0ETMIAW6O9z2wekwMG1.PuaYpuJmZTO1W3GCwOOF3Uyfj3343e');```
+
+```
+{
+	"message":"Invalid username or password."
+}
+```
+<a name="user_salt"/>
+pmt\_user\_salt
+================
+
+##### Description
+
+Get the salt for a specific user.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User id for requested salt value.
+
+##### Result
+
+Salt value as text. 
+
+##### Example(s)
+
+-   Salt value for test user Reader(user_id:1):
+
+```select * from pmt_user_salt(1);```
+
+```
+$2a$10$.V0ETMIAW6O9z2wekwMG1.
+```
+
 <a name="users"/>
 pmt\_users
 =============================
@@ -1826,9 +2029,8 @@ Json with the following:
 5.  email (character varying) – email address of user.
 6.  organization\_id (integer) – organization id for organization of user.
 7.  roles (json object):
-
-1.  role\_id (integer) – role id user is assigned to.
-2.  name (character varying) – name of role user is assigned to.
+	1.  role\_id (integer) – role id user is assigned to.
+	2.  name (character varying) – name of role user is assigned to.
 
 ##### Example(s)
 
@@ -1846,12 +2048,10 @@ Json with the following:
 	"organization": "BMGF",
 	"data_group_id":768,
 	"data_group": "BMGF",
-	"roles":[
-		{
+	"roles":[{
 			"role_id":2,
 			"name":"Editor"
-		}
-		]
+		}]
 }
 ...
 ```
