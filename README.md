@@ -69,7 +69,7 @@ Documentation
 
 Instructions - Installation of _PostgreSQL 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2)_
 ------------------------------------------------------------------------------------------
-**_Instructions for setting up Postgres 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2)
+**_Instructions for setting up Postgres 9.3.0 and PostGIS 2.1.0 on Ubuntu 12.04 (EC2).
 This version installs everything from the source packages including all the dependices on a fresh EC2._** 
 
 ```
