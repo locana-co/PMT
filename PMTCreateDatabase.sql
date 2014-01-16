@@ -1696,7 +1696,7 @@ BEGIN
     END IF;	
 
     -- -- report by taxonomy(ies)
-    IF $7 IS NOT NULL AND $7 <> '' THEN      
+    IF $6 IS NOT NULL AND $6 <> '' THEN      
       -- validate taxonomy ids
       SELECT INTO reporting_taxids * FROM pmt_validate_taxonomies($6);
 
