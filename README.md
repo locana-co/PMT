@@ -70,6 +70,7 @@ Documentation
 3. **PMT-Schema** - Database schema diagram of the physical structure of the database
 4. **PMT Database Development Process** - Describes the development process for the PMT database model and concurrent development activities
 5. **Understanding the Data Model** - Describes the PMT data model and taxonomy
+6. **[PMT Database Function Reference](https://github.com/spatialdev/PMT/tree/master/Documentation#pmt-database-function-reference)** - A listing of available database functions, usage and examples.
 
 <br />
 
