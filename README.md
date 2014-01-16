@@ -54,11 +54,11 @@ For instructions on installing PostgreSQL and PostGIS see Instructions - Install
 9. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
 10. The database is now ready for data. Data can be loaded one of two ways:
 	1. To load data directly into the database using data formatted in the [IATI Activities Standard](http://iatistandard.org/activities-standard/) 
-open **PMTIATIActivities.sql** and follow the steps outlined within. (Data can be converted to the [IATI Activities Standard](http://iatistandard.org/activities-standard/)
+open **PMTIATIActivities.sql** and follow the steps outlined within. (Data can be converted into the [IATI Activities Standard](http://iatistandard.org/activities-standard/)
 using [CSV2IATI](http://csv2iati.iatistandard.org/))
 	2. The [Open Aid Map] (https://github.com/spatialdev/OAM-PUBLIC) web application runs on top 
 of the PMT Database and provides a import tool for loading data formatted in the [IATI Activities Standard](http://iatistandard.org/activities-standard/) 
-through the interface. 
+through its interface. 
 <br />  
 	
 Documentation
