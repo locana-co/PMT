@@ -9,7 +9,7 @@ CREATE OR REPLACE LANGUAGE plpgsql;
 CREATE EXTENSION IF NOT EXISTS postgis; 
 
 -- Enable Encryption
-CREATE EXTENSION pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Drop Spatial Tables (comment this section out if you have built your spatial tables once)
 -- To comment use: ' -- '
@@ -36,6 +36,7 @@ DROP TABLE IF EXISTS  location_boundary CASCADE;
 DROP TABLE IF EXISTS  location_taxonomy CASCADE;
 DROP TABLE IF EXISTS  organization CASCADE;
 DROP TABLE IF EXISTS  organization_taxonomy CASCADE;
+DROP TABLE IF EXISTS  map CASCADE;
 DROP TABLE IF EXISTS  participation CASCADE;
 DROP TABLE IF EXISTS  participation_taxonomy CASCADE;
 DROP TABLE IF EXISTS  project CASCADE;
@@ -43,8 +44,10 @@ DROP TABLE IF EXISTS  project_contact CASCADE;
 DROP TABLE IF EXISTS  project_taxonomy CASCADE;
 DROP TABLE IF EXISTS  result CASCADE;
 DROP TABLE IF EXISTS  result_taxonomy CASCADE;
+DROP TABLE IF EXISTS  role CASCADE;
 DROP TABLE IF EXISTS  taxonomy CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS  user_role CASCADE;
 DROP TABLE IF EXISTS  xml CASCADE;
 
 --Drop Views  (if they exist)
@@ -60,10 +63,10 @@ DROP VIEW IF EXISTS project_activity_points CASCADE;
 DROP VIEW IF EXISTS project_contacts CASCADE;
 DROP VIEW IF EXISTS project_taxonomies CASCADE;
 DROP VIEW IF EXISTS tags CASCADE; 
+DROP VIEW IF EXISTS taxonomy_classifications CASCADE;
 
 DROP MATERIALIZED VIEW IF EXISTS location_lookup CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS organization_lookup CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS taxonomy_classifications CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS taxonomy_lookup CASCADE;
 
 --Drop Functions
@@ -229,7 +232,7 @@ CREATE TABLE "config"
 );
 -- add the current configuration information
 INSERT INTO config(version, iteration, changeset, download_dir) 
-VALUES (2.0, 7, 23, '/var/lib/postgresql/9.3/main/');
+VALUES (2.0, 8, 0, '/var/lib/postgresql/9.3/main/');
 --Contact
 CREATE TABLE "contact"
 (
@@ -725,87 +728,6 @@ CREATE TABLE "user_role"
 	,"role_id"		integer				NOT NULL
 	,CONSTRAINT user_role_id PRIMARY KEY(user_id,role_id)
 );
-
-/*****************************************************************
-MATERIALIZED VIEWS -- The version of Postgres (9.2) doesn't support
-materialized views. So these tables and associated functions are
-designed to support this database functionality until PMT is upgraded
-to a version supporting materialized views (Postgres 9.3 or higher)
-Create MATERIALIZED VIEWS:
-	1. taxonomy_lookup
-	2. location_lookup
-	3. organization_lookup
-	4. taxonomy_classifications
-******************************************************************/
--- taxonomy_lookup
-CREATE MATERIALIZED VIEW taxonomy_lookup AS
-(SELECT project_id, activity_id, location_id, organization_id, participation_id, start_date, end_date, x, y, georef, t.taxonomy_id, foo.classification_id
-FROM(SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
-FROM active_project_activities pa
-JOIN project_taxonomy pt
-ON pa.project_id = pt.project_id AND field ='project_id'
-UNION
-SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, at.classification_id
-FROM active_project_activities pa
-JOIN activity_taxonomy at
-ON pa.activity_id = at.activity_id AND field ='activity_id'
-UNION
-SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, lt.classification_id
-FROM active_project_activities pa
-JOIN location_taxonomy lt
-ON pa.location_id = lt.location_id AND field ='location_id'
-UNION
-SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, ot.classification_id 
-FROM active_project_activities pa
-JOIN organization_taxonomy ot
-ON pa.organization_id = ot.organization_id AND field ='organization_id'
-UNION
-SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
-FROM active_project_activities pa
-JOIN participation_taxonomy pt
-ON pa.participation_id = pt.participation_id AND field ='participation_id'
-) as foo
-JOIN classification c
-ON foo.classification_id = c.classification_id
-JOIN taxonomy t
-ON c.taxonomy_id = t.taxonomy_id);
-
--- location_lookup
-CREATE MATERIALIZED VIEW location_lookup AS
-(SELECT project_id, activity_id, location_id, start_date, end_date, x, y, georef, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids,
-(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 1 LIMIT 1) as gaul0_name,
-(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 2 LIMIT 1) as gaul1_name,
-(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 3 LIMIT 1) as gaul2_name
-FROM taxonomy_lookup
-GROUP BY project_id, activity_id, location_id, start_date, end_date, x, y, georef);
-
--- organization_lookup
-CREATE MATERIALIZED VIEW organization_lookup AS
-(SELECT project_id, activity_id, organization_id, start_date, end_date, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct location_id) as location_ids
-FROM taxonomy_lookup
-GROUP BY project_id, activity_id, organization_id, start_date, end_date);
-
--- function to support the taxonomy_lookup table
-CREATE OR REPLACE FUNCTION refresh_taxonomy_lookup() RETURNS integer AS $$
-BEGIN
-    RAISE NOTICE 'Refreshing lookup views...';
-    REFRESH MATERIALIZED VIEW taxonomy_lookup;
-    REFRESH MATERIALIZED VIEW location_lookup;  
-    REFRESH MATERIALIZED VIEW organization_lookup;
-    RAISE NOTICE 'Done refreshing lookup views.';
-    RETURN 1;
-END;
-$$ LANGUAGE plpgsql;
--- SELECT refresh_taxonomy_lookup();
-
--- taxonomy_classifications
-CREATE MATERIALIZED VIEW taxonomy_classifications AS
-(SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, c.classification_id, c.name as classification, c.category_id as classification_category_id, c.iati_code, c.iati_name
-FROM taxonomy t
-JOIN classification c
-ON t.taxonomy_id = c.taxonomy_id
-WHERE t.active = true and c.active = true
-ORDER BY t.taxonomy_id, c.classification_id);
 /*****************************************************************
 TRIGGERS -- is procedural code that is automatically executed in 
 response to certain events on a particular table or view. Possible 
@@ -5622,6 +5544,14 @@ ORDER BY project_id, activity_id, location_id, organization_id;
 -------------------------------------------------------------------
 -- taxonomy
 -------------------------------------------------------------------
+-- taxonomy_classifications
+CREATE OR REPLACE VIEW  taxonomy_classifications AS
+(SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, c.classification_id, c.name as classification, c.category_id as classification_category_id, c.iati_code, c.iati_name
+FROM taxonomy t
+JOIN classification c
+ON t.taxonomy_id = c.taxonomy_id
+WHERE t.active = true and c.active = true
+ORDER BY t.taxonomy_id, c.classification_id);
 -- project taxonomy
 CREATE OR REPLACE VIEW project_taxonomies
 AS SELECT p.project_id, p.title as project_title, t.name as taxonomy, c.name as classification
@@ -5798,3 +5728,74 @@ JOIN gaul2 ON gaul1.name = gaul2.gaul1_name
 UNION
 SELECT DISTINCT gaul0.code, gaul0.name, 'Country' as "type", gaul0.name, null AS gaul1_name, null AS gaul2_name, ST_AsGeoJSON(Box2D(gaul0.polygon))  AS bounds 
 FROM gaul0;
+
+/*****************************************************************
+MATERIALIZED VIEWS -- The version of Postgres (9.2) doesn't support
+materialized views. So these tables and associated functions are
+designed to support this database functionality until PMT is upgraded
+to a version supporting materialized views (Postgres 9.3 or higher)
+Create MATERIALIZED VIEWS:
+	1. taxonomy_lookup
+	2. location_lookup
+	3. organization_lookup
+******************************************************************/
+-- taxonomy_lookup
+CREATE MATERIALIZED VIEW taxonomy_lookup AS
+(SELECT project_id, activity_id, location_id, organization_id, participation_id, start_date, end_date, x, y, georef, t.taxonomy_id, foo.classification_id
+FROM(SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
+FROM active_project_activities pa
+JOIN project_taxonomy pt
+ON pa.project_id = pt.project_id AND field ='project_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, at.classification_id
+FROM active_project_activities pa
+JOIN activity_taxonomy at
+ON pa.activity_id = at.activity_id AND field ='activity_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, lt.classification_id
+FROM active_project_activities pa
+JOIN location_taxonomy lt
+ON pa.location_id = lt.location_id AND field ='location_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, ot.classification_id 
+FROM active_project_activities pa
+JOIN organization_taxonomy ot
+ON pa.organization_id = ot.organization_id AND field ='organization_id'
+UNION
+SELECT pa.project_id, pa.activity_id, pa.location_id, pa.organization_id, pa.participation_id, pa.activity_start as start_date, pa.activity_end as end_date, pa.x, pa.y, pa.georef, pt.classification_id
+FROM active_project_activities pa
+JOIN participation_taxonomy pt
+ON pa.participation_id = pt.participation_id AND field ='participation_id'
+) as foo
+JOIN classification c
+ON foo.classification_id = c.classification_id
+JOIN taxonomy t
+ON c.taxonomy_id = t.taxonomy_id);
+
+-- location_lookup
+CREATE MATERIALIZED VIEW location_lookup AS
+(SELECT project_id, activity_id, location_id, start_date, end_date, x, y, georef, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct organization_id) as organization_ids,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 1 LIMIT 1) as gaul0_name,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 2 LIMIT 1) as gaul1_name,
+(SELECT lbf.name FROM location_boundary_features lbf WHERE taxonomy_lookup.location_id = lbf.location_id AND lbf.boundary_id = 3 LIMIT 1) as gaul2_name
+FROM taxonomy_lookup
+GROUP BY project_id, activity_id, location_id, start_date, end_date, x, y, georef);
+
+-- organization_lookup
+CREATE MATERIALIZED VIEW organization_lookup AS
+(SELECT project_id, activity_id, organization_id, start_date, end_date, array_agg(distinct taxonomy_id) as taxonomy_ids, array_agg(distinct classification_id) as classification_ids, array_agg(distinct location_id) as location_ids
+FROM taxonomy_lookup
+GROUP BY project_id, activity_id, organization_id, start_date, end_date);
+
+-- function to support the taxonomy_lookup table
+CREATE OR REPLACE FUNCTION refresh_taxonomy_lookup() RETURNS integer AS $$
+BEGIN
+    RAISE NOTICE 'Refreshing lookup views...';
+    REFRESH MATERIALIZED VIEW taxonomy_lookup;
+    REFRESH MATERIALIZED VIEW location_lookup;  
+    REFRESH MATERIALIZED VIEW organization_lookup;
+    RAISE NOTICE 'Done refreshing lookup views.';
+    RETURN 1;
+END;
+$$ LANGUAGE plpgsql;
+-- SELECT refresh_taxonomy_lookup();
