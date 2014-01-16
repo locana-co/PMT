@@ -51,7 +51,8 @@ For instructions on installing PostgreSQL and PostGIS see Instructions - Install
 	ANALYZE;
 ```
 9. Open **PMTPermissions.sql** and follow the steps outlined within.  (_Adds users and permissions_)
-10. The database is now ready for data. To load an IATI formatted Activity XML document open **PMTIATIActivities.sql** and follow the steps outlined within.
+10. The database is now ready for data. To load an IATI formatted Activity XML document open **PMTIATIActivities.sql** and follow the steps outlined within. (an alternative to loading data directly through SQL is to now configure the
+front end application http://github/spatialdev/OAM-PUBLIC and load IATI data through the interface.
 <br />  
 	
 Documentation
