@@ -65,11 +65,8 @@ Documentation
 -------------
 **_Documents referenced below can be found in the Documentation folder._**
 
-1. **PMT-Framework** - High level PMT Framework (Database & API) diagram
-2. **PMT-ERD** - Entity Relationship Diagram using Chen method describing the relationships between the entities in the database
-3. **PMT-Schema** - Database schema diagram of the physical structure of the database
-4. **PMT Database Development Process** - Describes the development process for the PMT database model and concurrent development activities
-5. **Understanding the Data Model** - Describes the PMT data model and taxonomy
+1. **PMT-Schema** - Database schema diagram of the physical structure of the database
+4. **Understanding the Data Model** - Describes the PMT data model and taxonomy
 6. **[PMT Database Function Reference](https://github.com/spatialdev/PMT/tree/master/Documentation#pmt-database-function-reference)** - A listing of available database functions, usage and examples.
 
 <br />
