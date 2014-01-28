@@ -8,7 +8,7 @@ import urllib2
 import sys
 
 con = None
-con = psycopg2.connect("host='54.227.245.32' port='5432' dbname='pmt' user='postgres' password='postgres'") 
+con = psycopg2.connect("") 
 
 cnt = 0
 
