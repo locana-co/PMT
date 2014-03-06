@@ -84,7 +84,10 @@ This version installs everything from the source packages including all the depe
 	sudo wget http://anonscm.debian.org/loggerhead/pkg-postgresql/postgresql-common/trunk/download/head:/apt.postgresql.org.s-20130224224205-px3qyst90b3xp8zj-1/apt.postgresql.org.sh
 
 	sudo chmod 777 apt.postgresql.org.sh
-	sudo ./apt.postgresql.org.sh
+	--Note: if using 12.04 use:
+	sudo ./apt.postgresql.org.sh precise
+	--Note: if using 12.10 use
+	--sudo ./apt.postgresql.org.sh quantal
 	(hit enter)
 
 	sudo apt-get install postgresql-9.3 postgresql-contrib-9.3 postgresql-9.3-postgis-2.1 postgresql-9.3-postgis-scripts -y
