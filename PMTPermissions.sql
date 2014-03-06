@@ -29,6 +29,8 @@ GRANT CONNECT ON DATABASE <database_name> TO pmt_write;
 GRANT USAGE ON SCHEMA public TO pmt_read;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO pmt_read;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO pmt_read;
+GRANT SELECT, INSERT ON user_activity TO pmt_read;
+GRANT USAGE ON user_activity_user_activity_id_seq TO pmt_read;
 
 GRANT USAGE ON SCHEMA public TO pmt_write;
 GRANT SELECT,INSERT ON ALL TABLES IN SCHEMA public TO pmt_write;
