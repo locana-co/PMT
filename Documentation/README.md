@@ -6,13 +6,15 @@
 
 [pmt\_activities\_by\_tax](#activities_by_tax)
 
+[pmt\_activity](#activity)
+
 [pmt\_activity\_details](#activity_details)
 
 [pmt\_activity\_listview](#activity_listview)
 
 [pmt\_activity\_listview\_ct](#activity_listview_ct)
 
-[pmt\_auth\_user](#auth_user)
+[pmt\_auth\_user](#auth_user)   **SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9 (see [pmt\_user\_auth](#user_auth))**
 
 [pmt\_auto\_complete](#auto_complete)
 
@@ -20,11 +22,23 @@
 
 [pmt\_category\_root](#category_root)
 
+[pmt\_contacts](#contacts)
+
 [pmt\_countries](#countries)
 
 [pmt\_create\_user](#create_user)
 
 [pmt\_data\_groups](#data_groups)
+
+[pmt\_edit\_activity](#edit_activity)
+
+[pmt\_edit\_activity\_contact](#edit_activity_contact)
+
+[pmt\_edit\_activity\_taxonomy](#edit_activity_taxonomy)
+
+[pmt\_edit\_contact](#edit_contact)
+
+[pmt\_edit\_participation](#edit_participation)
 
 [pmt\_filter\_csv](#filter_csv)
 
@@ -36,21 +50,25 @@
 
 [pmt\_filter\_projects](#filter_projects)
 
+[pmt\_global\_search](#global_search)
+
 [pmt\_iati\_import](#iati_import)
 
-[pmt\_infobox\_activity\_stats](#infobox_activity_stats)
+[pmt\_infobox\_activity](#infobox_activity)   **SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9 (see [pmt\_activity](#activity))**
 
-[pmt\_infobox\_activity\_desc](#infobox_activity_desc)
+[pmt\_infobox\_activity\_contact](#infobox_activity_contact)   **SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9 (see [pmt\_activity](#activity))**
 
-[pmt\_infobox\_activity\_contact](#infobox_activity_contact)
+[pmt\_infobox\_activity\_desc](#infobox_activity_desc)   **SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9 (see [pmt\_activity](#activity))**
+
+[pmt\_infobox\_activity\_stats](#infobox_activity_stats)   **SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9 (see [pmt\_activity](#activity))**
+
+[pmt\_infobox\_project\_contact](#infobox_project_contact)
+
+[pmt\_infobox\_project\_desc](#infobox_project_desc)
 
 [pmt\_infobox\_project\_info](#infobox_project_info)
 
 [pmt\_infobox\_project\_stats](#infobox_project_stats)
-
-[pmt\_infobox\_project\_desc](#infobox_project_desc)
-
-[pmt\_infobox\_project\_contact](#infobox_project_contact)
 
 [pmt\_isdate](#isdate)
 
@@ -58,9 +76,13 @@
 
 [pmt\_locations\_by\_org](#locations_by_org)
 
+[pmt\_locations\_by\_polygon](#locations_by_polygon)
+
 [pmt\_locations\_by\_tax](#locations_by_tax)
 
 [pmt\_org\_inuse](#org_inuse)
+
+[pmt\_orgs](#orgs)
 
 [pmt\_project\_listview](#project_listview)
 
@@ -70,7 +92,7 @@
 
 [pmt\_purge\_project](#purge_project)
 
-[pmt\_tax\_inuse](#tax_inuse)
+[pmt\_sector\_compare](#sector_compare)
 
 [pmt\_stat\_activity\_by\_district](#stat_activity_by_district)
 
@@ -82,9 +104,15 @@
 
 [pmt\_stat\_orgs\_by\_district](#stat_orgs_by_district)
 
+[pmt\_stat\_partner\_network](#stat_partner_network)
+
 [pmt\_stat\_pop\_by\_district](#stat_pop_by_district)
 
 [pmt\_stat\_project\_by\_tax](#stat_project_by_tax)
+
+[pmt\_tax\_inuse](#tax_inuse)
+
+[pmt\_taxonomies](#taxonomies)
 
 [pmt\_update\_user](#update_user)
 
@@ -93,6 +121,28 @@
 [pmt\_user\_salt](#user_salt)
 
 [pmt\_users](#users)
+
+[pmt\_validate\_activities](#validate_activities)
+
+[pmt\_validate\_activity](#validate_activity)
+
+[pmt\_validate\_classification](#validate_classification)
+
+[pmt\_validate\_classifications](#validate_classifications)
+
+[pmt\_validate\_contact](#validate_contact)
+
+[pmt\_validate\_contacts](#validate_ccontacts)
+
+[pmt\_validate\_organization](#validate_organization)
+
+[pmt\_validate\_organizations](#validate_organizations)
+
+[pmt\_validate\_taxonomies](#validate_taxonomies)
+
+[pmt\_validate\_taxonomy](#validate_taxonomy)
+
+[pmt\_validate\_user\_authority](#validate_user_authority)
 
 [pmt\_version](#version)
 
@@ -137,6 +187,162 @@ Filter activities by classification reporting by a specified taxonomy.
 | 32765                   | "3A-CEMAC Regional Institutions Support"      | "651,652,653"           |
 |...|...|...|
 
+
+<a name="activity"/>
+pmt\_activity
+=============================
+
+##### Description
+
+All information for a single activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity id.
+2.  project\_id (integer) – project id of activity.
+3.  title (character varying) – title of activity.
+4.  label (character varying) – short title for activity.
+5.  description (character varying) – description of activity.
+6.  content (character varying) – various content for activity.
+7.  start\_date (date) – start date of activity.
+8.  end\_date (date) – end date of activity.
+9.  tags (character varying) – tags or keywords of activity.
+10.  iati\_identifier (integer) – iati idenifier or primary key of activity.
+11.  updated\_by (character varying(50)) -  last user to update activity information.
+12.  updated\_date (timestamp) -  last date and time activity information was updated.
+13.  custom\_fields (various) - any custom fields in the activity table that are not in the Core PMT will be returned as well.
+14.  location\_ct (integer) - number of locations for activity.
+15.  admin\_bnds (character varying) - list of GAUL administrative boundaries for all locations (format gaul_2, gaul_1, gaul_0). Multiple
+locations are seperated by a semi-colon (;).
+16.  amount (decimal) - total amount of activity.
+16.  taxonomy(object) - An object containing all associated taxonomy for the activity
+	1. taxonomy\_id (integer) - taxonomy id.
+	2. taxonomy (character varying) - taxonomy name.
+	3. classification\_id (integer) - classification id.
+	4. classification (character varying) - classification name.
+17.  organizations(object) - An object containing all organizations participating in the activity
+	1. organization\_id (integer) - organization id.
+	2. name (character varying) - organization name.
+	3. taxonomy\_id (integer) - taxonomy id.
+	4. taxonomy (character varying) - taxonomy name.
+	5. classification\_id (integer) - classification id.
+	6. classification (character varying) - classification name.
+18.  contacts (character varying) - An object containing all activity contacts.
+	1. contact\_id (integer) - contact id.
+	2. first\_name (character varying) - contact's first name.
+	3. last\_name (character varying) - contact's last name.
+	4. email (character varying) - contact's email address.
+	5. organization\_id (integer) - organization id.
+	6. name (character varying) - organization name the contact is associated with.
+19.  locations (character varying) - An object containing all activity locations.
+	1. location\_id (integer) - location id.
+	2. lat\_dd (decimal) - latitude in decimal degree format.
+	3. long\_dd (decimal) - longitude in decimal degree format.
+	4. x (decimal) - x point value in web mercator.
+	5. y (decimal) - y point value in web mercator.
+	6. georef (character varying) - point expressed in georef format.
+
+##### Example(s)
+
+```select * from pmt_activity(3);```
+
+```
+{
+	"activity_id":3
+	,"project_id":1
+	,"title":"UN collaborative Program for Reducing Emissions from Deforestation and forest Degradation in developing 
+			countries, Tanzania (UN-REDD)"
+	,"label":null
+	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions from Deforestation and 
+			forest Degradation (REDD) as a component of the Governments evolving REDD Strategy, and integrate it 
+			with other REDD activities in the country"
+	,"content":null
+	,"start_date":"2009-10-01"
+	,"end_date":"2013-12-31"
+	,"tags":null	
+	,"updated_by":"IATI XML Import"
+	,"updated_date":"2014-01-16 00:00:00"
+	,"iati_identifier":null
+	,"location_ct":1
+	,"admin_bnds":"United Republic of Tanzania,Singida,Manyoni"
+	,"taxonomy":[{
+		 "taxonomy_id":5
+		,"taxonomy":"Country"
+		,"classification_id":244
+		,"classification":"TANZANIA, UNITED REPUBLIC OF"
+		}
+		,{
+		 "taxonomy_id":14
+		,"taxonomy":"Sector Category"
+		,"classification_id":552
+		,"classification":"Other multisector"
+		}
+		,{
+		 "taxonomy_id":15
+		,"taxonomy":"Sector"
+		,"classification_id":729
+		,"classification":"Multisector aid"
+		}
+		,{
+		 "taxonomy_id":17
+		,"taxonomy":"Category"
+		,"classification_id":779
+		,"classification":"Training and Capacity Building"
+		}
+		,{
+		 "taxonomy_id":18
+		,"taxonomy":"Sub-Category"
+		,"classification_id":792
+		,"classification":"Training and Capacity Building"
+		}]
+	,"organizations":[{
+		 "organization_id":1
+		,"name":"FAO/ UNEP/ UNDP"
+		,"taxonomy_id":10
+		,"taxonomy":"Organisation Role"
+		,"classification_id":496
+		,"classification":"Funding"
+		}
+		,{
+		"organization_id":56
+		,"name":"Tanzania Forestry Service (TFS)"
+		,"taxonomy_id":10
+		,"taxonomy":"Organisation Role"
+		,"classification_id":497
+		,"classification":"Implementing"
+		}
+		,{
+		"organization_id":2
+		,"name":"MNRT, TFS"
+		,"taxonomy_id":10
+		,"taxonomy":"Organisation Role"
+		,"classification_id":497
+		,"classification":"Implementing"
+		}]
+	,"contacts":[{
+		"contact_id":1
+		,"first_name":"Almas"
+		,"last_name":"Kashindye"
+		,"email":"Almas.Kashindye@fao.org"
+		,"organization_id":1
+		,"name":"FAO/ UNEP/ UNDP"
+		}]
+	,"locations":[{
+		"location_id":3
+		,"lat_dd":-6.306897
+		,"long_dd":34.85392
+		,"x":3879921
+		,"y":-703503
+		,"georef":"QFEJ51144135"
+		}]
+}
+```
 
 <a name="activity_details"/>
 pmt\_activity\_details
@@ -352,7 +558,7 @@ Integer of number of records.
 <a name="auth_user"/>
 pmt\_auth\_user
 =============================
-
+**SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9**
 ##### Description
 
 Authenticate user using a plain text password.
@@ -502,6 +708,46 @@ Integer of root taxonomy\_id.
 
 15
 
+<a name="contacts"/>
+pmt\_contacts
+==============
+
+##### Description
+
+ Get all contacts.
+
+##### Parameter(s)
+
+No parameters.
+
+##### Result
+
+Ordered by last name then first name. Json with the following:
+
+1.  c\_id (integer) – contact\_id.
+2.  first_name (character varying(64)) – first name of contact.
+3.  last_name (character varying(128)) – last name of contact.
+4.  email (character varying(100)) - email of contact.
+4.  o\_id (integer) – organization\_id in which the contact belongs to.
+5.  org (character varying(255)) - organization name of the organization in which the contact belongs to.
+
+##### Example(s)
+
+```SELECT * FROM pmt_contacts();```
+
+```
+...
+{
+	"c_id":4,
+	"first_name":"John",
+	"last_name":"Doe",
+	"email":"john.doe@mymail.com",
+	"o_id":13,
+	"org":"FAO"
+}
+...
+```
+
 <a name="countries"/>
 pmt\_countries
 ==============
@@ -605,6 +851,267 @@ None.
 | 770                                  | "Malawi"                             |
 | …                                    | …                                    |
 
+
+<a name="edit_activity"/>
+pmt\_edit\_activity
+===================
+
+##### Description
+
+Edit an activity.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+2.  activity\_id (integer) – **Required**. Activity\_id of activity to edit.
+3.  json (json) - **Required**. Key/value pair as json of field/values to edit. Column names are 
+case sensitive. Enclose all values in double quotes, including null. **If your text values include
+a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
+uses the single quote to encase string constants.** You can include any existing
+field that exists for activity, even custom fields. The following fields cannot be edited even
+if included: 
+	- activity\_id
+	- project_id
+	- active
+	- retired_by
+	- created_by
+	- created_date
+	- updated_by
+	- updated_date
+
+	Json key/value format:
+	```
+	{"column_name": "value"}
+	```
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters or 
+user does not have authorization to edit. Use [pmt\_validate\_user\_authority](#validate_user_authority)
+to determine authorization.
+
+##### Example(s)
+
+-   Update the title, description and start_date for activity\_id 14863 and set it's opportunity\_id 
+ to null. 
+
+```
+select * from pmt_edit_activity(34,14863,'{"title": "Project Objective 1", 
+"description":"Market opportunities, Policies and Partnerships", "start_date":"9-2-2012", 
+"opportunity_id": "null"}');
+```
+
+	TRUE
+
+<a name="edit_activity_contact"/>
+pmt\_edit\_activity\_contact
+=============================
+
+##### Description
+
+Edit the relationship between an activity and a contact.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+2.  activity\_id (integer) – **Required**. Activity\_id of activity to edit.
+2.  contact\_id (integer) – **Required**.  Contact\_id of contact to associate to activity\_id.
+3.  edit\_activity (enum) - Optional. 
+	Options:
+	1. add (default) - will add a relationship between provided activity\_id and contact\_id
+	2. delete - will remove the relationship between the provided activity\_id and contact\_id
+	3. replace - will replace all existing relationships to the provided activity\_id with any contact, with the contact 
+of the provided contact\_id.
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters or 
+user does not have authorization to edit. Use [pmt\_validate\_user\_authority](#validate_user_authority)
+to determine authorization.
+
+##### Example(s)
+
+-   Add Don John (contact\_id:169) as a contact for activity\_id 14863 as user sparadee (user\_id:34):
+
+```select * from pmt_edit_activity_contact(34,14863, 169, 'add');```
+
+	TRUE
+
+-   Replace all contacts with Edward Jones (contact\_id:145) for activity\_id 14863 as user sparadee (user\_id:34):
+
+```select * from pmt_edit_activity_contact(34,14863, 145, 'replace');```
+
+	TRUE
+
+-   Delete Edward Jones (contact\_id:145) as contact for activity\_id 14863 as user sparadee (user\_id:34):
+
+```select * from pmt_edit_activity_contact(34,14863, 145, 'delete');```
+
+	TRUE
+
+<a name="edit_activity_taxonomy"/>
+pmt\_edit\_activity\_taxonomy
+=============================
+
+##### Description
+
+Edit the relationship between activity(ies) and a taxonomy classification. **Important Note: This function DOES NOT 
+call the refresh\_taxonomy\_lookup() function, which updates the materialized views that support a majority of the functions
+in the database. Be sure to call this function when editing is complete.**
+
+##### Parameter(s)
+
+1.  activity\_ids (character varying) – **Required**. Comma seperated list of activity_ids to edit.
+2.  classification\_id (integer) – **Required**.  Classification\_id of taxonomy classification in relationship to activity\_id(s).
+3.  edit\_activity (enum) - Optional. 
+	Options:
+	1. add (default) - will add a relationship between provided activity\_id(s) and classification_id
+	2. delete - will remove the relationship between the provided activity\_id(s) and classification_id
+	3. replace - will replace all relationships between the provided activity\_ids(s) and taxonomy of the provided classification\_id, with
+a single relationship between the provided activity\_id(s) and classification\_id.
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters.
+
+##### Example(s)
+
+-   Add a relationship to Sector 'Educational research' (classification\_id:567) to activity\_ids 2336,2335,5526:
+
+```select * from pmt_edit_activity_taxonomy('5526,2335,2336', 567, 'add');```
+
+	TRUE
+
+-   Remove the relationship to Sector 'Sectors not specified' (classification\_id:756) from activity\_ids 2336,2335,5526:
+
+```select * from pmt_edit_activity_taxonomy('5526,2335,2336', 756, 'delete');```
+
+	TRUE
+
+-   Replace  all relationships to the Sector taxonomy with the relationship to Sector 'Educational research' 
+(classification\_id:567) for activity\_ids 2336,2335,5526:
+
+```select * from pmt_edit_activity_taxonomy('5526,2335,2336', 756, 'replace');```
+
+	TRUE
+
+<a name="edit_contact"/>
+pmt\_edit\_contact
+===================
+
+##### Description
+
+Edit a contact.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+2.  contact\_id (integer) – Optional. Contact\_id of existing contact to edit, if left null then a new contact record will be created.
+3.  json (json) - **Required**. Key/value pair as json of field/values to edit. Column names are 
+case sensitive. Enclose all values in double quotes, including null. **If your text values include
+a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
+uses the single quote to encase string constants.** You can include any existing
+field that exists for contact, even custom fields. The following fields cannot be edited even
+if included: 
+	- contact\_id
+	- active
+	- retired_by
+	- created_by
+	- created_date
+	- updated_by
+	- updated_date
+
+	Json key/value format:
+	```
+	{"column_name": "value"}
+	```
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – contact\_id of the contact created or updated.
+2.  message(character varying) - Message containing either "Success" for a successful transaction 
+or containing an error description regarding the unsuccessful transaction. Possible error messages:
+	- Must included user\_id and json data parameters - Received when both required parameters are not provided.
+	- User does NOT have authority to create a new contact - Received when the user\_id provided does not have authority to create under current role.
+	- User does NOT have authority to update an existing contact - Received when the user\_id provided does not have authority to update under current role.
+	- Invalid contact\_id - Received when the contact\_id provided is invalid.
+
+##### Example(s)
+
+-   Update the email and title for Jonh Hancock (contact\_id:148) as user sparadee (user\_id:34)
+
+```select * from pmt_edit_contact(34,148,'{"email":"jhanhock@mail.com", "title":"CEO"}');```
+
+```
+"{"id":148,"message":"Success"}"
+```
+
+-   Add new contact for BMGF (organization\_id:13) as user sparadee (user\_id:34)
+
+```
+select * from pmt_edit_contact(34,null,'{"first_name":"John", "last_name":"Hanhock", "email":"jhanhock@mail.com", 
+"title":"CEO", "organization_id": 13}');
+```
+
+```
+"{"id":672,"message":"Success"}"
+```
+
+<a name="edit_participation"/>
+pmt\_edit\_participation
+=============================
+
+##### Description
+
+Edit the relationship between projects, activities and organizations.
+
+##### Parameter(s)
+
+1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+2.  participation\_id (integer) – **Required when edit\_activity option is delete**. participation\_id of participation record to edit.
+3.  project\_id (integer) – **Required when edit\_activity option is add/replace**. project\_id of project that organization has participation in.
+4.  activity\_id (integer) – Optional. Activity\_id of activity that organization has participation in.
+5.  organiation\_id (integer) – **Required when edit\_activity option is add/replace***.  Organiation\_id of organization that is participating in the project/activity.
+6.  classification\_id (integer) – **Required when edit\_activity option is add/replace***.  Classification\_id from Organisation Role taxonomy that represents the organization's
+participation role in the project/activity.
+7.  edit\_activity (enum) - Optional. 
+	Options:
+	1. add (default) - will add a participation record to project/activity.
+	2. delete - will remove  a participation record.
+	3. replace - will replace all existing all existing participation records with the new participation record for the project/activity **make sure you understand what this is doing before requesting this edit action***
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters or 
+user does not have authorization to edit. Use [pmt\_validate\_user\_authority](#validate_user_authority)
+to determine authorization.
+
+##### Example(s)
+
+-   Add IFPRI (organization\_id:519) as an Implementing (classification\_id:497) organization for 'STAPLE CROPS PROGRAMME' project 
+(project\_id:463) activity 'P008-09-P1-08-008-Integrated Striga Management For Improved Sorghum Productivity In East And Central Africa'
+(activity\_id:1653) as user sparadee (user\_id:34):
+
+```select * from pmt_edit_participation(34, null, 463, 1653, 519, 497, 'add');```
+
+	TRUE
+
+-   Delete IFPRI as an Implementing organization for 'STAPLE CROPS PROGRAMME' project activity 'P008-09-P1-08-008-Integrated Striga Management 
+For Improved Sorghum Productivity In East And Central Africa'(participation\_id:10708) as user sparadee (user\_id:34):
+
+```select * from pmt_edit_participation(34, 10708, null, null, null, null, 'delete');```
+
+	TRUE
+
+-   Replace **ALL** participation records for 'STAPLE CROPS PROGRAMME' project (project\_id:463) activity 
+'P008-09-P1-08-008-Integrated Striga Management For Improved Sorghum Productivity In East And Central Africa'
+(activity\_id:1653) with IFPRI as an Implementing organization as user sparadee (user\_id:34). 
+
+```select * from pmt_edit_participation(34, null, 463, 1653, 519, 497, 'replace');```
+
+	TRUE
 
 <a name="filter_csv"/>
 pmt\_filter\_csv
@@ -816,6 +1323,61 @@ Ordered  by project\_id.
 | 663                                  | "13147,13151"                        |
 | …                                    | …                                    |
 
+<a name="global_search"/>
+pmt\_global\_search
+=====================
+
+##### Description
+
+Searches title, description and tag columns of both activity and project tables for the search text.
+
+##### Parameter(s)
+
+1.  search\_text (text) – **Required**. Text string to search in activity and project tables.
+
+##### Result
+
+Json with the following:
+
+1.  type (text) – (p) for project record  and (a) for activity record.
+2.  id (integer) – project id or activity id, dependent on type.
+3.  title (character varying) – title of project or activity, dependent on type.
+4.  description (character varying) – description of project or activity, dependent on type.
+5.  tags (character varying) – tags of project or activity,  dependent on type.
+6.  p_ids (integer[]) - array of project ids related to record.
+7.  a_ids (integer[]) - array of activity ids related to record.
+
+
+##### Example(s)
+
+-   Search for the term 'rice':
+
+```SELECT * FROM pmt_global_search('rice');```
+
+```
+...
+{
+	"type":"a",
+	"id":1152,
+	"title":"ASDP",
+	"desc":"To install Rice processing plant at Mwamapuli village by June 2012",
+	"tags":null,
+	"p_ids":[2],
+	"a_ids":[1152]
+}
+...
+{
+	"type":"a",
+	"id":701,
+	"title":"ASDP",
+	"desc":"To excavate and line 2600 m of the main canal of Iyendwe irrigation scheme by June 2012",
+	"tags":"Rice",	
+	"p_ids":[2],
+	"a_ids":[701]
+}
+...
+
+```
 <a name="iati_import"/>
 pmt\_iati\_import
 =================
@@ -844,10 +1406,164 @@ True (success) or false (unsuccessful).
 
 TRUE
 
+<a name="infobox_activity"/>
+pmt\_infobox\_activity
+=============================
+
+##### Description
+
+All information for a single activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity id.
+2.  project\_id (integer) – project id of activity.
+3.  title (character varying) – title of activity.
+4.  label (character varying) – short title for activity.
+5.  description (character varying) – description of activity.
+6.  content (character varying) – various content for activity.
+7.  start\_date (date) – start date of activity.
+8.  end\_date (date) – end date of activity.
+9.  tags (character varying) – tags or keywords of activity.
+10.  iati\_identifier (integer) – iati idenifier or primary key of activity.
+11.  updated\_by (character varying(50)) -  last user to update activity information.
+12.  updated\_date (timestamp) -  last date and time activity information was updated.
+13.  custom\_fields (various) - any custom fields in the activity table that are not in the Core PMT will be returned as well.
+14.  location\_ct (integer) - number of locations for activity.
+15.  admin\_bnds (character varying) - list of GAUL administrative boundaries for all locations (format gaul_2, gaul_1, gaul_0). Multiple
+locations are seperated by a semi-colon (;).
+16.  taxonomy(object) - An object containing all associated taxonomy for the activity
+	1. taxonomy\_id (integer) - taxonomy id.
+	2. taxonomy (character varying) - taxonomy name.
+	3. classification\_id (integer) - classification id.
+	4. classification (character varying) - classification name.
+17.  partners(object) - An object containing all activity parners (Organizations having a Implementing or Funding Role in a activity)
+	1. organization\_id (integer) - organization id.
+	2. name (character varying) - organization name.
+	3. taxonomy\_id (integer) - taxonomy id.
+	4. taxonomy (character varying) - taxonomy name.
+	5. classification\_id (integer) - classification id.
+	6. classification (character varying) - classification name.
+18.  contacts (character varying) - An object containing all activity contacts.
+	1. contact\_id (integer) - contact id.
+	2. first\_name (character varying) - contact's first name.
+	3. last\_name (character varying) - contact's last name.
+	4. organization\_id (integer) - organization id.
+	5. name (character varying) - organization name the contact is associated with.
+
+##### Example(s)
+
+```select * from pmt_infobox_activity(14941);```
+
+```
+{
+	"activity_id":14941
+	,"project_id":764
+	,"title":"National coordination"
+	,"label":null
+	,"description":"National coordination"
+	,"content":null
+	,"start_date":"2011-03-19"
+	,"end_date":"2014-02-28"
+	,"tags":null
+	,"updated_by":"BMGF Data Scrub"
+	,"updated_date":"2014-01-28"
+	,"location_ct":1
+	,"admin_bnds":"Uganda,Kampala,Central Kampala"
+	,"taxonomy":[{
+		"taxonomy_id":17
+		,"taxonomy":"Sub-Initiative"
+		,"classification_id":774
+		,"classification":"Data & Priority Setting Platforms"
+		}]
+	,"partners":[{
+		"organization_id":1547
+		,"name":"Kickstart"
+		,"taxonomy_id":10
+		,"taxonomy":"Organisation Role"
+		,"classification_id":497
+		,"classification":"Implementing"
+		}]
+	,"contacts":null
+}
+```
+
+<a name="infobox_activity_contact"/>
+pmt\_infobox\_activity\_contact
+=============================
+**SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9**
+##### Description
+
+Contacts and partners for a given activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity\_id.
+2.  partners(character varying) - List of activity parners (Organizations having a Implementing or Funding Role in a activity)
+3.  contacts (character varying) - List of activity contacts.
+
+
+##### Example(s)
+
+```select * from pmt_infobox_activity_contact(1);```
+
+```
+{
+	"activity_id":1
+	,"partners":"FAO/ UNEP/ UNDP,MNRT, TFS,Tanzania Forestry Service (TFS)"
+	,"contacts":"Almas Kashindye"
+}
+```
+
+<a name="infobox_activity_desc"/>
+pmt\_infobox\_activity\_desc
+=============================
+**SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9**
+##### Description
+
+Description for a given activity.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  activity\_id (integer) – activity\_id.
+2.  description (character varying) - description of activity
+
+
+##### Example(s)
+
+```select * from pmt_infobox_activity_desc(1);```
+
+```
+{
+	"activity_id":1
+	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions 
+			from Deforestation and forest Degradation (REDD) as a component of the Governments 
+			evolving REDD Strategy, and integrate it with other REDD activities in the country"
+}
+```
+
 <a name="infobox_activity_stats"/>
 pmt\_infobox\_activity\_stats
 =============================
-
+**SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9**
 ##### Description
 
 Quick stats for a given activity.
@@ -885,69 +1601,68 @@ Json with the following:
 }
 ```
 
-<a name="infobox_activity_desc"/>
-pmt\_infobox\_activity\_desc
+<a name="infobox_project_contact"/>
+pmt\_infobox\_project\_contact
 =============================
 
 ##### Description
 
-Description for a given activity.
+Contacts and partners for a given project.
 
 ##### Parameter(s)
 
-1. activity_id (integer) - **Required.** Activity id.
+1. project_id (integer) - **Required.** Project id.
 
 ##### Result
 
 Json with the following:
 
-1.  activity\_id (integer) – activity\_id.
-2.  description (character varying) - description of activity
+1.  project\_id (integer) – project\_id.
+2.  partners(character varying) - List of project parners (Organizations having a Implementing or Funding Role in a activity)
+3.  contacts (character varying) - List of project contacts.
 
 
 ##### Example(s)
 
-```select * from pmt_infobox_activity_desc(1);```
+```select * from pmt_infobox_project_contact(1);```
 
 ```
 {
-	"activity_id":1
-	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions 
-			from Deforestation and forest Degradation (REDD) as a component of the Governments 
-			evolving REDD Strategy, and integrate it with other REDD activities in the country"
+	"project_id":1
+	,"partners":"No Data Entered"
+	,"contacts":"No Data Entered"
 }
 ```
 
-<a name="infobox_activity_contact"/>
-pmt\_infobox\_activity\_contact
+<a name="infobox_project_desc"/>
+pmt\_infobox\_project\_desc
 =============================
 
 ##### Description
 
-Contacts and partners for a given activity.
+Description for a given project.
 
 ##### Parameter(s)
 
-1. activity_id (integer) - **Required.** Activity id.
+1. project_id (integer) - **Required.** Project id.
 
 ##### Result
 
 Json with the following:
 
-1.  activity\_id (integer) – activity\_id.
-2.  partners(character varying) - List of activity parners (Organizations having a Implementing or Funding Role in a activity)
-3.  contacts (character varying) - List of activity contacts.
-
+1.  project\_id (integer) – project\_id.
+2.  title (character varying) - title of project
+2.  description (character varying) - description of project
 
 ##### Example(s)
 
-```select * from pmt_infobox_activity_contact(1);```
+```select * from pmt_infobox_project_desc(1);```
 
 ```
 {
-	"activity_id":1
-	,"partners":"FAO/ UNEP/ UNDP,MNRT, TFS,Tanzania Forestry Service (TFS)"
-	,"contacts":"Almas Kashindye"
+	"project_id":1
+	,"title":"IATI Activities XML Import"
+	,"description":"No Data Entered"
 }
 ```
 
@@ -1041,71 +1756,6 @@ Json with the following:
 	,"end_date":null
 	,"sector":"No Data Entered"
 	,"grant":null
-}
-```
-
-<a name="infobox_project_desc"/>
-pmt\_infobox\_project\_desc
-=============================
-
-##### Description
-
-Description for a given project.
-
-##### Parameter(s)
-
-1. project_id (integer) - **Required.** Project id.
-
-##### Result
-
-Json with the following:
-
-1.  project\_id (integer) – project\_id.
-2.  title (character varying) - title of project
-2.  description (character varying) - description of project
-
-##### Example(s)
-
-```select * from pmt_infobox_project_desc(1);```
-
-```
-{
-	"project_id":1
-	,"title":"IATI Activities XML Import"
-	,"description":"No Data Entered"
-}
-```
-
-<a name="infobox_project_contact"/>
-pmt\_infobox\_project\_contact
-=============================
-
-##### Description
-
-Contacts and partners for a given project.
-
-##### Parameter(s)
-
-1. project_id (integer) - **Required.** Project id.
-
-##### Result
-
-Json with the following:
-
-1.  project\_id (integer) – project\_id.
-2.  partners(character varying) - List of project parners (Organizations having a Implementing or Funding Role in a activity)
-3.  contacts (character varying) - List of project contacts.
-
-
-##### Example(s)
-
-```select * from pmt_infobox_project_contact(1);```
-
-```
-{
-	"project_id":1
-	,"partners":"No Data Entered"
-	,"contacts":"No Data Entered"
 }
 ```
 
@@ -1204,6 +1854,64 @@ Ordered  by georef.
 | 35539              | -7690321           | -1822100           | "365,443,933"      |
 | …                  | …                  | …                  | …                  |
 
+<a name="locations_by_polygon"/>
+pmt\_locations\_by\_polygon
+=======================
+
+##### Description
+
+Select locations within a given polygon by activity with a calculated distance from polygon centroid.
+
+##### Parameter(s)
+
+1.  wktPolygon (text) – **Required**. Well-known text representation of a polygon. 
+
+##### Result
+
+Json with the following:
+
+1.  title (character varying) – title of activity
+2.  location_ct (inteter) – number of locations found intersecting given polygon for this activity
+3.  avg_km (integer) - average distance from the polygon's centroid to the locations found intersecting given polygon for this activity
+3.  locations (json object):
+	1.  location\_id (integer) – location\_id of location
+	2.  lat\_dd (decimal) – latitude of location in decimal degrees
+	3.  long\_dd (decimal) – longitude of location in decimal degrees
+
+##### Example(s)
+
+-   Polygon in the Banjul, Gambia region:
+
+```
+select * from pmt_locations_by_polygon('POLYGON((-16.473 13.522,-16.469 13.186,-16.764 13.185,-16.797 
+13.491,-16.472 13.517,-16.473 13.522))'); 
+```
+
+```
+{
+	"title":"National coordination"
+	,"location_ct":1
+	,"avg_km":9
+	,"locations":
+		[{
+		 	"location_id":7630
+			,"lat_dd":13.269500
+			,"long_dd":-16.64700
+		}]
+}
+,{
+	"title":"P V S Salinity"
+	,"location_ct":1
+	,"avg_km":18
+	,"locations":
+		[{
+			"location_id":7632
+			,"lat_dd":13.482442
+			,"long_dd":-16.53636
+		}]
+}
+```
+
 <a name="locations_by_tax"/>
 pmt\_locations\_by\_tax
 =======================
@@ -1279,6 +1987,38 @@ Ordered by most used. Json with the following:
     "o_id":1,    
     "name":"AfDB"   
 }
+```
+
+<a name="orgs"/>
+pmt\_orgs
+=========
+
+##### Description
+
+Get all organizations.
+
+##### Parameter(s)
+
+No parameters.
+
+##### Result
+
+Ordered by organization name. Json with the following:
+
+1.  o\_id (integer) – organization\_id.
+2.  name (character varying(255)) – name of organization.
+
+##### Example(s)
+
+```SELECT * FROM pmt_orgs();```
+
+```
+...
+{
+	"o_id":32,
+	"name":"CARE International"  
+}
+...
 ```
 
 <a name="project_listview"/>
@@ -1438,87 +2178,53 @@ Boolean. True/False successful.
 
 TRUE
 
-<a name="tax_inuse"/>
-pmt\_tax\_inuse
-===============
+<a name="sector_compare"/>
+pmt\_sector\_compare
+====================
 
 ##### Description
 
-Taxonomy and associated classifications that are in use by any project,
-activity or location.
+Allows a comparision of assigned Sector taxonomy and the text value from the IATI Activities Sector xml element from the imported 
+document.
 
 ##### Parameter(s)
 
-1.  data\_group\_id (integer) – Optional. Restrict data to data group.
-2.  taxonomy\_ids (character varying) – Optional. Restrict data to
-    taxonomy(ies).
-3.  country\_ids (character varying) – Optional. Restrict data to
-    country(ies).
+1.  classification\_ids (character varying) – Optional. Comma seperated list of classification_ids to restrict results to.
+2.  order\_by (character varying) – Optional. Name of return result field to order results by (see Result section).
 
 ##### Result
 
-Ordered by most used. Json with the following:
+Json with the following:
 
-1.  t\_id (integer) – taxonomy\_id.
-2.  name (character varying(255)) – name of taxonomy.
-3.  Is\_cat (boolean) – is/not a taxonomy category.
-4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
-    taxonomy.
-5.  classifications (object) – classifications in use for this taxonomy.
-	1.  c\_id (integer) – classification\_id.
-	2.  cat\_id (integer) – classification\_id for the category
-    classification.
-	3.  name (character varying(255)) – the name of the classification.
+1.  a\_id (integer) – activity_id of activity.
+2.  c\_id (integer) - classification_id of Sector classification currently assigned to activity.
+3.  sector (character varying) - classification name of Sector classification currently assigned to activity.
+3.  import (character varying) - text value of the IATI Activities Sector element from the source document used to import the activity data.
 
 ##### Example(s)
 
--   Taxonomy/classifications for the World Bank data group
-    (classification\_id:772) in Bolivia (classification\_id:50):
+-   Compare the text value of the XML IATI Activities Sector element from the source document used to import 
+the activity data for the Bolivia data group (classification\_id:769) where the Sector 
+'Sectors not specified' (classification\_id:756) was assigned and sort by the text value of the IATI Activities 
+Sector xml element (result field: 'import'):
 
-```SELECT * FROM pmt_tax_inuse(772, '', '50');```
+```select * from pmt_sector_compare('769,756', 'import');```
 
 ```
 ...
-{
-    "t_id":15,
-    "name":"Sector",
-    "is_cat":false,
-    "cat_id":14,
-    "classifications":
-        [
-            {
-                "c_id":731,
-                "cat_id":552,
-                "name":"Desarrollo rural"
-            },
-            {
-                "c_id":636,
-                "cat_id":540,
-                "name":"Power generation/renewable sources"
-            },
-            ...
-        ]
-},
-{
-    "t_id":14,
-    "name":"Sector Category",
-    "is_cat":true,
-    "cat_id":16,
-    "classifications":
-        [
-            {
-                "c_id":552,
-                "cat_id":765,
-                "name":"Other multisector"
-            },
-            ...
-            {
-                "c_id":540,
-                "cat_id":764,
-                "name":"ENERGY GENERATION AND SUPPLY"},
-            ...
-        ]
+,{
+	"a_id":5526,
+	"c_id":756,
+	"sector":"Sectors not specified",
+	"import":"MULTISECTORIAL"
 }
+,{
+	"a_id":7461,
+	"c_id":756,
+	"sector":"Sectors not specified",
+	"import":"RECURSOS HIDRICOS"
+}
+...
 ```
 
 <a name="stat_activity_by_district"/>
@@ -1794,6 +2500,73 @@ Json with the following:
 ...
 ```
 
+<a name="stat_partner_network"/>
+pmt\_stat\_partner\_network
+=============================
+
+##### Description
+
+Statistics function providing nested accountable and implementing organizations and activities by funding organization.
+
+##### Parameter(s)
+
+1.  country\_ids (character varying) – Optional. Restrict data to country(ies).
+
+##### Result
+
+Json with the following:
+
+1. name(character varying) – name funding organization.
+2. o\_id (integer) - funding organization's id.
+	1. children (array) - object array of accountable organizations for the funding organizations activities
+		1. name (character varying) - name of accountable organization
+		2. children (array) - object array of implementing organizations for the accountable organizations activities
+			1. name (character varying) - name of implementing organization
+			2. children (array) - object array of activites implemented by the implementing organization
+				1. name (character varying) - title of activity
+
+##### Example(s)
+
+-   Partner network for activities in Nigeria (classification\_id:244):
+
+```SELECT * FROM pmt_stat_partner_network('244');```
+
+```
+...
+[
+  {
+	"name":"BMGF"
+	"o_id":13
+	,"children":[
+		{
+		   "name":"International Institute of Tropical Agriculture (IITA)"
+		  ,"children":[
+			{
+			    "name":"Doreo Partners"
+			    ,"children":[
+				{
+				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
+				},
+				{
+				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
+				},
+				{
+				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
+				},
+				...
+		   	     ]
+			}
+			...
+		   ]
+		}
+		...
+	]
+  }
+  ...
+]
+...
+```
+
 <a name="stat_pop_by_district"/>
 pmt\_stat\_pop\_by\_district
 =============================
@@ -1886,6 +2659,146 @@ Json with the following:
 }
 ```
 
+<a name="tax_inuse"/>
+pmt\_tax\_inuse
+===============
+
+##### Description
+
+Taxonomy and associated classifications that are in use by any project,
+activity or location.
+
+##### Parameter(s)
+
+1.  data\_group\_id (integer) – Optional. Restrict data to data group.
+2.  taxonomy\_ids (character varying) – Optional. Restrict data to
+    taxonomy(ies).
+3.  country\_ids (character varying) – Optional. Restrict data to
+    country(ies).
+
+##### Result
+
+Ordered by most used. Json with the following:
+
+1.  t\_id (integer) – taxonomy\_id.
+2.  name (character varying(255)) – name of taxonomy.
+3.  Is\_cat (boolean) – is/not a taxonomy category.
+4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
+    taxonomy.
+5.  classifications (object) – classifications in use for this taxonomy.
+	1.  c\_id (integer) – classification\_id.
+	2.  cat\_id (integer) – classification\_id for the category
+    classification.
+	3.  name (character varying(255)) – the name of the classification.
+
+##### Example(s)
+
+-   Taxonomy/classifications for the World Bank data group
+    (classification\_id:772) in Bolivia (classification\_id:50):
+
+```SELECT * FROM pmt_tax_inuse(772, '', '50');```
+
+```
+...
+{
+    "t_id":15,
+    "name":"Sector",
+    "is_cat":false,
+    "cat_id":14,
+    "classifications":
+        [
+            {
+                "c_id":731,
+                "cat_id":552,
+                "name":"Desarrollo rural"
+            },
+            {
+                "c_id":636,
+                "cat_id":540,
+                "name":"Power generation/renewable sources"
+            },
+            ...
+        ]
+},
+{
+    "t_id":14,
+    "name":"Sector Category",
+    "is_cat":true,
+    "cat_id":16,
+    "classifications":
+        [
+            {
+                "c_id":552,
+                "cat_id":765,
+                "name":"Other multisector"
+            },
+            ...
+            {
+                "c_id":540,
+                "cat_id":764,
+                "name":"ENERGY GENERATION AND SUPPLY"},
+            ...
+        ]
+}
+```
+
+<a name="taxonomies"/>
+pmt\_taxonomies
+===============
+
+##### Description
+
+Taxonomy and associated classifications.
+
+##### Parameter(s)
+
+1.  taxonomy\_ids (character varying) – Optional. Restrict data to taxonomy(ies).
+
+##### Result
+
+Ordered by most used. Json with the following:
+
+1.  t\_id (integer) – taxonomy\_id.
+2.  name (character varying(255)) – name of taxonomy.
+3.  Is\_cat (boolean) – is/not a taxonomy category.
+4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
+    taxonomy.
+5.  classifications (object) – classifications in use for this taxonomy.
+	1.  c\_id (integer) – classification\_id.
+	2.  cat\_id (integer) – classification\_id for the category
+    classification.
+	3.  name (character varying(255)) – the name of the classification.
+
+##### Example(s)
+
+-   Taxonomy/classifications for the Sector taxonomy (taxonomy\_id:15):
+
+```select * from pmt_taxonomies('15');```
+
+```
+...
+{
+    "t_id":15,
+    "name":"Sector",
+    "is_cat":false,
+    "cat_id":14,
+    "classifications":
+        [
+	    {
+		"c_id":636,
+		"cat_id":540,
+		"name":"Power generation/renewable sources"
+	    },
+  	    {
+		"c_id":657,
+		"cat_id":542,
+		"name":"Privatisation"
+	    }            
+            ...
+        ]
+}
+```
+
 <a name="update_user"/>
 pmt\_update\_user
 ================
@@ -1914,7 +2827,7 @@ Boolean. Successful (true). Unsuccessful (false).
 
 -   Update email for user Jane Doe(user_id:315):
 
-```SELECT * FROM pmt_update_user(315, null, null, null, null, 'jane.doe1234@email.com',  null, null);```
+```SELECT * FROM pmt_update_user(315, null, null, null, null, null, 'jane.doe1234@email.com',  null, null);```
 
 ```
 TRUE
@@ -1943,6 +2856,7 @@ Json with the following:
 4.  username (character varying) – username of user.
 5.  email (character varying) – email address of user.
 6.  organization\_id (integer) – organization id for organization of user.
+7.  authorized\_project\_ids - list of project_ids user has authority to edit.
 7.  roles (json object):
 	1.  role\_id (integer) – role id user is assigned to.
 	2.  name (character varying) – name of role user is assigned to.
@@ -1951,23 +2865,24 @@ Json with the following:
 
 - Authenticate Reader test user passing its username and hashed and salted password.
 
-```SELECT * FROM pmt_user_auth('reader', '$2a$10$.V0ETMIAW6O9z2wekwMG1.PuaYpuJmZTO1W3GCwOOF3UyfjoXKiea');```
+```SELECT * FROM pmt_user_auth('johndoe', '$2a$10$.V0ETMIAW6O9z2wekwMG1.PuaYpuJmZTO1W3GCwOOF3UyfjoXKiea');```
 
 ```
 {
 	"user_id":1,
-	"first_name":"reader",
-	"last_name":"(pmt testing user)",
-	"username":"reader",
+	"first_name":"John",
+	"last_name":"Doe",
+	"username":"johndoe",
 	"email":"test@email.com",
 	"organization_id":3,
 	"organization":"spatial dev",
 	"data_group_id":769,
 	"data_group":"ASDP",
+	"authorized_project_ids": "661,621,733,443"
 	"roles":
 		[{
-			"role_id":1,
-			"name":"Reader"
+			"role_id":2,
+			"name":"Editor"
 		}]
 }
 ```
@@ -2056,9 +2971,268 @@ Json with the following:
 ...
 ```
 
+<a name="validate_activities"/>
+pmt\_validate\_activities
+===========================
+
+##### Description
+
+Validate list of activity\_ids.
+
+##### Parameter(s)
+
+1. activity\_ids (character varying) - **Required**. comma seperated list of activity_ids to validate.
+
+##### Result
+
+Integer array of valid ACTIVE activity_ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_activities('11879,15432,15725,122');```
+
+| integer[]   |
+|-------------|
+| {11879,15432,15725}|
+
+<a name="validate_activity"/>
+pmt\_validate\_activity
+===========================
+
+##### Description
+
+Validate an activity\_id.
+
+##### Parameter(s)
+
+1. activity\_id (integer) - **Required**. activity_id to validate.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_activity(11879);```
+
+TRUE
+
+<a name="validate_classification"/>
+pmt\_validate\_classification
+===========================
+
+##### Description
+
+Validate a classification\_id.
+
+##### Parameter(s)
+
+1. classification\_id (integer) - **Required**. classification_id to validate.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_classification(768);```
+
+TRUE
+
+<a name="validate_classifications"/>
+pmt\_validate\_classifications
+==============================
+
+##### Description
+
+Validate list of classification\_ids.
+
+##### Parameter(s)
+
+1. classification\_ids (character varying) - **Required**. comma seperated list of classification_ids to validate.
+
+##### Result
+
+Integer array of valid ACTIVE classification_ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_classifications('50,9999,720');```
+
+| integer[]   |
+|-------------|
+| {50,720}|
+
+<a name="validate_contact"/>
+pmt\_validate\_contact
+===========================
+
+##### Description
+
+Validate a contact\_id.
+
+##### Parameter(s)
+
+1. contact\_id (integer) -  **Required**. contact_id to validate.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_contact(169);```
+
+TRUE
+
+<a name="validate_contacts"/>
+pmt\_validate\_contacts
+==============================
+
+##### Description
+
+Validate list of contact\_ids.
+
+##### Parameter(s)
+
+1. contact\_ids (character varying) - **Required**. comma seperated list of contact_ids to validate.
+
+##### Result
+
+Integer array of valid ACTIVE contact_ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_contacts('169,145,9999');```
+
+| integer[]   |
+|-------------|
+| {145,169}|
+
+<a name="validate_organization"/>
+pmt\_validate\_organization
+===========================
+
+##### Description
+
+Validate a organization\_id.
+
+##### Parameter(s)
+
+1. organization\_id (integer) - **Required**. organization_id to validate.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_organization(13);```
+
+TRUE
+
+<a name="validate_organizations"/>
+pmt\_validate\_organizations
+==============================
+
+##### Description
+
+Validate list of organization\_ids.
+
+##### Parameter(s)
+
+1. organization\_ids (character varying) - **Required**. comma seperated list of organization_ids to validate.
+
+##### Result
+
+Integer array of valid ACTIVE organization_ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_organizations('13,27,2');```
+
+| integer[]   |
+|-------------|
+| {13.27}|
+
+<a name="validate_taxonomies"/>
+pmt\_validate\_taxonomies
+===========================
+
+##### Description
+
+Validate list of taxonomy\_ids.
+
+##### Parameter(s)
+
+1. taxonomy\_ids (character varying) - **Required**. comma seperated list of taxonomy_ids to validate.
+
+##### Result
+
+Integer array of valid ACTIVE taxonomy_ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_taxonomies('5,10,99');```
+
+| integer[]   |
+|-------------|
+| {5,10}|
+
+<a name="validate_taxonomy"/>
+pmt\_validate\_taxonomy
+===========================
+
+##### Description
+
+Validate an taxonomy\_id.
+
+##### Parameter(s)
+
+1. taxonomy\_id (integer) - **Required**. taxonomy_id to validate.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_taxonomy(1);```
+
+TRUE
+
+<a name="validate_user_authority"/>
+pmt\_validate\_user\_authority
+==============================
+
+##### Description
+
+Validate a user's authority to edit a project id and the level of authority (CRUD).
+
+##### Parameter(s)
+
+1. user\_id (integer) - **Required**. user_id of user to validate authority for.
+2. project\_id (integer) - project_id to validate authority for user to edit.
+3. auth\_type (enum) - **Required**. authority type.
+	Options:
+	1. create - user has ability to create new records.
+	2. read - user has ability to read records.
+	3. update - user has ability to update existing records.
+	4. delete - user has ability to delete records.
+
+##### Result
+
+Boolean. True/False user has authority to edit project with authority type.
+
+##### Example(s)
+
+```select * from pmt_validate_user_authority(23, 420, 'update');```
+
+TRUE
+
 <a name="version"/>
 pmt\_version
-=============================
+============
 
 ##### Description
 

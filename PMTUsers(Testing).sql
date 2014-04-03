@@ -13,17 +13,16 @@ organization and one data group loaded.
 SELECT * FROM organization;
 SELECT * FROM pmt_data_groups();
 
-
 ----------
 -- Step 2
 -- Update scripts with ids and run
 ----------
 -- test reader user with Reader role
-SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Reader'), 'reader', 'reader', 'test@email.com', 'reader', '(pmt testing user)'); 
+SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Reader'), 'reader', 'reader', 'info@spatialdev.com', 'reader', '(pmt testing user)'); 
 -- test editor user with Editor role
-SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Editor'), 'editor', 'editor', 'test@email.com', 'editor', '(pmt testing user)'); 
+SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Editor'), 'editor', 'editor', 'info@spatialdev.com', 'editor', '(pmt testing user)'); 
 -- test super user with Super role
-SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Super'), 'super', 'super', 'test@email.com', 'super', '(pmt testing user)'); 
+SELECT * FROM pmt_create_user(<organization_id>, <data_group_id>, (SELECT role_id FROM role WHERE name = 'Super'), 'super', 'super', 'info@spatialdev.com', 'super', '(pmt testing user)'); 
 
 ----------
 -- Step 3

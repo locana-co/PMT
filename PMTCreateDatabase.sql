@@ -47,7 +47,9 @@ DROP TABLE IF EXISTS  result_taxonomy CASCADE;
 DROP TABLE IF EXISTS  role CASCADE;
 DROP TABLE IF EXISTS  taxonomy CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS  user_activity CASCADE;
 DROP TABLE IF EXISTS  user_role CASCADE;
+DROP TABLE IF EXISTS "version" CASCADE;
 DROP TABLE IF EXISTS  xml CASCADE;
 
 --Drop Views  (if they exist)
@@ -69,9 +71,21 @@ DROP MATERIALIZED VIEW IF EXISTS location_lookup CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS organization_lookup CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS taxonomy_lookup CASCADE;
 
+-- Drop Enumerators
+DROP TYPE IF EXISTS auth_crud CASCADE;
+DROP TYPE IF EXISTS auth_source CASCADE;
+DROP TYPE IF EXISTS edit_action CASCADE;
+DROP TYPE IF EXISTS edit_auth CASCADE;
+
+-- Create Enumerators
+CREATE TYPE auth_crud AS ENUM ('create','read','update','delete');
+CREATE TYPE auth_source AS ENUM ('organization','data_group');
+CREATE TYPE edit_action AS ENUM ('add','delete','replace');
+
 --Drop Functions
 DROP FUNCTION IF EXISTS refresh_taxonomy_lookup() CASCADE;
 DROP FUNCTION IF EXISTS pmt_activities_by_tax(Integer, Integer, character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_activity(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity_details(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity_listview(character varying, character varying, character varying, date, date, character varying, text, integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity_listview_ct(character varying, character varying, character varying, date, date) CASCADE;
@@ -82,15 +96,23 @@ DROP FUNCTION IF EXISTS pmt_iati_import(text, character varying, boolean) CASCAD
 DROP FUNCTION IF EXISTS pmt_isnumeric(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_isdate(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_category_root(integer, integer) CASCADE;
+DROP FUNCTION IF EXISTS pmt_contacts()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_countries(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_create_user(integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
 DROP FUNCTION IF EXISTS pmt_data_groups() CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity(integer, integer, json)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity_contact(integer, integer, integer, edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity_taxonomy(character varying, integer, edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_contact(integer, integer, json)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_participation(integer, integer, integer, integer, integer, integer, edit_action)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_csv(character varying, character varying, character varying, date, date, text);
 DROP FUNCTION IF EXISTS pmt_filter_iati(character varying, character varying, character varying, date, date, text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_locations(integer, character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_orgs(character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_projects(character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_global_search(text)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_menu(text)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_infobox_activity(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_activity_contact(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_activity_desc(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_activity_stats(integer)  CASCADE;
@@ -100,16 +122,20 @@ DROP FUNCTION IF EXISTS pmt_infobox_project_info(integer, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_project_nutrition(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_project_stats(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_org(integer, integer, character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_locations_by_polygon(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_tax(integer, integer, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_org_inuse(character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_orgs()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_project_listview(integer, character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_project_listview_ct(character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_activity(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_project(integer) CASCADE;
+DROP FUNCTION IF EXISTS pmt_sector_compare(character varying, character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_counts(character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_activity_by_district(integer, character varying, character varying, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_activity_by_tax(integer, character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_locations(character varying, character varying, character varying, date, date) CASCADE;
+DROP FUNCTION IF EXISTS pmt_stat_partner_network(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_pop_by_district(character varying, character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_project_by_tax(integer, character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_stat_orgs_by_activity(integer, character varying, character varying, character varying, date, date) CASCADE;
@@ -124,10 +150,13 @@ DROP FUNCTION IF EXISTS pmt_validate_activities(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_activity(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_classification(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_classifications(character varying)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_contact(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_contacts(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_organization(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_organizations(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_taxonomy(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_taxonomies(character varying)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_user_authority(integer, integer, auth_crud)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_version()  CASCADE;
 
 --Drop Types  (if it exists)
@@ -136,20 +165,26 @@ DROP TYPE IF EXISTS pmt_activity_details_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_activity_listview_result CASCADE;
 DROP TYPE IF EXISTS pmt_auth_user_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_auto_complete_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_contacts_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_countries_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_data_groups_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_filter_locations_result CASCADE;
 DROP TYPE IF EXISTS pmt_filter_projects_result CASCADE;
 DROP TYPE IF EXISTS pmt_filter_orgs_result CASCADE;
+DROP TYPE IF EXISTS pmt_global_search_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_infobox_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_locations_by_org_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_locations_by_polygon_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_locations_by_tax_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_org_inuse_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_orgs_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_project_listview_result CASCADE;
+DROP TYPE IF EXISTS pmt_sector_compare_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_stat_counts_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_activity_by_district_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_activity_by_tax_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_locations_result CASCADE;
+DROP TYPE IF EXISTS pmt_stat_partner_network_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_pop_by_district_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_project_by_tax_result CASCADE;
 DROP TYPE IF EXISTS pmt_stat_orgs_by_activity_result CASCADE;
@@ -178,7 +213,9 @@ Create the ENTITIES:
 	13. project			
 	14. result
 	15. user
-	16. xml
+	16. user_activity
+	17. version
+	18. xml
 ******************************************************************/
 --Activity
 CREATE TABLE "activity"
@@ -192,6 +229,7 @@ CREATE TABLE "activity"
 	,"start_date"		date
 	,"end_date"		date
 	,"tags"			character varying
+	,"iati_identifier" 	character varying(50)
 	,"active"		boolean				NOT NULL DEFAULT TRUE
 	,"retired_by"		integer	
 	,"created_by" 		character varying(50)
@@ -223,16 +261,14 @@ CREATE TABLE "config"
 (
 	"config_id" 		SERIAL				NOT NULL
 	,"version"		numeric(2,1)
-	,"iteration" 		integer
-	,"changeset" 		integer
 	,"download_dir"		text
+	,"edit_auth_source"	auth_source			DEFAULT 'data_group'
 	,"created_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
 	,"updated_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
 	,CONSTRAINT config_id PRIMARY KEY(config_id)
 );
 -- add the current configuration information
-INSERT INTO config(version, iteration, changeset, download_dir) 
-VALUES (2.0, 8, 0, '/var/lib/postgresql/9.3/main/');
+INSERT INTO config(version, download_dir) VALUES (2.0, '/var/lib/postgresql/9.3/main/');
 --Contact
 CREATE TABLE "contact"
 (
@@ -456,7 +492,6 @@ CREATE TABLE "participation"
 	,"project_id"		integer 			NOT NULL
 	,"activity_id"		integer		
 	,"organization_id"	integer				NOT NULL
-	,"reporting_org"	boolean				NOT NULL DEFAULT FALSE
 	,"active"		boolean				NOT NULL DEFAULT TRUE
 	,"retired_by"		integer
 	,"created_by" 		character varying(50)
@@ -541,6 +576,29 @@ CREATE TABLE "user"
 	,"updated_date" 	timestamp without time zone 	NOT NULL DEFAULT now()
 	,CONSTRAINT user_id PRIMARY KEY(user_id)
 );
+--User Activity
+CREATE TABLE "user_activity"
+(
+	"user_activity_id"	SERIAL				NOT NULL
+	,"user_id"		integer 			NULL			
+	,"username"		character varying(255)		NOT NULL
+	,"access_date" 		timestamp		 	NOT NULL DEFAULT current_timestamp
+	,"status"		character varying(50)		NOT NULL 
+	,CONSTRAINT user_activity_id PRIMARY KEY(user_activity_id)
+);
+-- Version
+CREATE TABLE "version"
+(
+	"version_id"		SERIAL				NOT NULL
+	,"version"		numeric(2,1)
+	,"iteration" 		integer
+	,"changeset" 		integer
+	,"created_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
+	,"updated_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
+	,CONSTRAINT version_id PRIMARY KEY(version_id)
+);
+-- add the current version information
+INSERT INTO version(version, iteration, changeset) VALUES (2.0, 8, 24);
 -- XML
 CREATE TABLE "xml"
 (
@@ -1026,6 +1084,8 @@ RETURNS TRIGGER AS $process_xml$
 	lat numeric;
 	long numeric;
 	error text;
+	has_valid_sector boolean;
+	sector_text text array;
 BEGIN	
         RAISE NOTICE 'Function process_xml() fired by INSERT or UPDATE on table xml.';
 	-- Extract from the xml document the type and name of the document
@@ -1161,8 +1221,7 @@ BEGIN
 						
 			-- iterate over all the activities in the the document
 			FOR activity IN EXECUTE 'SELECT (xpath(''/iati-activity/iati-identifier/text()'', node.xml))[1]::text AS "iati-identifier" ' 
-			    || ',(xpath(''/iati-activity/reporting-org/text()'', node.xml))[1]::text AS "reporting-org", (xpath(''/iati-activity/reporting-org/@type'', node.xml))[1]::text AS "reporting-org_type" '
-			    || ',(xpath(''/iati-activity/title/text()'', node.xml))[1]::text AS "title" '
+			    || ',(xpath(''/iati-activity/title/text()'', node.xml))[1]::text AS "title" '		    
 			    || ',(xpath(''/iati-activity/participating-org/text()'', node.xml))::text[] AS "participating-org",(xpath(''/iati-activity/participating-org/@role'', node.xml))::text[] AS "participating-org_role",(xpath(''/iati-activity/participating-org/@type'', node.xml))::text[] AS "participating-org_type"  '
 			    || ',(xpath(''/iati-activity/recipient-country/text()'', node.xml))::text[] AS "recipient-country",(xpath(''/iati-activity/recipient-country/@code'', node.xml))::text[] AS "recipient-country_code" ,(xpath(''/iati-activity/recipient-country/@percentage'', node.xml))::text[] AS "recipient-country_percentage"'
 			    || ',(xpath(''/iati-activity/description/text()'', node.xml))[1]::text AS "description" '
@@ -1175,327 +1234,310 @@ BEGIN
 			    || ',(xpath(''/iati-activity/budget'', node.xml))::xml[] AS "budget"'
 			    || 'FROM(SELECT unnest(xpath(''/' || NEW.type || '/iati-activity'', $1.xml))::xml AS xml) AS node;'  USING NEW LOOP
 
-			    -- Create a activity record and connect to the created project
-			    EXECUTE 'INSERT INTO activity (project_id, title, description, created_by, created_date, updated_by, updated_date) VALUES( ' 
-			    || p_id || ', ' || coalesce(quote_literal(activity."title"),'NULL') || ', ' 
-			    || coalesce(quote_literal(activity."description"),'NULL') || ', ' 
-			    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-			    || ') RETURNING activity_id;' INTO a_id;
-			    
-			    
-			    RAISE NOTICE ' +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
-			    RAISE NOTICE ' + Activity id % was added to the database.', a_id; 				    
-			    RAISE NOTICE ' + Adding activity:  %', activity."iati-identifier";		-- not a PMT attribute and not written to the database
-			    RAISE NOTICE '   - Reporting org:  %', activity."reporting-org";		
-			    RAISE NOTICE '      - Type:  %', activity."reporting-org_type";
-			    RAISE NOTICE '   - Title:  %', activity."title";
-			    RAISE NOTICE '   - Description:  %', activity."description";
-			    
-			    idx := 1;
-			    FOREACH i IN ARRAY activity."participating-org" LOOP
-				-- Does this org exist in the database?
-				SELECT INTO record_id organization.organization_id::integer FROM organization WHERE lower(name) = lower(i);
-				IF record_id IS NOT NULL THEN
-				    -- Create a participation record
-				    EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || p_id || ', ' || a_id || ', ' || record_id || ', ' 
+			    -- the activity must at least have a title
+			    IF activity."title" IS NOT NULL or activity."title" <> '' THEN
+			            -- Initialize the valid_sector flag to false
+			            has_valid_sector := false;			            
+				    -- Create a activity record and connect to the created project
+				    EXECUTE 'INSERT INTO activity (project_id, title, description, iati_identifier, created_by, created_date, updated_by, updated_date) VALUES( ' 
+				    || p_id || ', ' || coalesce(quote_literal(trim(activity."title")),'NULL') || ', ' || coalesce(quote_literal(trim(activity."description")),'NULL') || ', ' 
+				    || coalesce(quote_literal(activity."iati-identifier"),'NULL') || ', ' 
 				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING participation_id;' INTO participation_id;				   
-				ELSE
-				    -- Create a organization record
-				    EXECUTE 'INSERT INTO organization(name, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || coalesce(quote_literal(i),'NULL') || ', ' 
-				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING organization_id;' INTO o_id;
-				    -- Create a participation record
-				    EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || p_id || ', ' || a_id || ', ' || o_id || ', ' 
-				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING participation_id;' INTO participation_id;
-				END IF;
-				-- Does this value exist in our taxonomy?
-				SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."participating-org_role"[idx]) AND iati_codelist = 'Organisation Role';
-				IF record_id IS NOT NULL THEN
-				   -- add the taxonomy to the participation record
-			           EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES( ' || participation_id || ', ' || record_id || ', ''participation_id'');';
-				END IF;
-				-- Does this value exist in our taxonomy?
-				SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."participating-org_type"[idx]) AND iati_codelist = 'Organisation Type';
-				IF record_id IS NOT NULL THEN
-				   -- Does the organization have this taxonomy assigned?
-				   SELECT INTO record_id organization_taxonomy.organization_id::integer FROM organization_taxonomy WHERE organization_taxonomy.organization_id = o_id AND organization_taxonomy.classification_id = record_id;
-				   IF record_id IS NULL THEN
-				      -- add the taxonomy to the organization record
-			              EXECUTE 'INSERT INTO organization_taxonomy(organization_id, classification_id, field) VALUES( ' || o_id || ', ' || record_id || ', ''organization_id'');';
-			           END IF;
-				END IF;				  
-				RAISE NOTICE '   - Participating org:  %', i;
-				RAISE NOTICE '      - Role:  %', activity."participating-org_role"[idx];
-				RAISE NOTICE '      - Type:  %', activity."participating-org_type"[idx];
-				idx := idx + 1;
-			    END LOOP;	
-			    idx := 1;
-			    FOREACH i IN ARRAY activity."recipient-country" LOOP
-			        IF activity."recipient-country_code"[idx] IS NOT NULL THEN
-			           -- Does this value exist in our taxonomy?
-			           SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."recipient-country_code"[idx]) AND iati_codelist = 'Country';
-				   IF record_id IS NOT NULL THEN
-				      -- add the taxonomy to the activity record
-				      EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || record_id || ', ''activity_id'');';
-				   END IF;	
-			        END IF;
-				RAISE NOTICE '   - Recipient country:  %', i;
-				RAISE NOTICE '      - Code:  %', activity."recipient-country_code"[idx];
-				IF activity."recipient-country_percentage"[idx] IS NULL THEN
-					RAISE NOTICE '      - Percentage:  100';
-				ELSE				
-					RAISE NOTICE '      - Percentage:  %', activity."recipient-country_percentage"[idx];
-				END IF;
-				idx := idx + 1;
-			    END LOOP;			    		   
-			    idx := 1;
-			    FOREACH i IN ARRAY activity."activity-date" LOOP
-			       IF i <> ''  AND pmt_isdate(i) THEN
-			          CASE 
-			            WHEN lower(activity."activity-date_type"[idx]) = 'start-planned' OR lower(activity."activity-date_type"[idx]) = 'start-actual' THEN				    
-			               EXECUTE 'UPDATE activity SET start_date=' || coalesce(quote_nullable(i)) || ' WHERE activity_id =' || a_id || ';'; 
-			            WHEN lower(activity."activity-date_type"[idx]) = 'end-planned' OR lower(activity."activity-date_type"[idx]) = 'end-actual' THEN
-			               EXECUTE 'UPDATE activity SET end_date=' || coalesce(quote_nullable(i)) || ' WHERE activity_id =' || a_id || ';'; 
-			            ELSE
-			               EXECUTE 'UPDATE activity SET start_date=' || coalesce(quote_nullable(i)) || ' WHERE activity_id =' || a_id || ';'; 
-			          END CASE;
-			       END IF;
-			       			
-				RAISE NOTICE '   - Activity date:  %', i;				
-				RAISE NOTICE '      - Type:  %', activity."activity-date_type"[idx];    
-				idx := idx + 1;
-			    END LOOP;
-			    IF 	activity."activity-status_code" IS NOT NULL THEN
-			        -- Does this value exist in our taxonomy?
-			        SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."activity-status_code") AND iati_codelist = 'Activity Staus';
-				IF record_id IS NOT NULL THEN
-				   -- add the taxonomy to the activity record
-				   EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || record_id || ', ''activity_id'');';
-				END IF;	
-			    END IF;
-			    RAISE NOTICE '   - Activity status:  %', activity."activity-status";
-			    RAISE NOTICE '      - Code:  %', activity."activity-status_code";
-			    idx := 1;
-			    FOREACH i IN ARRAY activity."sector_code" LOOP
-				IF activity."sector_code"[idx] IS NOT NULL THEN
-				   -- Does this value exist in our taxonomy?
-				   SELECT INTO class_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."sector_code"[idx]) AND iati_codelist = 'Sector';
-				   IF class_id IS NOT NULL THEN
-				      -- does this activity already have this sector assigned?
-				      SELECT INTO record_id activity_id::integer FROM activity_taxonomy WHERE activity_id = a_id AND classification_id = class_id;
-				      IF record_id IS NULL THEN
-				         -- add the taxonomy to the activity record
-				         EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || class_id || ', ''activity_id'');';
-				      END IF;
-				   END IF;
-				   -- Does this value exist in our taxonomy? 
-				   SELECT INTO class_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(substring(trim(activity."sector_code"[idx]) from 1 for 3)) AND iati_codelist = 'Sector';
-				   IF class_id IS NOT NULL THEN
-				      -- does this activity already have this sector assigned?
-				      SELECT INTO record_id activity_id::integer FROM activity_taxonomy WHERE activity_id = a_id AND classification_id = class_id;
-				      IF record_id IS NULL THEN
-				         -- add the taxonomy to the activity record
-				         EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || class_id || ', ''activity_id'');';
-				      END IF;
-				   END IF;	
-				END IF;				
-				RAISE NOTICE '   - Sector:  %', i;
-				RAISE NOTICE '      - Code:  %', activity."sector_code"[idx];
-				RAISE NOTICE '      - Category: %', lower(substring(activity."sector_code"[idx] from 1 for 3));
-				idx := idx + 1;
-			    END LOOP;			    
-			    FOREACH i IN ARRAY activity."transaction" LOOP
-				FOR transact IN EXECUTE 'SELECT (xpath(''/transaction/transaction-type/text()'', '''|| i ||'''))[1]::text AS "transaction-type" ' 
-				  || ',(xpath(''/transaction/provider-org/text()'', '''|| i ||'''))[1]::text AS "provider-org"'
-				  || ',(xpath(''/transaction/value/text()'', '''|| i ||'''))[1]::text AS "value"'
-				  || ',(xpath(''/transaction/value/@currency'', '''|| i ||'''))[1]::text AS "currency"'
-				  || ',(xpath(''/transaction/value/@value-date'', '''|| i ||'''))[1]::text AS "value-date"'
-				  || ',(xpath(''/transaction/transaction-date/@iso-date'', '''|| i ||'''))[1]::text AS "transaction-date"'
-				  || ';' LOOP
-				  -- Must have a valid value to write
-				  IF transact."value" IS NOT NULL AND pmt_isnumeric(transact."value") THEN	
-				     -- if there is a transaction-date element use it to populate date values
-				     IF transact."transaction-date" IS NOT NULL AND transact."transaction-date" <> '' THEN
-				        -- Create a financial record 
-				        EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				        || p_id || ', ' || a_id || ', ' || ROUND(CAST(transact."value" as numeric), 2) || ', ' || coalesce(quote_literal(transact."transaction-date"),'NULL') || ', ' 
-				        || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				        || ') RETURNING financial_id;' INTO financial_id;
-				     -- if there isnt a transaction-date element use value-date attribute from the value element to populate date values	
-				     ELSE
-				        -- Create a financial record
-				        EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				        || p_id || ', ' || a_id || ', ' || ROUND(CAST(transact."value" as numeric), 2) || ', ' || coalesce(quote_literal(transact."value-date"),'NULL') || ', ' 
-				        || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				        || ') RETURNING financial_id;' INTO financial_id;
-				     END IF;
-				     IF transact."currency" IS NOT NULL AND transact."currency" <> '' THEN
-				          -- Does this value exist in our taxonomy?
-					  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(transact."currency") AND iati_codelist = 'Currency';
-					  IF record_id IS NOT NULL THEN
-					     -- add the taxonomy to the financial record
-					     EXECUTE 'INSERT INTO financial_taxonomy(financial_id, classification_id, field) VALUES( ' || financial_id || ', ' || record_id || ', ''amount'');';
-					  END IF;	
-				     END IF;
-				     
-				     RAISE NOTICE ' + Financial id % was added to the database.', financial_id; 		   
-				     RAISE NOTICE '   - Transaction: ';
-				     RAISE NOTICE '      - Type:  %', transact."transaction-type";
-				     RAISE NOTICE '      - Provider-org:  %', transact."provider-org";
-				     RAISE NOTICE '      - Value:  $%', ROUND(CAST(transact."value" as numeric), 2);				
-				     RAISE NOTICE '        - Value Date:  $%', transact."value-date";				
-				     RAISE NOTICE '        - Currency:  $%', transact."currency";
-				     RAISE NOTICE '      - Date:  %', transact."transaction-date";	
-				  ELSE
-				   RAISE NOTICE 'Transaction value is null or invalid. No record will be written.';
-				  END IF;				  
-				END LOOP;
-			    END LOOP;
-			    FOREACH i IN ARRAY activity."contact-info" LOOP
-				FOR contact IN EXECUTE 'SELECT (xpath(''/contact-info/organisation/text()'', '|| quote_literal(i) ||'))[1]::text AS "organisation" ' 
-				  || ',(xpath(''/contact-info/person-name/text()'', '|| quote_literal(i) ||'))[1]::text AS "person-name"'
-				  || ',(xpath(''/contact-info/email/text()'', '|| quote_literal(i) ||'))[1]::text AS "email"'
-				  || ',(xpath(''/contact-info/telephone/text()'', '|| quote_literal(i) ||'))[1]::text AS "telephone"'
-				  || ',(xpath(''/contact-info/mailing-address/text()'', '|| quote_literal(i) ||'))[1]::text AS "mailing-address"'
-				  || ';' LOOP			   
-				    RAISE NOTICE '   - Contact info:  ';
-				    RAISE NOTICE '      - Organisation:  %', contact."organisation";
-				    RAISE NOTICE '      - Person-name:  %', contact."person-name";
-				    RAISE NOTICE '      - Email:  %', contact."email";
-				    RAISE NOTICE '      - Telephone:  %', contact."telephone";
-				    RAISE NOTICE '      - Mailing-address:  %', contact."mailing-address";
-				END LOOP;
-			    END LOOP;			    		
-			    FOREACH i IN ARRAY activity."location" LOOP
-				FOR loc IN EXECUTE 'SELECT (xpath(''/location/coordinates/@latitude'', '|| quote_literal(i) ||'))[1]::text AS "latitude" ' 
-				  || ',(xpath(''/location/coordinates/@longitude'', '|| quote_literal(i) ||'))[1]::text AS "longitude" '
-				  || ',(xpath(''/location/name/text()'', '|| quote_literal(i) ||'))[1]::text AS "name" '
-				  || ',(xpath(''/location/administrative/@country'', '|| quote_literal(i) ||'))[1]::text AS "country" '
-				  || ';' LOOP	
-				    IF loc."latitude" IS NOT NULL AND loc."longitude" IS NOT NULL 
-				    AND pmt_isnumeric(loc."latitude") AND pmt_isnumeric(loc."longitude") THEN
-				       lat := loc."latitude"::numeric;
-				       long := loc."longitude"::numeric;
-				       IF lat >= -90 AND lat <= 90 AND long >= -180 AND long <= 180 THEN
-					-- Create a location record and connect to the activity
-				       EXECUTE 'INSERT INTO location(activity_id, project_id, title, point, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				       || a_id || ', ' || p_id || ', ' || coalesce(quote_literal(loc."name"),'NULL') || ', ' 
-				       || 'ST_GeomFromText(''POINT(' || loc."longitude" || ' ' || loc."latitude" || ')'', 4326)' || ', ' 
-				       || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				       || ')RETURNING location_id;' INTO l_id;
-				       IF loc."country" IS NOT NULL AND loc."country" <> '' THEN
-				          -- Does this value exist in our taxonomy?
-					  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(loc."country") AND iati_codelist = 'Country';
-					  class_id := record_id;
-					  IF class_id IS NOT NULL THEN
-					     -- Does this relationship exist already?
-					     SELECT INTO record_id location_id::integer FROM location_taxonomy WHERE location_id = l_id AND classification_id =  class_id;   
-					     IF record_id IS NULL THEN
-					        -- add the taxonomy to the location record
-					        EXECUTE 'INSERT INTO location_taxonomy(location_id, classification_id, field) VALUES( ' || l_id || ', ' || class_id || ', ''location_id'');';
-					     END IF;
-					  END IF;	
-				       END IF;
-				       RAISE NOTICE '   - Location:  ';
-				       RAISE NOTICE '      - Name:  %', loc."name";
-				       RAISE NOTICE '      - Country Code:  %', loc."country";
-				       RAISE NOTICE '      - Latitude:  %', loc."latitude";
-				       RAISE NOTICE '      - Longitude:  %', loc."longitude";
-				       ELSE
-					  RAISE NOTICE 'Either or both latitude and longitude values were out of range. Record will not be written.';
-				       END IF;
-				    ELSE
-				       RAISE NOTICE 'Either or both latitude and longitude values were null or invalid. Record will not be written.';
-				    END IF;				    
-				END LOOP;
-			    END LOOP;
-			    FOREACH i IN ARRAY activity."budget" LOOP
-				FOR budget IN EXECUTE 'SELECT (xpath(''/budget/value/text()'', '|| quote_literal(i) ||'))[1]::text AS "value" ' 
-				  || ',(xpath(''/budget/value/@currency'', '|| quote_literal(i) ||'))[1]::text AS "value-currency" '
-				  || ',(xpath(''/budget/value/@value-date'', '|| quote_literal(i) ||'))[1]::text AS "value-date" '
-				  || ',(xpath(''/budget/period-start/@iso-date'', '|| quote_literal(i) ||'))[1]::text AS "period-start" '
-				  || ',(xpath(''/budget/period-end/@iso-date'', '|| quote_literal(i) ||'))[1]::text AS "period-end" '
-				  || ';' LOOP	
-				    IF budget."value" IS NOT NULL AND pmt_isnumeric(budget."value") THEN 
-					-- if there is a period-start element use it to populate date values
-					IF budget."period-start" IS NOT NULL AND budget."period-start" <> '' THEN
- 					   -- Create a financial record with start and end dates
-					   EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, end_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
-					   || p_id || ', ' || a_id || ', ' || budget."value" || ', ' || coalesce(quote_literal(budget."period-start"),'NULL') || ', ' 
-					   || coalesce(quote_literal(budget."period-end"),'NULL') || ', ' 
-					   || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-					   || ') RETURNING financial_id;' INTO financial_id;
-					-- if there isnt a period-start element use value-date attribute from the value element to populate date values	
+				    || ') RETURNING activity_id;' INTO a_id;
+				    
+				    
+--				    RAISE NOTICE ' +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
+				    RAISE NOTICE ' + Activity id % was added to the database.', a_id; 				    
+-- 				    RAISE NOTICE ' + Adding activity:  %', activity."iati-identifier";
+-- 				    RAISE NOTICE '   - Title:  %', activity."title";
+-- 				    RAISE NOTICE '   - Description:  %', activity."description";
+ 				    
+				    idx := 1;
+				    FOREACH i IN ARRAY activity."participating-org" LOOP
+					-- Does this org exist in the database?
+					SELECT INTO record_id organization.organization_id::integer FROM organization WHERE lower(name) = lower(trim(i));
+					IF record_id IS NOT NULL THEN
+					    -- Create a participation record
+					    EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, created_date, updated_by, updated_date) VALUES( ' 
+					    || p_id || ', ' || a_id || ', ' || record_id || ', ' 
+					    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+					    || ') RETURNING participation_id;' INTO participation_id;				   
 					ELSE
-					   -- Create a financial record with start date
-					   EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
-					   || p_id || ', ' || a_id || ', ' || budget."value" || ', ' || coalesce(quote_literal(budget."value-date"),'NULL') || ', '  
-					   || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-					   || ') RETURNING financial_id;' INTO financial_id;
+					    -- Create a organization record
+					    EXECUTE 'INSERT INTO organization(name, created_by, created_date, updated_by, updated_date) VALUES( ' 
+					    || coalesce(quote_literal(trim(substring(i from 1 for 255))),'NULL') || ', ' 
+					    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+					    || ') RETURNING organization_id;' INTO o_id;
+					    -- Create a participation record
+					    EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, created_date, updated_by, updated_date) VALUES( ' 
+					    || p_id || ', ' || a_id || ', ' || o_id || ', ' 
+					    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+					    || ') RETURNING participation_id;' INTO participation_id;
 					END IF;
-					IF budget."value-currency" IS NOT NULL AND budget."value-currency" <> '' THEN
-				          -- Does this value exist in our taxonomy?
-					  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(budget."value-currency") AND iati_codelist = 'Currency';
-					  IF record_id IS NOT NULL THEN
-					     -- add the taxonomy to the financial record
-					     EXECUTE 'INSERT INTO financial_taxonomy(financial_id, classification_id, field) VALUES( ' || financial_id || ', ' || record_id || ', ''amount'');';
-					  END IF;	
+					-- Does this value exist in our taxonomy?
+					SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."participating-org_role"[idx]) AND iati_codelist = 'Organisation Role';
+					IF record_id IS NOT NULL THEN
+					  -- add the taxonomy to the participation record
+					  EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES( ' || participation_id || ', ' || record_id || ', ''participation_id'');';
+					END IF;
+					-- Does this value exist in our taxonomy?
+					SELECT INTO class_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."participating-org_type"[idx]) AND iati_codelist = 'Organisation Type';
+					IF class_id IS NOT NULL THEN				
+					  -- Does the organization have this taxonomy assigned?
+					  SELECT INTO record_id organization_taxonomy.organization_id::integer FROM organization_taxonomy WHERE organization_taxonomy.organization_id = o_id AND organization_taxonomy.classification_id = class_id;
+					  IF record_id IS NULL THEN
+					    -- add the taxonomy to the organization record
+			                    EXECUTE 'INSERT INTO organization_taxonomy(organization_id, classification_id, field) VALUES( ' || o_id || ', ' || class_id || ', ''organization_id'');';
+					  END IF;
+					END IF;				  
+ 					RAISE NOTICE '   - Participating org:  %', i;
+-- 					RAISE NOTICE '      - Role:  %', activity."participating-org_role"[idx];
+-- 					RAISE NOTICE '      - Type:  %', activity."participating-org_type"[idx];
+					idx := idx + 1;
+				    END LOOP;	
+				    idx := 1;
+				    FOREACH i IN ARRAY activity."recipient-country" LOOP
+					IF activity."recipient-country_code"[idx] IS NOT NULL THEN
+					   -- Does this value exist in our taxonomy?
+					   SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(trim(activity."recipient-country_code"[idx])) AND iati_codelist = 'Country';
+					   IF record_id IS NOT NULL THEN
+					      -- add the taxonomy to the activity record
+					      EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || record_id || ', ''activity_id'');';
+					   END IF;	
+					END IF;
+ 					RAISE NOTICE '   - Recipient country:  %', i;
+-- 					RAISE NOTICE '      - Code:  %', activity."recipient-country_code"[idx];					
+					idx := idx + 1;
+				    END LOOP;			    		   
+				    idx := 1;
+				    FOREACH i IN ARRAY activity."activity-date" LOOP
+				       IF i <> ''  AND pmt_isdate(trim(i)) THEN
+					  CASE 
+					    WHEN lower(trim(activity."activity-date_type"[idx])) = 'start-planned' OR lower(trim(activity."activity-date_type"[idx])) = 'start-actual' THEN				    
+					       EXECUTE 'UPDATE activity SET start_date=' || coalesce(quote_nullable(trim(i))) || ' WHERE activity_id =' || a_id || ';'; 
+					    WHEN lower(trim(activity."activity-date_type"[idx])) = 'end-planned' OR lower(trim(activity."activity-date_type"[idx])) = 'end-actual' THEN
+					       EXECUTE 'UPDATE activity SET end_date=' || coalesce(quote_nullable(trim(i))) || ' WHERE activity_id =' || a_id || ';'; 
+					    ELSE
+					       EXECUTE 'UPDATE activity SET start_date=' || coalesce(quote_nullable(trim(i))) || ' WHERE activity_id =' || a_id || ';'; 
+					  END CASE;
 				       END IF;
-				       RAISE NOTICE '   - Budget:  ';
-				       RAISE NOTICE '      - Value:  %', budget."value";
-				       RAISE NOTICE '         - Currency:  %', budget."value-currency";
-				       RAISE NOTICE '      - Start Date:  %', budget."period-start";
-				       RAISE NOTICE '      - End Date:  %', budget."period-end";
-				    ELSE
-				       RAISE NOTICE 'Budget value is null or invalid. Record will not be written.';
- 				    END IF; 				    				    
-				END LOOP;
-			    END LOOP;
-			    -- Add reporting organization
-			    -- Does this org exist in the database?
-			    SELECT INTO record_id organization.organization_id::integer FROM organization WHERE lower(name) = lower(activity."reporting-org");
-			    IF record_id IS NOT NULL THEN
-				o_id := record_id;
-				--Check for a participation record
-				SELECT INTO record_id participation.participation_id::integer FROM participation WHERE participation.project_id = p_id AND participation.activity_id = a_id AND participation.organization_id = o_id;
-				IF record_id IS NOT NULL THEN
-				   -- Update the participation record
-				   EXECUTE 'UPDATE participation SET reporting_org= true WHERE participation_id =' || record_id || ';'; 
-				ELSE
-				   -- Create the participation record
-				   EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, reporting_org, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || p_id || ', ' || a_id || ', ' || o_id || ', true , '
-				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING participation_id;' INTO participation_id;
-				END IF;
-			    ELSE
-				-- Create a organization record
-				    EXECUTE 'INSERT INTO organization(name, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || coalesce(quote_literal(activity."reporting-org"),'NULL') || ', ' 
-				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING organization_id;' INTO o_id;
-				-- Create the participation record
-				EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, reporting_org, created_by, created_date, updated_by, updated_date) VALUES( ' 
-				    || p_id || ', ' || a_id || ', ' || o_id || ', true , '
-				    || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
-				    || ') RETURNING participation_id;' INTO participation_id;
-			    END IF;
-			    -- Does this value exist in our taxonomy?
-			    SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."reporting-org_type") AND iati_codelist = 'Organisation Type';
-				IF record_id IS NOT NULL THEN
-				   -- Does the organization have this taxonomy assigned?
-				   SELECT INTO record_id organization_taxonomy.organization_id::integer FROM organization_taxonomy WHERE organization_taxonomy.organization_id = o_id AND organization_taxonomy.classification_id = record_id;
-				   IF record_id IS NULL THEN
-				      SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(activity."reporting-org_type") AND iati_codelist = 'Organisation Type';
-				      -- add the taxonomy to the organization record
-			              EXECUTE 'INSERT INTO organization_taxonomy(organization_id, classification_id, field) VALUES( ' || o_id || ', ' || record_id || ', ''organization_id'');';
-			           END IF;
-				END IF;	
+							
+ 					RAISE NOTICE '   - Activity date:  %', i;				
+-- 					RAISE NOTICE '      - Type:  %', activity."activity-date_type"[idx];    
+					idx := idx + 1;
+				    END LOOP;
+				    IF 	activity."activity-status_code" IS NOT NULL THEN
+					-- Does this value exist in our taxonomy?
+					SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(trim(activity."activity-status_code")) AND iati_codelist = 'Activity Staus';
+					IF record_id IS NOT NULL THEN
+					   -- add the taxonomy to the activity record
+					   EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || record_id || ', ''activity_id'');';
+					END IF;	
+				    END IF;
+ 				    RAISE NOTICE '   - Activity status:  %', activity."activity-status";
+-- 				    RAISE NOTICE '      - Code:  %', activity."activity-status_code";
+				    
+				    idx := 1;
+				    FOREACH i IN ARRAY activity."sector_code" LOOP
+					IF activity."sector_code"[idx] IS NOT NULL THEN					   
+					   -- Does this value exist in our taxonomy?
+					   SELECT INTO class_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(trim(activity."sector_code"[idx])) AND iati_codelist = 'Sector';
+					   IF class_id IS NOT NULL THEN
+					     IF has_valid_sector THEN
+					       -- This activity has more than one valid sector, remove all Sectors and assign it the multi-sector Sector
+					       EXECUTE 'DELETE FROM activity_taxonomy WHERE activity_id = ' || a_id || ' AND classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = ''Sector'');';  
+					       EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || (SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = 'Sector' AND iati_code = '43010' LIMIT 1) || ', ''activity_id'');';
+					       EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || (SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = 'Sector' AND iati_code = '430' LIMIT 1) || ', ''activity_id'');';
+					       RAISE NOTICE '       - Multi-Sector assignement:  %', a_id;
+					     ELSE
+					      -- This activity has a valid sector, set the flag for the first valid sector found
+					      has_valid_sector := true;
+					      -- does this activity already have this sector assigned?
+					      SELECT INTO record_id activity_id::integer FROM activity_taxonomy WHERE activity_id = a_id AND classification_id = class_id;
+					      IF record_id IS NULL THEN
+						 -- add the taxonomy to the activity record
+						 EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || class_id || ', ''activity_id'');';
+					      END IF;
+					      -- Does this value exist in our taxonomy? 
+					      SELECT INTO class_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(substring(trim(activity."sector_code"[idx]) from 1 for 3)) AND iati_codelist = 'Sector';
+					      IF class_id IS NOT NULL THEN
+					        -- does this activity already have this sector assigned?
+					        SELECT INTO record_id activity_id::integer FROM activity_taxonomy WHERE activity_id = a_id AND classification_id = class_id;
+					        IF record_id IS NULL THEN
+						   -- add the taxonomy to the activity record
+						   EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || class_id || ', ''activity_id'');';
+					        END IF;
+					      END IF;
+					    END IF;
+					   END IF;					   
+					END IF;				
+ 					RAISE NOTICE '   - Sector:  %', i;
+-- 					RAISE NOTICE '      - Code:  %', activity."sector_code"[idx];
+-- 					RAISE NOTICE '      - Category: %', lower(substring(activity."sector_code"[idx] from 1 for 3));
+					idx := idx + 1;
+				    END LOOP;	
+				    -- If there was no valid sector assign, assign the sector Sectors not Specified	 				    
+				    IF NOT has_valid_sector THEN
+				      EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || (SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = 'Sector' AND iati_code = '99810' LIMIT 1) || ', ''activity_id'');';
+				      EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES( ' || a_id || ', ' || (SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = 'Sector' AND iati_code = '998' LIMIT 1) || ', ''activity_id'');';
+ 				      RAISE NOTICE '       - Unassinged Sector:  %', a_id;
+				    END IF;
+				    -- Collect all the Sector text and store in content field
+				    sector_text := null;
+				    FOREACH i IN ARRAY activity."sector" LOOP
+				      sector_text :=  array_append(sector_text, i );
+				    END LOOP;	
+				    EXECUTE 'UPDATE activity SET content = ' || coalesce(quote_literal(array_to_string(sector_text, ',')),'NULL') || ' WHERE activity_id = ' || a_id || ';'; 			    
+				    RAISE NOTICE '       - Loading conent:  %', a_id;
+				    FOREACH i IN ARRAY activity."transaction" LOOP
+					FOR transact IN EXECUTE 'SELECT (xpath(''/transaction/transaction-type/text()'', '''|| i ||'''))[1]::text AS "transaction-type" ' 
+					  || ',(xpath(''/transaction/provider-org/text()'', '''|| i ||'''))[1]::text AS "provider-org"'
+					  || ',(xpath(''/transaction/value/text()'', '''|| i ||'''))[1]::text AS "value"'
+					  || ',(xpath(''/transaction/value/@currency'', '''|| i ||'''))[1]::text AS "currency"'
+					  || ',(xpath(''/transaction/value/@value-date'', '''|| i ||'''))[1]::text AS "value-date"'
+					  || ',(xpath(''/transaction/transaction-date/@iso-date'', '''|| i ||'''))[1]::text AS "transaction-date"'
+					  || ';' LOOP
+					  -- Must have a valid value to write
+					  IF transact."value" IS NOT NULL AND pmt_isnumeric(replace(transact."value", ',', '')) THEN	
+					     -- if there is a transaction-date element use it to populate date values
+					     IF transact."transaction-date" IS NOT NULL AND transact."transaction-date" <> '' THEN
+						-- Create a financial record 
+						EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
+						|| p_id || ', ' || a_id || ', ' || ROUND(CAST(replace(transact."value", ',', '') as numeric), 2) || ', ' || coalesce(quote_literal(transact."transaction-date"),'NULL') || ', ' 
+						|| quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+						|| ') RETURNING financial_id;' INTO financial_id;
+					     -- if there isnt a transaction-date element use value-date attribute from the value element to populate date values	
+					     ELSE
+						-- Create a financial record
+						EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
+						|| p_id || ', ' || a_id || ', ' || ROUND(CAST(replace(transact."value", ',', '') as numeric), 2) || ', ' || coalesce(quote_literal(transact."value-date"),'NULL') || ', ' 
+						|| quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+						|| ') RETURNING financial_id;' INTO financial_id;
+					     END IF;
+					     IF transact."currency" IS NOT NULL AND transact."currency" <> '' THEN
+						  -- Does this value exist in our taxonomy?
+						  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(transact."currency") AND iati_codelist = 'Currency';
+						  IF record_id IS NOT NULL THEN
+						     -- add the taxonomy to the financial record
+						     EXECUTE 'INSERT INTO financial_taxonomy(financial_id, classification_id, field) VALUES( ' || financial_id || ', ' || record_id || ', ''amount'');';
+						  END IF;	
+					     END IF;
+					     
+ 					     RAISE NOTICE ' + Financial id % was added to the database.', financial_id; 		   
+-- 					     RAISE NOTICE '   - Transaction: ';
+-- 					     RAISE NOTICE '      - Type:  %', transact."transaction-type";
+-- 					     RAISE NOTICE '      - Provider-org:  %', transact."provider-org";
+-- 					     RAISE NOTICE '      - Value:  $%', ROUND(CAST(transact."value" as numeric), 2);				
+-- 					     RAISE NOTICE '        - Value Date:  $%', transact."value-date";				
+-- 					     RAISE NOTICE '        - Currency:  $%', transact."currency";
+-- 					     RAISE NOTICE '      - Date:  %', transact."transaction-date";	
+					  ELSE
+-- 					   RAISE NOTICE 'Transaction value is null or invalid. No record will be written.';
+					  END IF;				  
+					END LOOP;
+				    END LOOP;
+				    FOREACH i IN ARRAY activity."contact-info" LOOP
+					FOR contact IN EXECUTE 'SELECT (xpath(''/contact-info/organisation/text()'', '|| quote_literal(i) ||'))[1]::text AS "organisation" ' 
+					  || ',(xpath(''/contact-info/person-name/text()'', '|| quote_literal(i) ||'))[1]::text AS "person-name"'
+					  || ',(xpath(''/contact-info/email/text()'', '|| quote_literal(i) ||'))[1]::text AS "email"'
+					  || ',(xpath(''/contact-info/telephone/text()'', '|| quote_literal(i) ||'))[1]::text AS "telephone"'
+					  || ',(xpath(''/contact-info/mailing-address/text()'', '|| quote_literal(i) ||'))[1]::text AS "mailing-address"'
+					  || ';' LOOP			   
+ 					    RAISE NOTICE '   - Contact info:  ';
+-- 					    RAISE NOTICE '      - Organisation:  %', contact."organisation";
+-- 					    RAISE NOTICE '      - Person-name:  %', contact."person-name";
+-- 					    RAISE NOTICE '      - Email:  %', contact."email";
+-- 					    RAISE NOTICE '      - Telephone:  %', contact."telephone";
+-- 					    RAISE NOTICE '      - Mailing-address:  %', contact."mailing-address";
+					END LOOP;
+				    END LOOP;			    		
+				    FOREACH i IN ARRAY activity."location" LOOP
+					FOR loc IN EXECUTE 'SELECT (xpath(''/location/coordinates/@latitude'', '|| quote_literal(i) ||'))[1]::text AS "latitude" ' 
+					  || ',(xpath(''/location/coordinates/@longitude'', '|| quote_literal(i) ||'))[1]::text AS "longitude" '
+					  || ',(xpath(''/location/name/text()'', '|| quote_literal(i) ||'))[1]::text AS "name" '
+					  || ',(xpath(''/location/administrative/@country'', '|| quote_literal(i) ||'))[1]::text AS "country" '
+					  || ';' LOOP	
+					    IF loc."latitude" IS NOT NULL AND loc."longitude" IS NOT NULL 
+					    AND pmt_isnumeric(loc."latitude") AND pmt_isnumeric(loc."longitude") THEN
+					       lat := loc."latitude"::numeric;
+					       long := loc."longitude"::numeric;
+					       IF lat >= -90 AND lat <= 90 AND long >= -180 AND long <= 180 THEN
+						-- Create a location record and connect to the activity
+					       EXECUTE 'INSERT INTO location(activity_id, project_id, title, point, created_by, created_date, updated_by, updated_date) VALUES( ' 
+					       || a_id || ', ' || p_id || ', ' || coalesce(quote_literal(loc."name"),'NULL') || ', ' 
+					       || 'ST_GeomFromText(''POINT(' || loc."longitude" || ' ' || loc."latitude" || ')'', 4326)' || ', ' 
+					       || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+					       || ')RETURNING location_id;' INTO l_id;
+					       IF loc."country" IS NOT NULL AND loc."country" <> '' THEN
+						  -- Does this value exist in our taxonomy?
+						  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(loc."country") AND iati_codelist = 'Country';
+						  class_id := record_id;
+						  IF class_id IS NOT NULL THEN
+						     -- Does this relationship exist already?
+						     SELECT INTO record_id location_id::integer FROM location_taxonomy WHERE location_id = l_id AND classification_id =  class_id;   
+						     IF record_id IS NULL THEN
+							-- add the taxonomy to the location record
+							EXECUTE 'INSERT INTO location_taxonomy(location_id, classification_id, field) VALUES( ' || l_id || ', ' || class_id || ', ''location_id'');';
+						     END IF;
+						  END IF;	
+					       END IF;
+ 					       RAISE NOTICE '   - Location:  ';
+-- 					       RAISE NOTICE '      - Name:  %', loc."name";
+-- 					       RAISE NOTICE '      - Country Code:  %', loc."country";
+-- 					       RAISE NOTICE '      - Latitude:  %', loc."latitude";
+-- 					       RAISE NOTICE '      - Longitude:  %', loc."longitude";
+					       ELSE
+						  RAISE NOTICE 'Either or both latitude and longitude values were out of range. Record will not be written.';
+					       END IF;
+					    ELSE
+					       RAISE NOTICE 'Either or both latitude and longitude values were null or invalid. Record will not be written.';
+					    END IF;				    
+					END LOOP;
+				    END LOOP;
+				    FOREACH i IN ARRAY activity."budget" LOOP
+					FOR budget IN EXECUTE 'SELECT (xpath(''/budget/value/text()'', '|| quote_literal(i) ||'))[1]::text AS "value" ' 
+					  || ',(xpath(''/budget/value/@currency'', '|| quote_literal(i) ||'))[1]::text AS "value-currency" '
+					  || ',(xpath(''/budget/value/@value-date'', '|| quote_literal(i) ||'))[1]::text AS "value-date" '
+					  || ',(xpath(''/budget/period-start/@iso-date'', '|| quote_literal(i) ||'))[1]::text AS "period-start" '
+					  || ',(xpath(''/budget/period-end/@iso-date'', '|| quote_literal(i) ||'))[1]::text AS "period-end" '
+					  || ';' LOOP	
+					    IF budget."value" IS NOT NULL AND pmt_isnumeric(replace(budget."value", ',', '')) THEN 
+						-- if there is a period-start element use it to populate date values
+						IF budget."period-start" IS NOT NULL AND budget."period-start" <> '' THEN
+						   -- Create a financial record with start and end dates
+						   EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, end_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
+						   || p_id || ', ' || a_id || ', ' || ROUND(CAST(replace(budget."value", ',', '') as numeric), 2)  || ', ' || coalesce(quote_literal(budget."period-start"),'NULL') || ', ' 
+						   || coalesce(quote_literal(budget."period-end"),'NULL') || ', ' 
+						   || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+						   || ') RETURNING financial_id;' INTO financial_id;
+						-- if there isnt a period-start element use value-date attribute from the value element to populate date values	
+						ELSE
+						   -- Create a financial record with start date
+						   EXECUTE 'INSERT INTO financial (project_id, activity_id, amount, start_date, created_by, created_date, updated_by, updated_date) VALUES( ' 
+						   || p_id || ', ' || a_id || ', ' || ROUND(CAST(replace(budget."value", ',', '') as numeric), 2) || ', ' || coalesce(quote_literal(budget."value-date"),'NULL') || ', '  
+						   || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) || ', ' || quote_literal(E'IATI XML Import') || ', ' || quote_literal(current_date) 
+						   || ') RETURNING financial_id;' INTO financial_id;
+						END IF;
+						IF budget."value-currency" IS NOT NULL AND budget."value-currency" <> '' THEN
+						  -- Does this value exist in our taxonomy?
+						  SELECT INTO record_id classification_id::integer FROM taxonomy_classifications WHERE lower(iati_code) = lower(budget."value-currency") AND iati_codelist = 'Currency';
+						  IF record_id IS NOT NULL THEN
+						     -- add the taxonomy to the financial record
+						     EXECUTE 'INSERT INTO financial_taxonomy(financial_id, classification_id, field) VALUES( ' || financial_id || ', ' || record_id || ', ''amount'');';
+						  END IF;	
+					       END IF;
+ 					       RAISE NOTICE '   - Budget:  ';
+ 					       RAISE NOTICE '      - Value:  %', ROUND(CAST(replace(budget."value", ',', '') as numeric), 2);
+ 					       RAISE NOTICE '         - Currency:  %', budget."value-currency";
+ 					       RAISE NOTICE '      - Start Date:  %', budget."period-start";
+ 					       RAISE NOTICE '      - End Date:  %', budget."period-end";
+					    ELSE
+ 					       RAISE NOTICE 'Budget value is null or invalid. Record will not be written.';
+					    END IF; 				    				    
+					END LOOP;
+				    END LOOP;
+
+			    END IF; -- the activity must have at least a title to be imported	
 			END LOOP;
 		END IF;	
 		ELSE
@@ -1513,7 +1555,7 @@ BEGIN
 $process_xml$ LANGUAGE plpgsql; 
 DROP TRIGGER IF EXISTS process_xml ON xml;
 CREATE TRIGGER process_xml BEFORE INSERT ON xml
-    FOR EACH ROW EXECUTE PROCEDURE process_xml();            
+    FOR EACH ROW EXECUTE PROCEDURE process_xml();
 /*****************************************************************
 Functions -- is procedural code that is executed when called.
 	See documentation.
@@ -1523,20 +1565,27 @@ CREATE TYPE pmt_activity_details_result_type AS (response json);
 CREATE TYPE pmt_activity_listview_result AS (response json);
 CREATE TYPE pmt_auth_user_result_type AS (response json);
 CREATE TYPE pmt_auto_complete_result_type AS (response json);
+CREATE TYPE pmt_contacts_result_type AS (response json);
 CREATE TYPE pmt_countries_result_type AS (response json);
 CREATE TYPE pmt_data_groups_result_type AS (c_id integer, name text);
+CREATE TYPE pmt_edit_contact_result_type AS (response json);
 CREATE TYPE pmt_infobox_result_type AS (response json);
 CREATE TYPE pmt_locations_by_org_result_type AS (l_id integer, x integer, y integer, r_ids text);
+CREATE TYPE pmt_locations_by_polygon_result_type AS (response json);
 CREATE TYPE pmt_locations_by_tax_result_type AS (l_id integer, x integer, y integer, r_ids text);
 CREATE TYPE pmt_filter_locations_result AS (l_id integer, r_ids text);
 CREATE TYPE pmt_filter_projects_result AS (p_id integer, a_ids text);  
 CREATE TYPE pmt_filter_orgs_result AS (l_id integer, r_ids text); 
+CREATE TYPE pmt_global_search_result_type AS (response json);
 CREATE TYPE pmt_org_inuse_result_type AS (response json);
+CREATE TYPE pmt_orgs_result_type AS (response json);
 CREATE TYPE pmt_project_listview_result AS (response json);
+CREATE TYPE pmt_sector_compare_result_type AS (response json);
 CREATE TYPE pmt_stat_counts_result AS (response json);
 CREATE TYPE pmt_stat_activity_by_district_result AS (response json);
 CREATE TYPE pmt_stat_activity_by_tax_result AS (response json);
 CREATE TYPE pmt_stat_locations_result AS (response json);
+CREATE TYPE pmt_stat_partner_network_result AS (response json);
 CREATE TYPE pmt_stat_pop_by_district_result AS (response json);
 CREATE TYPE pmt_stat_project_by_tax_result AS (response json);
 CREATE TYPE pmt_stat_orgs_by_activity_result AS (response json);
@@ -1969,24 +2018,40 @@ BEGIN
     IF valid_project_cols IS NOT NULL THEN
     FOREACH col IN ARRAY valid_project_cols LOOP
       IF execute_statement IS NULL THEN
-        execute_statement := 'SELECT array_agg(DISTINCT trim(both substring(val, 0, 100))) as autocomplete FROM (SELECT DISTINCT ' || col || '::text as val FROM project WHERE active = true ';
+        IF col = 'tags'::text THEN
+          execute_statement := 'SELECT array_agg(DISTINCT trim(both substring(val, 0, 100))) as autocomplete FROM (SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val FROM project WHERE active = true ';
+        ELSE
+          execute_statement := 'SELECT array_agg(DISTINCT trim(both substring(val, 0, 100))) as autocomplete FROM (SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val FROM project WHERE active = true ';
+        END IF;        
       ELSE
-        execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT ' || col || '::text as val  FROM project WHERE active = true  ';
+        IF col = 'tags'::text THEN
+          execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM project WHERE active = true  ';
+        ELSE
+          execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM project WHERE active = true  ';
+        END IF;        
       END IF;      
     END LOOP;
     END IF;
     IF valid_activity_cols IS NOT NULL THEN
     FOREACH col IN ARRAY valid_activity_cols LOOP
       IF execute_statement IS NULL THEN
-        execute_statement := 'SELECT array_agg(DISTINCT val) as autocomplete FROM (SELECT  DISTINCT ' || col || '::text as val  FROM activity WHERE active = true ';
+        IF col = 'tags'::text THEN
+          execute_statement := 'SELECT array_agg(DISTINCT trim(val)) as autocomplete FROM (SELECT  DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM activity WHERE active = true ';
+        ELSE
+          execute_statement := 'SELECT array_agg(DISTINCT trim(val)) as autocomplete FROM (SELECT  DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM activity WHERE active = true ';
+        END IF;        
       ELSE
-        execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT ' || col || '::text as val  FROM activity WHERE active = true ';
+        IF col = 'tags'::text THEN
+          execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM activity WHERE active = true ';
+        ELSE
+          execute_statement := execute_statement || ' UNION ALL SELECT DISTINCT regexp_split_to_table(' || col || ', E''\\,'')::text as val  FROM activity WHERE active = true ';
+        END IF;        
       END IF;       
     END LOOP;
     END IF;
     RAISE NOTICE 'Execute statement: %', execute_statement;
     IF execute_statement IS NOT NULL THEN
-      FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')ac WHERE val IS NOT NULL)j' LOOP     
+      FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')ac WHERE val IS NOT NULL AND val <> '''')j' LOOP     
 	RETURN NEXT rec;
       END LOOP;
     END IF;
@@ -2367,9 +2432,8 @@ $$
 DECLARE
   rec record;
 BEGIN	
-  -- collect locations 
   FOR rec IN (  SELECT version::text||'.'||iteration::text||'.'||changeset::text AS pmt_version, updated_date::date as last_update, (SELECT created_date from config where config_id = (select min(config_id) from config))::date as created
-		FROM config ORDER BY version, iteration, changeset DESC LIMIT 1 
+		FROM version ORDER BY version, iteration, changeset DESC LIMIT 1 
 		) LOOP		
 	RETURN NEXT rec;
   END LOOP;	  
@@ -2559,13 +2623,14 @@ END IF;
   
 
   -- prepare statement
-  execute_statement := 'SELECT location_id, x, y, array_to_string(organization_ids, '','') AS o_ids  FROM location_lookup';
+  execute_statement := 'SELECT ll.location_id, x, y, array_to_string(array_agg(ol.organization_id), '','') AS o_ids FROM location_lookup ll ' ||
+		'JOIN (select distinct unnest(location_ids) as location_id, organization_id FROM organization_lookup';
 				
   IF dynamic_where2 IS NOT NULL THEN          
     execute_statement := execute_statement || ' WHERE ' ||  array_to_string(dynamic_where2, ' AND ');
   END IF;
 
-  execute_statement := execute_statement || ' ORDER BY georef ';  
+  execute_statement := execute_statement || ') as ol ON ll.location_id = ol.location_id GROUP BY ll.location_id, x, y, georef ORDER BY georef ';  
 				   
   -- execute statement
   RAISE NOTICE 'Where statement: %', dynamic_where2;
@@ -2626,7 +2691,7 @@ BEGIN
 			RAISE NOTICE '   + No classification or organization or date filter.';
 			RAISE NOTICE '   + The reporting taxonomy is: %.', $1;
 			
-			FOR rec IN SELECT t2.location_id as l_id, t2.georef as g_id, array_to_string(array_agg(DISTINCT report_by.classification_id), ',') as cl_id
+			FOR rec IN SELECT t2.location_id as l_id, array_to_string(array_agg(DISTINCT report_by.classification_id), ',') as cl_id
 			FROM location_lookup AS t2
 			LEFT JOIN
 			(SELECT DISTINCT location_id, classification_id FROM taxonomy_lookup 
@@ -4960,13 +5025,25 @@ IF activities IS NOT NULL THEN
 						'FROM financial f ' ||
 						'WHERE f.activity_id = a.activity_id ' ||
 					'), ' ||
+					-- participating organizations
+					'( ' ||
+						'SELECT xmlagg(xmlelement(name "participating-org", xmlattributes(c.iati_code as "role"), o.name)) ' ||
+						'FROM participation pp ' ||
+						'JOIN organization o ' ||
+						'ON pp.organization_id = o.organization_id ' ||
+						'JOIN participation_taxonomy pt ' ||
+						'ON pp.participation_id = pt.participation_id ' ||
+						'JOIN classification c ' ||
+						'ON pt.classification_id = c.classification_id ' ||
+						'WHERE pp.activity_id = a.activity_id  ' ||
+					'), ' ||
 					-- sector	
 					'( ' ||
 						'SELECT xmlagg(xmlelement(name "sector", xmlattributes(c.iati_code as "code"), c.iati_name))	 ' ||
 						'FROM activity_taxonomy at ' ||
 						'JOIN classification c ' ||
 						'ON at.classification_id = c.classification_id	 ' ||
-						'WHERE taxonomy_id = 15 AND at.activity_id = a.activity_id ' ||
+						'WHERE taxonomy_id = (SELECT taxonomy_id FROM taxonomy WHERE name = ''Sector'') AND at.activity_id = a.activity_id ' ||
 					'), ' ||
 					-- location
 					'( ' ||
@@ -5000,6 +5077,7 @@ IF activities IS NOT NULL THEN
 	') ' ||
 	') To ' || filename || ';'; 
 
+	RAISE NOTICE 'Execute statement: %', execute_statement;
 	EXECUTE execute_statement;
 	RETURN TRUE;
 ELSE	
@@ -5051,13 +5129,14 @@ DECLARE
   purge_project_ids integer[];
   purge_id integer;
   group_name text;
+  new_project_id integer;
 BEGIN      
      IF $1 IS NULL OR $2 IS NULL THEN    
        RETURN FALSE;
      END IF;    
      
      -- get project_ids to purge by data_group
-     SELECT INTO purge_project_ids array_agg(project_id)::INT[] FROM xml WHERE lower(data_group) = lower($2);
+     SELECT INTO purge_project_ids array_agg(project_id)::INT[] FROM project_taxonomy WHERE classification_id IN (SELECT c_id FROM pmt_data_groups() WHERE lower(name) = lower($2));
 
      -- data group 
      SELECT INTO group_name name FROM pmt_data_groups() WHERE lower(name) = lower($2);
@@ -5065,22 +5144,26 @@ BEGIN
        group_name := $2;
      END IF;
 
--- 	RAISE NOTICE 'path: %', $1;
--- 	RAISE NOTICE 'data_group_name: %', data_group_name;
      -- load new xml data
-     INSERT INTO xml (action, xml, data_group) VALUES('insert',convert_from(pmt_bytea_import($1), 'utf-8')::xml, group_name);     
+     IF group_name IS NOT NULL OR group_name <> '' THEN
+
+       INSERT INTO xml (action, xml, data_group) VALUES('insert',convert_from(pmt_bytea_import($1), 'utf-8')::xml, group_name) RETURNING project_id INTO new_project_id;     
      
-     IF purge_project_ids IS NULL THEN
-       PERFORM refresh_taxonomy_lookup();
-     ELSE 
-       IF replace_all = TRUE THEN
-         FOREACH purge_id IN ARRAY purge_project_ids LOOP
-           PERFORM pmt_purge_project(purge_id);
-         END LOOP;
-       END IF;
+       IF purge_project_ids IS NULL THEN       
+         PERFORM refresh_taxonomy_lookup();
+       ELSE
+         IF replace_all = TRUE THEN
+           FOREACH purge_id IN ARRAY purge_project_ids LOOP
+             PERFORM pmt_purge_project(purge_id);
+           END LOOP;
+         END IF;
+       END IF;     
+     
+       RETURN TRUE;
+     ELSE
+       RETURN FALSE;
      END IF;
-     RETURN TRUE;
-     
+          
 EXCEPTION WHEN others THEN
     RETURN FALSE;
 END; 
@@ -5323,24 +5406,69 @@ CREATE OR REPLACE FUNCTION pmt_user_auth(username character varying(255), passwo
 SETOF pmt_user_auth_result_type AS $$
 DECLARE 
   valid_user_id integer;
+  authorization_source auth_source;
+  valid_data_group_id integer;
+  user_organization_id integer;
+  user_data_group_id integer;  
+  authorized_project_ids integer[];
+  role_super boolean;	
   rec record;
 BEGIN 
   SELECT INTO valid_user_id "user".user_id FROM "user" WHERE "user".username = $1 AND "user".password = $2;
   IF valid_user_id IS NOT NULL THEN
+    -- determine editing authorization source
+    SELECT INTO authorization_source edit_auth_source from config LIMIT 1;	
+    CASE authorization_source
+       -- authorization determined by organization affiliation
+        WHEN 'organization' THEN
+         -- get users organization_id
+         SELECT INTO user_organization_id organization_id FROM "user" WHERE "user".user_id = valid_user_id;   
+	 -- validate users organization_id	
+         IF (SELECT * FROM pmt_validate_organization(user_organization_id)) THEN
+           -- get list of project_ids user has authority to edit
+           SELECT INTO authorized_project_ids array_agg(DISTINCT p.project_id)::int[] FROM participation_taxonomy pt JOIN participation p ON pt.participation_id = p.participation_id
+           WHERE p.organization_id = user_organization_id AND pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Organisation Role' and classification = 'Accountable');
+         END IF;
+       -- authorization determined by data group affiliation
+       WHEN 'data_group' THEN
+         -- get users data_group_id
+         SELECT INTO user_data_group_id data_group_id FROM "user" WHERE "user".user_id = valid_user_id;  
+         -- validate users data_group_id
+	 SELECT INTO valid_data_group_id classification_id::integer FROM taxonomy_classifications WHERE classification_id = user_data_group_id AND taxonomy = 'Data Group';
+	 IF (valid_data_group_id IS NOT NULL) THEN
+           -- get list of project_ids user has authority to edit
+           SELECT INTO authorized_project_ids array_agg(DISTINCT pt.project_id)::int[] FROM project_taxonomy pt 
+           WHERE pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' and classification_id = user_data_group_id);          
+         END IF;
+       ELSE
+    END CASE;
+
+    -- check to see if user has a role with "SUPER" rights (if so they have full adminsitrative editing rights to the database)
+    SELECT INTO role_super super FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = valid_user_id);
+    IF role_super THEN
+      -- if super user than all project ids are authorized
+      SELECT INTO authorized_project_ids array_agg(DISTINCT p.project_id)::int[] FROM project p;
+    END IF;
+    
     FOR rec IN (SELECT row_to_json(j) FROM( 
 	SELECT user_id, first_name, last_name, "user".username, email, "user".organization_id
-	, (SELECT name FROM organization WHERE organization_id = "user".organization_id) as organization, "user".data_group_id
-	, (SELECT classification FROM taxonomy_classifications WHERE classification_id = "user".data_group_id) as data_group,(
-	SELECT array_to_json(array_agg(row_to_json(r))) FROM ( SELECT r.role_id, r.name FROM role r 
+	,(SELECT name FROM organization WHERE organization_id = "user".organization_id) as organization, "user".data_group_id
+	,(SELECT classification FROM taxonomy_classifications WHERE classification_id = "user".data_group_id) as data_group
+	,array_to_string(authorized_project_ids, ',') as authorized_project_ids
+	,(SELECT array_to_json(array_agg(row_to_json(r))) FROM ( SELECT r.role_id, r.name FROM role r 
 	JOIN user_role ur ON r.role_id = ur.role_id WHERE ur.user_id = "user".user_id) r ) as roles 
 	FROM "user" WHERE "user".user_id = valid_user_id
       ) j ) LOOP		
         RETURN NEXT rec;
-    END LOOP;			  
+    END LOOP;
+    -- log user activity
+    INSERT INTO user_activity(user_id, username, status) VALUES (valid_user_id, $1, 'success');		  
   ELSE
     FOR rec IN (SELECT row_to_json(j) FROM( SELECT 'Invalid username or password.' AS message ) j ) LOOP		
         RETURN NEXT rec;
     END LOOP;	
+    -- log user activity
+    INSERT INTO user_activity(username, status) VALUES ($1, 'fail');		  
   END IF;
 END; 
 $$ LANGUAGE 'plpgsql';
@@ -5501,6 +5629,1239 @@ IF ($1 IS NOT NULL AND $1 <> '') AND ($2 IS NOT NULL AND $2 <> '') THEN
    END LOOP;   
 END IF;   
 END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_sector_compare
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_sector_compare(classification_ids character varying, order_by character varying) RETURNS SETOF pmt_sector_compare_result_type AS 
+$$
+DECLARE
+  filter_classids integer array;
+  built_where text array; 
+  dynamic_where1 text array;
+  dynamic_orderby text;
+  execute_statement text;
+  i integer;
+  rec record;
+BEGIN	
+
+    -- filter by classification ids
+    IF ($1 is not null AND $1 <> '') THEN
+      RAISE NOTICE '   + The classification filter is: %.', string_to_array($1, ',')::int[];
+
+	SELECT INTO filter_classids * FROM pmt_validate_classifications($1);
+
+	IF filter_classids IS NOT NULL THEN
+	  -- Loop through each taxonomy classification group to contruct the where statement 
+	  FOR rec IN( SELECT tc.taxonomy_id, array_agg(tc.classification_id) AS filter_array 
+	  FROM taxonomy_classifications tc WHERE classification_id = ANY(filter_classids) GROUP BY tc.taxonomy_id
+	  ) LOOP				
+		built_where := null;
+		-- for each classification add to the where statement
+		FOREACH i IN ARRAY rec.filter_array LOOP 
+		  built_where :=  array_append(built_where, 'classification_ids @> ARRAY['|| i ||']');
+		END LOOP;
+		-- add each classification within the same taxonomy to the where joined by 'OR'
+		dynamic_where1 := array_append(dynamic_where1, '(' || array_to_string(built_where, ' OR ') || ')');
+	  END LOOP;			
+	END IF;
+    END IF;
+
+    -- create dynamic order statement
+    IF $2 IS NOT NULL AND $2 <> '' THEN 
+      dynamic_orderby := 'ORDER BY ' || $2 || ' ';
+    END IF;
+
+    -- prepare statement																
+    RAISE NOTICE '   + First where statement: %', array_to_string(dynamic_where1, ' AND ');
+
+    execute_statement := 'SELECT a.activity_id as a_id, tc.classification_id as c_id, tc.classification as sector, a.content as import ' ||
+			'FROM activity a LEFT JOIN (SELECT * FROM activity_taxonomy WHERE classification_id IN ' ||
+			'(SELECT classification_id FROM taxonomy_classifications WHERE iati_codelist = ''Sector'' AND taxonomy = ''Sector'')) AS at ' ||
+			'ON a.activity_id = at.activity_id JOIN taxonomy_classifications tc ON at.classification_id = tc.classification_id ';
+			
+    -- append where statements			
+    IF dynamic_where1 IS NOT NULL THEN 
+      execute_statement := execute_statement || 'WHERE  a.activity_id IN (SELECT activity_id FROM location_lookup WHERE ' ||  array_to_string(dynamic_where1, ' AND ') || ') ';
+    END IF;
+
+    -- append order statements
+    IF dynamic_orderby IS NOT NULL THEN 
+      execute_statement := execute_statement || dynamic_orderby;
+    END IF;
+    
+    -- execute statement		
+    RAISE NOTICE 'execute: %', 'SELECT row_to_json(j) FROM (' || execute_statement || ')j';	   
+     
+    FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP     
+	RETURN NEXT rec;
+    END LOOP;	
+	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_activity_taxonomy
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_activity_taxonomy(activity_ids character varying, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  valid_classification_id boolean;
+  valid_activity_ids integer[];
+  msg text;
+  record_id integer;
+  t_id integer;
+  i integer;
+  rec record;
+BEGIN	
+
+  -- first and second parameters are required
+  IF ($1 is not null AND $1 <> '') AND ($2 IS NOT NULL) THEN
+  
+    -- validate classification_id
+    SELECT INTO valid_classification_id * FROM pmt_validate_classification($2);
+    -- must provide a valid classification_id to continue
+    IF NOT valid_classification_id THEN
+      RAISE NOTICE 'Error: Must provide a valid classification_id.';
+      RETURN false;
+    END IF;
+    -- validate activity_ids
+    SELECT INTO valid_activity_ids array_agg(DISTINCT activity_id) FROM activity WHERE activity_id = ANY(string_to_array($1, ',')::int[]);
+    -- must provide a min of one valid activity_id to continue
+    IF valid_activity_ids IS NOT NULL THEN
+      -- get the taxonomy_id of the classification_id
+      SELECT INTO t_id taxonomy_id FROM taxonomy_classifications tc WHERE tc.classification_id = $2;
+      IF t_id IS NOT NULL THEN
+        -- operations based on edit_action
+        CASE $3
+          WHEN 'add' THEN
+            FOREACH i IN ARRAY valid_activity_ids LOOP 
+             SELECT INTO record_id activity_id FROM activity_taxonomy as at WHERE at.activity_id = i AND at.classification_id = $2 LIMIT 1;
+             IF record_id IS NULL THEN
+               EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES ('|| i ||', '|| $2 ||', ''activity_id'')';
+               RAISE NOTICE 'Add Record: %', 'Activity_id ('|| i ||') is now associated to classification_id ('|| $2 ||').'; 
+             ELSE
+               RAISE NOTICE'Add Record: %', 'This activity_id ('|| i ||') already has an association to this classification_id ('|| $2 ||').';                
+             END IF;
+            END LOOP;
+          WHEN 'delete' THEN
+            FOREACH i IN ARRAY valid_activity_ids LOOP 
+              EXECUTE 'DELETE FROM activity_taxonomy WHERE activity_id ='|| i ||' AND classification_id = '|| $2 ||' AND field = ''activity_id'''; 
+              RAISE NOTICE 'Delete Record: %', 'Remove association to classification_id ('|| $2 ||') for actvity_id ('|| i ||')';
+            END LOOP;
+          WHEN 'replace' THEN
+            FOREACH i IN ARRAY valid_activity_ids LOOP 
+              EXECUTE 'DELETE FROM activity_taxonomy WHERE activity_id ='|| i ||' AND classification_id in (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy_id = '|| t_id||') AND field = ''activity_id''';
+              RAISE NOTICE 'Delete Record: %', 'Remove association to taxonomy_id ('|| t_id ||') for actvity_id ('|| i ||')';
+	      EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES ('|| i ||', '|| $2 ||', ''activity_id'')'; 
+              RAISE NOTICE 'Add Record: %', 'Activity_id ('|| i ||') is now associated to classification_id ('|| $2 ||').';
+            END LOOP;
+          ELSE
+            FOREACH i IN ARRAY valid_activity_ids LOOP 
+             SELECT INTO record_id activity_id FROM activity_taxonomy as at WHERE at.activity_id = i AND at.classification_id = $2 LIMIT 1;
+             IF record_id IS NULL THEN
+               EXECUTE 'INSERT INTO activity_taxonomy(activity_id, classification_id, field) VALUES ('|| i ||', '|| $2 ||', ''activity_id'')';
+               RAISE NOTICE 'Add Record: %', 'Activity_id ('|| i ||') is now associated to classification_id ('|| $2 ||').'; 
+             ELSE
+               RAISE NOTICE'Add Record: %', 'This activity_id ('|| i ||') already has an association to this classification_id ('|| $2 ||').';                
+             END IF;
+            END LOOP;
+        END CASE;
+        RETURN true;
+      ELSE
+        RAISE NOTICE 'Error: There is no taxonomy_id for given classification_id.';
+	RETURN false;
+      END IF;
+    ELSE
+      RAISE NOTICE 'Error: Must provide at least one valid activity_id.';
+      RETURN false;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide all parameters.';
+    RETURN false;
+  END IF; 	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_locations_by_polygon
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_locations_by_polygon(wktPolygon text) RETURNS SETOF pmt_locations_by_polygon_result_type AS 
+$$
+DECLARE
+  wkt text;
+  rec record;
+BEGIN  
+  -- validate the incoming WKT is a polygon and that it is all uppercase
+  IF (upper(substring(trim($1) from 1 for 7)) = 'POLYGON') THEN
+    RAISE NOTICE 'WKT: %', $1;
+    wkt := replace(lower(trim($1)), 'polygon', 'POLYGON');    
+    RAISE NOTICE 'WKT Fixed: %', wkt;  
+
+    FOR rec IN (
+    SELECT row_to_json(j)
+    FROM(	
+	SELECT sel.title, sel.location_ct, sel.avg_km,
+		(SELECT array_to_json(array_agg(row_to_json(c))) FROM (
+			SELECT location_id, lat_dd, long_dd
+			FROM location
+			WHERE location_id = ANY(sel.location_ids)
+		) c) as locations
+	FROM(
+		SELECT calc.activity_id 
+			,(SELECT title FROM activity a WHERE a.activity_id = calc.activity_id) AS title 
+			,count(location_id) AS location_ct
+			,array_agg(location_id) AS location_ids
+			,round(avg(dist_km)) AS avg_km 
+		FROM(
+			SELECT location_id, activity_id, round(CAST(
+				ST_Distance_Spheroid(ST_Centroid(ST_GeomFromText(wkt, 4326)), point, 'SPHEROID["WGS 84",6378137,298.257223563]') As numeric),2)*.001 As dist_km
+			FROM location
+			WHERE ST_Contains(ST_GeomFromText(wkt, 4326), point)
+			AND active = true
+		) as calc
+		GROUP BY calc.activity_id
+	) as sel 
+     ) j
+    ) LOOP		
+      RETURN NEXT rec;
+    END LOOP;	
+      
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM (SELECT 'WKT must be of type POLYGON' as error) j ) LOOP		
+      RETURN NEXT rec;
+    END LOOP;	
+  END IF;	
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_contacts
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_contacts() RETURNS SETOF pmt_contacts_result_type AS 
+$$
+DECLARE
+  rec record;
+BEGIN	
+  
+  FOR rec IN ( SELECT row_to_json(j) FROM ( 
+    SELECT c.contact_id as c_id, first_name, last_name, email, organization_id as o_id,
+	(SELECT name FROM organization where organization_id = c.organization_id) as org
+    FROM contact c
+    ORDER BY last_name, first_name) j
+  ) LOOP		
+	RETURN NEXT rec;
+  END LOOP;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_orgs
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_orgs() RETURNS SETOF pmt_orgs_result_type AS 
+$$
+DECLARE
+  rec record;
+BEGIN	
+  
+  FOR rec IN ( SELECT row_to_json(j) FROM ( 
+    SELECT organization_id as o_id, name
+    FROM organization
+    ORDER BY name) j
+  ) LOOP		
+	RETURN NEXT rec;
+  END LOOP;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_user_authority
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_user_authority(user_id integer, project_id integer, auth_type auth_crud) RETURNS boolean AS $$
+DECLARE 
+	user_organization_id integer;
+	user_data_group_id integer;
+	valid_data_group_id integer;
+	authorized_project_ids integer[];
+	authorized_project_id boolean;
+	authorization_source auth_source;	
+	role_crud boolean;
+BEGIN 
+     -- user and authorization type parameters are required
+     IF $1 IS NULL  OR $3 IS NULL THEN    
+       RAISE NOTICE 'Missing required parameters';
+       RETURN FALSE;
+     END IF;    
+
+     -- check to see if user has a role with "SUPER" rights (if so they have full adminsitrative editing rights to the database)
+     SELECT INTO role_crud super FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = $1);
+
+     IF role_crud THEN
+       RAISE NOTICE 'User is a Super User';
+       RETURN TRUE;
+     END IF;
+
+     -- get users authorization type based on their role
+     CASE auth_type
+	WHEN 'create' THEN
+	  SELECT INTO role_crud "create" FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = $1);	    
+	WHEN 'read' THEN
+	  SELECT INTO role_crud "read" FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = $1);
+	WHEN 'update' THEN
+	  SELECT INTO role_crud "update" FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = $1);
+  	WHEN 'delete' THEN
+	  SELECT INTO role_crud "delete" FROM role WHERE role_id = (SELECT role_id FROM user_role WHERE user_role.user_id = $1);
+	ELSE
+	  RETURN FALSE;
+     END CASE;       
+
+     -- If there is no project_id provided then validate based on users authorization type (CRUD)
+     IF $2 IS NULL THEN       
+       IF role_crud THEN
+	 RETURN TRUE;
+       ELSE
+	 RETURN FALSE;
+       END IF;
+     END IF;
+     
+     -- determine editing authorization source
+     SELECT INTO authorization_source edit_auth_source from config LIMIT 1;
+
+     CASE authorization_source
+       -- authorization determined by organization affiliation
+       WHEN 'organization' THEN
+         -- get users organization_id
+         SELECT INTO user_organization_id organization_id FROM "user" WHERE "user".user_id = $1;   
+	 -- validate users organization_id	
+         IF (SELECT * FROM pmt_validate_organization(user_organization_id)) THEN
+           RAISE NOTICE 'Organization id is valid: %', user_organization_id;
+           -- get list of project_ids user has authority to edit
+           SELECT INTO authorized_project_ids array_agg(DISTINCT p.project_id)::int[] FROM participation_taxonomy pt JOIN participation p ON pt.participation_id = p.participation_id
+           WHERE p.organization_id = user_organization_id AND pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Organisation Role' and classification = 'Accountable');
+           RAISE NOTICE 'Authorized project_ids: %', authorized_project_ids;
+	 ELSE
+	   RAISE NOTICE 'Organization id for user is NOT valid.';
+	   RETURN FALSE;
+         END IF;
+       -- authorization determined by data group affiliation
+       WHEN 'data_group' THEN
+         -- get users data_group_id
+         SELECT INTO user_data_group_id data_group_id FROM "user" WHERE "user".user_id = $1;  
+         -- validate users data_group_id
+	 SELECT INTO valid_data_group_id classification_id::integer FROM taxonomy_classifications WHERE classification_id = user_data_group_id AND taxonomy = 'Data Group';
+	 IF (valid_data_group_id IS NOT NULL) THEN
+           RAISE NOTICE 'Data Group id is valid: %', user_data_group_id;
+           -- get list of project_ids user has authority to edit
+           SELECT INTO authorized_project_ids array_agg(DISTINCT pt.project_id)::int[] FROM project_taxonomy pt 
+           WHERE pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group' and classification_id = user_data_group_id);          
+           RAISE NOTICE 'Authorized project_ids: %', authorized_project_ids;
+	 ELSE
+	   RAISE NOTICE 'Data Group id for user is NOT valid.';
+	   RETURN FALSE;
+         END IF;
+       ELSE
+     END CASE;             
+
+     IF authorized_project_ids IS NOT NULL THEN
+       -- the requested project is in the list of authorized projects
+       IF ($2 = ANY(authorized_project_ids)) THEN        
+         RAISE NOTICE 'Project id (%) in authorized projects.', $2;
+         -- determine if the authorization type is allowed by user role
+         IF role_crud THEN
+	   RETURN TRUE;
+         ELSE
+           RAISE NOTICE 'User does not have request authorization type: %', $3;
+	   RETURN FALSE;
+         END IF;
+       ELSE
+         RAISE NOTICE 'Project id (%) NOT in authorized projects.', $2;
+	 RETURN FALSE;
+       END IF;
+     ELSE
+        RAISE NOTICE 'There are NO authorized projects';
+	RETURN FALSE;
+     END IF;
+    
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_activity
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_activity(user_id integer, activity_id integer, key_value_data json) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  p_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  user_name text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['activity_id','project_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- ALL parameters are required (next versions will allow null activity_id as new activity and have a flag for deletion
+  -- for now all authorization types = update)
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
+    -- validate activity_id
+    IF (SELECT * FROM pmt_validate_activity($2)) THEN
+      -- get project_id for activity
+      SELECT INTO p_id project_id FROM activity WHERE activity.activity_id = $2;
+      -- validate users authority to 'update' this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
+        -- we have a authorized user and a valid activity lets edit...
+        
+        -- loop through the columns of the activity table        
+        FOR json IN (SELECT * FROM json_each_text($3)) LOOP
+          RAISE NOTICE 'JSON key/value: %', json.key || ':' || json.value;
+          -- SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(ARRAY['activity_id','project_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date']) AND column_name = 'title';
+
+	  -- get the column information for column that user is requesting to edit	
+          FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_editing_columns) AND column_name = json.key) LOOP 
+            --IF column_record IS NOT NULL THEN
+              RAISE NOTICE 'Editing column: %', column_record.column_name;
+              RAISE NOTICE 'Assigning new value: %', json.value;
+              execute_statement := null;
+              CASE column_record.data_type 
+                WHEN 'integer', 'numeric' THEN              
+                 IF (SELECT pmt_isnumeric(json.value)) THEN
+                   execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || json.value || ' WHERE activity_id = ' || $2; 
+                 END IF;
+                ELSE
+                  -- if the value has the text null then assign the column value null
+                  IF (lower(json.value) = 'null') THEN
+                    execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = null WHERE activity_id = ' || $2; 
+                  ELSE
+                    execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE activity_id = ' || $2; 
+                  END IF;
+              END CASE;
+              IF execute_statement IS NOT NULL THEN
+                RAISE NOTICE 'Statement: %', execute_statement;
+                EXECUTE execute_statement;
+                SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+                EXECUTE 'UPDATE activity SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  activity_id = ' || $2;
+              END IF;
+          END LOOP;
+        END LOOP;
+        RETURN TRUE;     
+      ELSE
+        RAISE NOTICE 'Error: User does NOT have authority to edit this project.';
+	RETURN FALSE;
+      END IF;      
+    ELSE
+      RAISE NOTICE 'Error: Invalid activity_id.';
+      RETURN FALSE;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide all parameters.';
+    RETURN false;
+  END IF; 
+  
+EXCEPTION WHEN others THEN
+    RETURN FALSE;  	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_contact
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_contact(id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN false;
+     END IF;    
+     
+     SELECT INTO valid_id contact_id FROM contact WHERE active = true AND contact_id = $1;	 
+
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_validate_contacts
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_contacts(contact_ids character varying) RETURNS INT[] AS $$
+DECLARE 
+  valid_contact_ids INT[];
+  filter_contact_ids INT[];
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN valid_contact_ids;
+     END IF;
+
+     filter_contact_ids := string_to_array($1, ',')::int[];
+     
+     SELECT INTO valid_contact_ids array_agg(DISTINCT contact_id)::INT[] FROM (SELECT contact_id FROM contact WHERE active = true AND contact_id = ANY(filter_contact_ids) ORDER BY contact_id) AS t;
+     
+     RETURN valid_contact_ids;
+
+EXCEPTION
+     WHEN others THEN RETURN NULL;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_activity_contact
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_activity_contact(user_id integer, activity_id integer, contact_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  p_id integer;
+  record_id integer;
+BEGIN	
+  -- first three parameters are required 
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
+    -- validate activity_id & contact_id
+    IF (SELECT * FROM pmt_validate_activity($2)) AND (SELECT * FROM pmt_validate_contact($3)) THEN
+      -- get project_id for activity
+      SELECT INTO p_id project_id FROM activity WHERE activity.activity_id = $2;
+      
+      -- operations based on the requested edit action
+      CASE $4
+        WHEN 'delete' THEN
+          -- validate users authority to perform an update action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN          
+            EXECUTE 'DELETE FROM activity_contact WHERE activity_id ='|| $2 ||' AND contact_id = '|| $3; 
+            RAISE NOTICE 'Delete Record: %', 'Remove association to contact_id ('|| $3 ||') for actvity_id ('|| $2 ||')';
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;           
+        WHEN 'replace' THEN            
+           -- validate users authority to perform an update and create action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN          
+            EXECUTE 'DELETE FROM activity_contact WHERE activity_id ='|| $2;
+            RAISE NOTICE 'Delete Record: %', 'Removed all contacts for actvity_id ('|| $2 ||')';
+	    EXECUTE 'INSERT INTO activity_contact(activity_id, contact_id) VALUES ('|| $2 ||', '|| $3 ||')';
+            RAISE NOTICE 'Add Record: %', 'Activity_id ('|| $2 ||') is now associated to contact_id ('|| $3 ||').'; 
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;        
+        ELSE
+          -- validate users authority to perform a create action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN          
+            SELECT INTO record_id ac.activity_id FROM activity_contact as ac WHERE ac.activity_id = $2 AND ac.contact_id = $3 LIMIT 1;
+            IF record_id IS NULL THEN
+              EXECUTE 'INSERT INTO activity_contact(activity_id, contact_id) VALUES ('|| $2 ||', '|| $3 ||')';
+              RAISE NOTICE 'Add Record: %', 'Activity_id ('|| $2 ||') is now associated to contact_id ('|| $3 ||').'; 
+            ELSE
+              RAISE NOTICE'Add Record: %', 'This activity_id ('|| $2 ||') already has an association to this contact_id ('|| $3 ||').';                
+            END IF;
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;                  
+      END CASE;
+      -- edits are complete return successful
+      RETURN TRUE;         
+    ELSE
+      RAISE NOTICE 'Error: Invalid activity_id or contact_id.';
+      RETURN FALSE;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide all parameters.';
+    RETURN false;
+  END IF; 
+  
+EXCEPTION WHEN others THEN
+    RETURN FALSE;  	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_stat_partner_network
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_stat_partner_network(country_ids character varying)
+RETURNS SETOF pmt_stat_partner_network_result AS 
+$$
+DECLARE
+  valid_classification_ids int[];
+  valid_country_ids int[];
+  rec record;
+  exectute_statement text;
+  dynamic_where text;
+BEGIN
+
+  --  if country_ids exists validate and filter
+  IF $1 IS NOT NULL OR $1 <> '' THEN
+    SELECT INTO valid_classification_ids * FROM pmt_validate_classifications($1);
+    RAISE NOTICE 'valid classification ids: %', valid_classification_ids;
+    IF valid_classification_ids IS NOT NULL THEN
+      SELECT INTO valid_country_ids array_agg(DISTINCT c.classification_id)::INT[] 
+      FROM (
+        SELECT classification.classification_id 
+        FROM classification 
+        WHERE active = true 
+        AND classification.classification_id = ANY(valid_classification_ids)
+        AND classification.taxonomy_id = (SELECT taxonomy.taxonomy_id FROM taxonomy WHERE iati_codelist = 'Country')
+         ORDER BY classification.classification_id
+      ) as c;
+    END IF;
+    
+    IF valid_country_ids IS NOT NULL THEN
+        dynamic_where := ' AND (location_ids <@ ARRAY[(select array_agg(location_id) from taxonomy_lookup where classification_id = ANY(ARRAY[' || array_to_string(valid_country_ids, ',')  || ']))]) ';      
+    END IF;   
+    
+  END IF;
+  
+  -- prepare statement
+  exectute_statement := 'SELECT array_to_json(array_agg(row_to_json(x))) ' ||
+	'FROM ( ' ||
+		-- Funding Orgs
+		'SELECT f.name as name, f.organization_id as o_id, ' ||
+			'(SELECT array_to_json(array_agg(row_to_json(y))) ' ||
+			'FROM ( ' ||
+				-- Accountable Orgs
+				'SELECT ac.name as name, ' ||
+					'(SELECT array_to_json(array_agg(row_to_json(z))) ' ||
+					'FROM ( ' ||
+						-- Implementing Orgs
+						'SELECT i.name as name, ' ||
+							'(SELECT array_to_json(array_agg(row_to_json(a)))  ' ||
+							'FROM ( ' ||
+								'SELECT a.title as name ' ||
+								'FROM activity a ' ||
+								'WHERE activity_id = ANY(i.activity_ids) ' ||
+							')a) as children ' ||
+						'FROM ( ' ||
+						'SELECT ol.organization_id, o.name, array_agg(activity_id) as activity_ids ' ||
+						'FROM organization_lookup ol ' ||
+						'JOIN organization o ' ||
+						'ON ol.organization_id = o.organization_id ' ||
+						'WHERE (classification_ids @> ARRAY[(select classification_id from classification where taxonomy_id = (select taxonomy_id from taxonomy where name = ''Organisation Role'')  ' ||
+						'AND iati_name = ''Implementing'')]) AND (ac.activity_ids @> ARRAY[ol.activity_id]) ' ||
+						'GROUP BY ol.organization_id, o.name ' ||
+						') i ' ||
+					') z) as children ' ||
+				'FROM ( ' ||
+				'SELECT ol.organization_id, o.name, array_agg(activity_id) as activity_ids ' ||
+				'FROM organization_lookup ol ' ||
+				'JOIN organization o ' ||
+				'ON ol.organization_id = o.organization_id ' ||
+				'WHERE (classification_ids @> ARRAY[(select classification_id from classification where taxonomy_id = (select taxonomy_id from taxonomy where name = ''Organisation Role'')  ' ||
+				'AND iati_name = ''Accountable'')]) AND (f.activity_ids @> ARRAY[ol.activity_id]) ' ||
+				'GROUP BY ol.organization_id, o.name ' ||
+				') ac ' ||
+			') y) as children ' ||
+		'FROM ' ||
+		'(SELECT DISTINCT ol.organization_id, o.name, array_agg(activity_id) as activity_ids ' ||
+		'FROM organization_lookup ol ' ||
+		'JOIN organization o ' ||
+		'ON ol.organization_id = o.organization_id ' ||
+		'WHERE (classification_ids @> ARRAY[(select classification_id from classification where taxonomy_id = (select taxonomy_id from taxonomy where name = ''Organisation Role'')  ' ||
+		'AND iati_name = ''Funding'')])  ';
+
+		IF dynamic_where IS NOT NULL THEN
+			exectute_statement := exectute_statement || dynamic_where;
+		END IF;
+
+		exectute_statement := exectute_statement || 'GROUP BY ol.organization_id, o.name) as f ' ||
+		') x ';
+
+   RAISE NOTICE 'Execute: %', exectute_statement;
+   
+   -- exectute the prepared statement	
+   FOR rec IN EXECUTE exectute_statement LOOP
+	RETURN NEXT rec; 
+   END LOOP;
+   
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_contact
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_contact(user_id integer, contact_id integer, key_value_data json) 
+RETURNS SETOF pmt_edit_contact_result_type AS 
+$$
+DECLARE
+  new_contact_id integer;
+  c_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['contact_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- user and data parameters are required (next versions will have a flag for deletion)
+  IF ($1 IS NULL) OR ($3 IS NULL) THEN   
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id and json data parameters.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if contact_id is null then validate users authroity to create a new contact record  
+  IF ($2 IS NULL) THEN
+    IF (SELECT * FROM pmt_validate_user_authority($1, null, 'create')) THEN
+      EXECUTE 'INSERT INTO contact(created_by, updated_by) VALUES (' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING contact_id;' INTO new_contact_id;
+      RAISE NOTICE 'Created new contact with id: %', new_contact_id;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new contact.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  -- validate contact_id if provided and validate users authority to update an existing record  
+  ELSE      
+    IF (SELECT * FROM pmt_validate_contact($2)) THEN 
+      -- validate users authority to 'update' this contact
+      IF (SELECT * FROM pmt_validate_user_authority($1, null, 'update')) THEN   
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update an existing contact.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid contact_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+             
+  -- assign the contact_id to use in statements
+  IF new_contact_id IS NOT NULL THEN
+    c_id := new_contact_id;
+  ELSE
+    c_id := $2;
+  END IF;
+  
+  -- loop through the columns of the contact table        
+  FOR json IN (SELECT * FROM json_each_text($3)) LOOP
+    RAISE NOTICE 'JSON key/value: %', json.key || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='contact' AND column_name != ALL(invalid_editing_columns) AND column_name = json.key) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE contact SET ' || column_record.column_name || ' = ' || json.value || ' WHERE contact_id = ' || c_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE contact SET ' || column_record.column_name || ' = null WHERE contact_id = ' || c_id; 
+          ELSE
+            execute_statement := 'UPDATE contact SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE contact_id = ' || c_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE contact SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  contact_id = ' || c_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select c_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+   
+EXCEPTION WHEN others THEN
+    GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select c_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_participation
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_participation(user_id integer, participation_id integer, project_id integer, activity_id integer, 
+organization_id integer, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  p_id integer;
+  o_id integer;  
+  a_id integer;  
+  c_id integer;  
+  record_id integer;
+  participation_records integer[];
+  user_name text;
+BEGIN	
+
+  -- user parameter is required
+  IF ($1 IS NULL) THEN
+    RAISE NOTICE 'Error: Must have user_id parameter.';
+    RETURN FALSE;  
+  END IF;
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+  -- validate participation_id if provided
+  IF ($2 IS NOT NULL) THEN
+    SELECT INTO record_id p.participation_id FROM participation p WHERE p.participation_id = $2 AND active = true;
+    IF record_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided participation_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;  
+  -- validate project_id if provided
+  IF ($3 IS NOT NULL) THEN
+    SELECT INTO p_id p.project_id FROM project p WHERE p.project_id = $3 AND active = true;
+    IF p_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided project_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate activity_id if provided
+  IF ($4 IS NOT NULL) THEN
+    SELECT INTO a_id a.activity_id FROM activity a WHERE a.activity_id = $4 AND active = true;
+    IF a_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided activity_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate organization_id if provided
+  IF ($5 IS NOT NULL) THEN
+    SELECT INTO o_id o.organization_id FROM organization o WHERE o.organization_id = $5 AND active = true;
+    IF o_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided organization_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate classification_id if provided
+  IF ($6 IS NOT NULL) THEN
+    SELECT INTO c_id c.classification_id FROM classification c WHERE c.classification_id = $5 AND active = true AND c.classification_id IN (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role');
+    IF c_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided classification_id is not in the Organisation Role taxonomy or is inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  
+  -- operations based on the requested edit action
+  CASE $7
+    WHEN 'delete' THEN
+      -- check for required parameters
+      IF (record_id IS NULL) THEN 
+        RAISE NOTICE 'Error: Must have participation_id parameter when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;  
+      -- validate users authority to perform an update action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
+        EXECUTE 'DELETE FROM participation WHERE participation_id ='|| record_id; 
+        EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id ='|| record_id; 
+        RAISE NOTICE 'Delete Record: %', 'Removed participation and taxonomy associated to this participation_id ('|| record_id ||')';
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;   
+    WHEN 'replace' THEN            
+      -- check for required parameters
+      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
+        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;
+      -- validate users authority to perform an update and create action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN        
+        IF a_id IS NOT NULL THEN
+          -- activity participation
+          SELECT INTO participation_records array_agg(p.participation_id)::int[] FROM participation p WHERE p.project_id = p_id AND p.activity_id = a_id;
+          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
+          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
+          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id= ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
+          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
+		') is now associated to classification_id ('|| c_id ||').'; 
+        ELSE
+          -- project participation
+          SELECT INTO participation_records array_agg(p.participation_id)::int[]  FROM participation p WHERE p.project_id = p_id AND p.activity_id IS NULL;
+          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
+          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
+          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
+          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
+        END IF;
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;
+    ELSE
+      -- check for required parameters
+      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
+        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;
+      -- validate users authority to perform a create action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
+        IF a_id IS NOT NULL THEN
+          -- activity participation          
+          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
+		') is now associated to classification_id ('|| c_id ||').'; 
+        ELSE
+          -- project participation          
+          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
+        END IF;
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;        
+  END CASE;
+
+  -- edits are complete return successful
+  RETURN TRUE;         
+            
+EXCEPTION WHEN others THEN
+     RETURN FALSE;  	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_participation
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_participation(user_id integer, participation_id integer, project_id integer, activity_id integer, 
+organization_id integer, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  p_id integer;
+  o_id integer;  
+  a_id integer;  
+  c_id integer;  
+  record_id integer;
+  participation_records integer[];
+  user_name text;
+BEGIN	
+
+  -- user parameter is required
+  IF ($1 IS NULL) THEN
+    RAISE NOTICE 'Error: Must have user_id parameter.';
+    RETURN FALSE;  
+  END IF;
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+  -- validate participation_id if provided
+  IF ($2 IS NOT NULL) THEN
+    SELECT INTO record_id p.participation_id FROM participation p WHERE p.participation_id = $2 AND active = true;
+    IF record_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided participation_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;  
+  -- validate project_id if provided
+  IF ($3 IS NOT NULL) THEN
+    SELECT INTO p_id p.project_id FROM project p WHERE p.project_id = $3 AND active = true;
+    IF p_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided project_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate activity_id if provided
+  IF ($4 IS NOT NULL) THEN
+    SELECT INTO a_id a.activity_id FROM activity a WHERE a.activity_id = $4 AND active = true;
+    IF a_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided activity_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate organization_id if provided
+  IF ($5 IS NOT NULL) THEN
+    SELECT INTO o_id o.organization_id FROM organization o WHERE o.organization_id = $5 AND active = true;
+    IF o_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided organization_id is invalid or inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  -- validate classification_id if provided
+  IF ($6 IS NOT NULL) THEN
+    SELECT INTO c_id c.classification_id FROM classification c WHERE c.classification_id = $5 AND active = true AND c.classification_id IN (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role');
+    IF c_id IS NULL THEN
+      RAISE NOTICE 'Error: Provided classification_id is not in the Organisation Role taxonomy or is inactive.';
+      RETURN FALSE;
+    END IF;    
+  END IF;
+  
+  -- operations based on the requested edit action
+  CASE $7
+    WHEN 'delete' THEN
+      -- check for required parameters
+      IF (record_id IS NULL) THEN 
+        RAISE NOTICE 'Error: Must have participation_id parameter when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;  
+      -- validate users authority to perform an update action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
+        EXECUTE 'DELETE FROM participation WHERE participation_id ='|| record_id; 
+        EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id ='|| record_id; 
+        RAISE NOTICE 'Delete Record: %', 'Removed participation and taxonomy associated to this participation_id ('|| record_id ||')';
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;   
+    WHEN 'replace' THEN            
+      -- check for required parameters
+      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
+        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;
+      -- validate users authority to perform an update and create action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN        
+        IF a_id IS NOT NULL THEN
+          -- activity participation
+          SELECT INTO participation_records array_agg(p.participation_id)::int[] FROM participation p WHERE p.project_id = p_id AND p.activity_id = a_id;
+          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
+          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
+          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id= ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
+          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
+		') is now associated to classification_id ('|| c_id ||').'; 
+        ELSE
+          -- project participation
+          SELECT INTO participation_records array_agg(p.participation_id)::int[]  FROM participation p WHERE p.project_id = p_id AND p.activity_id IS NULL;
+          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
+          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
+          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
+          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
+        END IF;
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;
+    ELSE
+      -- check for required parameters
+      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
+        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
+	RETURN FALSE;  
+      END IF;
+      -- validate users authority to perform a create action on this project
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
+        IF a_id IS NOT NULL THEN
+          -- activity participation          
+          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
+		') is now associated to classification_id ('|| c_id ||').'; 
+        ELSE
+          -- project participation          
+          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
+		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
+          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
+          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
+        END IF;
+      ELSE
+        RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
+        RETURN FALSE;
+      END IF;        
+  END CASE;
+
+  -- edits are complete return successful
+  RETURN TRUE;         
+            
+EXCEPTION WHEN others THEN
+     RETURN FALSE;  	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_infobox_activity
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_infobox_activity(activity_id integer)
+RETURNS SETOF pmt_infobox_result_type AS 
+$$
+DECLARE
+  rec record;
+  invalid_return_columns text[];
+  return_columns text;
+  execute_statement text;
+  data_message text;
+BEGIN
+  IF $1 IS NOT NULL THEN	
+    -- set columns that are not to be returned 
+    invalid_return_columns := ARRAY['active', 'retired_by', 'created_by', 'created_date'];
+    -- get list of columns to return
+    SELECT INTO return_columns array_to_string(array_agg('a.' || column_name::text), ', ') FROM information_schema.columns 
+    WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_return_columns);
+
+    -- dynamically build the execute statment	
+    execute_statement := 'SELECT ' || return_columns || ', l.location_ct, l.admin_bnds ';
+    -- -- taxonomy	
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'from activity_taxonomy at ' ||
+				'join taxonomy_classifications  tc ' ||
+				'on at.classification_id = tc.classification_id ' ||
+				'and at.activity_id = ' || $1 ||
+				') t ) as taxonomy ';
+    -- partners			
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(p))) FROM ( ' ||
+				'select o.organization_id, o.name, tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'from participation pp ' ||
+				'join organization o ' ||
+				'on pp.organization_id = o.organization_id ' ||
+				'left join participation_taxonomy ppt ' ||
+				'on pp.participation_id = ppt.participation_id ' ||
+				'join taxonomy_classifications tc ' ||
+				'on ppt.classification_id = tc.classification_id ' ||
+				'where pp.active = true and o.active = true ' ||
+				'and tc.taxonomy = ''Organisation Role'' and (tc.classification = ''Implementing'' OR tc.classification= ''Funding'') ' ||
+				'and pp.activity_id = ' || $1 ||
+				') p ) as partners ';
+    -- contacts
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(c))) FROM ( ' ||
+				'select c.contact_id, c.first_name, c.last_name, c.organization_id, o.name ' ||
+				'from activity_contact ac ' ||
+				'join contact c ' ||
+				'on ac.contact_id = c.contact_id ' ||
+				'left join organization o ' ||
+				'on c.organization_id = o.organization_id ' ||
+				'where c.active = true and ac.activity_id = ' || $1 ||
+				') c ) as contacts ';				
+    -- activity
+    execute_statement := execute_statement || 'from (select * from activity a where a.active = true and a.activity_id = ' || $1 || ') a ';
+    -- locations
+    execute_statement := execute_statement || 'left join ' ||
+				'(select ll.activity_id, count(ll.location_id) as location_ct, array_to_string(array_agg(distinct ll.gaul0_name || '','' || ll.gaul1_name || '','' || ll.gaul2_name), '';'') as admin_bnds ' ||
+				'from location_lookup ll ' ||
+				'where ll.activity_id = ' || $1 ||
+				'group by ll.activity_id) l ' ||
+				'on a.activity_id = l.activity_id ';
+
+	FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP  		
+		RETURN NEXT rec;
+	END LOOP;
+   END IF;
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_global_search
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_global_search(search_text text)
+RETURNS SETOF pmt_global_search_result_type AS 
+$$
+DECLARE
+  rec record;
+  json_rec record;
+  column_rec record;
+  error_msg text;
+BEGIN
+  IF ($1 IS NULL OR $1 = '') THEN
+    -- must include all parameters, return error
+    FOR rec IN (SELECT row_to_json(j) FROM(SELECT 'Error: Must include search_text data parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  ELSE
+    FOR rec IN (
+    SELECT row_to_json(j)
+    FROM
+    (	
+	SELECT p.type, p.id, p.title, p.desc, p.tags, p.p_ids, p.a_ids FROM (
+	SELECT 'p'::text AS "type", p.project_id AS id, coalesce(p.label, p.title) AS title, (lower(p.title) LIKE '%' || lower($1) || '%') AS in_title, 
+	p.description AS desc, (lower(p.description) LIKE '%' || lower($1) || '%') AS in_desc, 
+	p.tags, (lower(p.tags) LIKE '%' || lower($1) || '%') AS in_tags, array_agg(distinct p.project_id) as p_ids, array_agg(distinct l.activity_id) as a_ids
+	-- , ST_AsGeoJSON(ST_Envelope(ST_UNION(l.point))) AS bbox, array_agg(l.location_id) AS l_ids
+	FROM project p
+	LEFT JOIN activity l
+	ON p.project_id = l.project_id
+	WHERE p.active = true and
+	(lower(p.title) LIKE '%' || lower($1) || '%' or lower(p.description) LIKE '%' || lower($1) || '%' or lower(p.tags) LIKE '%' || lower($1) || '%')
+	GROUP BY p.project_id, p.title, p.description, p.tags
+	ORDER BY in_title desc, in_tags desc, in_desc desc) AS p
+	UNION ALL
+	SELECT a.type, a.id, a.title, a.desc, a.tags, a.p_ids, a.a_ids FROM (
+	SELECT 'a'::text AS "type", a.activity_id AS id, coalesce(a.label, a.title) AS title, (lower(a.title) LIKE '%' || lower($1) || '%') AS in_title, 
+	a.description AS desc, (lower(a.description) LIKE '%' || lower($1) || '%') AS in_desc, 
+	a.tags, (lower(a.tags) LIKE '%' || lower($1) || '%') AS in_tags, array_agg(distinct a.project_id) as p_ids, array_agg(distinct a.activity_id) as a_ids
+	-- , ST_AsGeoJSON(ST_Envelope(ST_UNION(l.point))) AS bbox, array_agg(l.location_id) AS l_ids
+	FROM activity a
+	WHERE a.active = true and
+	(lower(a.title) LIKE '%' || lower($1) || '%' or lower(a.description) LIKE '%' || lower($1) || '%' or lower(a.tags) LIKE '%' || lower($1) || '%')
+	GROUP BY a.activity_id, a.title, a.description, a.tags
+	ORDER BY in_title desc, in_tags desc, in_desc desc) AS a
+     ) j
+    ) LOOP		
+      RETURN NEXT rec;
+    END LOOP;	
+    
+  END IF;
+  	
+EXCEPTION WHEN others THEN
+    GET STACKED DIAGNOSTICS error_msg = MESSAGE_TEXT;
+    FOR rec IN (SELECT row_to_json(j) FROM(SELECT 'Internal Error - Contact your DBA with the following error message: ' || error_msg as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  	
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_activity
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_activity(activity_id integer)
+RETURNS SETOF pmt_infobox_result_type AS 
+$$
+DECLARE
+  rec record;
+  invalid_return_columns text[];
+  return_columns text;
+  execute_statement text;
+  data_message text;
+BEGIN
+  IF $1 IS NOT NULL THEN	
+    -- set columns that are not to be returned 
+    invalid_return_columns := ARRAY['active', 'retired_by', 'created_by', 'created_date'];
+    -- get list of columns to return
+    SELECT INTO return_columns array_to_string(array_agg('a.' || column_name::text), ', ') FROM information_schema.columns 
+    WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_return_columns);
+
+    -- dynamically build the execute statment	
+    execute_statement := 'SELECT ' || return_columns || ', l.location_ct, l.admin_bnds, f.amount ';
+
+    -- taxonomy	
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'from activity_taxonomy at ' ||
+				'join taxonomy_classifications  tc ' ||
+				'on at.classification_id = tc.classification_id ' ||
+				'and at.activity_id = ' || $1 ||
+				') t ) as taxonomy ';
+    -- organizations			
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(p))) FROM ( ' ||
+				'select o.organization_id, o.name, tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'from participation pp ' ||
+				'join organization o ' ||
+				'on pp.organization_id = o.organization_id ' ||
+				'left join participation_taxonomy ppt ' ||
+				'on pp.participation_id = ppt.participation_id ' ||
+				'join taxonomy_classifications tc ' ||
+				'on ppt.classification_id = tc.classification_id ' ||
+				'where pp.active = true and o.active = true ' ||
+				'and pp.activity_id = ' || $1 ||
+				') p ) as organizations ';
+    -- contacts
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(c))) FROM ( ' ||
+				'select c.contact_id, c.first_name, c.last_name, c.email, c.organization_id, o.name ' ||
+				'from activity_contact ac ' ||
+				'join contact c ' ||
+				'on ac.contact_id = c.contact_id ' ||
+				'left join organization o ' ||
+				'on c.organization_id = o.organization_id ' ||
+				'where c.active = true and ac.activity_id = ' || $1 ||
+				') c ) as contacts ';				
+     -- locations
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(l))) FROM ( ' ||
+				'select l.location_id, l.lat_dd, l.long_dd, l.x, l.y, l.georef ' ||
+				'from location l ' ||				
+				'where l.active = true and l.activity_id = ' || $1 ||
+				') l ) as locations ';		
+								
+    -- activity
+    execute_statement := execute_statement || 'from (select * from activity a where a.active = true and a.activity_id = ' || $1 || ') a ';
+    -- locations
+    execute_statement := execute_statement || 'left join ' ||
+				'(select ll.activity_id, count(distinct ll.location_id) as location_ct, array_to_string(array_agg(distinct ll.gaul0_name || '','' || ll.gaul1_name || '','' || ll.gaul2_name), '';'') as admin_bnds ' ||
+				'from location_lookup ll ' ||
+				'where ll.activity_id = ' || $1 ||
+				'group by ll.activity_id) l ' ||
+				'on a.activity_id = l.activity_id ';
+    -- financial	
+    execute_statement := execute_statement || 'left join  ' ||
+				'(select f.activity_id, sum(f.amount) as amount ' ||
+				'from financial f ' ||				
+				'where f.active = true and f.activity_id = ' || $1 ||
+				'group by f.activity_id) f ' ||
+				'on a.activity_id = f.activity_id ';
+
+--	RAISE NOTICE 'Execute statement: %', execute_statement;			
+
+	FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP  		
+		RETURN NEXT rec;
+	END LOOP;
+   END IF;
+END;$$ LANGUAGE plpgsql;
 /*****************************************************************
 VIEWS -- under development and not final. Currently for the 
 purpose checking validitiy of data migration.
@@ -5528,7 +6889,7 @@ JOIN location l
 ON a.activity_id = l.activity_id
 JOIN participation pp
 ON (p.project_id = pp.project_id AND pp.activity_id IS NULL) 
-WHERE a.active = true and p.active = true and l.active = true and pp.reporting_org = false and pp.active = true
+WHERE a.active = true and p.active = true and l.active = true and pp.active = true
 UNION 
 SELECT DISTINCT p.project_id as project_id, a.activity_id as activity_id, l.location_id as location_id, pp.organization_id as organization_id, pp.participation_id as participation_id, a.start_date as activity_start, a.end_date as activity_end
 , l.x,l.y, l.georef as georef
@@ -5539,7 +6900,7 @@ JOIN location l
 ON a.activity_id = l.activity_id
 JOIN participation pp
 ON (p.project_id = pp.project_id AND a.activity_id = pp.activity_id)
-WHERE a.active = true and p.active = true and l.active = true  and pp.reporting_org = false  and pp.active = true) as foo
+WHERE a.active = true and p.active = true and l.active = true and pp.active = true) as foo
 ORDER BY project_id, activity_id, location_id, organization_id;
 -------------------------------------------------------------------
 -- taxonomy
@@ -5728,6 +7089,73 @@ JOIN gaul2 ON gaul1.name = gaul2.gaul1_name
 UNION
 SELECT DISTINCT gaul0.code, gaul0.name, 'Country' as "type", gaul0.name, null AS gaul1_name, null AS gaul2_name, ST_AsGeoJSON(Box2D(gaul0.polygon))  AS bounds 
 FROM gaul0;
+-------------------------------------------------------------------
+-- Data Loading Report for record counts
+-------------------------------------------------------------------
+CREATE OR REPLACE VIEW data_loading_report
+AS SELECT 'activity table' as "table", COUNT(*)::integer AS "current record count", 0 AS "correct record count", '' as "comments" FROM activity
+UNION ALL
+SELECT 'activity_contact junction table' as "table", COUNT(*)::integer AS "current record count", 0 AS "correct record count", '' as "comments" FROM activity_contact
+UNION ALL
+SELECT 'activity_taxonomy junction table' as "table", COUNT(*)::integer AS "current record count", 0 AS "correct record count", '' as "comments" FROM activity_taxonomy
+UNION ALL
+SELECT 'boundary table' as "table", COUNT(*) AS "current record count", 3 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM boundary			
+UNION ALL
+SELECT 'boundary_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM boundary_taxonomy			
+UNION ALL
+SELECT 'contact table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM contact			
+UNION ALL
+SELECT 'contact_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM contact_taxonomy
+UNION ALL
+SELECT 'detail table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM detail
+UNION ALL
+SELECT 'feature_taxonomy junction table' as "table", COUNT(*) AS "current record count", 277 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM feature_taxonomy
+UNION ALL
+SELECT 'financial table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM financial			
+UNION ALL
+SELECT 'financial_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM financial_taxonomy		
+UNION ALL
+SELECT 'gaul0 table' as "table", COUNT(*) AS "current record count", 277 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM gaul0
+UNION ALL
+SELECT 'gaul1 table' as "table", COUNT (*) AS "current record count", 3469 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM gaul1
+UNION ALL
+SELECT 'gaul2 table' as "table", COUNT(*) AS "current record count", 37378 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM gaul2
+UNION ALL
+SELECT 'location table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM location 
+UNION ALL
+SELECT 'location_boundary junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM location_boundary
+UNION ALL
+SELECT 'location_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM location_taxonomy
+UNION ALL
+SELECT 'map table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM map		
+UNION ALL
+SELECT 'organization table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM organization		
+UNION ALL
+SELECT 'organization_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM organization_taxonomy	
+UNION ALL
+SELECT 'participation table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM participation
+UNION ALL
+SELECT 'participation_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM participation_taxonomy
+UNION ALL
+SELECT 'project table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM project			
+UNION ALL
+SELECT 'project_contact junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM project_contact
+UNION ALL
+SELECT 'project_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM project_taxonomy
+UNION ALL
+SELECT 'result table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM result			
+UNION ALL
+SELECT 'result_taxonomy junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM result_taxonomy
+UNION ALL
+SELECT 'role table' as "table", COUNT(*) AS "current record count", 3 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM role
+UNION ALL
+SELECT 'user table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM "user"
+UNION ALL
+SELECT 'user_role junction table' as "table", COUNT(*) AS "current record count", 0 AS "correct record count", '' as "comments" FROM user_role
+UNION ALL
+SELECT 'classification table' as "table", COUNT(*) AS "current record count", 767 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM classification
+UNION ALL
+SELECT 'taxonomy table' as "table", COUNT(*) AS "current record count", 16 AS "correct record count", 'Correct count reflects minimum count on default PMT install.' as "comments" FROM taxonomy;
 
 /*****************************************************************
 MATERIALIZED VIEWS -- The version of Postgres (9.2) doesn't support

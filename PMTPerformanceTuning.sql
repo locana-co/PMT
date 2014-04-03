@@ -76,9 +76,3 @@ CREATE INDEX location_lookup_end_date_idx on location_lookup(end_date);
 CREATE INDEX location_lookup_gaul0_name_idx on location_lookup(gaul0_name);
 CREATE INDEX location_lookup_gaul1_name_idx on location_lookup(gaul1_name);
 CREATE INDEX location_lookup_gaul2_name_idx on location_lookup(gaul2_name);
-
--- Create index for taxonomy_classifications
-CREATE INDEX taxonomy_classifications_taxonomy_id_idx on taxonomy_classifications(taxonomy_id);
-CREATE INDEX taxonomy_classifications_taxonomy_idx on taxonomy_classifications(taxonomy);
-CREATE INDEX taxonomy_classifications_classification_id_idx on taxonomy_classifications(classification_id);
-CREATE INDEX taxonomy_classifications_classification_idx on taxonomy_classifications(classification);
