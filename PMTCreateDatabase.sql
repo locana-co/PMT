@@ -72,18 +72,20 @@ DROP MATERIALIZED VIEW IF EXISTS organization_lookup CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS taxonomy_lookup CASCADE;
 
 -- Drop Enumerators
-DROP TYPE IF EXISTS auth_crud CASCADE;
-DROP TYPE IF EXISTS auth_source CASCADE;
-DROP TYPE IF EXISTS edit_action CASCADE;
-DROP TYPE IF EXISTS edit_auth CASCADE;
+DROP TYPE IF EXISTS pmt_auth_crud CASCADE;
+DROP TYPE IF EXISTS pmt_auth_source CASCADE;
+DROP TYPE IF EXISTS pmt_edit_action CASCADE;
 
 -- Create Enumerators
-CREATE TYPE auth_crud AS ENUM ('create','read','update','delete');
-CREATE TYPE auth_source AS ENUM ('organization','data_group');
-CREATE TYPE edit_action AS ENUM ('add','delete','replace');
+CREATE TYPE pmt_auth_crud AS ENUM ('create','read','update','delete');
+CREATE TYPE pmt_auth_source AS ENUM ('organization','data_group');
+CREATE TYPE pmt_edit_action AS ENUM ('add','delete','replace');
 
 --Drop Functions
 DROP FUNCTION IF EXISTS refresh_taxonomy_lookup() CASCADE;
+DROP FUNCTION IF EXISTS pmt_activate_activity(integer, integer, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_activate_project(integer, integer, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_activities()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_activities_by_tax(Integer, Integer, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_activity_details(integer) CASCADE;
@@ -100,11 +102,19 @@ DROP FUNCTION IF EXISTS pmt_contacts()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_countries(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_create_user(integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
 DROP FUNCTION IF EXISTS pmt_data_groups() CASCADE;
-DROP FUNCTION IF EXISTS pmt_edit_activity(integer, integer, json)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_edit_activity_contact(integer, integer, integer, edit_action)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_edit_activity_taxonomy(character varying, integer, edit_action)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_edit_contact(integer, integer, json)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_edit_participation(integer, integer, integer, integer, integer, integer, edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity(integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity_contact(integer, integer, integer, pmt_edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_activity_taxonomy(character varying, integer, pmt_edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_contact(integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_detail(integer, integer, integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_financial(integer, integer, integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_location(integer, integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_location_taxonomy(integer, integer, integer, pmt_edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_organization(integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_participation(integer, integer, integer, integer, integer, integer, pmt_edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_project(integer, integer, json, boolean)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_project_contact(integer, integer, integer, pmt_edit_action)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_edit_project_taxonomy(integer, integer, integer, pmt_edit_action)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_csv(character varying, character varying, character varying, date, date, text);
 DROP FUNCTION IF EXISTS pmt_filter_iati(character varying, character varying, character varying, date, date, text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_filter_locations(integer, character varying, character varying, character varying, date, date) CASCADE;
@@ -121,11 +131,15 @@ DROP FUNCTION IF EXISTS pmt_infobox_project_desc(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_project_info(integer, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_project_nutrition(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_infobox_project_stats(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_locations(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_org(integer, integer, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_polygon(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_locations_by_tax(integer, integer, character varying) CASCADE;
+DROP FUNCTION IF EXISTS pmt_locations_by_tax(Integer, character varying, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_org_inuse(character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_orgs()  CASCADE;
+DROP FUNCTION IF EXISTS pmt_project(integer) CASCADE;
+DROP FUNCTION IF EXISTS pmt_projects()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_project_listview(integer, character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_project_listview_ct(character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_activity(integer) CASCADE;
@@ -148,51 +162,34 @@ DROP FUNCTION IF EXISTS pmt_user_salt(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_users();
 DROP FUNCTION IF EXISTS pmt_validate_activities(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_activity(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_boundary_feature(integer, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_classification(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_classifications(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_contact(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_contacts(character varying)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_detail(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_financial(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_location(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_locations(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_organization(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_organizations(character varying)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_project(integer)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_projects(character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_taxonomy(integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_validate_taxonomies(character varying)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_validate_user_authority(integer, integer, auth_crud)  CASCADE;
+DROP FUNCTION IF EXISTS pmt_validate_user_authority(integer, integer, pmt_auth_crud)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_version()  CASCADE;
 
 --Drop Types  (if it exists)
 DROP TYPE IF EXISTS pmt_activities_by_tax_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_activity_details_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_activity_listview_result CASCADE;
-DROP TYPE IF EXISTS pmt_auth_user_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_auto_complete_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_contacts_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_countries_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_data_groups_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_filter_locations_result CASCADE;
-DROP TYPE IF EXISTS pmt_filter_projects_result CASCADE;
 DROP TYPE IF EXISTS pmt_filter_orgs_result CASCADE;
-DROP TYPE IF EXISTS pmt_global_search_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_infobox_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_filter_projects_result CASCADE;
+DROP TYPE IF EXISTS pmt_json_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_locations_by_org_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_locations_by_polygon_result_type CASCADE;
+DROP TYPE IF EXISTS pmt_locations_by_tax_dd_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_locations_by_tax_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_org_inuse_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_orgs_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_project_listview_result CASCADE;
-DROP TYPE IF EXISTS pmt_sector_compare_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_stat_counts_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_activity_by_district_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_activity_by_tax_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_locations_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_partner_network_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_pop_by_district_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_project_by_tax_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_orgs_by_activity_result CASCADE;
-DROP TYPE IF EXISTS pmt_stat_orgs_by_district_result CASCADE;
-DROP TYPE IF EXISTS pmt_tax_inuse_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_taxonomies_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_user_auth_result_type CASCADE;
-DROP TYPE IF EXISTS pmt_users_result_type CASCADE;
 DROP TYPE IF EXISTS pmt_version_result_type CASCADE;
 
 /*****************************************************************
@@ -227,7 +224,9 @@ CREATE TABLE "activity"
 	,"description"		character varying
 	,"content"		character varying
 	,"start_date"		date
+	,"plan_start_date"	date
 	,"end_date"		date
+	,"plan_end_date"	date
 	,"tags"			character varying
 	,"iati_identifier" 	character varying(50)
 	,"active"		boolean				NOT NULL DEFAULT TRUE
@@ -415,6 +414,8 @@ CREATE TABLE "location"
 	"location_id"		SERIAL 				NOT NULL
 	,"project_id"		integer 			NOT NULL
 	,"activity_id"		integer 			NOT NULL	
+	,"boundary_id"		integer
+	,"feature_id"		integer
 	,"title"		character varying
 	,"description"		character varying
 	,"x"			integer
@@ -464,7 +465,7 @@ CREATE TABLE "map"
 CREATE TABLE "organization"
 (
 	"organization_id"	SERIAL				NOT NULL
-	,"name"			character varying(255)
+	,"name"			character varying
 	,"address1" 		character varying(150)
 	,"address2" 		character varying(150)
 	,"city" 		character varying(30)
@@ -598,7 +599,7 @@ CREATE TABLE "version"
 	,CONSTRAINT version_id PRIMARY KEY(version_id)
 );
 -- add the current version information
-INSERT INTO version(version, iteration, changeset) VALUES (2.0, 8, 24);
+INSERT INTO version(version, iteration, changeset) VALUES (2.0, 8, 51);
 -- XML
 CREATE TABLE "xml"
 (
@@ -1025,33 +1026,49 @@ RETURNS trigger AS $upd_boundary_features$
     DECLARE
 	boundary RECORD;
 	feature RECORD;
+	ft RECORD;
 	rec RECORD;
+	spatialtable text;
+	execute_statement text;
+	centroid geometry;
 	id integer;
     BEGIN
-	--RAISE NOTICE 'Refreshing boundary features for location_id % ...', NEW.location_id;
-	EXECUTE 'DELETE FROM location_boundary WHERE location_id = ' || NEW.location_id;
-		
+      --RAISE NOTICE 'Refreshing boundary features for location_id % ...', NEW.location_id;
+      EXECUTE 'DELETE FROM location_boundary WHERE location_id = ' || NEW.location_id;
+
+      IF (SELECT * FROM pmt_validate_boundary_feature(NEW.boundary_id, NEW.feature_id)) THEN
+        SELECT INTO spatialtable spatial_table FROM boundary b WHERE active = true AND b.boundary_id = NEW.boundary_id;
+        -- get centroid and assign as NEW.point
+        execute_statement := 'SELECT ST_Transform(ST_Centroid((SELECT polygon FROM ' || quote_ident(spatialtable) || ' WHERE feature_id = ' || NEW.feature_id || ' LIMIT 1)),4326)' ;
+        EXECUTE execute_statement INTO centroid;
+	IF (centroid IS NOT NULL) THEN	
+	  RAISE NOTICE 'Centroid of boundary assigned';
+          NEW.point := centroid;
+        END IF;
+      END IF; 
+        
+      -- Only process if there is a point value
+      IF (NEW.point IS NOT NULL) THEN
+	
 	FOR boundary IN SELECT * FROM boundary LOOP
 		--RAISE NOTICE 'Add % boundary features ...', quote_ident(boundary.spatial_table);
 		FOR feature IN EXECUTE 'SELECT * FROM ' || quote_ident(boundary.spatial_table)  || ' WHERE ST_Intersects(ST_PointFromText(''' ||
 			ST_AsText(NEW.point) || ''', 4326), polygon)' LOOP
-			EXECUTE 'INSERT INTO location_boundary VALUES (' || NEW.location_id || ', ' || 
-			feature.boundary_id || ', ' || feature.feature_id || ')';
+		  -- For each boundary locate intersecting features and record them in the location_boundary table
+		  EXECUTE 'INSERT INTO location_boundary VALUES (' || NEW.location_id || ', ' || feature.boundary_id || ', ' || feature.feature_id || ')';
+		  -- Assign all associated taxonomy classification from intersected features to new location
+		  FOR ft IN (SELECT * FROM feature_taxonomy WHERE feature_id = feature.feature_id) LOOP
+		    -- Replace all previous taxonomy associates with new
+		    DELETE FROM location_taxonomy WHERE location_id = NEW.location_id AND classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy_id = (SELECT taxonomy_id FROM classification WHERE classification_id = ft.classification_id));    
+		    INSERT INTO location_taxonomy VALUES (NEW.location_id, ft.classification_id, 'location_id');
+		  END LOOP;
 		END LOOP;
 				
 	END LOOP;
-
-	-- Find Country of location and add as location taxonomy
-	FOR rec IN ( SELECT feature_id FROM  gaul0 WHERE ST_Intersects(NEW.point, polygon)) LOOP
-	  RAISE NOTICE 'Intersected GUAL0 feature id: %', rec.feature_id; 
-	  SELECT INTO id classification_id FROM feature_taxonomy WHERE feature_id = rec.feature_id;
-	  IF id IS NOT NULL THEN	
-	    DELETE FROM location_taxonomy WHERE location_id = NEW.location_id AND classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Country');
-	    INSERT INTO location_taxonomy VALUES (NEW.location_id, id, 'location_id');
-	  END IF;
-	END LOOP;
-		
-	RETURN NEW;
+      END IF;
+      
+      RETURN NEW;
+      
     END;
 $upd_boundary_features$ LANGUAGE plpgsql; 
 DROP TRIGGER IF EXISTS upd_boundary_features ON location;
@@ -1561,47 +1578,20 @@ Functions -- is procedural code that is executed when called.
 	See documentation.
 ******************************************************************/
 CREATE TYPE pmt_activities_by_tax_result_type AS (a_id integer, title character varying, c_ids text);
-CREATE TYPE pmt_activity_details_result_type AS (response json);
-CREATE TYPE pmt_activity_listview_result AS (response json);
-CREATE TYPE pmt_auth_user_result_type AS (response json);
-CREATE TYPE pmt_auto_complete_result_type AS (response json);
-CREATE TYPE pmt_contacts_result_type AS (response json);
-CREATE TYPE pmt_countries_result_type AS (response json);
 CREATE TYPE pmt_data_groups_result_type AS (c_id integer, name text);
-CREATE TYPE pmt_edit_contact_result_type AS (response json);
-CREATE TYPE pmt_infobox_result_type AS (response json);
-CREATE TYPE pmt_locations_by_org_result_type AS (l_id integer, x integer, y integer, r_ids text);
-CREATE TYPE pmt_locations_by_polygon_result_type AS (response json);
-CREATE TYPE pmt_locations_by_tax_result_type AS (l_id integer, x integer, y integer, r_ids text);
+CREATE TYPE pmt_json_result_type AS (response json);
 CREATE TYPE pmt_filter_locations_result AS (l_id integer, r_ids text);
 CREATE TYPE pmt_filter_projects_result AS (p_id integer, a_ids text);  
 CREATE TYPE pmt_filter_orgs_result AS (l_id integer, r_ids text); 
-CREATE TYPE pmt_global_search_result_type AS (response json);
-CREATE TYPE pmt_org_inuse_result_type AS (response json);
-CREATE TYPE pmt_orgs_result_type AS (response json);
-CREATE TYPE pmt_project_listview_result AS (response json);
-CREATE TYPE pmt_sector_compare_result_type AS (response json);
-CREATE TYPE pmt_stat_counts_result AS (response json);
-CREATE TYPE pmt_stat_activity_by_district_result AS (response json);
-CREATE TYPE pmt_stat_activity_by_tax_result AS (response json);
-CREATE TYPE pmt_stat_locations_result AS (response json);
-CREATE TYPE pmt_stat_partner_network_result AS (response json);
-CREATE TYPE pmt_stat_pop_by_district_result AS (response json);
-CREATE TYPE pmt_stat_project_by_tax_result AS (response json);
-CREATE TYPE pmt_stat_orgs_by_activity_result AS (response json);
-CREATE TYPE pmt_stat_orgs_by_district_result AS (response json);
-CREATE TYPE pmt_tax_inuse_result_type AS (response json);
-CREATE TYPE pmt_taxonomies_result_type AS (response json);
-CREATE TYPE pmt_user_auth_result_type AS (response json);
-CREATE TYPE pmt_users_result_type AS (response json);
+CREATE TYPE pmt_locations_by_org_result_type AS (l_id integer, x integer, y integer, r_ids text);
+CREATE TYPE pmt_locations_by_tax_dd_result_type AS  (l_id integer, x integer, y integer, lat numeric, lng numeric, r_ids text);
+CREATE TYPE pmt_locations_by_tax_result_type AS (l_id integer, x integer, y integer, r_ids text);
 CREATE TYPE pmt_version_result_type AS (version text, last_update date, created date);
 
 /******************************************************************
   pmt_activity_details
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_activity_details(a_id integer)
-RETURNS SETOF pmt_activity_details_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_activity_details(a_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_activity_id integer;
   rec record;
@@ -1661,9 +1651,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_activity_listview
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_activity_listview(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date, report_taxonomy_ids character varying, orderby text, limit_rec integer, offset_rec integer)
-RETURNS SETOF pmt_activity_listview_result AS 
-$$
+start_date date, end_date date, report_taxonomy_ids character varying, orderby text, limit_rec integer, offset_rec integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE  
   filter_classids integer array;
   filter_orgids integer array;
@@ -1982,9 +1970,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_auto_complete
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_auto_complete(project_fields character varying, activity_fields character varying)
-RETURNS SETOF pmt_auto_complete_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_auto_complete(project_fields character varying, activity_fields character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   execute_statement text;
   requested_project_cols text[];
@@ -2062,9 +2048,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_project_listview
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_project_listview(tax_id integer, classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date, orderby text, limit_rec integer, offset_rec integer)
-RETURNS SETOF pmt_project_listview_result AS 
-$$
+start_date date, end_date date, orderby text, limit_rec integer, offset_rec integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_taxonomy_id boolean;
   report_by_category boolean; 
@@ -2536,6 +2520,121 @@ END IF;
 				'WHERE taxonomy_lookup.taxonomy_id = ' || report_taxonomy_id || ') AS report_by  ' ||
 				'ON t2.location_id = report_by.location_id ' ||
 				'GROUP BY t2.location_id,t2.x, t2.y, t2.georef ' ||	
+				'ORDER BY t2.georef ';  
+  -- execute statement
+  RAISE NOTICE 'Where statement: %', dynamic_where2;
+  RAISE NOTICE 'Execute statement: %', execute_statement;
+  FOR rec IN EXECUTE execute_statement	    
+  LOOP
+   IF report_by_category THEN 
+      SELECT INTO rec.c_ids array_to_string(array_agg(DISTINCT category_id), ',') FROM classification WHERE classification_id = ANY(string_to_array(rec.c_ids, ',')::int[]);
+      RETURN NEXT rec;
+    ELSE
+      RETURN NEXT rec;    
+    END IF;
+  END LOOP;
+  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_locations_by_tax (overloaded method)
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_locations_by_tax(tax_id Integer, data_group character varying, country_ids character varying) RETURNS SETOF pmt_locations_by_tax_dd_result_type AS 
+$$
+DECLARE
+  valid_data_group_ids int[];
+  dg_id integer;
+  valid_country_ids int[];
+  valid_classification_ids int[];
+  valid_taxonomy_id boolean;
+  report_by_category boolean; 
+  report_taxonomy_id integer;
+  built_where text array;
+  dynamic_where1 text;
+  dynamic_where2 text array;  
+  execute_statement text;
+  i integer;
+  rec record;
+BEGIN
+  report_by_category := false; -- intialize to false  
+  
+  -- validate and process taxonomy_id parameter
+  IF $1 IS NOT NULL THEN
+    SELECT INTO valid_taxonomy_id * FROM pmt_validate_taxonomy($1);    
+    -- has valid taxonomy id
+    IF valid_taxonomy_id THEN 
+       report_taxonomy_id := $1;
+      -- is this taxonomy a category?
+      SELECT INTO report_by_category is_category FROM taxonomy WHERE taxonomy_id = (report_taxonomy_id);      
+      -- yes, this is a category taxonomy
+      IF report_by_category THEN
+        -- what are the root taxonomy(ies) of the category taxonomy
+        SELECT INTO report_taxonomy_id * FROM pmt_category_root(report_taxonomy_id, data_group);
+        -- there are root taxonomy(ies)
+        IF report_taxonomy_id IS NOT NULL THEN
+           -- RAISE NOTICE 'report_taxonomy_id: %', report_taxonomy_id;
+        ELSE
+          report_taxonomy_id := $1;
+          report_by_category := false;
+        END IF;
+      END IF;      
+    END IF;	
+  END IF;
+
+    -- validate and process country_ids parameter
+  IF $3 IS NOT NULL OR $3 <> '' THEN
+    SELECT INTO valid_classification_ids * FROM pmt_validate_classifications($3);
+    RAISE NOTICE 'valid classification ids: %', valid_classification_ids;
+  END IF;
+    
+  -- validate and process data_group parameter
+  IF $2 IS NOT NULL OR $2 <> '' THEN
+    -- validate the classification id
+    SELECT INTO valid_data_group_ids * FROM pmt_validate_classifications($2);
+
+    IF valid_data_group_ids IS NOT NULL THEN
+      IF valid_classification_ids IS NOT NULL THEN
+        FOREACH dg_id IN ARRAY valid_data_group_ids LOOP
+          valid_classification_ids := array_append(valid_classification_ids, dg_id);
+        END LOOP;
+      ELSE
+        valid_classification_ids := valid_data_group_ids;
+      END IF;
+    END IF;
+  END IF;
+
+  IF valid_classification_ids IS NOT NULL THEN
+  -- Loop through each taxonomy classification group to contruct the where statement 
+  FOR rec IN( SELECT tc.taxonomy_id, array_agg(tc.classification_id) AS filter_array 
+  FROM taxonomy_classifications tc WHERE classification_id = ANY(valid_classification_ids) GROUP BY tc.taxonomy_id
+  ) LOOP				
+	built_where := null;
+	-- for each classification add to the where statement
+	FOREACH i IN ARRAY rec.filter_array LOOP 
+	  built_where :=  array_append(built_where, 'classification_ids @> ARRAY['|| i ||']');
+	END LOOP;
+	-- add each classification within the same taxonomy to the where joined by 'OR'
+	dynamic_where2 := array_append(dynamic_where2, '(' || array_to_string(built_where, ' OR ') || ')');
+  END LOOP;			
+END IF;
+  
+  -- prepare statement
+  execute_statement := 'SELECT t2.location_id as l_id, t2.x, t2.y, t2.lat_dd, t2.long_dd, array_to_string(array_agg(DISTINCT report_by.classification_id), '','') as c_ids ' ||
+				'FROM( ' ||
+				'SELECT DISTINCT ll.location_id, ll.x, ll.y, l.lat_dd, l.long_dd, ll.georef, ll.classification_ids FROM location_lookup ll ' ||
+				'JOIN location l ON ll.location_id = l.location_id ';
+				
+  IF dynamic_where2 IS NOT NULL THEN          
+    execute_statement := execute_statement || ' WHERE ' ||  array_to_string(dynamic_where2, ' AND ');
+  END IF;
+
+  IF report_taxonomy_id IS NULL THEN report_taxonomy_id := 1; END IF;
+  
+  execute_statement := execute_statement || ') as t2 ' ||
+				'LEFT JOIN ' ||
+				'(SELECT distinct location_id, classification_id FROM taxonomy_lookup  ' ||
+				'WHERE taxonomy_lookup.taxonomy_id = ' || report_taxonomy_id || ') AS report_by  ' ||
+				'ON t2.location_id = report_by.location_id ' ||
+				'GROUP BY t2.location_id, t2.x, t2.y, t2.lat_dd, t2.long_dd, t2.georef ' ||	
 				'ORDER BY t2.georef ';  
   -- execute statement
   RAISE NOTICE 'Where statement: %', dynamic_where2;
@@ -3043,8 +3142,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_org_inuse
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_org_inuse(classification_ids character varying)
-RETURNS SETOF pmt_org_inuse_result_type AS $$
+CREATE OR REPLACE FUNCTION pmt_org_inuse(classification_ids character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_classification_ids int[];
   dynamic_where1 text array;
@@ -3100,9 +3198,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_countries
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_countries(classification_ids text)
-RETURNS SETOF pmt_countries_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_countries(classification_ids text) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   filter_classids int[];
   rec record;
@@ -3153,9 +3249,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_tax_inuse
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_tax_inuse(data_group_id integer, taxonomy_ids character varying, country_ids character varying)
-RETURNS SETOF pmt_tax_inuse_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_tax_inuse(data_group_id integer, taxonomy_ids character varying, country_ids character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_classification_id boolean;
   valid_classification_ids int[];
@@ -3262,9 +3356,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_taxonomies
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_taxonomies(taxonomy_ids character varying)
-RETURNS SETOF pmt_taxonomies_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_taxonomies(taxonomy_ids character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_taxonomy_ids int[];  
   dynamic_where1 text;
@@ -3719,9 +3811,7 @@ $$ LANGUAGE 'plpgsql';
 /******************************************************************
   pmt_infobox_menu
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_menu(location_ids text)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_menu(location_ids text) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   filter_locids int[]; 
   rec record;
@@ -3765,9 +3855,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_project_info
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_project_info(project_id integer, tax_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_project_info(project_id integer, tax_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_taxonomy_id boolean;
   t_id integer;
@@ -3847,9 +3935,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_project_stats
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_project_stats(project_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_project_stats(project_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -3898,9 +3984,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_project_desc
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_project_desc(project_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_project_desc(project_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -3927,9 +4011,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_project_contact
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_project_contact(project_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_project_contact(project_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -3985,9 +4067,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_activity_stats
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_activity_stats(activity_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_activity_stats(activity_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -4049,9 +4129,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_activity_desc
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_activity_desc(activity_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_activity_desc(activity_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -4077,9 +4155,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_infobox_activity_contact
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_activity_contact(activity_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_activity_contact(activity_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   data_message text;
@@ -4134,9 +4210,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_counts
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_counts(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date)
-RETURNS SETOF pmt_stat_counts_result AS 
-$$
+start_date date, end_date date) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   filter_classids integer array;
@@ -4288,9 +4362,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_project_by_tax
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_project_by_tax(tax_id integer, classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date)
-RETURNS SETOF pmt_stat_project_by_tax_result AS 
-$$
+start_date date, end_date date) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   valid_taxonomy_id boolean;
@@ -4401,9 +4473,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_activity_by_tax
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_activity_by_tax(tax_id integer, classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date)
-RETURNS SETOF pmt_stat_activity_by_tax_result AS 
-$$
+start_date date, end_date date) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   valid_taxonomy_id boolean;
@@ -4513,9 +4583,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_locations
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_locations(classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date)
-RETURNS SETOF pmt_stat_locations_result AS 
-$$
+start_date date, end_date date) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   filter_classids integer array;
@@ -4622,9 +4690,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_orgs_by_activity
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_orgs_by_activity(tax_id integer, classification_ids character varying, organization_ids character varying, unassigned_tax_ids character varying, 
-start_date date, end_date date)
-RETURNS SETOF pmt_stat_orgs_by_activity_result AS 
-$$
+start_date date, end_date date) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   valid_taxonomy_id boolean;
@@ -5208,8 +5274,7 @@ $$ LANGUAGE 'plpgsql';
 /******************************************************************
   pmt_users
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_users() RETURNS 
-SETOF pmt_users_result_type AS $$
+CREATE OR REPLACE FUNCTION pmt_users() RETURNS SETOF pmt_json_result_type AS $$
 DECLARE 
   rec record;
 BEGIN 
@@ -5226,8 +5291,7 @@ $$ LANGUAGE 'plpgsql';
 /******************************************************************
   pmt_auth_user
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_auth_user(username character varying(255), password character varying(255)) RETURNS 
-SETOF pmt_auth_user_result_type AS $$
+CREATE OR REPLACE FUNCTION pmt_auth_user(username character varying(255), password character varying(255)) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE 
   valid_user_id integer;
   rec record;
@@ -5403,10 +5467,10 @@ $$ LANGUAGE 'plpgsql';
   pmt_user_auth
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_user_auth(username character varying(255), password character varying(255)) RETURNS 
-SETOF pmt_user_auth_result_type AS $$
+SETOF pmt_json_result_type AS $$
 DECLARE 
   valid_user_id integer;
-  authorization_source auth_source;
+  authorization_source pmt_auth_source;
   valid_data_group_id integer;
   user_organization_id integer;
   user_data_group_id integer;  
@@ -5487,8 +5551,7 @@ $$ LANGUAGE 'plpgsql';
   pmt_stat_orgs_by_district
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_orgs_by_district(data_group_id integer, country character varying, region character varying, org_role_id integer, top_limit integer)
-RETURNS SETOF pmt_stat_orgs_by_district_result AS 
-$$
+RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   limit_by integer;
   org_c_id integer;
@@ -5556,8 +5619,7 @@ END;$$ LANGUAGE plpgsql;
   pmt_stat_activity_by_district
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_stat_activity_by_district(data_group_id integer, country character varying, region character varying, activity_taxonomy_id integer)
-RETURNS SETOF pmt_stat_activity_by_district_result AS 
-$$
+RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_data_group_id integer;
   is_valid_taxonomy boolean;
@@ -5608,9 +5670,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_stat_pop_by_district
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_stat_pop_by_district(country character varying, region character varying)
-RETURNS SETOF pmt_stat_pop_by_district_result AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_stat_pop_by_district(country character varying, region character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_data_group_id integer;
   execute_statement text;
@@ -5632,7 +5692,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_sector_compare
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_sector_compare(classification_ids character varying, order_by character varying) RETURNS SETOF pmt_sector_compare_result_type AS 
+CREATE OR REPLACE FUNCTION pmt_sector_compare(classification_ids character varying, order_by character varying) RETURNS SETOF pmt_json_result_type AS 
 $$
 DECLARE
   filter_classids integer array;
@@ -5700,7 +5760,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_edit_activity_taxonomy
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_edit_activity_taxonomy(activity_ids character varying, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pmt_edit_activity_taxonomy(activity_ids character varying, classification_id integer, edit_action pmt_edit_action) RETURNS BOOLEAN AS 
 $$
 DECLARE
   valid_classification_id boolean;
@@ -5781,8 +5841,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_locations_by_polygon
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_locations_by_polygon(wktPolygon text) RETURNS SETOF pmt_locations_by_polygon_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_locations_by_polygon(wktPolygon text) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   wkt text;
   rec record;
@@ -5798,8 +5857,26 @@ BEGIN
     FROM(	
 	SELECT sel.title, sel.location_ct, sel.avg_km,
 		(SELECT array_to_json(array_agg(row_to_json(c))) FROM (
-			SELECT location_id, lat_dd, long_dd
-			FROM location
+			SELECT location_id, lat_dd, long_dd,
+				(SELECT array_to_json(array_agg(row_to_json(t))) FROM (
+					SELECT DISTINCT tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification
+					FROM taxonomy_lookup tl
+					JOIN taxonomy_classifications tc
+					ON tl.classification_id = tc.classification_id
+					WHERE location_id = l.location_id
+					AND tc.taxonomy <> 'Organisation Role'
+				) t) as taxonomy,
+				(SELECT array_to_json(array_agg(row_to_json(t))) FROM (
+					SELECT DISTINCT o.organization_id, o.name, tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification
+					FROM taxonomy_lookup tl
+					JOIN taxonomy_classifications tc
+					ON tl.classification_id = tc.classification_id
+					JOIN organization o
+					ON tl.organization_id = o.organization_id
+					WHERE location_id = l.location_id
+					AND tc.taxonomy = 'Organisation Role'
+				) t) as organizations
+			FROM location l
 			WHERE location_id = ANY(sel.location_ids)
 		) c) as locations
 	FROM(
@@ -5831,8 +5908,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_contacts
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_contacts() RETURNS SETOF pmt_contacts_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_contacts() RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
 BEGIN	
@@ -5849,8 +5925,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_orgs
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_orgs() RETURNS SETOF pmt_orgs_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_orgs() RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
 BEGIN	
@@ -5866,14 +5941,14 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_validate_user_authority
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_validate_user_authority(user_id integer, project_id integer, auth_type auth_crud) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION pmt_validate_user_authority(user_id integer, project_id integer, auth_type pmt_auth_crud) RETURNS boolean AS $$
 DECLARE 
 	user_organization_id integer;
 	user_data_group_id integer;
 	valid_data_group_id integer;
 	authorized_project_ids integer[];
 	authorized_project_id boolean;
-	authorization_source auth_source;	
+	authorization_source pmt_auth_source;	
 	role_crud boolean;
 BEGIN 
      -- user and authorization type parameters are required
@@ -5978,79 +6053,234 @@ $$ LANGUAGE 'plpgsql';
 /******************************************************************
    pmt_edit_activity
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_edit_activity(user_id integer, activity_id integer, key_value_data json) RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pmt_edit_activity(user_id integer, activity_id integer, project_id integer, key_value_data json, delete_record boolean default false) RETURNS SETOF pmt_json_result_type AS 
 $$
 DECLARE
+  new_activity_id integer;
   p_id integer;
+  a_id integer;
   json record;
   column_record record;
   execute_statement text;
   invalid_editing_columns text[];
+  delete_response json;
   user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
 BEGIN	
   -- set columns that are not editable via the parameters 
   invalid_editing_columns := ARRAY['activity_id','project_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
   
-  -- ALL parameters are required (next versions will allow null activity_id as new activity and have a flag for deletion
-  -- for now all authorization types = update)
-  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
-    -- validate activity_id
-    IF (SELECT * FROM pmt_validate_activity($2)) THEN
-      -- get project_id for activity
-      SELECT INTO p_id project_id FROM activity WHERE activity.activity_id = $2;
-      -- validate users authority to 'update' this project
-      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
-        -- we have a authorized user and a valid activity lets edit...
-        
-        -- loop through the columns of the activity table        
-        FOR json IN (SELECT * FROM json_each_text($3)) LOOP
-          RAISE NOTICE 'JSON key/value: %', json.key || ':' || json.value;
-          -- SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(ARRAY['activity_id','project_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date']) AND column_name = 'title';
-
-	  -- get the column information for column that user is requesting to edit	
-          FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_editing_columns) AND column_name = json.key) LOOP 
-            --IF column_record IS NOT NULL THEN
-              RAISE NOTICE 'Editing column: %', column_record.column_name;
-              RAISE NOTICE 'Assigning new value: %', json.value;
-              execute_statement := null;
-              CASE column_record.data_type 
-                WHEN 'integer', 'numeric' THEN              
-                 IF (SELECT pmt_isnumeric(json.value)) THEN
-                   execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || json.value || ' WHERE activity_id = ' || $2; 
-                 END IF;
-                ELSE
-                  -- if the value has the text null then assign the column value null
-                  IF (lower(json.value) = 'null') THEN
-                    execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = null WHERE activity_id = ' || $2; 
-                  ELSE
-                    execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE activity_id = ' || $2; 
-                  END IF;
-              END CASE;
-              IF execute_statement IS NOT NULL THEN
-                RAISE NOTICE 'Statement: %', execute_statement;
-                EXECUTE execute_statement;
-                SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
-                EXECUTE 'UPDATE activity SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  activity_id = ' || $2;
-              END IF;
-          END LOOP;
-        END LOOP;
-        RETURN TRUE;     
-      ELSE
-        RAISE NOTICE 'Error: User does NOT have authority to edit this project.';
-	RETURN FALSE;
-      END IF;      
+  -- user_id is required for all operations
+  IF ($1 IS NOT NULL) THEN
+    -- update/create operation
+    IF NOT ($5) THEN
+      -- json is required
+      IF ($4 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: The json parameter is required for a create/update operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+      -- project_id is required if activity_id is null
+      IF ($2 IS NULL) AND ($3 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: project_id is required for a create operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    -- delete operation	
     ELSE
-      RAISE NOTICE 'Error: Invalid activity_id.';
-      RETURN FALSE;
+      -- activity_id is requried
+      IF ($2 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: activity_id is required for a delete operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
     END IF;
+  -- error if user_id    
   ELSE
-    RAISE NOTICE 'Error: Must provide all parameters.';
-    RETURN false;
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: user_id is a required parameter for all operations.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
   END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if activity_id is null then validate users authroity to create a new activity record  
+  IF ($2 IS NULL) THEN
+    -- validate project_id
+    IF (SELECT * FROM pmt_validate_project($3)) THEN       
+      IF (SELECT * FROM pmt_validate_user_authority($1, $3, 'create')) THEN
+        EXECUTE 'INSERT INTO activity(project_id, created_by, updated_by) VALUES (' || $3 || ',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING activity_id;' INTO new_activity_id;
+        RAISE NOTICE 'Created new activity with id: %', new_activity_id;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new activity for project_id: ' || $3 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: project_id is not valid.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  -- validate activity_id if provided and validate users authority to update an existing record  
+  ELSE
+    -- get project_id for activity
+    SELECT INTO p_id activity.project_id FROM activity WHERE activity.activity_id = $2;      
+    -- validate activity_id
+    IF (SELECT * FROM pmt_validate_activity($2)) THEN 
+      -- validate users authority to 'delete' this activity
+      IF ($5) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+        -- deactivate this activity          
+          FOR rec IN (SELECT * FROM pmt_activate_activity($1, $2, false)) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this activity.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE        
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update this activity.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid activity_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+
+  -- assign the activity_id to use in statements
+  IF new_activity_id IS NOT NULL THEN
+    a_id := new_activity_id;
+  ELSE
+    a_id := $2;
+  END IF;
+    
+  -- loop through the columns of the activity table        
+  FOR json IN (SELECT * FROM json_each_text($4)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || json.value || ' WHERE activity_id = ' || a_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = null WHERE activity_id = ' || a_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = null WHERE activity_id = ' || a_id; 
+          ELSE
+            execute_statement := 'UPDATE activity SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE activity_id = ' || a_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE activity SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  activity_id = ' || a_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select a_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
   
 EXCEPTION WHEN others THEN
-    RETURN FALSE;  	  
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select a_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
 END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_activate_activity
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_activate_activity(user_id integer, activity_id integer, activate boolean default true) RETURNS SETOF pmt_json_result_type AS  $$
+DECLARE
+  p_id integer;
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+BEGIN 
+  -- user and activity_id parameters are required
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) THEN
+    -- get users name
+    SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id and activity_id data parameters.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get project_id for activity
+  SELECT INTO p_id project_id FROM activity WHERE activity.activity_id = $2;   
+
+  -- validate activity_id
+  IF p_id IS NOT NULL THEN  
+    -- user must have 'delete' privilages to change active values
+    IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+      -- set active values as requested       
+      EXECUTE 'UPDATE activity SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE activity.activity_id = ' || $2 || ';';
+      EXECUTE 'UPDATE location SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE location.activity_id = ' || $2 || ';';
+      EXECUTE 'UPDATE financial SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE financial.activity_id = ' || $2 || ';';
+      EXECUTE 'UPDATE participation SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE participation.activity_id = ' || $2 || ';';
+      EXECUTE 'UPDATE detail SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE detail.activity_id = ' || $2 || ';';
+      EXECUTE 'UPDATE result SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE result.activity_id = ' || $2 || ';';
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to change the active status of this activity and its assoicated records.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid activity_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF;
+
+   -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select $2 as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;        
+    	  
+EXCEPTION WHEN others THEN
+      GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select $2 as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	 
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_activate_project
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_activate_project(user_id integer, project_id integer, activate boolean default true) RETURNS SETOF pmt_json_result_type AS  $$
+DECLARE
+  p_id integer;
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+BEGIN 
+  -- user and activity_id parameters are required
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) THEN
+    -- get users name
+    SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id and project_id data parameters.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- user must have 'delete' privilages to change active values
+  IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+    -- set active values as requested       
+    EXECUTE 'UPDATE project SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE project.project_id = ' || $2 || ';';
+    EXECUTE 'UPDATE activity SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE activity.project_id = ' || $2 || ';';
+    EXECUTE 'UPDATE location SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE location.project_id = ' || $2 || ';';
+    EXECUTE 'UPDATE financial SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE financial.project_id = ' || $2 || ';';
+    EXECUTE 'UPDATE participation SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE participation.project_id = ' || $2 || ';';
+    EXECUTE 'UPDATE detail SET active = ' || $3 || ', updated_by =' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE detail.project_id = ' || $2 || ';';    
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to change the active status of this project and its assoicated records.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF;
+
+   -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select $2 as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;        
+    	  
+EXCEPTION WHEN others THEN
+      GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select $2 as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	 
+END;
+$$ LANGUAGE 'plpgsql';
 /******************************************************************
   pmt_validate_contact
 ******************************************************************/
@@ -6098,7 +6328,7 @@ $$ LANGUAGE 'plpgsql';
 /******************************************************************
    pmt_edit_activity_contact
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_edit_activity_contact(user_id integer, activity_id integer, contact_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pmt_edit_activity_contact(user_id integer, activity_id integer, contact_id integer, edit_action pmt_edit_action) RETURNS BOOLEAN AS 
 $$
 DECLARE
   p_id integer;
@@ -6165,9 +6395,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
   pmt_stat_partner_network
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_stat_partner_network(country_ids character varying)
-RETURNS SETOF pmt_stat_partner_network_result AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_stat_partner_network(country_ids character varying) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   valid_classification_ids int[];
   valid_country_ids int[];
@@ -6263,8 +6491,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_edit_contact
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_edit_contact(user_id integer, contact_id integer, key_value_data json) 
-RETURNS SETOF pmt_edit_contact_result_type AS 
+CREATE OR REPLACE FUNCTION pmt_edit_contact(user_id integer, contact_id integer, key_value_data json, delete_record boolean default false) RETURNS SETOF pmt_json_result_type AS 
 $$
 DECLARE
   new_contact_id integer;
@@ -6282,9 +6509,13 @@ BEGIN
   -- set columns that are not editable via the parameters 
   invalid_editing_columns := ARRAY['contact_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
   
-  -- user and data parameters are required (next versions will have a flag for deletion)
-  IF ($1 IS NULL) OR ($3 IS NULL) THEN   
-    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id and json data parameters.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  -- user and data parameters are required
+  IF ($1 IS NOT NULL) THEN
+    IF NOT ($4) AND ($3 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included json parameter when delete_record is false.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
   END IF; 
 
   -- get users name
@@ -6301,10 +6532,20 @@ BEGIN
   -- validate contact_id if provided and validate users authority to update an existing record  
   ELSE      
     IF (SELECT * FROM pmt_validate_contact($2)) THEN 
+      -- validate users authority to 'delete' this contact
+      IF ($4) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, null, 'delete')) THEN
+          -- deactivate this contact          
+          EXECUTE 'UPDATE contact SET active = false WHERE contact.contact_id = ' || $2;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this contact.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
       -- validate users authority to 'update' this contact
-      IF (SELECT * FROM pmt_validate_user_authority($1, null, 'update')) THEN   
-      ELSE
-        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update an existing contact.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      ELSE          
+        IF (SELECT * FROM pmt_validate_user_authority($1, null, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update an existing contact.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
       END IF;
     ELSE
       FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid contact_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
@@ -6320,9 +6561,9 @@ BEGIN
   
   -- loop through the columns of the contact table        
   FOR json IN (SELECT * FROM json_each_text($3)) LOOP
-    RAISE NOTICE 'JSON key/value: %', json.key || ':' || json.value;
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
     -- get the column information for column that user is requesting to edit	
-    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='contact' AND column_name != ALL(invalid_editing_columns) AND column_name = json.key) LOOP 
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='contact' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
       RAISE NOTICE 'Editing column: %', column_record.column_name;
       RAISE NOTICE 'Assigning new value: %', json.value;
       execute_statement := null;
@@ -6330,6 +6571,9 @@ BEGIN
         WHEN 'integer', 'numeric' THEN              
           IF (SELECT pmt_isnumeric(json.value)) THEN
             execute_statement := 'UPDATE contact SET ' || column_record.column_name || ' = ' || json.value || ' WHERE contact_id = ' || c_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE contact SET ' || column_record.column_name || ' = null WHERE contact_id = ' || c_id; 
           END IF;
         ELSE
           -- if the value has the text null then assign the column value null
@@ -6360,7 +6604,7 @@ END;$$ LANGUAGE plpgsql;
    pmt_edit_participation
 ******************************************************************/
 CREATE OR REPLACE FUNCTION pmt_edit_participation(user_id integer, participation_id integer, project_id integer, activity_id integer, 
-organization_id integer, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
+organization_id integer, classification_id integer, edit_action pmt_edit_action) RETURNS SETOF pmt_json_result_type AS 
 $$
 DECLARE
   p_id integer;
@@ -6370,12 +6614,15 @@ DECLARE
   record_id integer;
   participation_records integer[];
   user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
 BEGIN	
 
   -- user parameter is required
   IF ($1 IS NULL) THEN
-    RAISE NOTICE 'Error: Must have user_id parameter.';
-    RETURN FALSE;  
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must have user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
   END IF;
   -- get users name
   SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
@@ -6383,40 +6630,38 @@ BEGIN
   IF ($2 IS NOT NULL) THEN
     SELECT INTO record_id p.participation_id FROM participation p WHERE p.participation_id = $2 AND active = true;
     IF record_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided participation_id is invalid or inactive.';
-      RETURN FALSE;
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Provided participation_id is invalid or inactive.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
     END IF;    
   END IF;  
   -- validate project_id if provided
   IF ($3 IS NOT NULL) THEN
     SELECT INTO p_id p.project_id FROM project p WHERE p.project_id = $3 AND active = true;
     IF p_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided project_id is invalid or inactive.';
-      RETURN FALSE;
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Provided project_id is invalid or inactive.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;          
     END IF;    
   END IF;
   -- validate activity_id if provided
   IF ($4 IS NOT NULL) THEN
     SELECT INTO a_id a.activity_id FROM activity a WHERE a.activity_id = $4 AND active = true;
     IF a_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided activity_id is invalid or inactive.';
-      RETURN FALSE;
-    END IF;    
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Provided activity_id is invalid or inactive.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
+    ELSE
+      SELECT INTO p_id a.project_id FROM activity a WHERE a.activity_id = a_id;
+    END IF; 
+       
   END IF;
   -- validate organization_id if provided
   IF ($5 IS NOT NULL) THEN
     SELECT INTO o_id o.organization_id FROM organization o WHERE o.organization_id = $5 AND active = true;
     IF o_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided organization_id is invalid or inactive.';
-      RETURN FALSE;
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Provided organization_id is invalid or inactive.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
     END IF;    
   END IF;
   -- validate classification_id if provided
   IF ($6 IS NOT NULL) THEN
-    SELECT INTO c_id c.classification_id FROM classification c WHERE c.classification_id = $5 AND active = true AND c.classification_id IN (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role');
+    SELECT INTO c_id tc.classification_id from taxonomy_classifications tc where tc.taxonomy = 'Organisation Role' AND tc.classification_id = $6;
     IF c_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided classification_id is not in the Organisation Role taxonomy or is inactive.';
-      RETURN FALSE;
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Provided classification_id is not in the Organisation Role taxonomy or is inactive.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
     END IF;    
   END IF;
   
@@ -6425,8 +6670,7 @@ BEGIN
     WHEN 'delete' THEN
       -- check for required parameters
       IF (record_id IS NULL) THEN 
-        RAISE NOTICE 'Error: Must have participation_id parameter when edit action is: %', $7;
-	RETURN FALSE;  
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must have participation_id parameter when edit action is: ' || $7 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;  
       -- validate users authority to perform an update action on this project
       IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
@@ -6434,14 +6678,12 @@ BEGIN
         EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id ='|| record_id; 
         RAISE NOTICE 'Delete Record: %', 'Removed participation and taxonomy associated to this participation_id ('|| record_id ||')';
       ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
-        RETURN FALSE;
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: The requested edit action requires the user to have UPDATE rights to this project: ' || p_id as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;   
     WHEN 'replace' THEN            
       -- check for required parameters
       IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
-        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
-	RETURN FALSE;  
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: ' || $7 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;
       -- validate users authority to perform an update and create action on this project
       IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN        
@@ -6468,14 +6710,12 @@ BEGIN
           RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
         END IF;
       ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
-        RETURN FALSE;
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: ' || p_id as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;
     ELSE
       -- check for required parameters
       IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
-        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
-	RETURN FALSE;  
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: ' || $7 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;
       -- validate users authority to perform a create action on this project
       IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
@@ -6494,172 +6734,24 @@ BEGIN
           RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
         END IF;
       ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
-        RETURN FALSE;
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: The requested edit action requires the user to have CREATE rights to this project: ' || p_id as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;     
       END IF;        
   END CASE;
 
-  -- edits are complete return successful
-  RETURN TRUE;         
-            
-EXCEPTION WHEN others THEN
-     RETURN FALSE;  	  
-END;$$ LANGUAGE plpgsql;
-/******************************************************************
-   pmt_edit_participation
-******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_edit_participation(user_id integer, participation_id integer, project_id integer, activity_id integer, 
-organization_id integer, classification_id integer, edit_action edit_action) RETURNS BOOLEAN AS 
-$$
-DECLARE
-  p_id integer;
-  o_id integer;  
-  a_id integer;  
-  c_id integer;  
-  record_id integer;
-  participation_records integer[];
-  user_name text;
-BEGIN	
-
-  -- user parameter is required
-  IF ($1 IS NULL) THEN
-    RAISE NOTICE 'Error: Must have user_id parameter.';
-    RETURN FALSE;  
-  END IF;
-  -- get users name
-  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
-  -- validate participation_id if provided
-  IF ($2 IS NOT NULL) THEN
-    SELECT INTO record_id p.participation_id FROM participation p WHERE p.participation_id = $2 AND active = true;
-    IF record_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided participation_id is invalid or inactive.';
-      RETURN FALSE;
-    END IF;    
-  END IF;  
-  -- validate project_id if provided
-  IF ($3 IS NOT NULL) THEN
-    SELECT INTO p_id p.project_id FROM project p WHERE p.project_id = $3 AND active = true;
-    IF p_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided project_id is invalid or inactive.';
-      RETURN FALSE;
-    END IF;    
-  END IF;
-  -- validate activity_id if provided
-  IF ($4 IS NOT NULL) THEN
-    SELECT INTO a_id a.activity_id FROM activity a WHERE a.activity_id = $4 AND active = true;
-    IF a_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided activity_id is invalid or inactive.';
-      RETURN FALSE;
-    END IF;    
-  END IF;
-  -- validate organization_id if provided
-  IF ($5 IS NOT NULL) THEN
-    SELECT INTO o_id o.organization_id FROM organization o WHERE o.organization_id = $5 AND active = true;
-    IF o_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided organization_id is invalid or inactive.';
-      RETURN FALSE;
-    END IF;    
-  END IF;
-  -- validate classification_id if provided
-  IF ($6 IS NOT NULL) THEN
-    SELECT INTO c_id c.classification_id FROM classification c WHERE c.classification_id = $5 AND active = true AND c.classification_id IN (select classification_id from taxonomy_classifications where taxonomy = 'Organisation Role');
-    IF c_id IS NULL THEN
-      RAISE NOTICE 'Error: Provided classification_id is not in the Organisation Role taxonomy or is inactive.';
-      RETURN FALSE;
-    END IF;    
-  END IF;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select record_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
   
-  -- operations based on the requested edit action
-  CASE $7
-    WHEN 'delete' THEN
-      -- check for required parameters
-      IF (record_id IS NULL) THEN 
-        RAISE NOTICE 'Error: Must have participation_id parameter when edit action is: %', $7;
-	RETURN FALSE;  
-      END IF;  
-      -- validate users authority to perform an update action on this project
-      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN
-        EXECUTE 'DELETE FROM participation WHERE participation_id ='|| record_id; 
-        EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id ='|| record_id; 
-        RAISE NOTICE 'Delete Record: %', 'Removed participation and taxonomy associated to this participation_id ('|| record_id ||')';
-      ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
-        RETURN FALSE;
-      END IF;   
-    WHEN 'replace' THEN            
-      -- check for required parameters
-      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
-        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
-	RETURN FALSE;  
-      END IF;
-      -- validate users authority to perform an update and create action on this project
-      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN        
-        IF a_id IS NOT NULL THEN
-          -- activity participation
-          SELECT INTO participation_records array_agg(p.participation_id)::int[] FROM participation p WHERE p.project_id = p_id AND p.activity_id = a_id;
-          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
-          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
-          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id= ANY(ARRAY['|| array_to_string(participation_records, ',')  || '])'; 
-          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
-		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
-          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
-          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
-		') is now associated to classification_id ('|| c_id ||').'; 
-        ELSE
-          -- project participation
-          SELECT INTO participation_records array_agg(p.participation_id)::int[]  FROM participation p WHERE p.project_id = p_id AND p.activity_id IS NULL;
-          RAISE NOTICE 'Participation records to be deleted and replaced: %', participation_records;
-          EXECUTE 'DELETE FROM participation WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
-          EXECUTE 'DELETE FROM participation_taxonomy WHERE participation_id = ANY(ARRAY['|| array_to_string(participation_records, ',') || '])'; 
-          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
-		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
-          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
-          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
-        END IF;
-      ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
-        RETURN FALSE;
-      END IF;
-    ELSE
-      -- check for required parameters
-      IF (p_id IS NULL) OR (o_id IS NULL) OR (c_id IS NULL) THEN
-        RAISE NOTICE 'Error: Must have project_id, organization_id and classification_id parameters when edit action is: %', $7;
-	RETURN FALSE;  
-      END IF;
-      -- validate users authority to perform a create action on this project
-      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
-        IF a_id IS NOT NULL THEN
-          -- activity participation          
-          EXECUTE 'INSERT INTO participation(project_id, activity_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || a_id || ',' || o_id || 
-		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
-          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
-          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||'), activity_id ('|| a_id ||
-		') is now associated to classification_id ('|| c_id ||').'; 
-        ELSE
-          -- project participation          
-          EXECUTE 'INSERT INTO participation(project_id, organization_id, created_by, updated_by) VALUES (' || p_id || ',' || o_id || 
-		',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING participation_id;' INTO record_id;
-          EXECUTE 'INSERT INTO participation_taxonomy(participation_id, classification_id, field) VALUES (' || record_id || ',' || c_id || ', ''participation_id'');';
-          RAISE NOTICE 'Add Record: %', 'participation_id ('|| record_id ||') has organiztaion_id  ('|| o_id ||'), project_id ('|| p_id ||') is now associated to classification_id ('|| c_id ||').'; 
-        END IF;
-      ELSE
-        RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
-        RETURN FALSE;
-      END IF;        
-  END CASE;
-
-  -- edits are complete return successful
-  RETURN TRUE;         
-            
 EXCEPTION WHEN others THEN
-     RETURN FALSE;  	  
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select record_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      
 END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_infobox_activity
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_infobox_activity(activity_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_infobox_activity(activity_id integer) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   invalid_return_columns text[];
@@ -6726,9 +6818,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_global_search
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_global_search(search_text text)
-RETURNS SETOF pmt_global_search_result_type AS 
-$$
+CREATE OR REPLACE FUNCTION pmt_global_search(search_text text) RETURNS SETOF pmt_json_result_type AS $$
 DECLARE
   rec record;
   json_rec record;
@@ -6743,26 +6833,32 @@ BEGIN
     SELECT row_to_json(j)
     FROM
     (	
-	SELECT p.type, p.id, p.title, p.desc, p.tags, p.p_ids, p.a_ids FROM (
+	SELECT p.type, p.id, p.title, p.desc, p.tags, p.p_ids, p.a_ids, dg_id FROM (
 	SELECT 'p'::text AS "type", p.project_id AS id, coalesce(p.label, p.title) AS title, (lower(p.title) LIKE '%' || lower($1) || '%') AS in_title, 
 	p.description AS desc, (lower(p.description) LIKE '%' || lower($1) || '%') AS in_desc, 
 	p.tags, (lower(p.tags) LIKE '%' || lower($1) || '%') AS in_tags, array_agg(distinct p.project_id) as p_ids, array_agg(distinct l.activity_id) as a_ids
+	, array_agg(distinct pt.classification_id) as dg_id
 	-- , ST_AsGeoJSON(ST_Envelope(ST_UNION(l.point))) AS bbox, array_agg(l.location_id) AS l_ids
 	FROM project p
 	LEFT JOIN activity l
 	ON p.project_id = l.project_id
-	WHERE p.active = true and
+	LEFT JOIN project_taxonomy pt
+	ON p.project_id = pt.project_id
+	WHERE p.active = true and l.active = true and pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group') and
 	(lower(p.title) LIKE '%' || lower($1) || '%' or lower(p.description) LIKE '%' || lower($1) || '%' or lower(p.tags) LIKE '%' || lower($1) || '%')
 	GROUP BY p.project_id, p.title, p.description, p.tags
 	ORDER BY in_title desc, in_tags desc, in_desc desc) AS p
 	UNION ALL
-	SELECT a.type, a.id, a.title, a.desc, a.tags, a.p_ids, a.a_ids FROM (
+	SELECT a.type, a.id, a.title, a.desc, a.tags, a.p_ids, a.a_ids, dg_id FROM (
 	SELECT 'a'::text AS "type", a.activity_id AS id, coalesce(a.label, a.title) AS title, (lower(a.title) LIKE '%' || lower($1) || '%') AS in_title, 
 	a.description AS desc, (lower(a.description) LIKE '%' || lower($1) || '%') AS in_desc, 
 	a.tags, (lower(a.tags) LIKE '%' || lower($1) || '%') AS in_tags, array_agg(distinct a.project_id) as p_ids, array_agg(distinct a.activity_id) as a_ids
+	, array_agg(distinct pt.classification_id) as dg_id
 	-- , ST_AsGeoJSON(ST_Envelope(ST_UNION(l.point))) AS bbox, array_agg(l.location_id) AS l_ids
 	FROM activity a
-	WHERE a.active = true and
+	LEFT JOIN project_taxonomy pt
+	ON a.project_id = pt.project_id
+	WHERE a.active = true and pt.classification_id IN (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy = 'Data Group') and
 	(lower(a.title) LIKE '%' || lower($1) || '%' or lower(a.description) LIKE '%' || lower($1) || '%' or lower(a.tags) LIKE '%' || lower($1) || '%')
 	GROUP BY a.activity_id, a.title, a.description, a.tags
 	ORDER BY in_title desc, in_tags desc, in_desc desc) AS a
@@ -6780,8 +6876,7 @@ END;$$ LANGUAGE plpgsql;
 /******************************************************************
    pmt_activity
 ******************************************************************/
-CREATE OR REPLACE FUNCTION pmt_activity(activity_id integer)
-RETURNS SETOF pmt_infobox_result_type AS 
+CREATE OR REPLACE FUNCTION pmt_activity(activity_id integer) RETURNS SETOF pmt_json_result_type AS 
 $$
 DECLARE
   rec record;
@@ -6798,11 +6893,11 @@ BEGIN
     WHERE table_schema='public' AND table_name='activity' AND column_name != ALL(invalid_return_columns);
 
     -- dynamically build the execute statment	
-    execute_statement := 'SELECT ' || return_columns || ', l.location_ct, l.admin_bnds, f.amount ';
+    execute_statement := 'SELECT ' || return_columns || ', l.location_ct, l.admin_bnds ';
 
     -- taxonomy	
     execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
-				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
 				'from activity_taxonomy at ' ||
 				'join taxonomy_classifications  tc ' ||
 				'on at.classification_id = tc.classification_id ' ||
@@ -6810,14 +6905,17 @@ BEGIN
 				') t ) as taxonomy ';
     -- organizations			
     execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(p))) FROM ( ' ||
-				'select o.organization_id, o.name, tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification ' ||
+				'select pp.participation_id, o.organization_id, o.name, o.url'  ||
+						', (SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+						'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+						'from participation_taxonomy pt ' ||
+						'join taxonomy_classifications tc ' ||
+						'on pt.classification_id = tc.classification_id ' ||
+						'and pt.participation_id = pp.participation_id ' ||
+						') t ) as taxonomy ' ||
 				'from participation pp ' ||
 				'join organization o ' ||
-				'on pp.organization_id = o.organization_id ' ||
-				'left join participation_taxonomy ppt ' ||
-				'on pp.participation_id = ppt.participation_id ' ||
-				'join taxonomy_classifications tc ' ||
-				'on ppt.classification_id = tc.classification_id ' ||
+				'on pp.organization_id = o.organization_id ' ||				
 				'where pp.active = true and o.active = true ' ||
 				'and pp.activity_id = ' || $1 ||
 				') p ) as organizations ';
@@ -6830,13 +6928,33 @@ BEGIN
 				'left join organization o ' ||
 				'on c.organization_id = o.organization_id ' ||
 				'where c.active = true and ac.activity_id = ' || $1 ||
-				') c ) as contacts ';				
+				') c ) as contacts ';	
+    -- details
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(d))) FROM ( ' ||
+				'select d.detail_id, d.title, d.description, d.amount ' ||
+				'from detail d ' ||				
+				'where d.active = true and d.activity_id = ' || $1 ||
+				') d ) as details ';					
+
+    -- financials
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(f))) FROM ( ' ||
+				'select f.financial_id, f.amount'  ||
+						', (SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+						'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+						'from financial_taxonomy ft ' ||
+						'join taxonomy_classifications tc ' ||
+						'on ft.classification_id = tc.classification_id ' ||
+						'and ft.financial_id = f.financial_id ' ||
+						') t ) as taxonomy ' ||
+				'from financial f ' ||		
+				'where f.active = true and f.activity_id = ' || $1 ||
+				') f ) as financials ';
+											
      -- locations
-    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(l))) FROM ( ' ||
-				'select l.location_id, l.lat_dd, l.long_dd, l.x, l.y, l.georef ' ||
-				'from location l ' ||				
+    execute_statement := execute_statement || ',(SELECT array_agg(l.location_id)::int[]  ' ||
+				'from location l ' ||		
 				'where l.active = true and l.activity_id = ' || $1 ||
-				') l ) as locations ';		
+				') as location_ids ';			
 								
     -- activity
     execute_statement := execute_statement || 'from (select * from activity a where a.active = true and a.activity_id = ' || $1 || ') a ';
@@ -6847,19 +6965,1336 @@ BEGIN
 				'where ll.activity_id = ' || $1 ||
 				'group by ll.activity_id) l ' ||
 				'on a.activity_id = l.activity_id ';
-    -- financial	
-    execute_statement := execute_statement || 'left join  ' ||
-				'(select f.activity_id, sum(f.amount) as amount ' ||
-				'from financial f ' ||				
-				'where f.active = true and f.activity_id = ' || $1 ||
-				'group by f.activity_id) f ' ||
-				'on a.activity_id = f.activity_id ';
 
---	RAISE NOTICE 'Execute statement: %', execute_statement;			
+
+	RAISE NOTICE 'Execute statement: %', execute_statement;			
 
 	FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP  		
 		RETURN NEXT rec;
 	END LOOP;
+   END IF;
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_project
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_project(project_id integer) RETURNS SETOF pmt_json_result_type AS $$
+DECLARE
+  rec record;
+  invalid_return_columns text[];
+  return_columns text;
+  execute_statement text;
+  data_message text;
+BEGIN
+  IF $1 IS NOT NULL THEN	
+    -- set columns that are not to be returned 
+    invalid_return_columns := ARRAY['active', 'retired_by', 'created_by', 'created_date'];
+    -- get list of columns to return
+    SELECT INTO return_columns array_to_string(array_agg('p.' || column_name::text), ', ') FROM information_schema.columns 
+    WHERE table_schema='public' AND table_name='project' AND column_name != ALL(invalid_return_columns);
+
+    -- dynamically build the execute statment	
+    execute_statement := 'SELECT ' || return_columns;
+
+    -- taxonomy	
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+				'from project_taxonomy pt ' ||
+				'join taxonomy_classifications  tc ' ||
+				'on pt.classification_id = tc.classification_id ' ||
+				'and pt.project_id = ' || $1 ||
+				') t ) as taxonomy ';
+    -- organizations			
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(p))) FROM ( ' ||
+				'select pp.participation_id, o.organization_id, o.name, o.url'  ||
+						', (SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+						'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+						'from participation_taxonomy pt ' ||
+						'join taxonomy_classifications tc ' ||
+						'on pt.classification_id = tc.classification_id ' ||
+						'and pt.participation_id = pp.participation_id ' ||
+						') t ) as taxonomy ' ||
+				'from participation pp ' ||
+				'join organization o ' ||
+				'on pp.organization_id = o.organization_id ' ||				
+				'where pp.active = true and o.active = true ' ||
+				'and pp.activity_id is null and pp.project_id = ' || $1 ||
+				') p ) as organizations ';
+    -- contacts
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(c))) FROM ( ' ||
+				'select c.contact_id, c.first_name, c.last_name, c.email, c.organization_id, o.name ' ||
+				'from project_contact pc ' ||
+				'join contact c ' ||
+				'on pc.contact_id = c.contact_id ' ||
+				'left join organization o ' ||
+				'on c.organization_id = o.organization_id ' ||
+				'where c.active = true and pc.project_id = ' || $1 ||
+				') c ) as contacts ';					
+    -- details
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(d))) FROM ( ' ||
+				'select d.detail_id, d.title, d.description, d.amount ' ||
+				'from detail d ' ||				
+				'where d.active = true and d.activity_id is null and d.project_id = ' || $1 ||
+				') d ) as details ';
+
+    -- financials
+    execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(f))) FROM ( ' ||
+				'select f.financial_id, f.amount'  ||
+						', (SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+						'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+						'from financial_taxonomy ft ' ||
+						'join taxonomy_classifications tc ' ||
+						'on ft.classification_id = tc.classification_id ' ||
+						'and ft.financial_id = f.financial_id ' ||
+						') t ) as taxonomy ' ||
+				'from financial f ' ||				
+				'where f.active = true and f.activity_id is null and f.project_id = ' || $1 ||
+				') f ) as financials ';
+												
+    -- activities
+    execute_statement := execute_statement || ',(SELECT array_agg(a.activity_id)::int[]  ' ||
+				'from activity a ' ||		
+				'where a.active = true and a.project_id = ' || $1 ||
+				') as activity_ids ';		
+				
+    -- locations
+    execute_statement := execute_statement || ',(SELECT array_agg(l.location_id)::int[]  ' ||
+				'from location l ' ||		
+				'where l.active = true and l.project_id = ' || $1 ||
+				') as location_ids ';		
+								
+    -- project
+    execute_statement := execute_statement || 'from (select * from project p where p.active = true and p.project_id = ' || $1 || ') p ';
+   
+
+	RAISE NOTICE 'Execute statement: %', execute_statement;			
+
+	FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP  		
+		RETURN NEXT rec;
+	END LOOP;
+   END IF;
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_project
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_project(id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN false;
+     END IF;    
+     
+     SELECT INTO valid_id project_id FROM project WHERE active = true AND project_id = $1;	 
+
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_validate_projects
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_projects(project_ids character varying) RETURNS INT[] AS $$
+DECLARE 
+  valid_project_ids INT[];
+  filter_project_ids INT[];
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN valid_project_ids;
+     END IF;
+
+     filter_project_ids := string_to_array($1, ',')::int[];
+     
+     SELECT INTO valid_project_ids array_agg(DISTINCT project_id)::INT[] FROM (SELECT project_id FROM project WHERE active = true AND project_id = ANY(filter_project_ids) ORDER BY project_id) AS t;
+     
+     RETURN valid_project_ids;
+
+EXCEPTION
+     WHEN others THEN RETURN NULL;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_project_contact
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_project_contact(user_id integer, project_id integer, contact_id integer, edit_action pmt_edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  p_id integer;
+  record_id integer;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- first three parameters are required 
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
+    -- validate project_id & contact_id
+    IF (SELECT * FROM pmt_validate_project($2)) AND (SELECT * FROM pmt_validate_contact($3)) THEN
+      p_id := $2;
+      
+      -- operations based on the requested edit action
+      CASE $4
+        WHEN 'delete' THEN
+          -- validate users authority to perform an update action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN          
+            EXECUTE 'DELETE FROM project_contact WHERE project_id ='|| $2 ||' AND contact_id = '|| $3; 
+            RAISE NOTICE 'Delete Record: %', 'Remove association to contact_id ('|| $3 ||') for project_id ('|| $2 ||')';
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;           
+        WHEN 'replace' THEN            
+           -- validate users authority to perform an update and create action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN          
+            EXECUTE 'DELETE FROM project_contact WHERE project_id ='|| $2;
+            RAISE NOTICE 'Delete Record: %', 'Removed all contacts for project_id ('|| $2 ||')';
+	    EXECUTE 'INSERT INTO project_contact(project_id, contact_id) VALUES ('|| $2 ||', '|| $3 ||')';
+            RAISE NOTICE 'Add Record: %', 'project_id ('|| $2 ||') is now associated to contact_id ('|| $3 ||').'; 
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;        
+        ELSE
+          -- validate users authority to perform a create action on this project
+          IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN          
+            SELECT INTO record_id pc.project_id FROM project_contact as pc WHERE pc.project_id = $2 AND pc.contact_id = $3 LIMIT 1;
+            IF record_id IS NULL THEN
+              EXECUTE 'INSERT INTO project_contact(project_id, contact_id) VALUES ('|| $2 ||', '|| $3 ||')';
+              RAISE NOTICE 'Add Record: %', 'project_id ('|| $2 ||') is now associated to contact_id ('|| $3 ||').'; 
+            ELSE
+              RAISE NOTICE'Add Record: %', 'This project_id ('|| $2 ||') already has an association to this contact_id ('|| $3 ||').';                
+            END IF;
+          ELSE
+            RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', p_id;
+	    RETURN FALSE;
+          END IF;                  
+      END CASE;
+      -- edits are complete return successful
+      RETURN TRUE;         
+    ELSE
+      RAISE NOTICE 'Error: Invalid project_id or contact_id.';
+      RETURN FALSE;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide all parameters.';
+    RETURN false;
+  END IF; 
+  
+EXCEPTION WHEN others THEN
+   GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+		  error_msg2 = PG_EXCEPTION_DETAIL,
+		  error_msg3 = PG_EXCEPTION_HINT;
+    RAISE NOTICE 'Error: %', error_msg1;
+    RETURN FALSE;  	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_projects
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_projects() RETURNS SETOF pmt_json_result_type AS $$
+DECLARE 
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+  rec record;
+BEGIN 
+
+    FOR rec IN (SELECT row_to_json(j) FROM(
+
+	SELECT p.project_id, p.title, ((SELECT array_agg(activity_id)::int[] FROM activity a WHERE a.project_id = p.project_id AND a.active = true)) as activity_ids
+	FROM project p
+	WHERE p.active = true
+	ORDER BY p.title
+	
+	) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+     
+EXCEPTION WHEN others THEN
+    GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(SELECT 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	 
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_activities
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_activities() RETURNS SETOF pmt_json_result_type AS $$
+DECLARE 
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+  rec record;
+BEGIN 
+
+    FOR rec IN (SELECT row_to_json(j) FROM(
+
+	SELECT a.activity_id, a.title, ((SELECT array_agg(location_id)::int[] FROM location l WHERE l.activity_id = a.activity_id AND l.active = true)) as location_ids
+	FROM activity a
+	WHERE a.active = true
+	ORDER BY a.title
+	
+	) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+     
+EXCEPTION WHEN others THEN
+    GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(SELECT 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	 
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_project_taxonomy
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_project_taxonomy(user_id integer, project_id integer, classification_id integer, edit_action pmt_edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  valid_classification_id boolean;
+  valid_project_id integer;
+  record_id integer;
+  t_id integer;
+  i integer;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+BEGIN	
+
+  -- first three parameters are required 
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
+  
+    IF (SELECT * FROM pmt_validate_project($2)) AND (SELECT * FROM pmt_validate_classification($3)) THEN
+  
+      -- get the taxonomy_id of the classification_id
+      SELECT INTO t_id taxonomy_id FROM taxonomy_classifications tc WHERE tc.classification_id = $3;
+      
+      IF t_id IS NOT NULL THEN
+        -- operations based on the requested edit action
+        CASE $4          
+          WHEN 'delete' THEN
+            -- validate users authority to perform an update action on this project
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'update')) THEN 
+              EXECUTE 'DELETE FROM project_taxonomy WHERE project_id ='|| $2 ||' AND classification_id = '|| $3 ||' AND field = ''project_id'''; 
+              RAISE NOTICE 'Delete Record: %', 'Remove association to classification_id ('|| $3 ||') for project_id ('|| $2 ||')';
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this project: %', $2;
+	      RETURN FALSE;
+            END IF;     
+          WHEN 'replace' THEN
+             -- validate users authority to perform an update and create action on this project
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, $2, 'create')) THEN
+            
+              EXECUTE 'DELETE FROM project_taxonomy WHERE project_id ='|| $2 ||' AND classification_id in (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy_id = '|| t_id||') AND field = ''project_id''';
+              RAISE NOTICE 'Delete Record: %', 'Remove association to taxonomy_id ('|| t_id ||') for project_id ('|| $2 ||')';
+	      EXECUTE 'INSERT INTO project_taxonomy(project_id, classification_id, field) VALUES ('|| $2 ||', '|| $3 ||', ''project_id'')'; 
+              RAISE NOTICE 'Add Record: %', 'project_id ('|| $2 ||') is now associated to classification_id ('|| $3 ||').';
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this project: %', $2;
+	      RETURN FALSE;
+            END IF;  
+          ELSE
+            -- validate users authority to perform a create action on this project
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'create')) THEN 
+              
+              SELECT INTO record_id pt.project_id FROM project_taxonomy as pt WHERE pt.project_id = $2 AND pt.classification_id = $3 LIMIT 1;
+              IF record_id IS NULL THEN
+               EXECUTE 'INSERT INTO project_taxonomy(project_id, classification_id, field) VALUES ('|| $2 ||', '|| $3 ||', ''project_id'')';
+               RAISE NOTICE 'Add Record: %', 'project_id ('|| $2 ||') is now associated to classification_id ('|| $3 ||').'; 
+             ELSE
+               RAISE NOTICE'Add Record: %', 'This project_id ('|| $2 ||') already has an association to this classification_id ('|| $3 ||').';                
+             END IF;
+             
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this project: %', $2;
+	      RETURN FALSE;
+            END IF;        
+        END CASE;
+        RETURN true;
+      ELSE
+        RAISE NOTICE 'Error: There is no taxonomy_id for given classification_id.';
+	RETURN false;
+      END IF;
+      
+    ELSE
+      RAISE NOTICE 'Error: Invalid project_id or classification_id.';
+      RETURN false;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide user_id, project_id and classification_id parameters.';
+    RETURN false;
+  END IF;
+  
+EXCEPTION WHEN others THEN
+  GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+		  error_msg2 = PG_EXCEPTION_DETAIL,
+		  error_msg3 = PG_EXCEPTION_HINT;
+                          
+  RAISE NOTICE 'Error: %', error_msg1;                          
+  RETURN FALSE;   	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_project
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_project(user_id integer, project_id integer, key_value_data json, delete_record boolean default false) RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  new_project_id integer;
+  p_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  delete_response json;
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['project_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- user and data parameters are required
+  IF ($1 IS NOT NULL) THEN
+    IF NOT ($4) AND ($3 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included json parameter when delete_record is false.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if project_id is null then validate users authroity to create a new project record  
+  IF ($2 IS NULL) THEN
+    IF (SELECT * FROM pmt_validate_user_authority($1, null, 'create')) THEN
+      EXECUTE 'INSERT INTO project(created_by, updated_by) VALUES (' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING project_id;' INTO new_project_id;
+      RAISE NOTICE 'Created new project with id: %', new_project_id;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new project.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  -- validate project_id if provided and validate users authority to update an existing record  
+  ELSE
+    -- validate project_id
+    IF (SELECT * FROM pmt_validate_project($2)) THEN 
+      -- validate users authority to 'delete' this project
+      IF ($4) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'delete')) THEN
+        -- deactivate this project          
+          FOR rec IN (SELECT * FROM pmt_activate_project($1, $2, false)) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this project.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE        
+        IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update this project.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid project_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+
+  -- assign the project_id to use in statements
+  IF new_project_id IS NOT NULL THEN
+    p_id := new_project_id;
+  ELSE
+    p_id := $2;
+  END IF;
+    
+  -- loop through the columns of the contact table        
+  FOR json IN (SELECT * FROM json_each_text($3)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='project' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE project SET ' || column_record.column_name || ' = ' || json.value || ' WHERE project_id = ' || p_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE project SET ' || column_record.column_name || ' = null WHERE project_id = ' || p_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE project SET ' || column_record.column_name || ' = null WHERE project_id = ' || p_id; 
+          ELSE
+            execute_statement := 'UPDATE project SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE project_id = ' || p_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE project SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  project_id = ' || p_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select p_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
+  
+EXCEPTION WHEN others THEN
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select p_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_detail
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_detail(id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN false;
+     END IF;    
+     
+     SELECT INTO valid_id detail_id FROM detail WHERE active = true AND detail_id = $1;	 
+
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_detail
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_detail(user_id integer, detail_id integer, project_id integer, activity_id integer, key_value_data json, delete_record boolean default false) 
+RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  new_detail_id integer;
+  p_id integer;
+  a_id integer;
+  d_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  delete_response json;
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['detail_id', 'project_id', 'activity_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- validate required parameters
+  -- user_id always required
+  IF ($1 IS NOT NULL) THEN
+    -- if delete_record = false then json is required
+    IF NOT ($6) AND ($5 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included json parameter when delete_record is false.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    ELSE
+      IF ($2 IS NULL) AND ($6) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included detail_id when delete_record is true.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    END IF;
+    -- must supply a detail_id, a project_id or activity_id
+    IF ($2 IS NULL) AND ($3 IS NULL) AND ($4 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included project_id or activity_id parameter when detail_id parameter is null.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if detail_id is null then validate users authroity to create a new detail record  
+  IF ($2 IS NULL) THEN
+  
+    -- validate the associated project/activity records
+    IF ($3 IS NOT NULL) THEN
+      IF (SELECT * FROM pmt_validate_project($3)) THEN  
+        p_id := $3;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid project_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;      
+    END IF;
+    
+    IF ($4 IS NOT NULL) THEN
+        IF (SELECT * FROM pmt_validate_activity($4)) THEN  
+          a_id := $4;
+          SELECT INTO p_id a.project_id FROM activity a WHERE a.activity_id = $4;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid activity_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+    END IF; 
+
+    IF p_id IS NOT NULL THEN
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
+        IF a_id IS NOT NULL THEN
+          EXECUTE 'INSERT INTO detail(project_id, activity_id, created_by, updated_by) VALUES (' || p_id  || ',' || a_id || ',' || quote_literal(user_name) || ',' 
+		|| quote_literal(user_name) || ') RETURNING detail_id;' INTO new_detail_id;
+        ELSE
+          EXECUTE 'INSERT INTO detail(project_id, created_by, updated_by) VALUES (' || p_id  || ',' || quote_literal(user_name) || ',' 
+		|| quote_literal(user_name) || ') RETURNING detail_id;' INTO new_detail_id;
+        END IF;
+        
+        RAISE NOTICE 'Created new detail with id: %', new_detail_id;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new detail record for project id ' || p_id as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must provide a valid project_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+    
+  -- validate detail_id if provided and validate users authority to update an existing record  
+  ELSE  
+    -- validate detail_id
+    IF (SELECT * FROM pmt_validate_detail($2)) THEN 
+      -- get project_id from detail record
+      SELECT INTO p_id d.project_id FROM detail d WHERE d.detail_id = $2;      
+      -- validate users authority to 'delete' this detail
+      IF ($6) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+          -- deactivate this detail 
+          EXECUTE 'UPDATE detail SET active = false WHERE detail_id = ' || $2;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this detail for project id ' || p_id  as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE        
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update this project.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid detail_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+
+  -- assign the project_id to use in statements
+  IF new_detail_id IS NOT NULL THEN
+    d_id := new_detail_id;
+  ELSE
+    d_id := $2;
+  END IF;
+    
+  -- loop through the columns of the detail table        
+  FOR json IN (SELECT * FROM json_each_text($5)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='detail' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE detail SET ' || column_record.column_name || ' = ' || json.value || ' WHERE detail_id = ' || d_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE detail SET ' || column_record.column_name || ' = null WHERE detail_id = ' || d_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE detail SET ' || column_record.column_name || ' = null WHERE detail_id = ' || d_id; 
+          ELSE
+            execute_statement := 'UPDATE detail SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE detail_id = ' || d_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE detail SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  detail_id = ' || d_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select d_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
+  
+EXCEPTION WHEN others THEN
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select d_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_financial
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_financial(id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN false;
+     END IF;    
+     
+     SELECT INTO valid_id financial_id FROM financial WHERE active = true AND financial_id = $1;	 
+
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+   pmt_edit_financial
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_financial(user_id integer, financial_id integer, project_id integer, activity_id integer, key_value_data json, delete_record boolean default false) 
+RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  new_financial_id integer;
+  p_id integer;
+  a_id integer;
+  f_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['financial_id', 'project_id', 'activity_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- validate required parameters
+  -- user_id always required
+  IF ($1 IS NOT NULL) THEN
+    -- if delete_record = false then json is required
+    IF NOT ($6) AND ($5 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included json parameter when delete_record is false.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    ELSE
+      IF ($2 IS NULL) AND ($6) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included financial_id when delete_record is true.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    END IF;
+    -- must supply a financial_id, a project_id or activity_id
+    IF ($2 IS NULL) AND ($3 IS NULL) AND ($4 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included project_id or activity_id parameter when financial_id parameter is null.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if financial_id is null then validate users authroity to create a new financial record  
+  IF ($2 IS NULL) THEN
+  
+    -- validate the associated project/activity records
+    IF ($3 IS NOT NULL) THEN
+      IF (SELECT * FROM pmt_validate_project($3)) THEN  
+        p_id := $3;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid project_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;      
+    END IF;
+    
+    IF ($4 IS NOT NULL) THEN
+        IF (SELECT * FROM pmt_validate_activity($4)) THEN  
+          a_id := $4;
+          SELECT INTO p_id a.project_id FROM activity a WHERE a.activity_id = $4;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid activity_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+    END IF; 
+
+    IF p_id IS NOT NULL THEN
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
+        IF a_id IS NOT NULL THEN
+          EXECUTE 'INSERT INTO financial(project_id, activity_id, created_by, updated_by) VALUES (' || p_id  || ',' || a_id || ',' || quote_literal(user_name) || ',' 
+		|| quote_literal(user_name) || ') RETURNING financial_id;' INTO new_financial_id;
+        ELSE
+          EXECUTE 'INSERT INTO financial(project_id, created_by, updated_by) VALUES (' || p_id  || ',' || quote_literal(user_name) || ',' 
+		|| quote_literal(user_name) || ') RETURNING financial_id;' INTO new_financial_id;
+        END IF;
+        
+        RAISE NOTICE 'Created new financial with id: %', new_financial_id;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new financial record for project id ' || p_id as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must provide a valid project_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+    
+  -- validate financial_id if provided and validate users authority to update an existing record  
+  ELSE  
+    -- validate financial_id
+    IF (SELECT * FROM pmt_validate_financial($2)) THEN 
+      -- get project_id from financial record
+      SELECT INTO p_id f.project_id FROM financial f WHERE f.financial_id = $2;      
+      -- validate users authority to 'delete' this financial
+      IF ($6) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+          -- deactivate this financial 
+          EXECUTE 'UPDATE financial SET active = false WHERE financial_id = ' || $2;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this financial record for project id ' || p_id  as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE        
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update this project.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid financial_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+
+  -- assign the project_id to use in statements
+  IF new_financial_id IS NOT NULL THEN
+    f_id := new_financial_id;
+  ELSE
+    f_id := $2;
+  END IF;
+    
+  -- loop through the columns of the contact table        
+  FOR json IN (SELECT * FROM json_each_text($5)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='financial' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE financial SET ' || column_record.column_name || ' = ' || json.value || ' WHERE financial_id = ' || f_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE financial SET ' || column_record.column_name || ' = null WHERE financial_id = ' || f_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE financial SET ' || column_record.column_name || ' = null WHERE financial_id = ' || f_id; 
+          ELSE
+            execute_statement := 'UPDATE financial SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE financial_id = ' || f_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE financial SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  financial_id = ' || f_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select f_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
+  
+EXCEPTION WHEN others THEN
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select f_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+   pmt_edit_organization
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_organization(user_id integer, organization_id integer, key_value_data json, delete_record boolean default false) RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  new_organization_id integer;
+  o_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['organization_id', 'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- user and data parameters are required
+  IF ($1 IS NOT NULL) THEN
+    IF NOT ($4) AND ($3 IS NULL) THEN
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included json parameter when delete_record is false.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Must included user_id parameter.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if organization_id is null then validate users authroity to create a new organization record  
+  IF ($2 IS NULL) THEN
+    IF (SELECT * FROM pmt_validate_user_authority($1, null, 'create')) THEN
+      EXECUTE 'INSERT INTO organization(created_by, updated_by) VALUES (' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING organization_id;' INTO new_organization_id;
+      RAISE NOTICE 'Created new organization with id: %', new_organization_id;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new organization.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  -- validate organization_id if provided and validate users authority to update an existing record  
+  ELSE      
+    IF (SELECT * FROM pmt_validate_organization($2)) THEN 
+       -- validate users authority to 'delete' this organization
+      IF ($4) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, null, 'delete')) THEN
+          -- deactivate this organization          
+          EXECUTE 'UPDATE organization SET active = false WHERE organization.organization_id = ' || $2;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this organization.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE             
+        IF (SELECT * FROM pmt_validate_user_authority($1, null, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update an existing organization.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid organization_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+             
+  -- assign the organization_id to use in statements
+  IF new_organization_id IS NOT NULL THEN
+    o_id := new_organization_id;
+  ELSE
+    o_id := $2;
+  END IF;
+  
+  -- loop through the columns of the organization table        
+  FOR json IN (SELECT * FROM json_each_text($3)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='organization' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE organization SET ' || column_record.column_name || ' = ' || json.value || ' WHERE organization_id = ' || o_id; 
+          END IF;
+           IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE organization SET ' || column_record.column_name || ' = null WHERE organization_id = ' || o_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE organization SET ' || column_record.column_name || ' = null WHERE organization_id = ' || o_id; 
+          ELSE
+            execute_statement := 'UPDATE organization SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE organization_id = ' || o_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE organization SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  organization_id = ' || o_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select o_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+   
+EXCEPTION WHEN others THEN
+    GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select o_id as id, 'Internal Error - organization your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_edit_location
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_location(user_id integer, location_id integer, activity_id integer, key_value_data json, delete_record boolean default false) RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  new_location_id integer;
+  p_id integer;
+  a_id integer;
+  l_id integer;
+  json record;
+  column_record record;
+  execute_statement text;
+  invalid_editing_columns text[];
+  delete_response json;
+  user_name text;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text;
+BEGIN	
+  -- set columns that are not editable via the parameters 
+  invalid_editing_columns := ARRAY['location_id','activity_id','project_id', 'x', 'y', 'lat_dd', 'long_dd', 'latlong', 'georef', 
+				   'active', 'retired_by', 'created_by', 'created_date', 'updated_by', 'updated_date'];
+  
+  -- user_id is required for all operations
+  IF ($1 IS NOT NULL) THEN
+    -- update/create operation
+    IF NOT ($5) THEN
+      -- json is required
+      IF ($4 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: The json parameter is required for a create/update operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+      -- activity_id is required if location_id is null
+      IF ($2 IS NULL) AND ($3 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: activity_id is required for a create operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    -- delete operation	
+    ELSE
+      -- location_id is requried
+      IF ($2 IS NULL) THEN
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: location_id is required for a delete operation.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    END IF;
+  -- error if user_id    
+  ELSE
+    FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: user_id is a required parameter for all operations.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+  END IF; 
+
+  -- get users name
+  SELECT INTO user_name username FROM "user" WHERE "user".user_id = $1;
+
+  -- if location_id is null then validate users authroity to create a new location record  
+  IF ($2 IS NULL) THEN
+    -- validate activity_id
+    IF (SELECT * FROM pmt_validate_activity($3)) THEN 
+      SELECT INTO p_id a.project_id FROM activity a WHERE a.activity_id = $3;
+      IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'create')) THEN
+        EXECUTE 'INSERT INTO location(project_id, activity_id, created_by, updated_by) VALUES (' || p_id || ',' || $3 || ',' || quote_literal(user_name) || ',' || quote_literal(user_name) || ') RETURNING location_id;' INTO new_location_id;
+        RAISE NOTICE 'Created new location with id: %', new_location_id;
+      ELSE
+        FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to create a new location for activity_id: ' || $3 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: activity_id is not valid.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  -- validate location_id if provided and validate users authority to update an existing record  
+  ELSE    
+    -- validate location_id
+    IF (SELECT * FROM pmt_validate_location($2)) THEN 
+      -- get project_id and activity_id for location
+      SELECT INTO p_id l.project_id FROM location l WHERE l.location_id = $2;      
+      SELECT INTO a_id l.activity_id FROM location l WHERE l.location_id = $2;      
+      -- validate users authority to 'delete' this activity
+      IF ($5) THEN
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'delete')) THEN
+          -- deactivate this activity          
+          EXECUTE 'UPDATE location SET active = false, updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE location_id = ' || $2;
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to delete this location.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      -- validate users authority to 'update' this activity
+      ELSE        
+        IF (SELECT * FROM pmt_validate_user_authority($1, p_id, 'update')) THEN   
+        ELSE
+          FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: User does NOT have authority to update this location.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+        END IF;
+      END IF;
+    ELSE
+      FOR rec IN (SELECT row_to_json(j) FROM(select null as id, 'Error: Invalid location_id.' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+    END IF;
+  END IF;
+
+  -- assign the location_id to use in statements
+  IF new_location_id IS NOT NULL THEN
+    l_id := new_location_id;
+  ELSE
+    l_id := $2;
+  END IF;
+    
+  -- loop through the columns of the activity table        
+  FOR json IN (SELECT * FROM json_each_text($4)) LOOP
+    RAISE NOTICE 'JSON key/value: %', lower(json.key) || ':' || json.value;
+    -- get the column information for column that user is requesting to edit	
+    FOR column_record IN (SELECT * FROM information_schema.columns WHERE table_schema='public' AND table_name='location' AND column_name != ALL(invalid_editing_columns) AND lower(column_name) = lower(json.key)) LOOP 
+      RAISE NOTICE 'Editing column: %', column_record.column_name;
+      RAISE NOTICE 'Assigning new value: %', json.value;
+      RAISE NOTICE 'Column type: %', column_record.data_type;
+      execute_statement := null;
+      CASE column_record.data_type 
+        WHEN 'integer', 'numeric' THEN              
+          IF (SELECT pmt_isnumeric(json.value)) THEN
+            execute_statement := 'UPDATE location SET ' || column_record.column_name || ' = ' || json.value || ' WHERE location_id = ' || l_id; 
+          END IF;
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE location SET ' || column_record.column_name || ' = null WHERE location_id = ' || l_id; 
+          END IF;
+        WHEN 'USER-DEFINED' THEN
+          IF(column_record.udt_name = 'geometry') THEN
+	    -- per documenation assumes projection is (WGS84: 4326)
+            execute_statement := 'UPDATE location SET ' || column_record.column_name || ' = ST_GeomFromText(' || quote_literal(json.value) || ', 4326) WHERE location_id = ' || l_id; 
+          END IF;
+        ELSE
+          -- if the value has the text null then assign the column value null
+          IF (lower(json.value) = 'null') THEN
+            execute_statement := 'UPDATE location SET ' || column_record.column_name || ' = null WHERE location_id = ' || l_id; 
+          ELSE
+            execute_statement := 'UPDATE location SET ' || column_record.column_name || ' = ' || quote_literal(json.value) || ' WHERE location_id = ' || l_id; 
+          END IF;
+      END CASE;
+      IF execute_statement IS NOT NULL THEN
+        RAISE NOTICE 'Statement: %', execute_statement;
+        EXECUTE execute_statement;
+                
+        EXECUTE 'UPDATE location SET updated_by = ' || quote_literal(user_name) || ', updated_date = ' || quote_literal(current_date) || ' WHERE  location_id = ' || l_id;
+      END IF;
+    END LOOP;
+  END LOOP;
+  -- editing completed successfullly
+  FOR rec IN (SELECT row_to_json(j) FROM(select l_id as id, 'Success' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;         
+  
+EXCEPTION WHEN others THEN
+     GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+                          error_msg2 = PG_EXCEPTION_DETAIL,
+                          error_msg3 = PG_EXCEPTION_HINT;
+    FOR rec IN (SELECT row_to_json(j) FROM(select l_id as id, 'Internal Error - Contact your DBA with the following error message: ' || error_msg1 as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_location
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_location(id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN false;
+     END IF;    
+     
+     SELECT INTO valid_id location_id FROM location WHERE active = true AND location_id = $1;	 
+
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql';    
+/******************************************************************
+   pmt_edit_location_taxonomy
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_edit_location_taxonomy(user_id integer, location_id integer, classification_id integer, edit_action pmt_edit_action) RETURNS BOOLEAN AS 
+$$
+DECLARE
+  valid_classification_id boolean;
+  valid_location_id integer;
+  record_id integer;
+  t_id integer;
+  i integer;
+  rec record;
+  error_msg1 text;
+  error_msg2 text;
+  error_msg3 text; 
+BEGIN	
+
+  -- first three parameters are required 
+  IF ($1 IS NOT NULL) AND ($2 IS NOT NULL) AND ($3 IS NOT NULL) THEN
+  
+    IF (SELECT * FROM pmt_validate_location($2)) AND (SELECT * FROM pmt_validate_classification($3)) THEN
+  
+      -- get the taxonomy_id of the classification_id
+      SELECT INTO t_id taxonomy_id FROM taxonomy_classifications tc WHERE tc.classification_id = $3;
+      
+      IF t_id IS NOT NULL THEN
+        -- operations based on the requested edit action
+        CASE $4          
+          WHEN 'delete' THEN
+            -- validate users authority to perform an update action on this location
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'update')) THEN 
+              EXECUTE 'DELETE FROM location_taxonomy WHERE location_id ='|| $2 ||' AND classification_id = '|| $3 ||' AND field = ''location_id'''; 
+              RAISE NOTICE 'Delete Record: %', 'Remove association to classification_id ('|| $3 ||') for location_id ('|| $2 ||')';
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE rights to this location: %', $2;
+	      RETURN FALSE;
+            END IF;     
+          WHEN 'replace' THEN
+             -- validate users authority to perform an update and create action on this location
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'update')) AND (SELECT * FROM pmt_validate_user_authority($1, $2, 'create')) THEN
+            
+              EXECUTE 'DELETE FROM location_taxonomy WHERE location_id ='|| $2 ||' AND classification_id in (SELECT classification_id FROM taxonomy_classifications WHERE taxonomy_id = '|| t_id||') AND field = ''location_id''';
+              RAISE NOTICE 'Delete Record: %', 'Remove association to taxonomy_id ('|| t_id ||') for location_id ('|| $2 ||')';
+	      EXECUTE 'INSERT INTO location_taxonomy(location_id, classification_id, field) VALUES ('|| $2 ||', '|| $3 ||', ''location_id'')'; 
+              RAISE NOTICE 'Add Record: %', 'location_id ('|| $2 ||') is now associated to classification_id ('|| $3 ||').';
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have UPDATE and CREATE rights to this location: %', $2;
+	      RETURN FALSE;
+            END IF;  
+          ELSE
+            -- validate users authority to perform a create action on this location
+            IF (SELECT * FROM pmt_validate_user_authority($1, $2, 'create')) THEN 
+              
+              SELECT INTO record_id pt.location_id FROM location_taxonomy as pt WHERE pt.location_id = $2 AND pt.classification_id = $3 LIMIT 1;
+              IF record_id IS NULL THEN
+               EXECUTE 'INSERT INTO location_taxonomy(location_id, classification_id, field) VALUES ('|| $2 ||', '|| $3 ||', ''location_id'')';
+               RAISE NOTICE 'Add Record: %', 'location_id ('|| $2 ||') is now associated to classification_id ('|| $3 ||').'; 
+             ELSE
+               RAISE NOTICE'Add Record: %', 'This location_id ('|| $2 ||') already has an association to this classification_id ('|| $3 ||').';                
+             END IF;
+             
+            ELSE
+              RAISE NOTICE 'Error: The requested edit action requires the user to have CREATE rights to this location: %', $2;
+	      RETURN FALSE;
+            END IF;        
+        END CASE;
+        RETURN true;
+      ELSE
+        RAISE NOTICE 'Error: There is no taxonomy_id for given classification_id.';
+	RETURN false;
+      END IF;
+      
+    ELSE
+      RAISE NOTICE 'Error: Invalid location_id or classification_id.';
+      RETURN false;
+    END IF;
+  ELSE
+    RAISE NOTICE 'Error: Must provide user_id, location_id and classification_id parameters.';
+    RETURN false;
+  END IF;
+  
+EXCEPTION WHEN others THEN
+  GET STACKED DIAGNOSTICS error_msg1 = MESSAGE_TEXT,
+		  error_msg2 = PG_EXCEPTION_DETAIL,
+		  error_msg3 = PG_EXCEPTION_HINT;
+                          
+  RAISE NOTICE 'Error: %', error_msg1;                          
+  RETURN FALSE;   	  
+END;$$ LANGUAGE plpgsql;
+/******************************************************************
+  pmt_validate_boundary_feature
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_boundary_feature(boundary_id integer, feature_id integer) RETURNS boolean AS $$
+DECLARE valid_id integer;
+	spatialtable text;
+	execute_statement text;
+BEGIN 
+     IF $1 IS NULL OR $2 IS NULL THEN    
+       RETURN false;
+     END IF;    
+
+     SELECT INTO spatialtable spatial_table FROM boundary WHERE active = true AND boundary.boundary_id = $1;	
+     RAISE NOTICE 'spatialtable: % ...', spatialtable; 
+
+     IF spatialtable IS NOT NULL THEN
+       execute_statement := 'SELECT feature_id FROM ' || quote_ident(spatialtable) || ' WHERE feature_id = ' || $2 ;
+       EXECUTE execute_statement INTO valid_id;
+       RAISE NOTICE 'valid_id : % ...', valid_id; 
+     ELSE
+       RETURN false;
+     END IF;
+     
+     IF valid_id IS NULL THEN
+      RETURN false;
+     ELSE 
+      RETURN true;
+     END IF;
+     
+EXCEPTION WHEN OTHERS THEN
+    RETURN FALSE;
+END; 
+$$ LANGUAGE 'plpgsql'; 
+/******************************************************************
+  pmt_validate_locations
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_validate_locations(location_ids character varying) RETURNS INT[] AS $$
+DECLARE 
+  valid_location_ids INT[];
+  filter_location_ids INT[];
+BEGIN 
+     IF $1 IS NULL THEN    
+       RETURN valid_location_ids;
+     END IF;
+
+     filter_location_ids := string_to_array($1, ',')::int[];
+     
+     SELECT INTO valid_location_ids array_agg(DISTINCT location_id)::INT[] FROM (SELECT location_id FROM location WHERE active = true AND location_id = ANY(filter_location_ids) ORDER BY location_id) AS t;
+     
+     RETURN valid_location_ids;
+
+EXCEPTION
+     WHEN others THEN RETURN NULL;
+END; 
+$$ LANGUAGE 'plpgsql';
+/******************************************************************
+  pmt_locations
+******************************************************************/
+CREATE OR REPLACE FUNCTION pmt_locations(location_ids character varying) RETURNS SETOF pmt_json_result_type AS 
+$$
+DECLARE
+  rec record;
+  invalid_return_columns text[];
+  valid_location_ids integer[];
+  return_columns text;
+  execute_statement text;
+  boundary_features text;
+  boundary_tables text[];
+  data_message text;
+BEGIN
+  IF $1 IS NOT NULL THEN
+    -- validate location_ids
+    select into valid_location_ids * from pmt_validate_locations($1);
+    -- set columns that are not to be returned 
+    invalid_return_columns := ARRAY['active', 'retired_by', 'created_by', 'created_date', 'point'];
+    -- get list of columns to return
+    SELECT INTO return_columns array_to_string(array_agg('l.' || column_name::text), ', ') FROM information_schema.columns 
+    WHERE table_schema='public' AND table_name='location' AND column_name != ALL(invalid_return_columns);
+    IF (valid_location_ids IS NOT NULL) THEN
+      -- dynamically build boundary_features
+      FOR rec IN (SELECT spatial_table FROM boundary) LOOP  		
+        boundary_tables := array_append(boundary_tables, ' select boundary_id, feature_id, polygon from ' || rec.spatial_table || ' ');   
+      END LOOP;
+    
+      boundary_features:= ' (' || array_to_string(boundary_tables, ' UNION ') || ') as boundary_features ';
+    
+      -- dynamically build the execute statment	
+      execute_statement := 'SELECT ' || return_columns || ' ';
+
+      -- taxonomy	
+      execute_statement := execute_statement || ',(SELECT array_to_json(array_agg(row_to_json(t))) FROM ( ' ||
+				'select tc.taxonomy_id, tc.taxonomy, tc.classification_id, tc.classification, tc.code ' ||
+				'from location_taxonomy lt ' ||
+				'join taxonomy_classifications  tc ' ||
+				'on lt.classification_id = tc.classification_id ' ||
+				'and lt.location_id = l.location_id'
+				') t ) as taxonomy ';       							
+      -- point
+      execute_statement := execute_statement || ', ST_AsGeoJSON(point) as point ';  				
+      -- polygon
+      execute_statement := execute_statement || ', (SELECT ST_AsGeoJSON(polygon) FROM ' || boundary_features || ' WHERE boundary_id = l.boundary_id AND feature_id = l.feature_id) as polygon ';  
+   				
+      -- location
+      execute_statement := execute_statement || 'from (select * from location l where l.active = true and l.location_id = ANY(ARRAY[' || array_to_string(valid_location_ids, ',') || '])) l ';    
+
+
+      RAISE NOTICE 'Execute statement: %', execute_statement;			
+
+      FOR rec IN EXECUTE 'SELECT row_to_json(j) FROM (' || execute_statement || ')j' LOOP  		
+	  RETURN NEXT rec;
+      END LOOP;
+      ELSE
+         FOR rec IN (SELECT row_to_json(j) FROM(select 'Error: No valid location ids: ' as message) j) LOOP  RETURN NEXT rec; END LOOP; RETURN;
+      END IF;
    END IF;
 END;$$ LANGUAGE plpgsql;
 /*****************************************************************
@@ -6907,7 +8342,8 @@ ORDER BY project_id, activity_id, location_id, organization_id;
 -------------------------------------------------------------------
 -- taxonomy_classifications
 CREATE OR REPLACE VIEW  taxonomy_classifications AS
-(SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, c.classification_id, c.name as classification, c.category_id as classification_category_id, c.iati_code, c.iati_name
+(SELECT t.taxonomy_id, t.name as taxonomy, t.is_category, t.category_id as taxonomy_category_id, t.iati_codelist, t.description, 
+c.classification_id, c.name as classification, c.code, c.category_id as classification_category_id, c.iati_code, c.iati_name
 FROM taxonomy t
 JOIN classification c
 ON t.taxonomy_id = c.taxonomy_id
