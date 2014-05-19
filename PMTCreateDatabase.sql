@@ -100,7 +100,7 @@ DROP FUNCTION IF EXISTS pmt_isdate(text) CASCADE;
 DROP FUNCTION IF EXISTS pmt_category_root(integer, integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_contacts()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_countries(text) CASCADE;
-DROP FUNCTION IF EXISTS pmt_create_user(integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
+DROP FUNCTION IF EXISTS pmt_create_user(integer, integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
 DROP FUNCTION IF EXISTS pmt_data_groups() CASCADE;
 DROP FUNCTION IF EXISTS pmt_edit_activity(integer, integer, json, boolean)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_edit_activity_contact(integer, integer, integer, pmt_edit_action)  CASCADE;
@@ -141,7 +141,7 @@ DROP FUNCTION IF EXISTS pmt_orgs()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_project(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_projects()  CASCADE;
 DROP FUNCTION IF EXISTS pmt_project_listview(integer, character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
-DROP FUNCTION IF EXISTS pmt_project_listview_ct(character varying, character varying, character varying, date, date, text, integer, integer) CASCADE;
+DROP FUNCTION IF EXISTS pmt_project_listview_ct(character varying, character varying, character varying, date, date) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_activity(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_purge_project(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_sector_compare(character varying, character varying)  CASCADE;
@@ -156,7 +156,7 @@ DROP FUNCTION IF EXISTS pmt_stat_orgs_by_activity(integer, character varying, ch
 DROP FUNCTION IF EXISTS pmt_stat_orgs_by_district(integer, character varying, character varying, integer, integer)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_tax_inuse(integer, character varying, character varying)  CASCADE;
 DROP FUNCTION IF EXISTS pmt_taxonomies(character varying)  CASCADE;
-DROP FUNCTION IF EXISTS pmt_update_user(integer, integer, integer, character varying(255), character varying(255), character varying(255), character varying(150), character varying(150));
+DROP FUNCTION IF EXISTS pmt_update_user(integer, integer, integer, integer, character varying(255), character varying(255),  character varying(255), character varying(150), character varying(150));
 DROP FUNCTION IF EXISTS pmt_user_auth(character varying, character varying) CASCADE;
 DROP FUNCTION IF EXISTS pmt_user_salt(integer) CASCADE;
 DROP FUNCTION IF EXISTS pmt_users();
@@ -261,7 +261,7 @@ CREATE TABLE "config"
 	"config_id" 		SERIAL				NOT NULL
 	,"version"		numeric(2,1)
 	,"download_dir"		text
-	,"edit_auth_source"	auth_source			DEFAULT 'data_group'
+	,"edit_auth_source"	pmt_auth_source			DEFAULT 'data_group'
 	,"created_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
 	,"updated_date" 	timestamp without time zone 	NOT NULL DEFAULT current_date
 	,CONSTRAINT config_id PRIMARY KEY(config_id)
