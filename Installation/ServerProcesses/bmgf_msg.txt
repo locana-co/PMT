@@ -1,0 +1,8 @@
+The data included in your download was provided by grantees between July 2012 and March 2013. Quality and completeness of the data varies. While guidance was given to grantees for how the data should be collected and submitted the data do not adhere to standards for completeness, spatial resolution and geocoding. The following terms apply to your use of this data. 
+
+TERMS OF USE 
+This Portfolio Mapping Tool ('Tool') and the data contained therein is being developed by the Bill & Melinda Gates Foundation ('Foundation') to enable detailed mapping of grantee work in agricultural development and enable better coordination, partnership, strategy development and advocacy. Each user of the data ('you') agrees to the following terms and conditions. 
+
+Incorporated Terms: The PMT terms include all terms and conditions of the Foundation Terms of Use for http://www.gatesfoundation.org ('Foundation Terms'), which you should review by visiting http://www.gatesfoundation.org/about/Pages/terms-of-use.aspx and all terms and conditions of the Foundation's Privacy & Information Security Policy for http://www.gatesfoundation.org ('Foundation Privacy Policy'), which you should review and by visiting http://www.gatesfoundation.org/about/Pages/privacy-policy.asp 
+
+We recommend downloading and printing these terms for future reference. Terms used but not defined in the PMT Terms have the definitions set forth in the Foundation Terms or the Foundation Privacy Policy, except that 'Site' (as defined in the Foundation Terms) includes the Tool.
