@@ -48,8 +48,6 @@ which are present in all PMT database instances.
 
 [location\_taxonomy](#location_taxonomy)
 
-map (**deprecating in iteration 10**)
-
 [organization](#organization)
 
 [organization\_taxonomy](#organization_taxonomy)
@@ -178,6 +176,9 @@ All **bold** fields are required.
 | \_spatial\_table		| character varying(50)	|  		| 				| Table name of the boundary layer loaded in the PMT Database.	|
 | \_version			| character varying(50)	|  		| 				| Version of the boundary layer. Most commonly this is the year the boundary layer was developed.	|
 | \_source			| character varying(150)|  		| 				| Source of the boundary layer. Use a URL to source where possible.	|
+| \_type			| character varying 	|  		| 				| The type of boundary layer. Used for grouping common boundaries. Example: gadm or gaul.	|
+| \_admin\_level		| integer		|  		| 				| The level of boundary in terms of commonly accepted administrative boundary levels: 0 (country), 1 (region), 2 (district), etc.	|
+| \_group			| character varying	|  		| 				| The boundary group, similar to data groups. Allows boundaries to be grouped by owner or purpose (i.e. global, country (tza, eth)).	|
 | **\_active**			| boolean		| true		| 				| T/F the record is active. Inactive records are not accessible through any of the PMT read-only interfaces. Essentially treated as _"deleted"_.	|
 | \_retired\_by			| integer		| 		| 				| Boundary id (primary key) of the boundary that has replaced/retired this boundary.	|
 | **\_created\_by**		| character varying(150)| 		| 				| Username of user or script name of data script that has created the record in the PMT Database.	|
@@ -497,18 +498,17 @@ All **bold** fields are required.
 | **feature\_id**		| integer		|   		| Check constraint		| Check enforced foreign key to the spatial boundary table specified by the boundary\_id.		|
 | \_title			| character varying	|  		| 				| Title of the location.	|
 | \_description			| character varying	|  		| 				| Description of the location.	|
-| \_geographic\_id		| character varying	|  		| 				| A code from the gazetteer or administrative boundary repository specified by the associated Geographic Vocabulary taxonomy classification. |
-| \_geographic\_level		| character varying	|  		| 				| A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each level value is determined by the associated Geographic Vocabulary taxonomy classification. |
 | \_x				| integer		|  		| 				| x coordinate as integer, calculated from point on INSERT or UPDATE.	|
 | \_y				| integer		|  		| 				| y coordinate as integer, calculated from point on INSERT or UPDATE.	|
 | \_lat\_dd			| numeric		|  		| 				| Latitude in decimal degrees format (DDD.dddd), calculated from point on INSERT or UPDATE.	|
 | \_long\_dd			| numeric		|  		| 				| Longitude in decimal degrees format (DDD.dddd), calculated from point on INSERT or UPDATE.	|
 | \_latlong			| character varying(100)|  		| 				| Latitude & longitude in compass direction format (DDD MM SS + compass direction), calculated from point on INSERT or UPDATE.	|
-| \_georef			| character varying(20)	|  		| 				| Latitude & longitude in [GeoRef](http://en.wikipedia.org/wiki/Georef) format, calculated from point on INSERT or UPDATE.	|
+| \_admin0			| character varying	|  		| 				| Administrative boundary level 0, for boundary geocoded locations.	|
 | \_admin1			| character varying	|  		| 				| Administrative boundary level 1, for boundary geocoded locations.	|
 | \_admin2			| character varying	|  		| 				| Administrative boundary level 2, for boundary geocoded locations.	|
 | \_admin3			| character varying	|  		| 				| Administrative boundary level 3, for boundary geocoded locations.	|
 | \_admin4			| character varying	|  		| 				| Administrative boundary level 4, for boundary geocoded locations.	|
+| \_admin\_level		| integer		|  		| 				| Administrative level for boundary geocoded locations (0 - Country, 1 - Region, 2 - District, 3 - Ward, 4 - Village, 99 - Exact or Point).	|
 | \_point			| geometry		|  		| 				| Spatial point.	|
 | **\_active**			| boolean		| true		| 				| T/F the record is active. Inactive records are not accessible through any of the PMT read-only interfaces. Essentially treated as _"deleted"_.	|
 | \_retired\_by			| integer		| 		| 				| Location id (primary key) of the location that has replaced/retired this location.	|
@@ -521,8 +521,8 @@ All **bold** fields are required.
 
 * **pmt_upd_geometry_formats** (INSERT, UPDATE) - calculates and updates all the location formats (\_x, \_y, \_lat\_dd, \_long\_dd, 
 \_latlong, \_georef) in the location table based on inserted or updated point. 
-* **pmt_upd_boundary_features** (INSERT, UPDATE) - locates all the boundary features intersected by the inserted or updated point and creates 
-relationships to the point within the [location\_boundary](#location_boundary) table.
+* **pmt_upd_boundary_features** (INSERT, UPDATE) - locates all the boundary features intersected by the inserted or updated point or the associated boundary feature and creates 
+relationships to the point/polygon within the [location\_boundary](#location_boundary) table.
 * **pmt_dlt_boundary_features** (DELETE) - removes all the boundary features relationships to the point within the 
 [location\_boundary](#location_boundary) table before the location is deleted.
 
@@ -547,7 +547,6 @@ All **bold** fields are required.
 | **location\_id** 		| integer		|  		| FK - location.id		| Foreign key to the location table.										|
 | **boundary\_id** 		| integer		|  		| FK - boundary.id		| Foreign key to the boundary table.										|
 | **feature\_id** 		| integer		|  		| Check constraint		| Check enforced foreign key to the spatial boundary table specified by the boundary\_id.		|
-| \_feature\_area		| double		|  		| 				| The area of the associate feature polygon. 					|
 | \_feature\_name		| character varying	|  		| 				| Name of the feature associated. 	|
 
 [&larrhk; Back to Table List](#table-listing)

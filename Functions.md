@@ -6,17 +6,15 @@ parameters and examples for usage. Please report any errors to the issues page.
 
 ## Function Listing
 
-[pmt\_2x2](#pmt_2x2)
+[pmt\_2x2](#pmt_2x2) **New for v10**
 
-[pmt\_2x2\_regions](#pmt_2x2_regions)
+[pmt\_2x2\_regions](#pmt_2x2_regions) **New for v10**
 
 [pmt\_activate\_activity](#activate_activity)
 
 [pmt\_activities](#pmt_activities) **Updated for v10**
 
 [pmt\_activities\_by\_polygon](#pmt_activities_by_polygon) **Updated for v10**
-
-[pmt\_activities\_by\_tax](#activities_by_tax)
 
 [pmt\_activity](#pmt_activity) **Update in progress for v10**
 
@@ -32,11 +30,7 @@ parameters and examples for usage. Please report any errors to the issues page.
 
 [pmt\_activity\_ids\_by\_boundary](#pmt_activity_ids_by_boundary) **New for v10**
 
-[pmt\_activity\_listview](#activity_listview)
-
-[pmt\_activity\_listview\_ct](#activity_listview_ct)
-
-[pmt\_auth\_user](#auth_user)   **DEPRECATED  Interation 8 and below: (see [pmt\_user\_auth](#user_auth))**
+[pmt\_activity\_titles](#pmt_activity_titles) **New for v10**
 
 [pmt\_auto\_complete](#pmt_auto_complete) **Updated for v10**
 
@@ -44,7 +38,11 @@ parameters and examples for usage. Please report any errors to the issues page.
 
 [pmt\_boundary\_extents](#pmt_boundary_extents) **New for v10**
 
+[pmt\_boundary\_feature](#pmt_boundary_feature) **New for v10**
+
 [pmt\_boundary\_filter](#pmt_boundary_filter) **New for v10**
+
+[pmt\_boundary\_hierarchy](#pmt_boundary_hierarchy) **New for v10**
 
 [pmt\_boundary\_pivot](#pmt_boundary_pivot) **New for v10**
 
@@ -102,15 +100,11 @@ parameters and examples for usage. Please report any errors to the issues page.
 
 [pmt\_is\_data\_group](#pmt_is_data_group) **New for v10**
 
-[pmt\_isdate](#isdate)
+[pmt\_isdate](#pmt_isdate)
 
-[pmt\_isnumeric](#isnumeric)
+[pmt\_isnumeric](#pmt_isnumeric)
 
 [pmt\_locations](#pmt_locations) **Updated for v10**
-
-[pmt\_locations\_by\_org](#locations_by_org)
-
-[pmt\_locations\_by\_tax](#locations_by_tax)
 
 [pmt\_locations\_for\_boundaries](#pmt_locations_for_boundaries) **New for v10**
 
@@ -130,25 +124,11 @@ parameters and examples for usage. Please report any errors to the issues page.
 
 [pmt\_purge\_activity](#pmt_purge_activity) **Updated for v10**
 
-[pmt\_sector\_compare](#sector_compare)
-
-[pmt\_stat\_activity\_by\_district](#stat_activity_by_district)
-
 [pmt\_stat\_activity\_by\_tax](#pmt_stat_activity_by_tax) **Updated for v10**
 
 [pmt\_stat\_by\_org](#pmt_stat_by_org) **New for v10**
 
-[pmt\_stat\_counts](#stat_counts)
-
 [pmt\_stat\_invest\_by\_funder](#pmt_stat_invest_by_funder) **New for v10**
-
-[pmt\_stat\_orgs\_by\_activity](#stat_orgs_by_activity)
-
-[pmt\_stat\_orgs\_by\_district](#stat_orgs_by_district)
-
-[pmt\_stat\_partner\_network](#stat_partner_network)
-
-[pmt\_stat\_pop\_by\_district](#stat_pop_by_district)
 
 [pmt\_statistic\_data](#pmt_statistic_data) **New for v10**
 
@@ -159,8 +139,6 @@ parameters and examples for usage. Please report any errors to the issues page.
 [pmt\_taxonomies](#taxonomies)
 
 [pmt\_update\_crosswalks](#pmt_update_crosswalks)
-
-[pmt\_update\_user](#update_user) **DEPRECIATED Interation 8 and below: (see [pmt\_edit\_user](#edit_user))**
 
 [pmt\_user\_auth](#pmt_user_auth) **Updated for v10**
 
@@ -434,52 +412,66 @@ to restrict data. If no data group id is provided, all data groups are included.
 6. start\_date (date) - start date for activities (filter).
 7. end\_date (date) - end date for activities (filter).
 8. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
-
+9. activity\_ids (character varying) - comma seperated list of activity id(s) to restrict data aggregation to.
+10. boundary\_filter (json) - a json array of objects. Each object must contain "b" with a boundary id and "ids" with an array of feature ids (i.e. ```[{"b":12,"ids":[2,3]},{"b":13,"ids":[73,85]}]```)
 
 ##### Result
 
 Json with the following:
 
 1.  id (integer) – the activity id.
-2.  parent\_id (integer) – the activity id of the parent activity.
-3.  data\_group\_id (integer) – the data group id for the activity.
-4.  data\_group (character varying) – the name of the data group for the activity
-5.  title (character varying) – title of activity.
-6.  amount (numeric) – total investment amount for the activity.
-
+2.  pid (integer) – the activity id of the parent activity.
+3.  dgid (integer) – the data group id for the activity.
+4.  dg (character varying) – the name of the data group for the activity
+5.  t (character varying) – title of activity.
+6.  a (numeric) – total investment amount for the activity.
+7.  sd (date) - the activity start date.
+8.  ed (date) - the activity end date.
+9.  f (character varying[]) - array of funding organizations for the activity.
 
 ##### Example(s)
 
 - All activities for BMGF (data\_group\_id: 768) that have an Activity Status (taxonomy id: 18) of "Complete" (classification id: 797) or do 
 not have an Activity Status (taxonomy id: 18) assigned between 1/1/2005 and 1/1/2020:
 
-```select * from pmt_activities('768','797',null,null,null,'1/1/2005','1/1/2020','18');   ;```
+```select * from pmt_activities('768','797',null,null,null,'1/1/2005','1/1/2020','18',null);  ```
 
 ```
 ...
 {
-	"id":11923,
-	"parent_id":23577,
-	"data_group_id":768,
-	"data_group":"BMGF",
-	"_title":"Business Development Centres",
-	"amount":100000.00
+	"id":1841,
+	"pid":23728,
+	"dgid":768,
+	"dg":"BMGF",
+	"t":"Tanzania Tropical Pesticides Research Institute",
+	"a":200000.00,
+	"sd":"2008-02-01",
+	"ed":"2013-01-31",
+	"f":{
+		"Bill & Melinda Gates Foundation (BMGF)"
+	}
 },
 {
-	"id":12425,
-	"parent_id":23753,
-	"data_group_id":768,
-	"data_group":"BMGF",
-	"_title":"ALLAHABAD/BAMHRAULI",
-	"amount":null
+	"id":1842,
+	"pid":23546,
+	"dgid":768,
+	"dg":"BMGF",
+	"t":"Quarterly review meeting",
+	"a":null
+	"sd":"2011-11-01",
+	"ed":"2016-11-30",
+	"f":{null}
 },
 {
-	"id":14931,
-	"parent_id":23691,
-	"data_group_id":768,
-	"data_group":"BMGF",
-	"_title":"ISAR",
-	"amount":null
+	"id":1843,
+	"pid":23546,
+	"dgid":768,
+	"dg":"BMGF",
+	"t":"Equip women farmers and collective members with life skills",
+	"a":null,
+	"sd":"2011-11-01",
+	"ed":"2016-11-30",
+	"f":{null}
 }
 ...
 ```
@@ -495,7 +487,19 @@ Select activities within a given polygon.
 
 ##### Parameter(s)
 
-1.  wktpolygon (text) – **Required**. Well-known text representation of a polygon. 
+1.  wktpolygon (text) – **Required**. Well-known text representation of a polygon.
+2. data\_group\_ids (character varying) - comma seperated list of classification\_id(s) from the Data Group taxonomy
+to restrict data aggregation to. If no data group id is provided, all data groups are included.
+3. classification\_ids (character varying) - comma seperated list of classification\_id(s) for any taxonomy (filter).
+4. org\_ids (character varying) - comma seperated list of organization\_id(s) for any organization regardless of role (filter).
+5. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
+6. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
+7. start\_date (date) - start date for activities (filter).
+8. end\_date (date) - end date for activities (filter).
+9. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+10. activity\_ids (character varying) - comma seperated list of activity id(s) to restrict data aggregation to.
+11. boundary\_filter (json) - a json array of objects. Each object must contain "b" with a boundary id and "ids" with an array of feature ids (i.e. ```[{"b":12,"ids":[2,3]},{"b":13,"ids":[73,85]}]```)
+
 
 ##### Result
 
@@ -505,10 +509,10 @@ Json with the following:
 
 ##### Example(s)
 
--   Polygon:
+-   Get activities for BMGF & AGRA (data\_groups\_id: 768,769) between 2001 and 2021 within a given polygon:
 
 ```
-select * from pmt_activities_by_polygon('POLYGON((-16.473 13.522,-16.469 13.186,-16.764 13.185,-16.797 13.491,-16.472 13.517,-16.473 13.522))'); 
+select * from pmt_activities_by_polygon('POLYGON((-16.473 13.522,-16.469 13.186,-16.764 13.185,-16.797 13.491,-16.472 13.517,-16.473 13.522))','768,769',null,null,null,null,'01-01-2001','12-31-2021',null, null,null); 
 ```
 
 ```
@@ -518,45 +522,6 @@ select * from pmt_activities_by_polygon('POLYGON((-16.473 13.522,-16.469 13.186,
 ```
 
 [&larrhk; Back to Function List](#function-listing)
-
-<a name="activities_by_tax"/>
-pmt\_activities\_by\_tax
-========================
-
-##### Description
-
-Filter activities by classification reporting by a specified taxonomy.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    activities.
-2.  data\_group (integer) -  Optional. Restrict data to a single data
-    group.
-3.  country\_ids (character varying) – Optional. Restrict data to
-    country(ies).
-
-##### Result
-
-1.  a\_id (integer) – activity\_id.
-2.  title (character varying) – title of activity.
-3.  c\_ids (text) – comma separated list of classification\_ids
-    associated to activity from taxonomy specified by tax\_id.
-
-##### Example(s)
-
--   Activities by Sector (taxonomy\_id:15) from World Bank data group
-    (classification\_id:772):
-
-```SELECT * FROM pmt_activities_by_tax(15, 772, '');```
-
-
-| a\_id                   | Title                   | c\_ids                  |
-|-------------------------|-------------------------|-------------------------|
-| 32757                   | "SA Trade &amp; Trans Facilitation Project"  | "575,623,624"           |
-| 32759                   | "3A-Southern Afr Power Mrkt APL 1 (FY04)" | "637,717"               |
-| 32765                   | "3A-CEMAC Regional Institutions Support"      | "651,652,653"           |
-|...|...|...|
 
 
 ## pmt\_activity
@@ -651,8 +616,7 @@ Json with the following:
 	6. boundaries(object) - An object containing all intersected boundaries for the activity's locations
 		1. boundary\_id (integer) - boundary id.
 		2. feature\_id (integer) - feature id of boundary.
-		3. \_feature\_area (numeric) - area of the feature.
-		4. \_feature\_name (character varying) - the name of the feature.
+		3. \_feature\_name (character varying) - the name of the feature.
 30.  children (object) - An object containing all activity's children activities.
 	1. id (integer) - child activity id.
 	2. \_title (character varying) - child activity title.
@@ -794,6 +758,7 @@ to restrict data. If no data group id is provided, all data groups are included.
 6. boundary\_id (integer) - the boundary id referenced by the feature\_id (filter).
 7. feature\_id (integer) - the featuer id to restrict activities to (filter).
 8. limit\_records (integer) - number of records to return.
+9. field\_list (character varying) - list of additional activity fields to return. Example: 'opportunity_id,_description'
 
 
 ##### Result
@@ -802,98 +767,39 @@ Json with the following:
 
 1.  id (integer) – the activity id.
 2.  title (character varying) – the activity title.
-3.  investment (numberic) – the investment amount for the activity.
-4.  organizations (json[]) – array of organization information.
-	1.  role (character varying) – the classification for the Organisation Role.
-	2.  name (character varying[]) – array of organization names for the role.
-	3.  label (character varying[]) – array of organization labels for the role.
+3.  amount (numeric) – the investment amount for the activity.
+4.  fund (character varying) - comma seperated listing of funding organization names for the activity.
+5.  imp (character varying) - comma seperated listing of implementing organization names for the activity.
+6.  acct (character varying) - comma seperated listing of accountable organization names for the activity.
+7.  additional requested fields listed in the "field\_list" option.
 
 ##### Example(s)
 
--   Top 5 activities by investment for EthATA data group (data\_group\_id:2237)
-in Ethiopia's Oromia region (feature\_id: 869) using GADM boundary (boundary\_id: 16):
+-   Top 5 activities by investment, including the opportunity_id field for BMGF data group (data\_group\_id:768)
+in Ethiopia (feature\_id: 74) using GADM 0 boundary (boundary\_id: 15):
 
-```SELECT * FROM pmt_activity_by_invest('2237',null,null,null,16,891,5);```
+```SELECT * FROM pmt_activity_by_invest('768',null,null,null,15,74,5,'opportunity_id');```
 
 ```
 {
-	"id":25339,
-	"title":"Ethiopia Productive Safety Net APL III Project (P113220)",
-	"investment":1936100000.00,
-	"organizations":"[
-		{
-			"role":"Funding",
-			"name":[
-				"United Nations World Food Programme (WFP)",
-				"United States Agency for International Development (USAID)",
-				"Netherlands Development Cooperation (NETH)",
-				"World Bank (WB)",
-				"Irish Aid (IREAID)",
-				"Canadian International Development Agency (CIDA)",
-				"DEFID",
-				"European Commission (EC)",
-				"SWED"
-			],
-			"label":[
-				"CIDA",
-				"DEFID",
-				"EC",
-				"IREAID",
-				"NETH",
-				"SWED",
-				"WFP",
-				"USAID",
-				"WB"
-			]
-		},
-		}
-			"role":"Implementing",
-			"name":[
-				"Afar RFSO",
-				"Amhara RFSO",
-				"Federal Food Security Coordination Bureau (FFSCB)",
-				"MINISTRY OF AGRICULTURE AND RURAL DEVELOPMENT",
-				"Oromyia RFSO",
-				"Regional Food Security Offices (RFSO)",
-				"SNNP RFSO",
-				"Somali RFSO",
-				"Tigray RFSO"
-
-			],
-			"label":[
-				"Afar RFSO",
-				"Amhara RFSO",
-				"Federal Food Security Coordination Bureau (FFSCB)",
-				"MINISTRY OF AGRICULTURE AND RURAL DEVELOPMENT",
-				"Oromyia RFSO",
-				"Regional Food Security Offices (RFSO)",
-				"SNNP RFSO",
-				"Somali RFSO",
-				"Tigray RFSO"
-			]
-		}
-	]
+	"id":24905,
+	"_title":"AGRA Soil Health Program",
+	"amount":148135881.00,
+	"fund":"Bill & Melinda Gates Foundation (BMGF)",
+	"imp":"Alliance for a Green Revolution in Africa (AGRA)",	
+	"acct":null,
+	"opportunity_id":"OPP48790"
 },
 ...
 {
-	"id":25253,
-	"title":"Agriculture Sector Support Project",
-	"investment":103881470.00,
-	"organizations":[
-		{
-			"role":"Funding",
-			"name":[
-				"Regional Government",
-				"African Development Bank"
-			],
-			"label":[
-				"Regional Government",
-				"African Development Bank"
-			]
-		}
-	]
+	"id":25130,
+	"_title":"Renewal: STRASA Phase 3 - Stress-Tolerant Rice for Africa and South Asia",
+	"amount":32770000.00,
+	"fund":"Bill & Melinda Gates Foundation (BMGF)",
+	"imp":"International Rice Research Institute (IRRI)",
+	"acct":null,
+	"opportunity_id":"OPP10888"
 }
-
 
 ```
 
@@ -904,18 +810,21 @@ in Ethiopia's Oromia region (feature\_id: 869) using GADM boundary (boundary\_id
 
 ##### Description
 
-Returns count of activities for a filter.
+Returns count of parent activities for a filter.
 
 ##### Parameter(s)
 
 1. data\_group\_ids (character varying) - comma seperated list of classification\_id(s) from the Data Group taxonomy
 to restrict data aggregation to. If no data group id is provided, all data groups are included.
 2. classification\_ids (character varying) - comma seperated list of classification\_id(s) for any taxonomy (filter).
-3. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
-4. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
-5. start\_date (date) - start date for activities (filter).
-6. end\_date (date) - end date for activities (filter).
-7. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+3. org\_ids (character varying) - comma seperated list of organization\_id(s) for any organization regardless of role (filter).
+4. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
+5. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
+6. start\_date (date) - start date for activities (filter).
+7. end\_date (date) - end date for activities (filter).
+8. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+9. activity\_ids (character varying) - comma seperated list of activity id(s) to restrict data aggregation to.
+10. boundary\_filter (json) - a json array of objects. Each object must contain "b" with a boundary id and "ids" with an array of feature ids (i.e. ```[{"b":12,"ids":[2,3]},{"b":13,"ids":[73,85]}]```)
 
 ##### Result
 
@@ -928,6 +837,17 @@ Json with the following:
 and activities occur between 1/1/2012 and 12/31/2018:
 
 ```SELECT * FROM pmt_activity_count('768','797',null,null,'1/1/2012','12/31/2018',null); ```
+
+```
+{
+	"ct":67
+}
+```
+
+-   Number of activities for BMGF data (data\_group\_id: 768) where Activity Status is Complete (classification\_id: 797) 
+and activities occur between 1/1/2012 and 12/31/2018:
+
+```SELECT * FROM pmt_activity_count('768','797',null,null,null,'1/1/2012','12/31/2018',null,null,null); ```
 
 ```
 {
@@ -1053,6 +973,7 @@ Json with the following:
 	3. gaul2\_name (character varying) - name of GAUL 2 administrative boundary
 	3. lat (decimal degrees) - latitude of location
 	3. long (decimal degrees) - longitude of location
+
 ##### Example(s)
 
 -   Activity_id 2039:
@@ -1115,7 +1036,7 @@ Json with the following:
 
 ##### Description
 
-Returns activity ids and titles for a given feature and boundary.
+Returns parent activity ids and titles for a given feature and boundary.
 
 ##### Parameter(s)
 
@@ -1124,12 +1045,14 @@ Returns activity ids and titles for a given feature and boundary.
 3. data\_group\_ids (character varying) - comma seperated list of classification\_id(s) from the Data Group taxonomy
 to restrict data aggregation to. If no data group id is provided, all data groups are included.
 4. classification\_ids (character varying) - comma seperated list of classification\_id(s) for any taxonomy (filter).
-5. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
-6. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
-7. start\_date (date) - start date for activities (filter).
-8. end\_date (date) - end date for activities (filter).
-9. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
-
+5. org\_ids (character varying) - comma seperated list of organization\_id(s) for any organization regardless of role (filter).
+6. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
+7. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
+8. start\_date (date) - start date for activities (filter).
+9. end\_date (date) - end date for activities (filter).
+10. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+11. activity\_ids (character varying) - comma seperated list of activity id(s) to restrict data aggregation to.
+12. boundary\_filter (json) - a json array of objects. Each object must contain "b" with a boundary id and "ids" with an array of feature ids (i.e. ```[{"b":12,"ids":[2,3]},{"b":13,"ids":[73,85]}]```)
 
 ##### Result
 
@@ -1144,7 +1067,7 @@ Json array with the following:
 where Focus Crop is Maize or Cassava (classification ids: 816,819) OR the activity has **NO** Focus Crops (taxonomy id: 22)
 and activities occur between 1/1/2012 and 12/31/2018:
 
-```SELECT * FROM pmt_activity_ids_by_boundary(8, 4,'768','816,819','','','1/1/2012','12/31/2018','22'); ```
+```SELECT * FROM pmt_activity_ids_by_boundary(8, 4,'768','816,819','','','1/1/2012','12/31/2018','22',null); ```
 
 ```
 ...
@@ -1162,189 +1085,82 @@ and activities occur between 1/1/2012 and 12/31/2018:
 ...
 ```
 
+-   Activity information for Gambela (feature\_id: 6) in the  to the UNOCHA administrative level 1 boundary (boundary\_id: 12) for RED&FS data (data\_group\_id: 2237)
+where Program is "Stand Alone Project" (classification\_id: 2239) and activities occur between 1/1/2002 and 12/31/2020 within the Oromia region 
+(boundary\_id: 12 feature\_id: 8) or in the Majang zone (boundary\_id: 13 feature\_id: 38) within the Gambela region :
+
+```SELECT * FROM pmt_activity_ids_by_boundary(12, 6,'2237','2239',null,null,'1/1/2002','12/31/2020',null,'[{"b":12,"ids":[8]},{"b":13,"ids":[38]}]');```
+
+```
+{
+	"id":26234,
+	"_title":"UNICEF-Accelarating Progress MDGS on W&S Ethiopia"
+},
+{
+	"id":26283,
+	"_title":"Rural Capacity Building Project (RCBP)"
+},
+{
+	"id":26301,
+	"_title":"Disaster Risk Reduction and Early Recovery Project"
+}
+```
+
 [&larrhk; Back to Function List](#function-listing)
 
 
-<a name="activity_listview"/>
-pmt\_activity\_listview
-=======================
+## pmt\_activity\_titles
+
 
 ##### Description
 
-Filter activity and organization by classification, organization and
-date range, reporting a specified taxonomy(ies) with pagination.
+Provides a listing of activity titles for a given set of activity ids.
 
 ##### Parameter(s)
 
-1.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-2.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-3.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-4.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-5.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-6.  report\_taxonomy\_ids (character varying) – Optional. Report activities by one or 
-    more taxonomies.
-7.  orderby (text) – Optional. Order by result columns (a\_id, a\_name, f\_orgs, i\_orgs, tax1, tax2, etc.).
-8.  limit\_rec (integer) – Optional. Maximum number of returned records.
-9.  offset\_rec (integer) – Optional. Number of records to offset the
-    return records by.
+1.  activity\_ids (integer[]) – **Required**. Array of activity ids.
 
 ##### Result
 
 Json with the following:
 
-1.  a\_id (integer) – activity\_id.
-2.  a\_name (character varying) – title of activity.
-3.  f\_orgs (character varying) - comma separated list of funding organizations.
-4.  i\_orgs (character varying) - comma separated list of implementing organizations.
-5.  tax (character varying) - comma separated list of classifications based on requested 
-    reporting taxonomy(ies). **Note:** report\_taxonomy\_ids accepts multiple taxonomy ids. The ids
-    are sorted by ascending order and returned as tax1, tax2, tax3, etc.
+1.  id (integer) – activity id.
+2.  \_title (character varying) – title of activity.
 
 ##### Example(s)
 
--   Activities for Bolivia (classification\_id:769) between the dates of 1-1-1990 and 12-31-2014. Report
-    activities by Sector (taxonomy\_id:15) and include activities that do NOT have an assignment to Sector (taxonomy\_id:15).  
-    Order the data by activity title (a\_name). Limit the number of rows returned to 10 with an offset of
-    100:
+-   Activity titles for the following activity ids (26271,26283,26284,26286,26287):
 
-```select * from  pmt_activity_listview('769', '', '15', null,null, '15', 'a_name', 10, 100);```
-
-```
-...
-{
-	"a_id":5089
-	,"a_name":"AMPL. MEJ. SIST. AGUA POTABLE ANTOFAGASTA  (SAN CARLOS)"
-	,"f_orgs":"Donaciones - HIPC II"
-	,"i_orgs":"Fondo Nacional de InversiСn Productiva y Social"
-	,"tax1":"Water supply and sanitation - large systems"
-}
-...
-```
-
--   Activities for ASDP (classification\_id:769). Report activities by Sector (taxonomy\_id:15) and by Country (taxonomy\_id:5) 
-    and include activities that do NOT have an assignment to Sector (taxonomy\_id:15).  
-    Order the data by Sector (tax2). Limit the number of rows returned to 10 no offset:  
-    **Note:** Sector is first in the parameter list, but is returned as tax2. This is because they are returned in numerical order 
-    and Country (taxonomy\_id 5) is before Sector (taxonomy\_id 15):
-
-```select * from  pmt_activity_listview('769', '', '15', null,null, '15,5', 'tax2', 10, null);;```
-
-```
-...
-{
-	"a_id":970
-	,"a_name":"ASDP"
-	,"f_orgs":"ACBG (Agriculture Capacity Building Grant)"
-	,"i_orgs":"LGAs"
-	,"tax1":"TANZANIA, UNITED REPUBLIC OF"
-	,"tax2":"Agricultural co-operatives"
-}
-...
-```
-
-<a name="activity_listview_ct"/>
-pmt\_activity\_listview\_ct
-===========================
-
-##### Description
-
-Total record count for pmt\_activity\_listview. Sending the same filter
-parameters as pmt\_activity\_listview will provide the total record
-count. Used to assist with pagination.
-
-##### Parameter(s)
-
-1.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-2.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-3.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-4.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-5.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-
-##### Result
-
-Integer of number of records.
-
-##### Example(s)
-
--   Number of Activity & Organization records in Nepal
-    (classification\_id:771) and organization participant is Funding
-    (classification\_id:496) between the dates of 1-1-1990 and 12-31-2014:
-
-```select * from  pmt_activity_listview_ct('771,496', '', '', '1-1-1990','12-31-2014');```
-
-1613
-
-<a name="auth_user"/>
-pmt\_auth\_user
-=============================
-**SCHEDULED TO BE DEPRECATED IN DATABASE ITERATION 9**
-##### Description
-
-Authenticate user using a plain text password.
-
-##### Parameter(s)
-
-1.  username (character varying) - **Required**. User's username.
-2.  password (character varying) - **Required**. User's password.
-
-##### Result
-
-Json with the following:
-
-1.  user\_id (integer) – user id.
-2.  first\_name (character varying) – first name of user.
-3.  last\_name (character varying) – last name of user.
-4.  username (character varying) – username of user.
-5.  email (character varying) – email address of user.
-6.  organization\_id (integer) – organization id for organization of user.
-7.  roles (json object):
-	1.  role\_id (integer) – role id user is assigned to.
-	2.  name (character varying) – name of role user is assigned to.
-
-##### Example(s)
-
-- Authenticate Jane Doe passing her username and password.
-
-```SELECT * FROM pmt_auth_user('janedoe', 'supersecret');```
+```SELECT * FROM pmt_activity_titles(ARRAY[26271,26283,26284,26286,26287]);```
 
 ```
 {
-	"user_id":315,
-	"first_name":"Jane",
-	"last_name":"Doe",
-	"username":"myusername",
-	"email":"jane.doe@email.com",
-	"organization_id":13,
-	"organization": "BMGF",
-	"data_group_id":768,
-	"data_group": "BMGF",
-	"roles":[
-		{
-			"role_id":2,
-			"name":"Editor"
-		}
-		]
-}
-```
-- Authenticate Jane Doe passing her username and an invalid password.
-
-```SELECT * FROM pmt_auth_user('janedoe', 'superduper');```
-
-```
+	"id":26325,
+	"_title":"East Africa Agriculture Productivity Project"
+},
 {
-	"message":"Invalid username or password."
+	"id":26284,
+	"_title":"Ethiopia Productive Safety Net APL III Project (P113220)"
+},
+{
+	"id":26271,"_title":"African Stockpiles Project"
+},
+{
+	"id":26283,
+	"_title":"Rural Capacity Building Project (RCBP)"
+},
+{
+	"id":26286,
+	"_title":"Tana Beles Integrated Water Resources Development Project (TBIWRDP)"
+},
+{
+	"id":26287,
+	"_title":"Agricultural Growth"
 }
+
 ```
+
+[&larrhk; Back to Function List](#function-listing)
 
 
 ## pmt\_auto\_complete
@@ -1486,6 +1302,158 @@ SELECT * FROM pmt_boundary_extents('gadm0','Ethiopia,Mali'); ;
 		-12.2389116287231 3.39882302284263))"
 }
 
+```
+
+[&larrhk; Back to Function List](#function-listing)
+
+
+## pmt\_boundary\_feature
+
+##### Description
+
+Returns all administrative level names for a give boundary feature.
+
+##### Parameter(s)
+
+1. boundary_id (integer) - **Required** the boundary id for the feature.
+2. feature_id (integer) - **Required** the feature id for the feature to query.
+
+##### Result
+
+Json with the following:
+
+1.  0_name (character varying) – the country level name (if exists)
+2.  1_name (character varying) – the admin 1 level name (if exists)
+3.  2_name (character varying) – the admin 2 level name (if exists)
+4.  3_name (character varying) – the admin 3 level name (if exists)
+5.  admin_level (character varying) – the number for the administrative level: 0 (country), 1 (admin 1), 2 (admin 2) or 3 (admin 3)
+
+##### Example(s)
+
+-   Get all administrative level names for Ethiopia (feature\_id: 74) in GADM 0 (boundary\_id: 15):
+
+```
+SELECT * FROM  pmt_boundary_feature(15, 74); 
+```
+
+```
+{
+	"0_name":"Ethiopia",
+	"admin_level":"0"
+}
+
+```
+
+-   Get all administrative level names for Addis Abeba(feature\_id: 15174) in GADM 2 (boundary\_id: 17):
+
+```
+SELECT * FROM  pmt_boundary_feature(17, 15174); 
+```
+
+```
+{
+	"0_name":"Ethiopia",
+	"1_name":"Addis Abeba",
+	"2_name":"Addis Abeba",
+	"admin_level":"2"
+}
+
+```
+
+
+[&larrhk; Back to Function List](#function-listing)
+
+
+## pmt\_boundary\_hierarchy
+
+##### Description
+
+Creates a nested boundary hierarchy (tree view structure) of boundary feature ids and names.
+
+##### Parameter(s)
+
+1. boundary\_type (character varying) - **Required** The boundary type for the created hierarchy. Options: gaul, gadm, unocha, nbs.
+2. admin\_levels (character varying) - a comma delimited list of admin levels to include. Options: 0,1,2,3 
+3. filter\_features (character varying) - a comma delimited list of names of features in the highest admin level to restrict data to.
+4. data\_group\_ids (character varying) - a comma delimited list of data group ids to filter returned boundaries to. Only boundary features where data group(s) have location information will be returned.
+
+##### Result
+
+Json with the following:
+
+1.  b0-b3 (integer) - the boundary id of each level of the hierarchy (number does not correlate to admin level).
+2.  boundaries (object[]) - array of objects containing the boundary hierarchy
+	1. id (integer) - the feature id (first boundary level of hierarchy)
+	2. n (character varying) - the feature name  (first boundary level of hierarchy)
+	3. b (object[]) - array of objects containing the next boundary level
+		1. id (integer) - the feature id (second boundary level of hierarchy)
+		2. n (character varying) - the feature name  (second boundary level of hierarchy)
+		3. b (object[]) - array of objects containing the next boundary level
+			1. pattern continued for each level of boundary hierarchy (based on requested number of admin levels)
+		
+
+##### Example(s)
+
+-   Create a boundary hierarchy using GADM for admin levels 0-2 for Ethiopia:
+
+```
+SELECT * FROM pmt_boundary_hierarchy('gadm','0,1,2','Ethiopia'); 
+```
+
+```
+{
+	"b0":15,
+	"b1":16,
+	"b2":17,
+	"boundaries":[
+	{
+		"id":74,
+		"n":"Ethiopia",
+		"b1":[
+		{
+			"id":896,
+			"n":"Oromia",
+			"b2":[
+			{
+				"id":15203,
+				"n":"Debub Mirab Shewa"
+			},
+			{
+				"id":15200,
+				"n":"Arsi"
+			},
+			{
+				"id":15204,
+				"n":"Guji"
+			},
+			...
+			{
+				"id":15216,
+				"n":"North Shewa"
+			}]
+		},
+		...
+		{
+			"id":890,
+			"n":"Afar",
+			"b2":[
+			{
+				"id":15178,
+				"n":"Afar Zone 4"
+			},
+			{
+				"id":15179,
+				"n":"Afar Zone 5"
+			},
+			...
+			{
+				"id":15177,
+				"n":"Afar Zone 3"
+			}]
+		}]
+	}]
+}
+		
 ```
 
 [&larrhk; Back to Function List](#function-listing)
@@ -3243,6 +3211,7 @@ A string.
 
 [&larrhk; Back to Function List](#function-listing)
 
+
 ## pmt\_global\_search
 
 
@@ -3253,32 +3222,25 @@ Searches all text and character varying data type fields for the [activity table
 ##### Parameter(s)
 
 1.  search\_text (text) – **Required**. Text string to search activity table.
+2.  data\_group\_ids (character varying) - comma delimited string of data group ids it restrict search to.
 
 ##### Result
 
 Json with the following:
 
-1.  id (integer) – activity id.
-2.  \_title (character varying) – title of activity.
+1.  ids (integer[]) – array of activity ids.
 
 
 ##### Example(s)
 
--   Search for the term 'fish':
+-   Search for the term 'wheat' in the RED&FS data (data_group_id: 2237):
 
-```SELECT * FROM pmt_global_search('fish');```
+```SELECT * FROM pmt_global_search('wheat', '2237');```
 
 ```
 {
-	"id":19518,
-	"_title":"To construct one fish market at Korongwe village by June 2012"
+	"ids":[26255,26257,26259]
 }
-...
-{
-	"id":19548,
-	"_title":"To facilitate farmer group at Katahoka village to start fish farming by June, 2012"
-}
-...
 
 ```
 
@@ -3342,9 +3304,8 @@ TRUE
 
 [&larrhk; Back to Function List](#function-listing)
 
-<a name="isdate"/>
-pmt\_isdate
-===========
+
+## pmt\_isdate
 
 ##### Description
 
@@ -3368,9 +3329,10 @@ FALSE
 
 TRUE
 
-<a name="isnumeric"/>
-pmt\_isnumeric
-==============
+[&larrhk; Back to Function List](#function-listing)
+
+
+## pmt\_isnumeric
 
 ##### Description
 
@@ -3393,6 +3355,8 @@ FALSE
 ```SELECT pmt_isnumeric(null);```
 
 TRUE
+
+[&larrhk; Back to Function List](#function-listing)
 
 
 ## pmt\_locations
@@ -3488,91 +3452,8 @@ Json with the following:
 		}
 	
 ```
+[&larrhk; Back to Function List](#function-listing)
 
-<a name="locations_by_org"/>
-pmt\_locations\_by\_org
-=======================
-
-##### Description
-
-Filter locations by classification, organization and date range,
-reporting associated organization(s).
-
-##### Parameter(s)
-
-1.  class\_id (integer) – Optional. classification\_id to restrict
-    organizations by.
-2.  data\_group (integer) – Optional. Restrict data to a single data
-    group.
-3.  country\_ids (character varying) – Optional. Restrict data to
-    country(ies).
-
-##### Result
-
-Ordered  by georef.
-
-1.  l\_id (integer) – Location\_id.
-2.  x (integer) – x coordinate.
-3.  y (integer) – y coordinate.
-4.  r\_ids (text) – comma separated list of organization\_ids associated
-    to location.
-
-##### Example(s)
-
--   Locations by organization for World Bank data group
-    (classification\_id:772) in the country of Bolivia
-    (classification\_id:50):
-
-```SELECT * FROM pmt_locations_by_org (null, 772, '50');```
-
-| l\_id              | x                  | y                  | r\_ids             |
-|--------------------|--------------------|--------------------|--------------------|
-| 35814              | -7718151           | -1946061           | "365,443,939"      |
-| 35919              | -7699599           | -1806653           | "365,443,941"      |
-| 35539              | -7690321           | -1822100           | "365,443,933"      |
-| …                  | …                  | …                  | …                  |
-
-<a name="locations_by_tax"/>
-pmt\_locations\_by\_tax
-=======================
-
-##### Description
-
-Filter locations by classification, organization and date range,
-reporting a specified taxonomy.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    locations.
-2.  data\_group (character varying) -  Optional. Restrict data to data group(s).
-3.  country\_ids (character varying) – Optional. Restrict data to
-    country(ies).
-
-##### Result
-
-Ordered  by georef.
-
-1.  l\_id (integer) – Location\_id.
-2.  x (integer) – x coordinate.
-3.  y (integer) – y coordinate.
-4.  r\_ids (text) – comma separated list of classification\_ids
-    associated to location from taxonomy specified by tax\_id.
-
-##### Example(s)
-
--   Locations by Sector taxonomy (taxonomy\_id:10) for World Bank data
-    group (classification\_id:772) in the country of Bolivia
-    (classification\_id:50):
-
-```SELECT * FROM pmt_locations_by_tax (10, 772, '50');```
-
-| l\_id              | x                  | y                  | r\_ids             |
-|--------------------|--------------------|--------------------|--------------------|
-| 35814              | -7718151           | -1946061           | "495,496,497"      |
-| 35919              | -7699599           | -1806653           | "495,496,497"      |
-| 35539              | -7690321           | -1822100           | "495,496,497"      |
-| …                  | …                  | …                  | …                  |
 
 
 ## pmt\_locations\_for\_boundaries
@@ -3588,20 +3469,24 @@ requested boundary.
 2. data\_group\_ids (character varying) - comma seperated list of classification\_id(s) from the Data Group taxonomy
 to restrict data aggregation to. If no data group id is provided, all data groups are included.
 3. classification\_ids (character varying) - comma seperated list of classification\_id(s) for any taxonomy (filter).
-4. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
-5. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
-6. start\_date (date) - start date for activities (filter).
-7. end\_date (date) - end date for activities (filter).
-8. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+4. org\_ids (character varying) - comma seperated list of organization\_id(s) for any organization regardless of role (filter).
+5. imp\_org\_ids (character varying) - comma seperated list of organization\_id(s) for implementing organizations (filter).
+6. fund\_org\_ids (character varying) - comma seperated list of organization\_id(s) for funding organizations (filter).
+7. start\_date (date) - start date for activities (filter).
+8. end\_date (date) - end date for activities (filter).
+9. unassigned\_taxonomy\_ids (character varying) - comma seperated list of taxonomy id(s) for any taxonomy, will return activities that _DO NOT_ have that taxonomy assigned (filter).
+10. activity\_ids (character varying) - comma seperated list of activity id(s) to restrict data aggregation to.
+11. boundary\_filter (json) - a json array of objects. Each object must contain "b" with a boundary id and "ids" with an array of feature ids (i.e. ```[{"b":12,"ids":[2,3]},{"b":13,"ids":[73,85]}]```)
 
 ##### Result
 
 Json with the following:
 
 1.  id (integer) – feature\_id of the feature within the requested boundary.
-2.  a (integer) – total number of activities within feature.
-3.  l (integer) – total number of locations within feature.
-4.  b (integer) – boundary\_id of the boundary feature is associated to.
+2.  p (integer) - total number of parent activities within feature.
+3.  a (integer) – total number of activities within feature.
+4.  l (integer) – total number of locations within feature.
+5.  b (integer) – boundary\_id of the boundary feature is associated to.
 
 
 ##### Example(s)
@@ -3609,20 +3494,50 @@ Json with the following:
 -   Aggregate location/activity counts to the continent boundary (boundary\_id: 8) for BMGF data (data\_group\_id: 768)
 where Activity Status is Complete (classification\_id: 797) and activities occur between 1/1/2012 and 12/31/2018:
 
-```SELECT * FROM pmt_locations_for_boundaries(8,'768','797',null,null,'1/1/2012','12/31/2018',null);```
+```SELECT * FROM pmt_locations_for_boundaries(8,'768','797',null,null,'1/1/2012','12/31/2018',null,null);```
 
 ```
 {
 	"id":1,
+	"p":1,
 	"a":1,
 	"l":1,
 	"b":8
-},
-{
+},{
 	"id":4,
+	"p":3,
 	"a":66,
 	"l":66,
 	"b":8
+}
+
+```
+
+-   Aggregate location/activity counts to the UNOCHA administrative level 1 boundary (boundary\_id: 12) for RED&FS data (data\_group\_id: 2237)
+where Program is "Stand Alone Project" (classification\_id: 2239) and activities occur between 1/1/2002 and 12/31/2020 within the Oromia region 
+(boundary\_id: 12 feature\_id: 8) or in the Majang zone (boundary\_id: 13 feature\_id: 38) within the Gambela region :
+
+```SELECT * FROM pmt_locations_for_boundaries(12,'2237','2239',null,null,'1/1/2002','12/31/2020',null,'[{"b":12,"ids":[8]},{"b":13,"ids":[38]}]');```
+
+```
+{
+	"id":1,
+	"a":3,
+	"l":3,
+	"b":12
+},
+...
+{
+	"id":10,
+	"a":15,
+	"l":80,
+	"b":12
+},
+{
+	"id":11,
+	"a":20,
+	"l":49,
+	"b":12
 }
 
 ```
@@ -3731,7 +3646,7 @@ to restrict data. If no data group id is provided, all data groups are included 
 3. start\_date (date) - start date for activities (filter).
 4. end\_date (date) - end date for activities (filter).
 5. boundary\_id (integer) - the boundary id referenced by the feature\_id (filter).
-6. feature\_id (integer) - the featuer id to restrict activities to (filter).
+6. feature\_ids (character varying) - comma seperated list of featuer ids for the boundary to restrict activities to (filter).
 
 ##### Result
 
@@ -3739,19 +3654,21 @@ Json with the following:
 
 1.  activity\_count (integer) - total number of activities
 2.  implmenting\_count (integer) - total number of implementing organizations
-3.  total_investment (integer) - total amount of invested money for activities
+3.  total\_investment (integer) - total amount of invested money for activities
+4.  country\_count (integer) - total number of countries where activities have locations
 
 ##### Example(s)
 
--   Overview statistics for BMGF data (data\_group\_id: 768) in Ethiopia (feature_id: 74) 
+-   Overview statistics for BMGF data (data\_group\_id: 768) in Ethiopia (feature\_id: 74) and Tanzania (feature\_id: 227)
 using the GADM boundary (boundary_id: 15):
 
-```SELECT * FROM pmt_overview_stats('768',null,null,null,74,15)```
+```SELECT * FROM pmt_overview_stats('768',null,null,null,15,'74,227');```
 ```
 {
-	"activity_count":449,
-	"implmenting_count":48,
-	"total_investment":100000.00
+	"activity_count":117,
+	"implmenting_count":252,
+	"total_investment":1576921373.00,
+	"country_count":2
 }
 ```
 
@@ -4182,107 +4099,6 @@ TRUE
 [&larrhk; Back to Function List](#function-listing)
 
 
-<a name="sector_compare"/>
-pmt\_sector\_compare
-====================
-
-##### Description
-
-Allows a comparison of assigned Sector taxonomy and the text value from the IATI Activities Sector xml element from the imported 
-document.
-
-##### Parameter(s)
-
-1.  classification\_ids (character varying) – Optional. Comma separated list of classification_ids to restrict results to.
-2.  order\_by (character varying) – Optional. Name of return result field to order results by (see Result section).
-
-##### Result
-
-Json with the following:
-
-1.  a\_id (integer) – activity_id of activity.
-2.  c\_id (integer) - classification_id of Sector classification currently assigned to activity.
-3.  sector (character varying) - classification name of Sector classification currently assigned to activity.
-3.  import (character varying) - text value of the IATI Activities Sector element from the source document used to import the activity data.
-
-##### Example(s)
-
--   Compare the text value of the XML IATI Activities Sector element from the source document used to import 
-the activity data for the Bolivia data group (classification\_id:769) where the Sector 
-'Sectors not specified' (classification\_id:756) was assigned and sort by the text value of the IATI Activities 
-Sector xml element (result field: 'import'):
-
-```select * from pmt_sector_compare('769,756', 'import');```
-
-```
-...
-,{
-	"a_id":5526,
-	"c_id":756,
-	"sector":"Sectors not specified",
-	"import":"MULTISECTORIAL"
-}
-,{
-	"a_id":7461,
-	"c_id":756,
-	"sector":"Sectors not specified",
-	"import":"RECURSOS HIDRICOS"
-}
-...
-```
-
-<a name="stat_activity_by_district"/>
-pmt\_stat\_activity\_by\_district
-=============================
-
-##### Description
-
-Statistics function providing activity counts by taxonomy per district for a region.
-
-##### Parameter(s)
-
-1.  data\_group\_id (integer) – Optional. Classification_id of data group to restrict results to.
-2.  country (character varying) – **Required**. Name of country (GAUL 0 Administrative Name)
-3.  region (character varying) – **Required**. Name of region (GAUL 1 Administrative Name)
-4.  activity\_taxonomy\_id (integer) – **Required**. Taxonomy_id of taxonomy to group activity counts by per district.
-
-##### Result
-
-Json with the following:
-
-1.  region (character varying) – name of the region.
-2.  district (character varying) – name of the district within region.
-3.  activities (json object):
-	1.  c\_id (integer) – classification_id of classification within provided activity taxonomy_id.
-	2.  name (character varying) – name of classification within provided activity taxonomy_id.
-	3.  a\_ct (integer) - number of activities assigned classification within district.
-
-##### Example(s)
-
--   AGRA data (classification\_id:769) activity counts by Initiative (taxonomy\_id:23) per district for the Morogoro Region:
-
-```select * from pmt_stat_activity_by_district(769, 'United Republic of Tanzania', 'Morogoro', 23);```
-
-```
-...
-{
-	"region":"Morogoro"
-	,"district":"Morogoro Rural"
-	,"activities":
-		[{
-			"c_id":823
-			,"name":"Access & Markets"
-			,"a_ct":4
-		},
-		{
-			"c_id":831
-			,"name":"Research & Development"
-			,"a_ct":3
-		}]
-}
-...
-```
-
 ## pmt\_stat\_activity\_by\_tax
 
 
@@ -4299,7 +4115,8 @@ to restrict data. If no data group id is provided, all data groups are included.
 4. start\_date (date) - start date for activities (filter).
 5. end\_date (date) - end date for activities (filter).
 6. boundary\_id (integer) - the boundary id referenced by the feature\_id (filter).
-7. feature\_id (integer) - the featuer id to restrict activities to (filter).
+7. feature\_id (integer) - the feature id to restrict activities to (filter).
+8. record\_limit (integer) - the number of records to limit return to, remaining classifications will be aggregated into an "other" classification.
 
 ##### Result
 
@@ -4316,7 +4133,7 @@ Json with the following:
     Initiative taxonomy (taxonomy\_id:23) in Ethiopia (feature\_id: 74) using GADM 
 boundary (boundary\_id: 15):
 
-```SELECT * FROM pmt_stat_activity_by_tax(23,'768',null,null,null,15,74);```
+```SELECT * FROM pmt_stat_activity_by_tax(23,'768',null,null,null,15,74,null);```
 
 ```
 {
@@ -4435,54 +4252,6 @@ in Ethiopia (feature\_id: 74) using GADM boundary (boundary\_id: 15):
 [&larrhk; Back to Function List](#function-listing)
 
 
-
-<a name="stat_counts"/>
-pmt\_stat\_counts
-=================
-
-##### Description
-
-Statistics function providing filterable counts for project, activity,
-implementing organizations and districts.
-
-##### Parameter(s)
-
-1.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-2.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-3.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-4.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-5.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-
-##### Result
-
-Json with the following:
-
-1.  p\_ct (integer) – project count.
-2.  a\_ct (integer) – activity count.
-3.  o\_ct (integer) – implementing organization count.
-4.  d\_ct (integer) – district count.
-
-##### Example(s)
-
--   Statistic counts for BMGF data group (classification\_id:768):
-
-```SELECT * FROM pmt_stat_counts('768', '', '', null, null);```
-
-```
-{
-
-    "p_ct":80,
-    "a_ct":6112,
-    "o_ct":602,
-    "d_ct":1405
-}
-```
-
 ## pmt\_stat\_invest\_by\_funder
 
 
@@ -4511,6 +4280,7 @@ Json with the following:
 3.  label (character varying) – the funding organization name's abbreviation or shortened name.
 4.  count (integer) – the number of activities funded by the organization.
 5.  sum (numeric) – the total amount invested by the funding organization.
+6.  a\_ids (integer[]) - a list of activity ids funded by organization.
 
 ##### Example(s)
 
@@ -4524,274 +4294,46 @@ in Ethiopia (feature\_id: 74) using GADM boundary (boundary\_id: 15):
 	"id":3112,
 	"name":"World Bank (WB)",
 	"label":"WB",
-	"count":13,
-	"sum":1030620000.00
+	"count":10,
+	"sum":1030620000.00,
+	"a_ids":[26271,26283,26284,26286,26287,26288,26322,26323,26324,26325]
 },
 {
 	"id":3073,
 	"name":"United States Agency for International Development (USAID)",
 	"label":"USAID",
 	"count":22,
-	"sum":751774975.00
+	"sum":751774975.00,
+	"a_ids":[26284,26285,26287,26303,26304,26305,26306,26307,26308,26309,26310,26311,26312,26313,26314,26315,26316,26317,26318,26319,26320,26321]
 },
 {
 	"id":3175,
 	"name":"European Commission (EC)",
 	"label":"EC",
 	"count":1,
-	"sum":360000000.00
+	"sum":360000000.00,
+	"a_ids":[26284]
 },
 {
 	"id":3135,
 	"name":"Canadian International Development Agency (CIDA)",
 	"label":"CIDA",
 	"count":20,
-	"sum":309649285.00
+	"sum":309649285.00,
+	"a_ids":[26200,26201,26202,26203,26204,26205,26206,26207,26208,26209,26210,26211,26212,26280,26283,26284,26285,26287,26326]
 },
 {
 	"id":3170,
 	"name":"DEFID",
 	"label":"DEFID",
-	"count":1,"sum":282300000.00
+	"count":1,"sum":282300000.00,
+	"a_ids":[26284]
 }
 
 
 ```
 
 [&larrhk; Back to Function List](#function-listing)
-
-
-<a name="stat_orgs_by_activity"/>
-pmt\_stat\_orgs\_by\_activity
-=============================
-
-##### Description
-
-Statistics function providing filterable counts for TOP TEN implementing
-organizations by activity classified by taxonomy.
-
-##### Parameter(s)
-
-1.  tax\_id (integer) – **Required**. Taxonomy\_id to classify returned
-    activity counts.
-2.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-3.  organization\_ids (character varying) – Optional. Restrict data to
-    organization(s)
-4.  unassigned\_tax\_ids (character varying) – Optional. Include data
-    without assignments to specified taxonomy(ies).
-5.  start\_date (date) – Optional. Restrict data to a data range. Used
-    with end\_date parameter.
-6.  end\_date (date) – Optional. Restrict data to a data range. Used
-    with start\_date parameter.
-
-##### Result
-
-Json with the following:
-
-1.  o\_id (integer) – organization\_id.
-2.  a\_ct (integer) – activity count.
-3.  a\_by\_tax (json object):
-	1.  c\_id (integer) – classification id.
-	2.  a\_ct (integer) – number of activities with classification id in
-    a\_ct above.
-
-##### Example(s)
-
--   Top ten implementing organizations by activity counts for BMGF data
-    group (classification\_id:768) by Initiative taxonomy
-    (taxonomy\_id:23):
-
-```SELECT * FROM pmt_stat_orgs_by_activity(23, '768', '', '', null, null);```
-
-```
-{
-    "o_id":334,
-    "a_ct":646,
-    "a_by_tax":[
-		{
-			"c_id":823,
-			"a_ct":625
-		},       
-		{
-			"c_id":831,
-			"a_ct":21
-		}
-	]
-}
-...
-```
-
-<a name="stat_orgs_by_district"/>
-pmt\_stat\_orgs\_by\_district
-=============================
-
-##### Description
-
-Statistics function providing organizations with activity counts by district for a region.
-
-##### Parameter(s)
-
-1.  data\_group\_id (integer) – Optional. Classification_id of data group to restrict results to.
-2.  country (character varying) – **Required**. Name of country (GAUL 0 Administrative Name)
-3.  region (character varying) – **Required**. Name of region (GAUL 1 Administrative Name)
-4.  org\_role\_id (integer) – Optional. Classification_id for taxonomy 'Organisation Role'. Default is 'Accountable'. 
-5.  top\_limit (integer) – Optional. Limits the number of returned organizations per district to number requested ordered by number of activities. Default is 3. 
-
-##### Result
-
-Json with the following:
-
-1.  region (character varying) – name of the region.
-2.  district (character varying) – name of the district within region.
-3.  orgs (json object):
-	1.  o\_id (integer) – organization id.
-	2.  name (character varying) – name of organization.
-	3.  a\_ct (integer) - number of activities the organization participates within the 'Organisation Role' classification.
-
-##### Example(s)
-
--   Top three accountable (classification\_id:494) organizations for AGRA (classification\_id:769) per district 
-    for the Morogoro Region:
-
-```select * from pmt_stat_orgs_by_district(769, 'United Republic of Tanzania', 'Morogoro', 494, 3);```
-
-```
-...
-,{
-	"region":"Morogoro"
-	,"district":"Morogoro Urban"
-	,"orgs":
-		[{
-			"o_id":27
-			,"name":"Alliance for a Green Revolution in Africa (AGRA)"
-			,"a_ct":6
-		}
-		,{
-			"o_id":10
-			,"name":"Kickstart International"
-			,"a_ct":3
-		}
-		,{
-			"o_id":269
-			,"name":"Board of Regents of the University of Nebraska"
-			,"a_ct":2
-		}]
-}
-...
-```
-
-<a name="stat_partner_network"/>
-pmt\_stat\_partner\_network
-=============================
-
-##### Description
-
-Statistics function providing nested accountable and implementing organizations and activities by funding organization.
-
-##### Parameter(s)
-
-1.  country\_ids (character varying) – Optional. Restrict data to country(ies).
-
-##### Result
-
-Json with the following:
-
-1. name(character varying) – name funding organization.
-2. o\_id (integer) - funding organization's id.
-	1. children (array) - object array of accountable organizations for the funding organizations activities
-		1. name (character varying) - name of accountable organization
-		2. children (array) - object array of implementing organizations for the accountable organizations activities
-			1. name (character varying) - name of implementing organization
-			2. children (array) - object array of activities implemented by the implementing organization
-				1. name (character varying) - title of activity
-
-##### Example(s)
-
--   Partner network for activities in Nigeria (classification\_id:244):
-
-```SELECT * FROM pmt_stat_partner_network('244');```
-
-```
-...
-[
-  {
-	"name":"BMGF"
-	"o_id":13
-	,"children":[
-		{
-		   "name":"International Institute of Tropical Agriculture (IITA)"
-		  ,"children":[
-			{
-			    "name":"Doreo Partners"
-			    ,"children":[
-				{
-				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
-				},
-				{
-				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
-				},
-				{
-				    "name":"Aflatoxin prevalence study in farmers' fields in Nigeria"
-				},
-				...
-		   	     ]
-			}
-			...
-		   ]
-		}
-		...
-	]
-  }
-  ...
-]
-...
-```
-
-<a name="stat_pop_by_district"/>
-pmt\_stat\_pop\_by\_district
-=============================
-
-##### Description
-
-Statistics function providing population data by district for a region.
-
-##### Parameter(s)
-
-1.  country (character varying) – **Required**. Name of country (GAUL 0 Administrative Name)
-2.  region (character varying) – **Required**. Name of region (GAUL 1 Administrative Name)
-
-##### Result
-
-Json with the following:
-
-1.  region (character varying) – name of the region.
-2.  district (character varying) – name of the district within region.
-3.  pop_total (numeric(500,2)): total population of the district.
-4.  pop_poverty (numeric(500,2)): poverty population of the district.
-5.  pop_rural (numeric(500,2)): rural population of the district.
-6.  pop_poverty_rural (numeric(500,2)): rural poverty population of the district.
-7.  pop_source (text): source of population data for the district.
-
-##### Example(s)
-
--   Population data per district for the Morogoro Region:
-
-```select * from pmt_stat_pop_by_district('United Republic of Tanzania', 'morogoro');```
-
-```
-...
-,{
-	"region":"Morogoro",
-	"district":"Morogoro Urban",
-	"pop_total":307356.00,
-	"pop_poverty":50573.40,
-	"pop_rural":124967.00,
-	"pop_poverty_rural":50573.40,
-	"pop_source":"WorldPop"
-}
-...
-```
 
 
 ## pmt\_statistic\_data
@@ -5120,40 +4662,6 @@ TRUE
 
 [&larrhk; Back to Function List](#function-listing)
 
-
-<a name="update_user"/>
-pmt\_update\_user
-================
-
-##### Description
-
-Update existing user information and/or role.
-
-##### Parameter(s)
-
-1.  user\_id (integer) – **Required**. User id for user being updated.
-2.  organization\_id (integer) – Optional. Organization id user will be assigned to.
-3.  data\_group\_id (integer) - Optional. Data group id user will be assigned to.
-4.  role\_id (integer) – Optional. Role id user will be assigned to.
-5.  username (character varying(255)) - Optional. User username.
-6.  password (character varying(255)) - Optional. User password.
-7.  email (character varying(255)) - Optional. User email address.
-8.  first\_name (character varying(150)) - Optional. User first name.
-9.  last\_name (character varying(150)) - Optional. User last name.
-
-##### Result
-
-Boolean. Successful (true). Unsuccessful (false).
-
-##### Example(s)
-
--   Update email for user Jane Doe(user_id:315):
-
-```SELECT * FROM pmt_update_user(315, null, null, null, null, null, 'jane.doe1234@email.com',  null, null);```
-
-```
-TRUE
-```
 
 ## pmt\_user\_auth
 
