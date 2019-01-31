@@ -14,4 +14,4 @@ The PMT database is a PostgreSQL RDBMS utilizing the spatial extender PostGIS fo
 
 The PMT application is a highly configurable suite of features and modules that allow users to explore, analyze, query and manage development data. The web application is built using AngularJS and common JavaScript libraries. The PMT database is accessed by the application, through a NodeJs/ExpressJs API which also provides user authentication.
 
-For more information on system requirements and installation of a PMT instance please refer to the [PMT Framework Software Requirement Specifications and Installation Instructions](PMT-SRS.pdf).
+For more information on system requirements and installation of a PMT instance please refer to the [PMT Framework Software Requirement Specifications and Installation Instructions](PMT-SRS-v3.0.pdf).
