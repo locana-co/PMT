@@ -42,6 +42,8 @@ which are present in all PMT database instances.
 
 [iati\_import](#iati_import)
 
+[instance](#instance)
+
 [location](#location)
 
 [location\_boundary](#location_boundary)
@@ -479,6 +481,32 @@ trigger to determine which ETL function to perfrom to load the data into the PMT
 [&larrhk; Back to Table List](#table-listing)
 
 
+## instance
+
+#### Description
+
+The instance table contains all the PMT application instances. 
+
+#### Field List
+
+All **bold** fields are required.
+
+| Field		   		| Data Type   		| Default Value	| Constraint			| Description													|
+| ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
+| **id**      			| serial		|  automated	| PK				| Primary key for the table.										|
+| **\_theme**			| character varying	|  		| Unique				| Alias for theme. Used as a unique reference to a single PMT applicaiton instance.	|
+| \_description			| character varying	|  		| 				| Description of the instance.	|
+| **data\_group\_ids**	| character varying	|  		| 				| Comma seperated list of data groups owned by the instance. These are data groups the instances has rights to add, edit or delete.	|
+| **\_active**			| boolean		| true		| 				| T/F the record is active. Inactive records are not accessible through any of the PMT read-only interfaces. Essentially treated as _"deleted"_.	|
+| \_retired\_by			| integer		| 		| 				| Instance id (primary key) of the instance that has replaced/retired this instance.	|
+| **\_created\_by**		| character varying(150)| 		| 				| Username of user or script name of data script that has created the record in the PMT Database.	|
+| **\_created\_date**		| timestamp without time| current date	| 				| Date the record was created in the PMT Database.	|
+| **\_updated\_by**		| character varying(150)| 		| 				| Username of user or script name of data script that has last updated the record in the PMT Database.	|
+| **\_updated\_date**		| timestamp without time| current date	| 				| Date the record was last edited in the PMT Database.	|
+
+[&larrhk; Back to Table List](#table-listing)
+
+
 ## location
 
 #### Description
@@ -520,11 +548,10 @@ All **bold** fields are required.
 #### Triggers 
 
 * **pmt_upd_geometry_formats** (INSERT, UPDATE) - calculates and updates all the location formats (\_x, \_y, \_lat\_dd, \_long\_dd, 
-\_latlong, \_georef) in the location table based on inserted or updated point. 
+\_latlong, \_georef) in the location table based on inserted or updated point. Only executes when the \_point, boundary\_id or feature\_id fields are updated.
 * **pmt_upd_boundary_features** (INSERT, UPDATE) - locates all the boundary features intersected by the inserted or updated point or the associated boundary feature and creates 
-relationships to the point/polygon within the [location\_boundary](#location_boundary) table.
-* **pmt_dlt_boundary_features** (DELETE) - removes all the boundary features relationships to the point within the 
-[location\_boundary](#location_boundary) table before the location is deleted.
+relationships to the point/polygon within the [location\_boundary](#location_boundary) table. Only executes when the \_point, boundary\_id or feature\_id fields are updated.
+* **pmt_dlt_boundary_features** (DELETE) - removes all the boundary features relationships to the point within the [location\_boundary](#location_boundary) table before the location is deleted.
 
 [&larrhk; Back to Table List](#table-listing)
 
@@ -733,7 +760,7 @@ All **bold** fields are required.
 | Field		   		| Data Type   		| Default Value	| Constraint			| Description													|
 | ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
 | **id**      			| serial		|  automated	| PK				| Primary key for the table.										|
-| \_name			| character varying	|  		| 				| Name of the role.	|
+| \_name			    | character varying	|  		| Unique			| Name of the role.	|
 | \_description			| character varying	|  		| 				| Description of the role.	|
 | **\_read**			| boolean		| false		| 				| T/F role has read permissions.	|
 | **\_create**			| boolean		| false		| 				| T/F role has create permissions.	|
@@ -892,12 +919,14 @@ All **bold** fields are required.
 [&larrhk; Back to Table List](#table-listing)
 
 
-## user\_activity\_role
+## user\_activity
 
 #### Description
 
-The user activity role table provides users permissions via roles to activities. Assignments of permissions for a user
-to activities can be done per activity or by a taxonomy classification.
+The user activity table provides users access to activities. Assignments for a user to activities can be done per activity or by a taxonomy classification. The
+permissions a user has on assigned activity, depends on the role assigned to the instance that "owns" the data group the activity belongs to. Instances own data
+groups. Users are assigned to instances via the [user\_instance](#user_instance) table and provided a role (Reader, Editor, Administrator or Super). The role
+determines the specific permissions a user is allowed.
 
 #### Field List
 
@@ -907,7 +936,6 @@ All **bold** fields are required.
 | ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
 | **id**      			| serial		|  automated	| PK				| Primary key for the table.										|
 | **user\_id**			| integer		|  		| FK - user.id			| Foreign key to the user table. The user being granted a role on an activity.	|
-| **role\_id**			| integer		|  		| FK - role.id			| Foreign key to the role table. The role the user is assigned for an activity.	|
 | activity\_id			| integer		|  		| FK - activity.id		| Foreign key to the activity table. The activity the users has permissions on. Activity\_id **OR** classification\_id must not be null. When activity\_id is used then user is provided permissions to the single activity. 	|
 | classification\_id		| integer		|  		| FK - classification.id	| Foreign key to the classification table. The user is granted permission to all activities having the specified classification. Activity\_id **OR** classification\_id must not be null. |
 | **\_direction**		| character varying(5)	| ONE		| 				| Direction of crosswalk. ONE - one way: origin to link. BOTH - both ways: origin to link and link to origin.	|
@@ -917,6 +945,25 @@ All **bold** fields are required.
 | **\_created\_date**		| timestamp without time| current date	| 				| Date the record was created in the PMT Database.	|
 | **\_updated\_by**		| character varying(150)| 		| 				| Username of user or script name of data script that has last updated the record in the PMT Database.	|
 | **\_updated\_date**		| timestamp without time| current date	| 				| Date the record was last edited in the PMT Database.	|
+
+[&larrhk; Back to Table List](#table-listing)
+
+
+## user\_instance
+
+#### Description
+
+A junction table to link users and instances. Reprsents the relationship between a user and an instance and their role or permission level for that instance.
+
+#### Field List
+
+All **bold** fields are required.
+
+| Field		   		| Data Type   		| Default Value	| Constraint			| Description													|
+| ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
+| **instance\_id** 	| integer		|  		| FK - instance.id		| Foreign key to the instance table.										|
+| **user\_id** 		| integer		|  		| FK - users.id		| Foreign key to the users table.		|
+| **role\_id** 		| integer		|  		| FK - role.id		| Foreign key to the role table.		|
 
 [&larrhk; Back to Table List](#table-listing)
 
@@ -934,9 +981,10 @@ All **bold** fields are required.
 | Field		   		| Data Type   		| Default Value	| Constraint			| Description													|
 | ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
 | **id**      			| serial		|  automated	| PK				| Primary key for the table.										|
-| user\_id			| integer		|  		| FK - user.id			| Foreign key to the user table. The user_id of the username.	|
+| user\_id		    	| integer		|  		| FK - user.id			| Foreign key to the user table. The user_id of the username.	|
+| **instance\_id**		| integer		|  		| FK - instance.id			| Foreign key to the instance table.	|
 | **\_username**		| character varying(255)| 		| 				| The username of the user accessing the PMT.	|
-| **\_access\_date**		| timestamp without time| current date	| 				| The date the user accessed the PMT.	|
+| **\_access\_date**	| timestamp without time| current date	| 				| The date the user accessed the PMT.	|
 | **\_status**			| character varying(50)	| 		| 				| The status of the user's access to the PMT. Options: success or fail.	|
 
 [&larrhk; Back to Table List](#table-listing)
@@ -956,9 +1004,8 @@ All **bold** fields are required.
 | ----------------------------- | --------------------- |:-------------:|:-----------------------------:| ------------------------------------------------------------------------------------------------------------- |
 | **id**      			| serial		|  automated	| PK				| Primary key for the table.										|
 | **organization\_id**		| integer		|  		| FK - organization.id		| Foreign key to the organization table. The organization the user belongs to.	|
-| **role\_id**			| integer		| 1 		| FK - role.id			| Foreign key to the role table. The role the user is assigned for database level permissions.	|
-| \_first\_name			| character varying(150)|  		| 				| First name.	|
-| \_last\_name			| character varying(150)|  		| 				| Last name.	|
+| **\_first\_name**		| character varying(150)|  		| 				| First name.	|
+| **\_last\_name**		| character varying(150)|  		| 				| Last name.	|
 | **\_username**		| character varying(255)|  		| 				| Username.	|
 | **\_email**			| character varying(255)|  		| 				| Email.	|
 | **\_password**		| character varying(255)|  		| 				| Password.	|

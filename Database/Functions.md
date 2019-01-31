@@ -4,193 +4,236 @@ The PMT Database contains a large number of functions that support various appli
 database functionality. This documentation contains a description of the function, its 
 parameters and examples for usage. Please report any errors to the issues page.
 
+_Note: A small number of functions are deprecated in version 10, but are included so that
+logic is not lost. If needed, these functions will need to be updated for v10._
+
 ## Function Listing
 
-[pmt\_2x2](#pmt_2x2) **New for v10**
+[pmt\_2x2](#pmt_2x2)
 
-[pmt\_2x2\_regions](#pmt_2x2_regions) **New for v10**
+[pmt\_2x2\_regions](#pmt_2x2_regions)
 
-[pmt\_activate\_activity](#activate_activity)
+[pmt\_activate\_activity](#pmt_activate_activity)
 
-[pmt\_activities](#pmt_activities) **Updated for v10**
+[pmt\_activities](#pmt_activities)
 
-[pmt\_activities\_by\_polygon](#pmt_activities_by_polygon) **Updated for v10**
+[pmt\_activities\_by\_polygon](#pmt_activities_by_polygon)
 
-[pmt\_activity](#pmt_activity) **Update in progress for v10**
+[pmt\_activity](#pmt_activity)
 
-[pmt\_activity\_by\_invest](#pmt_activity_by_invest) **New for v10**
+[pmt\_activity\_by\_invest](#pmt_activity_by_invest)
 
-[pmt\_activity\_count](#pmt_activity_count) **New for v10**
+[pmt\_activity\_count](#pmt_activity_count)
 
-[pmt\_activity\_count\_by\_participants](#pmt_activity_count_by_participants) **New for v10**
+[pmt\_activity\_count\_by\_participants](#pmt_activity_count_by_participants)
 
-[pmt\_activity\_count\_by\_taxonomy](#pmt_activity_count_by_taxonomy) **New for v10**
+[pmt\_activity\_count\_by\_taxonomy](#pmt_activity_count_by_taxonomy)
 
-[pmt\_activity\_details](#activity_details)
+[pmt\_activity\_detail](#pmt_activity_detail)
 
-[pmt\_activity\_ids\_by\_boundary](#pmt_activity_ids_by_boundary) **New for v10**
+[pmt\_activity\_family\_titles](#pmt_activity_family_titles)
 
-[pmt\_activity\_titles](#pmt_activity_titles) **New for v10**
+[pmt\_activity\_ids\_by\_boundary](#pmt_activity_ids_by_boundary)
 
-[pmt\_auto\_complete](#pmt_auto_complete) **Updated for v10**
+[pmt\_activity\_titles](#pmt_activity_titles)
+
+[pmt\_are\_data\_group](#pmt_are_data_group)
+
+[pmt\_auto\_complete](#pmt_auto_complete)
 
 [pmt\_boundaries\_by\_point](#pmt_boundaries_by_point)
 
-[pmt\_boundary\_extents](#pmt_boundary_extents) **New for v10**
+[pmt\_boundary\_extents](#pmt_boundary_extents)
 
-[pmt\_boundary\_feature](#pmt_boundary_feature) **New for v10**
+[pmt\_boundary\_feature](#pmt_boundary_feature)
 
-[pmt\_boundary\_filter](#pmt_boundary_filter) **New for v10**
+[pmt\_boundary\_filter](#pmt_boundary_filter)
 
-[pmt\_boundary\_hierarchy](#pmt_boundary_hierarchy) **New for v10**
+[pmt\_boundary\_hierarchy](#pmt_boundary_hierarchy)
 
-[pmt\_boundary\_pivot](#pmt_boundary_pivot) **New for v10**
+[pmt\_boundary\_pivot](#pmt_boundary_pivot)
 
-[pmt\_bytea\_import](#bytea_import)
+[pmt\_boundary\_search](#pmt_boundary_search)
 
-[pmt\_category\_root](#category_root)
+[pmt\_bytea\_import](#pmt_bytea_import)
 
-[pmt\_clone\_activity](#clone_activity)
+[pmt\_category\_root](#pmt_category_root) **Deprecated**
 
-[pmt\_contacts](#contacts)
+[pmt\_classification\_search](#pmt_classification_search)
 
-[pmt\_countries](#countries)
+[pmt\_classification\_count](#pmt_classification_count)
 
-[pmt\_create\_user](#create_user) **DEPRECATED Interation 8 and below: (see [pmt\_edit\_user](#edit_user))**
+[pmt\_classifications](#pmt_classifications)
 
-[pmt\_data\_groups](#pmt_data_groups) **Updated for v10**
+[pmt\_clone\_activity](#pmt_clone_activity) **Deprecated**
 
-[pmt\_edit\_activity](#edit_activity)
+[pmt\_consolidate\_orgs](#pmt_consolidate_orgs)
 
-[pmt\_edit\_activity\_contact](#edit_activity_contact)
+[pmt\_contacts](#pmt_contacts)
 
-[pmt\_edit\_activity\_taxonomy](#edit_activity_taxonomy)
+[pmt\_data\_groups](#pmt_data_groups)
 
-[pmt\_edit\_contact](#edit_contact)
+[pmt\_edit\_activity](#pmt_edit_activity)
 
-[pmt\_edit\_detail](#edit_detail)
+[pmt\_edit\_activity\_contact](#pmt_edit_activity_contact) **Deprecated**
 
-[pmt\_edit\_financial](#edit_financial)
+[pmt\_edit\_activity\_taxonomy](#pmt_edit_activity_taxonomy)
 
-[pmt\_edit\_financial\_taxonomy](#edit_financial_taxonomy)
+[pmt\_edit\_classification](#pmt_edit_classification)
 
-[pmt\_edit\_location](#edit_location)
+[pmt\_edit\_contact](#pmt_edit_contact)
 
-[pmt\_edit\_location\_taxonomy](#edit_location_taxonomy)
+[pmt\_edit\_detail](#pmt_edit_detail)
 
-[pmt\_edit\_organization](#edit_organization)
+[pmt\_edit\_detail\_taxonomy](#pmt_edit_detail_taxonomy)
 
-[pmt\_edit\_participation](#edit_participation)
+[pmt\_edit\_financial](#pmt_edit_financial)
 
-[pmt\_edit\_participation\_taxonomy](#edit_participation_taxonomy)
+[pmt\_edit\_financial\_taxonomy](#pmt_edit_financial_taxonomy)
 
-[pmt\_edit\_user](#pmt_edit_user) **Updated for v10**
+[pmt\_edit\_location](#pmt_edit_location)
 
-[pmt\_export](#pmt_export) **Updated for v10 (renamed from pmt\_filter\_csv)**
+[pmt\_edit\_location\_taxonomy](#pmt_edit_location_taxonomy) **Deprecated**
 
-[pmt\_filter](#pmt_filter)  **New for v10**
+[pmt\_edit\_organization](#pmt_edit_organization) 
 
-[pmt\_filter\_iati](#filter_iati)
+[pmt\_edit\_participation](#pmt_edit_participation)
 
-[pmt\_filter\_string](#pmt_filter_string)  **New for v10**
+[pmt\_edit\_participation\_taxonomy](#pmt_edit_participation_taxonomy) **Deprecated**
 
-[pmt\_global\_search](#pmt_global_search) **Updated for v10**
+[pmt\_edit\_taxonomy](#pmt_edit_taxonomy)
 
-[pmt\_iati\_import](#pmt_iati_import) **Updated for v10**
+[pmt\_edit\_user](#pmt_edit_user)
 
-[pmt\_is\_data\_group](#pmt_is_data_group) **New for v10**
+[pmt\_edit\_user\_activity](#pmt_edit_user_activity)
+
+[pmt\_export](#pmt_export)
+
+[pmt\_exists\_activity_contact](#pmt_exists_activity_contact)
+
+[pmt\_filter](#pmt_filter)
+
+[pmt\_filter\_iati](#pmt_filter_iati) **Deprecated**
+
+[pmt\_filter\_string](#pmt_filter_string)
+
+[pmt\_find\_users](#pmt_find_users)
+
+[pmt\_get\_valid\_id](#pmt_get_valid_id)
+
+[pmt\_global\_search](#pmt_global_search)
+
+[pmt\_iati\_import](#pmt_iati_import)
+
+[pmt\_is\_data\_group](#pmt_is_data_group)
+
+[pmt\_is\_data\_groups](#pmt_is_data_groups)
 
 [pmt\_isdate](#pmt_isdate)
 
 [pmt\_isnumeric](#pmt_isnumeric)
 
-[pmt\_locations](#pmt_locations) **Updated for v10**
+[pmt\_locations](#pmt_locations)
 
-[pmt\_locations\_for\_boundaries](#pmt_locations_for_boundaries) **New for v10**
+[pmt\_locations\_for\_boundaries](#pmt_locations_for_boundaries)
 
-[pmt\_org\_inuse](#pmt_org_inuse) **Updated for v10**
+[pmt\_org\_inuse](#pmt_org_inuse)
 
-[pmt\_orgs](#pmt_orgs) **Updated for v10**
+[pmt\_orgs](#pmt_orgs)
 
-[pmt\_overview_stats](#pmt_overview_stats) **New for v10**
+[pmt\_overview_stats](#pmt_overview_stats)
 
-[pmt\_partner\_pivot](#pmt_partner_pivot) **New for v10**
+[pmt\_partner\_pivot](#pmt_partner_pivot)
 
-[pmt\_partner\_sankey](#pmt_partner_sankey) **Updated for v10**
+[pmt\_partner\_sankey](#pmt_partner_sankey)
 
-[pmt\_partner\_sankey\_activities](#pmt_partner_sankey_activities) **Updated for v10**
+[pmt\_partner\_sankey\_activities](#pmt_partner_sankey_activities)
 
-[pmt\_purge\_activities](#pmt_purge_activities) **New for v10**
+[pmt\_purge\_activities](#pmt_purge_activities)
 
-[pmt\_purge\_activity](#pmt_purge_activity) **Updated for v10**
+[pmt\_purge\_activity](#pmt_purge_activity)
 
-[pmt\_stat\_activity\_by\_tax](#pmt_stat_activity_by_tax) **Updated for v10**
+[pmt\_refresh\_views](#pmt_refresh_views)
 
-[pmt\_stat\_by\_org](#pmt_stat_by_org) **New for v10**
+[pmt\_roles](#pmt_roles)
 
-[pmt\_stat\_invest\_by\_funder](#pmt_stat_invest_by_funder) **New for v10**
+[pmt\_stat\_activity\_by\_tax](#pmt_stat_activity_by_tax)
 
-[pmt\_statistic\_data](#pmt_statistic_data) **New for v10**
+[pmt\_stat\_by\_org](#pmt_stat_by_org)
 
-[pmt\_statistic\_indicators](#pmt_statistic_indicators) **New for v10**
+[pmt\_stat\_invest\_by\_funder](#pmt_stat_invest_by_funder)
 
-[pmt\_tax\_inuse](#tax_inuse)
+[pmt\_statistic\_data](#pmt_statistic_data)
 
-[pmt\_taxonomies](#taxonomies)
+[pmt\_statistic\_indicators](#pmt_statistic_indicators)
+
+[pmt\_taxonomies](#pmt_taxonomies)
+
+[pmt\_taxonomy\_count](#pmt_taxonomy_count)
+
+[pmt\_taxonomy\_search](#pmt_taxonomy_search)
 
 [pmt\_update\_crosswalks](#pmt_update_crosswalks)
 
-[pmt\_user\_auth](#pmt_user_auth) **Updated for v10**
+[pmt\_update\_location\_boundries](#pmt_update_location_boundries)
 
-[pmt\_user\_salt](#pmt_user_salt) **Updated for v10**
+[pmt\_user\_auth](#pmt_user_auth)
 
-[pmt\_user](#user)
+[pmt\_user\_orgs](#pmt_user_orgs)
 
-[pmt\_users](#pmt_users) **Updated for v10**
+[pmt\_user\_salt](#pmt_user_salt)
 
-[pmt\_validate\_activities](#pmt_validate_activities) **Updated for v10**
+[pmt\_users](#pmt_users)
 
-[pmt\_validate\_activity](#validate_activity)
+[pmt\_validate\_activities](#pmt_validate_activities)
 
-[pmt\_validate\_boundary\_feature](#pmt_validate_boundary_feature) **Updated for v10**
+[pmt\_validate\_activity](#pmt_validate_activity)
 
-[pmt\_validate\_classification](#pmt_validate_classification) **Updated for v10**
+[pmt\_validate\_boundary\_feature](#pmt_validate_boundary_feature)
 
-[pmt\_validate\_classifications](#pmt_validate_classifications) **Updated for v10**
+[pmt\_validate\_classification](#pmt_validate_classification)
 
-[pmt\_validate\_contact](#validate_contact)
+[pmt\_validate\_classifications](#pmt_validate_classifications)
 
-[pmt\_validate\_contacts](#validate_contacts)
+[pmt\_validate\_contact](#pmt_validate_contact)
 
-[pmt\_validate\_detail](#validate_detail)
+[pmt\_validate\_contacts](#pmt_validate_contacts)
 
-[pmt\_validate\_financial](#validate_financial)
+[pmt\_validate\_detail](#pmt_validate_detail)
 
-[pmt\_validate\_location](#pmt_validate_location) **Updated for v10**
+[pmt\_validate\_details](#pmt_validate_details)
 
-[pmt\_validate\_locations](#pmt_validate_locations) **Updated for v10**
+[pmt\_validate\_financial](#pmt_validate_financial)
 
-[pmt\_validate\_organization](#pmt_validate_organization) **Updated for v10**
+[pmt\_validate\_financials](#pmt_validate_financials)
 
-[pmt\_validate\_organizations](#validate_organizations)
+[pmt\_validate\_location](#pmt_validate_location)
 
-[pmt\_validate\_participation](#validate_participation)
+[pmt\_validate\_locations](#pmt_validate_locations)
 
-[pmt\_validate\_participations](#validate_participations)
+[pmt\_validate\_organization](#pmt_validate_organization)
 
-[pmt\_validate\_role](#validate_role)
+[pmt\_validate\_organizations](#pmt_validate_organizations) **Deprecated**
 
-[pmt\_validate\_taxonomies](#validate_taxonomies)
+[pmt\_validate\_participation](#pmt_validate_participation)
 
-[pmt\_validate\_taxonomy](#pmt_validate_taxonomy) **Updated for v10**
+[pmt\_validate\_participations](#pmt_validate_participations) **Deprecated**
 
-[pmt\_validate\_user](#validate_user)
+[pmt\_validate\_role](#pmt_validate_role)
 
-[pmt\_validate\_user\_authority](#pmt_validate_user_authority) **Updated for v10**
+[pmt\_validate\_taxonomies](#pmt_validate_taxonomies)
 
-[pmt\_version](#pmt_version) **Updated for v10**
+[pmt\_validate\_taxonomy](#pmt_validate_taxonomy)
 
-[test\_execute\_unit\_tests](#test_execute_unit_tests) **New for v10**
+[pmt\_validate\_user](#pmt_validate_user)
+
+[pmt\_validate\_user\_authority](#pmt_validate_user_authority)
+
+[pmt\_validate\_username](#pmt_validate_username)
+
+[pmt\_version](#pmt_version)
+
+[test\_execute\_unit\_tests](#test_execute_unit_tests)
 
 * * * * *
 
@@ -269,7 +312,7 @@ SELECT * FROM pmt_2x2_regions();
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_2x2\_regions
@@ -351,12 +394,10 @@ SELECT * FROM pmt_2x2_regions();
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
-<a name="activate_activity"/>
-pmt\_activate\_activity
-=======================
+## pmt\_activate\_activity
 
 ##### Description
 
@@ -364,19 +405,20 @@ Activate/deactivate an activity and its related records (locations, financial, p
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. user\_id of user requesting edit.
-2.  activity\_id (integer) – **Required**. activity\_id to activate/deactivate.
-3.  activate (boolean) - **Default is TRUE**. True to activate, false to deactivate.
+1.  instance\_id (integer) – **Required**. instance id in which the requesting edit originates.
+2.  user\_id (integer) – **Required**. user id of user requesting edit.
+3.  activity\_id (integer) – **Required**. activity id to activate/deactivate.
+4.  activate (boolean) - **Default is TRUE**. True to activate, false to deactivate.
 
 ##### Result
 
 Json with the following:
 
-1.  id (integer) – activity\_id of the activity activated/deactivated.
+1.  id (integer) – activity id of the activity activated/deactivated.
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Some possible error messages:
-	- Must include user_id and activity_id data parameters
-	- User does NOT have authority to change the active status of this activity and its associated records.
+	- Must included instance\_id, user\_id and activity\_id data parameters
+	- User does NOT have authority to change the active status of this activity and its assoicated records
 
 ##### Example(s)
 
@@ -391,6 +433,8 @@ or containing an error description regarding the unsuccessful transaction. Some 
 ```select * from pmt_activate_activity(34, 15820, false);```
 
 ```{"id":15820,"message":"Success"}```
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activities
@@ -476,7 +520,7 @@ not have an Activity Status (taxonomy id: 18) assigned between 1/1/2005 and 1/1/
 ...
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activities\_by\_polygon
@@ -521,7 +565,7 @@ select * from pmt_activities_by_polygon('POLYGON((-16.473 13.522,-16.469 13.186,
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity
@@ -558,8 +602,8 @@ Json with the following:
 17.  \_updated\_by (character varying(50)) -  last user to update activity information.
 18.  \_updated\_date (timestamp) -  last date and time activity information was updated.
 19.  custom\_fields (various) - any custom fields in the activity table that are not in the Core PMT will be returned as well.
-20.   data\_group (character varying) – the data group name.
-21.   parent\_title (character varying) – the activity's parent activity title.
+20.  data\_group (character varying) – the data group name.
+21.  parent\_title (character varying) – the activity's parent activity title.
 22.  ct (integer) - number of locations for activity.
 23.  taxonomy(object) - An object containing all associated taxonomy for the activity
 	1. taxonomy\_id (integer) - taxonomy id.
@@ -569,25 +613,34 @@ Json with the following:
 	5. code (character varying) - classification code.
 24.  organizations(object) - An object containing all organizations participating in the activity
 	1. organization (character varying) - organization name
-	2. role (character varying) - the organization's role in the activity (Implementing, Funding, Accountable, Extending)
-	3. url (character varying) - the url for the organization.
-	4. address (character varying) - the organization's address.
-	5. city (character varying) - the city of the organization.
-	6. state\_providence (character varying) - the state or providence of the organization.
-	7. zip (character varying) - the zip code for the providence.
-	8. country (character varying) - the country of the organization.
+	2. role (character varying) - the organization's role in the activity (Organisation Role taxonomy)
+	3. type (charcter varyng) - the organization's type in the activity (Organisation Type taxonomy)
+	4. prime (charcter varyng) - the organization's prime designation in the activity (Implementing Types taxonomy)
+	5. url (character varying) - the url for the organization.
+	6. address (character varying) - the organization's address.
+	7. city (character varying) - the city of the organization.
+	8. state\_providence (character varying) - the state or providence of the organization.
+	9. zip (character varying) - the zip code for the providence.
+	10. country (character varying) - the country of the organization.
 25.  contacts (object) - An object containing all activity contacts.
 	1. id (integer) - the contact id.
 	2. \_first\_name (character varying) - contact's first name.
 	3. \_last\_name (character varying) - contact's last name.
 	4. \_email (character varying) - contact's email address.
-	5. organization\_id (integer) - organization id.
-	6. \_name (character varying) - organization name the contact is associated with.
+	5. \_title (character varying) - contact's title.
+	6. organization\_id (integer) - organization id.
+	7. \_name (character varying) - organization name the contact is associated with.
 26.  details (object) - An object containing all activity details.
 	1. detail\_id (integer) - detail id.
 	2. \_title (character varying) - the title of the detail.
 	3. \_description (character varying) - description of the detail.
 	4. \_amount (numeric (12,2)) - detail amount.
+	5. taxonomy(object) - An object containing all associated taxonomy for the financial record
+		1. taxonomy\_id (integer) - taxonomy id.
+		2. taxonomy (character varying) - taxonomy name.
+		3. classification\_id (integer) - classification id.
+		4. classification (character varying) - classification name.
+		5. code (character varying) - classification code.
 27.  financials (object) - An object containing all activity financial data.
 	1. id (integer) - financial id.
 	2. \_amount (numeric (100,2)) - financial amount.	
@@ -607,13 +660,14 @@ Json with the following:
 	2. \_admin1 (character varying) - the name of the administrative level 1 boundray for the location.	
 	3. \_admin2 (character varying) - the name of the administrative level 2 boundray for the location.
 	4. \_admin3 (character varying) - the name of the administrative level 3 boundray for the location.
-	5. taxonomy(object) - An object containing all associated taxonomy for the financial record
+	5. \_admin_level (integer) - the administrative boundary level in which the location is mapped to.
+	6. taxonomy(object) - An object containing all associated taxonomy for the financial record
 		1. taxonomy\_id (integer) - taxonomy id.
 		2. taxonomy (character varying) - taxonomy name.
 		3. classification\_id (integer) - classification id.
 		4. classification (character varying) - classification name.
 		5. code (character varying) - classification code.
-	6. boundaries(object) - An object containing all intersected boundaries for the activity's locations
+	7. boundaries(object) - An object containing all intersected boundaries for the activity's locations
 		1. boundary\_id (integer) - boundary id.
 		2. feature\_id (integer) - feature id of boundary.
 		3. \_feature\_name (character varying) - the name of the feature.
@@ -628,7 +682,6 @@ Json with the following:
 ```
 {
 	"activity_id":3
-	,"project_id":1
 	,"title":"UN collaborative Program for Reducing Emissions from Deforestation and forest Degradation in developing 
 			countries, Tanzania (UN-REDD)"
 	,"label":null
@@ -738,7 +791,7 @@ Json with the following:
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity\_by\_invest
@@ -803,7 +856,7 @@ in Ethiopia (feature\_id: 74) using GADM 0 boundary (boundary\_id: 15):
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity\_count
@@ -855,7 +908,7 @@ and activities occur between 1/1/2012 and 12/31/2018:
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity\_count\_by\_participants
@@ -901,7 +954,7 @@ Json with the following:
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity\_count\_by\_taxonomy
@@ -936,101 +989,324 @@ Json with the following:
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
-<a name="activity_details"/>
-pmt\_activity\_details
-=======================
+## pmt\_activity\_detail
+
 
 ##### Description
 
-Activity details for a single activity.
+All information for a single activity, tailored specifically for an editing UI. THIS DOCUMENTATION IS OUT OF DATE,
+CURRENTLY UNDER DEVELOPMENT.
 
 ##### Parameter(s)
 
-1.  a\_id (integer) – **Required**. activity\_id.
+1. activity_id (integer) - **Required.** Activity id.
 
 ##### Result
 
 Json with the following:
 
-1.  a\_id (integer) – activity\_id.
-2.  title (character varying) – title of activity.
-3.  desc (character varying) – description of activity.
-4.  start\_date (date) – start date of activity.
-4.  end\_date (date) – end date of activity.
-5.  tags (character varying) – tags of activity.
-6.  amount (integer) - total amount of activity.
-7.  taxonomy (object) – object containing taxonomy/classification for all related taxonomies
-	1. taxonomy (character varying) – name of taxonomy
-	2. classification (character varying) – name of classification
-	3. org (character varying) – name of organization (provided only where taxonomy is *Organisation Role*)
-7.  locations (object) – object containing all related locations.
-	1. location_id (integer) - location_id of location
-	2. gaul0\_name (character varying) - name of GAUL 0 administrative boundary
-	3. gaul1\_name (character varying) - name of GAUL 1 administrative boundary
-	3. gaul2\_name (character varying) - name of GAUL 2 administrative boundary
-	3. lat (decimal degrees) - latitude of location
-	3. long (decimal degrees) - longitude of location
+1.  id (integer) – activity id.
+2.  data\_group\_id (integer) – the data group id.
+3.  parent\_id (integer) – the activity's parent id (if null the activity is a parent).
+4.  \_title (character varying) – title of activity.
+5.  \_label (character varying) – short title for activity.
+6.  \_description (character varying) – description of activity.
+7.  \_objective (character varying) – the objective for activity.
+8.  \_content (character varying) – various content for activity.
+9.  \_url (character varying) – url for activity.
+10.  \_start\_date (date) – start date of activity.
+11.  \_planned\_start\_date (date) – planned start date of activity.
+12.  \_planned\_end\_date (date) – end date of activity.
+13.  \_end\_date (date) – planned end date of activity.
+14.  \_tags (character varying) – tags or keywords of activity.
+15.  \_iati\_identifier (integer) – iati identifier or primary key of activity.
+16.  \_iati\_import\_id (integer) – iati import id for the corresponding import record (if null the data was manually loaded).
+17.  \_created\_by (character varying(50)) - user who created activity information.
+18.  \_created\_date (timestamp) -  date and time activity information was created.
+17.  \_updated\_by (character varying(50)) -  last user to update activity information.
+18.  \_updated\_date (timestamp) -  last date and time activity information was updated.
+19.  custom\_fields (various) - any custom fields in the activity table that are not in the Core PMT will be returned as well.
+20.   data\_group (character varying) – the data group name.
+21.   parent\_title (character varying) – the activity's parent activity title.
+22.  ct (integer) - number of locations for activity.
+23.  taxonomy(object) - An object containing all associated taxonomy for the activity
+	1. taxonomy\_id (integer) - taxonomy id.
+	2. taxonomy (character varying) - taxonomy name.
+	3. classification\_id (integer) - classification id.
+	4. classification (character varying) - classification name.
+	5. code (character varying) - classification code.
+24.  organizations(object) - An object containing all organizations participating in the activity
+	1. p\_id (integer) - participation record id
+	2. id (integer) - organization id	
+	3. \_name (character varying) - organization name
+	4. classification\_id (integer) - classification id of the Organization Role.
+	5. classification (character varying) - classification name of the Organization Role.
+25.  contacts (object) - An object containing all activity contacts.
+	1. id (integer) - the contact id.
+	2. \_first\_name (character varying) - contact's first name.
+	3. \_last\_name (character varying) - contact's last name.
+	4. \_title (character varying) - contact's title.
+	5. \_email (character varying) - contact's email address.
+	6. organization\_id (integer) - organization id.
+	7. organization\_name (character varying) - organization name the contact is associated with.
+	8. activities (integer[]) - list of activity ids the contact is related to.
+27.  financials (object) - An object containing all activity financial data.
+	1. id (integer) - financial id.
+	2. \_amount (numeric (100,2)) - financial amount.	
+	3. \_start\_date (date) – start date for financial amount.
+	4. \_end\_date (date) – end date for financial amount.
+	5. provider\_id (integer) - the id of the organization providing the financial amount.
+	5. provider (character varying) - the name of the organization providing the financial amount.
+	6. recipient\_id (integer) - the id of the organization receiving the financial amount.
+	6. recipient (character varying) - the name of the organization receiving the financial amount.
+	7. taxonomy(object) - An object containing all associated taxonomy for the financial record
+		1. taxonomy\_id (integer) - taxonomy id.
+		2. taxonomy (character varying) - taxonomy name.
+		3. classification\_id (integer) - classification id.
+		4. classification (character varying) - classification name.
+		5. code (character varying) - classification code.
+29.  locations (object) - An object containing all activity location data.
+	1. id (integer) - location id.
+	2. \_admin1 (character varying) - the name of the administrative level 1 boundray for the location.	
+	3. \_admin2 (character varying) - the name of the administrative level 2 boundray for the location.
+	4. \_admin3 (character varying) - the name of the administrative level 3 boundray for the location.
+	5. \_admin_level (integer) - the administrative boundary level in which the location is mapped to.
+	6. boundary\_id (integer) - boundary id.
+	7. feature\_id (integer) - feature id of boundary.
+30.  children (object) - An object containing all activity's children activities.
+	1. id (integer) - child activity id.
+	2. \_title (character varying) - child activity title.
 
 ##### Example(s)
 
--   Activity_id 2039:
-
-```SELECT * FROM  pmt_activity_details(2039);```
+```select * from pmt_activity_detail(3);```
 
 ```
-{	"a_id":2039
-	,"title":"ASDP"
-	,"desc":"repair of hides and skin banda"
-	,"start_date":"2011-01-01"
-	,"end_date":"2012-12-31"
-	,"tags":null
-	,"amount":3500000.00
-	,"taxonomy":
-		[{	"taxonomy":"Country"
-			,"classification":"TANZANIA, UNITED REPUBLIC OF"
-			,"org":null
-		  }
- 		 ,{	"taxonomy":"Data Group"
-			,"classification":"ASDP"
-			,"org":null
-		  }
-		 ,{	"taxonomy":"Category"
-			,"classification":"Post Harvest"
-			,"org":null
-		  }
-		 ,{	"taxonomy":"Organisation Role"
+{
+	"activity_id":3
+	,"title":"UN collaborative Program for Reducing Emissions from Deforestation and forest Degradation in developing 
+			countries, Tanzania (UN-REDD)"
+	,"label":null
+	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions from Deforestation and 
+			forest Degradation (REDD) as a component of the Governments evolving REDD Strategy, and integrate it 
+			with other REDD activities in the country"
+	,"content":null
+	,"start_date":"2009-10-01"
+	,"end_date":"2013-12-31"
+	,"tags":null	
+	,"updated_by":"IATI XML Import"
+	,"updated_date":"2014-01-16 00:00:00"
+	,"iati_identifier":null
+	,"location_ct":1
+	,"admin_bnds":"United Republic of Tanzania,Singida,Manyoni"
+	,"taxonomy":[{
+		 "taxonomy_id":5
+		,"taxonomy":"Country"
+		,"classification_id":244
+		,"classification":"TANZANIA, UNITED REPUBLIC OF"
+		,"code":"TZ"
+		}
+		,{
+		 "taxonomy_id":14
+		,"taxonomy":"Sector Category"
+		,"classification_id":552
+		,"classification":"Other multisector"
+		,"code":"430"
+		}
+		,{
+		 "taxonomy_id":15
+		,"taxonomy":"Sector"
+		,"classification_id":729
+		,"classification":"Multisector aid"
+		,"code":"43010"
+		}
+		,{
+		 "taxonomy_id":17
+		,"taxonomy":"Category"
+		,"classification_id":779
+		,"classification":"Training and Capacity Building"
+		,"code":null
+		}
+		,{
+		 "taxonomy_id":18
+		,"taxonomy":"Sub-Category"
+		,"classification_id":792
+		,"classification":"Training and Capacity Building"
+		,"code":null
+		}]
+	,"organizations":[{
+		 "organization_id":1
+		,"_name":"FAO/ UNEP/ UNDP"
+		,"url":null
+		,"classification_id":496
+		,"classification":"Funding"
+		}
+		,{
+		"organization_id":56
+		,"name":"Tanzania Forestry Service (TFS)"
+		,"url":null
+		,"taxonomy":[{
+			"taxonomy_id":10
+			,"taxonomy":"Organisation Role"
+			,"classification_id":497
 			,"classification":"Implementing"
-			,"org":"LGAs"
-		  }
-		 ,{	"taxonomy":"Organisation Role"
-			,"classification":"Funding"
-			,"org":"DLDF (District Local Development Fund)"
-		  }
-		 ,{	"taxonomy":"Sector"
-			,"classification":"Plant and post-harvest protection and pest control"
-			,"org":null
-		  }
-		 ,{	"taxonomy":"Sector Category"
-			,"classification":"AGRICULTURE"
-			,"org":null
-		  }
-	 	 ,{	"taxonomy":"Sub-Category"
-			,"classification":"Commodity Value Chain"
-			,"org":null
-		  }]
-	,"locations":
-		  [{	"location_id":2039
-			,"gaul0_name":"United Republic of Tanzania"
-			,"gaul1_name":"Shinyanga"
-			,"gaul2_name":"Kahama"
-			,"lat":-3.950000
-			,"long":32.03333
-		  }]
+			,"code":"Implementing"
+			}]
+		}
+		,{
+		"organization_id":2
+		,"name":"MNRT, TFS"
+		,"taxonomy":[{
+			"taxonomy_id":10
+			,"taxonomy":"Organisation Role"
+			,"classification_id":497
+			,"classification":"Implementing"
+			,"_code":"Implementing"
+			}]
+		}]
+	,"contacts":[{
+		"contact_id":1
+		,"_first_name":"Almas"
+		,"_last_name":"Kashindye"
+		,"_title":"Project Manager"
+		,"_email":"Almas.Kashindye@fao.org"
+		,"organization_id":1
+		,"organization_name":"FAO/ UNEP/ UNDP"
+		}]
+	,"details": null
+	,"financials":[{
+		 "financial_id":13
+		,"_amount":814972.00
+		,"taxonomy":[{
+			"taxonomy_id":6
+			,"taxonomy":"Currency"
+			,"classification_id":422
+			,"classification":"US Dollar"
+			,"_code":"USD"
+			}]
+		}]
+	,"locations":[{3}]
 }
 ```
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_activity\_family\_titles
+
+##### Description
+
+Provides a listing of family structured activity titles (parent -> child). Filterable by data group.
+
+##### Parameter(s)
+
+1.  data\_group\_ids (character varying) – Optional. Comma seperated listing of data group ids to filter results to.
+2.  classification\_ids (character varying) – Optional. Comma seperated listing of classification ids to return associations to. Returns all classification ids in provided list where each activity is associated.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – parent activity id.
+2.  \_title (character varying) – title of parent activity.
+3.  c (integer[]) - list of classification ids associated to from provided list.
+4.  children (json[]) - array of child activity objects
+	1.  id (integer) – child activity id.
+	2.  \_title (character varying) – title of child activity.
+	3.  c (integer[]) - list of classification ids associated to from provided list.
+
+##### Example(s)
+
+-   Family activity titles for the RED&FS data group (2237):
+
+```SELECT * FROM pmt_activity_family_titles('2237',null);```
+
+```
+{
+	"id":26269,
+	"_title":"ATVET Project",
+	"children":null,
+	"c": null
+},
+...
+{
+	"id":29572,
+	"_title":"Pastoralist Areas Resilience Improvement and Market Expansion (PRIME)",
+	"c": null,
+	"children":[
+		{
+			"id":29714,
+			"_title":"Afar Region",
+			"c": null
+		},{
+			"id":29713,
+			"_title":"Oromia Region",
+			"c": null
+		},{
+			"id":29712,
+			"_title":"Amhara Region",
+			"c": null
+		},{
+			"id":29711,
+			"_title":"Somali Region",
+			"c": null
+		}
+	[
+},
+{
+	"id":29575,
+	"_title":"Drought Resilience and Sustainable Livelihoods Programme (DRSLP)",
+	"children":null,
+	"c": null
+}
+...
+```
+
+-   Family activity titles for the RED&FS data group (2237) and return assoications to Maize (2268) :
+
+```SELECT * FROM pmt_activity_family_titles('2237','2268');```
+
+```
+{
+	"id":26269,
+	"_title":"ATVET Project",
+	"children":null,
+	"c": null
+},
+...
+{
+	"id":29600,
+	"_title":"Advanced Maize Seed Adoption Program (AMSAP)",
+	"c": null,
+	"children":[
+		{
+			"id":29740,
+			"_title":"Oromia Region",
+			"c":[2268]
+		},{
+			"id":29741,
+			"_title":"Amhara Region",
+			"c":[2268]
+		},{
+			"id":29739,
+			"_title":"Tigray Region",
+			"c":[2268]
+		}
+	]
+},
+{
+	"id":29602,
+	"_title":"SDR_IFTAR - Strengthening Drought Resilience: Transitional aid measure: Improving food security and disaster risk management to enhance resilience of livestock dependent pastoralists in Afar, Ethiopia",
+	"children":null,
+	"c": [2268]
+}
+...
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_activity\_ids\_by\_boundary
 
@@ -1106,7 +1382,7 @@ where Program is "Stand Alone Project" (classification\_id: 2239) and activities
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_activity\_titles
@@ -1160,7 +1436,35 @@ Json with the following:
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_are\_data\_group
+
+##### Description
+
+Validates an array of data group classification\_ids. Data group is a taxonomy that
+is used to determine data source and provide user authentication.
+
+##### Parameter(s)
+
+1. ids (character varying) – comma seperated list of classification\_ids within the Data Group taxonomy.
+
+##### Result
+
+True or false.
+
+##### Example(s)
+
+```pmt_are_data_group(ARRAY[1068,999999]);```
+
+FALSE
+
+```SELECT SELECT * FROM pmt_are_data_group(ARRAY[1068,1069,2266,2267,768,769]);```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_auto\_complete
@@ -1204,7 +1508,7 @@ A text array of distinct values from all provided columns. Each text element ret
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundaries\_by\_point
@@ -1264,7 +1568,7 @@ An array of json objects containing all intersected boundary features:
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundary\_extents
@@ -1304,7 +1608,7 @@ SELECT * FROM pmt_boundary_extents('gadm0','Ethiopia,Mali'); ;
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundary\_feature
@@ -1361,7 +1665,7 @@ SELECT * FROM  pmt_boundary_feature(17, 15174);
 ```
 
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundary\_hierarchy
@@ -1456,7 +1760,7 @@ SELECT * FROM pmt_boundary_hierarchy('gadm','0,1,2','Ethiopia');
 		
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundary\_filter
@@ -1511,11 +1815,10 @@ SELECT * FROM pmt_boundary_filter('gadm1','_gadm0_name','Ethiopia,Mali'); ;
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_boundary\_pivot
-
 
 ##### Description
 
@@ -1783,16 +2086,58 @@ Results can then be rendered as a table:
 |Sustainable Land Management Program|CIDA,DED,EU,GIZ,IFAD,KFW,MASHAV,WB,|CIDA,DED,EU,FIN,GIZ,IFAD,KFW,MASHAV,WB,|CIDA,DED,EU,FIN,GIZ,IFAD,KFW,WB,||||||CIDA,DED,EU,GIZ,IFAD,KFW,MASHAV,WB,|CIDA,DED,EU,GIZ,IFAD,KFW,MASHAV,WB,||
 
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_boundary\_search
+Searches all pmt boundary table feature names, within an given boundary type and returns matching features.
+
+##### Parameter(s)
+1.  boundary\_type (character varying) – admin boundry type. ['gadm','gaul','unocha','acc','nbs', ect]
+2.  search\_string (character varying) - string to search for, not case sensative. Will match if search string is contained in any part of the feature name.
+
+##### Result
+
+Array of json objects with the following:
+1. b0 (character varying) - the boundary level 0 name for feature matched.
+2. b1 (character varying) - the boundary level 1 name for feature matched.
+3. b2 (character varying) - the boundary level 2 name for feature matched.
+4. b3 (character varying) - the boundary level 3 name for feature matched.
 
 
-<a name="bytea_import"/>
-pmt\_bytea\_import
-==================
+##### Example(s)
+
+-   Search for "libolo" in GADM boundaries:
+
+```select * from pmt_boundary_search( 'gadm','libolo' );```
+
+```
+{
+	"b0":"Angola",
+	"b1":"Cuanza Sul",
+	"b2":"Libolo",
+	"b3":""
+},	
+{
+	"b0":"Angola",
+	"b1":"Cuanza Sul",
+	"b2":"Libolo",
+	"b3":"Kabuta"
+},
+...
+{
+	"b0":"Angola",
+	"b1":"Cuanza Sul",
+	"b2":"Libolo",
+	"b3":"Munenga"
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_bytea\_import
 
 ##### Description
 
-<a name="bytea_reftext"/>
 Converts text into bytea. Used in combination with PostgreSQL
 convert\_from() to import xml documents as an xml data type. (Jack
 Douglas)[[1]](#bytea_ref)
@@ -1812,9 +2157,10 @@ Text as bytea.
 
 ```convert_from(pmt_bytea_import('/temp/file.xml'), 'utf-8')::xml```
 
-<a name="category_root"/>
-pmt\_category\_root
-===================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_category\_root
 
 ##### Description
 
@@ -1840,9 +2186,218 @@ Integer of root taxonomy\_id.
 
 15
 
-<a name="clone_activity"/>
-pmt\_clone\_activity
-===================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_classification\_count
+
+##### Description
+
+Count of classifications, filterable by search text and taxonomy id.
+
+##### Parameter(s)
+
+1.  taxonomy\_id (instance) – **Required**. Taxonomy id for classification listing.
+2.  search\_text (text) – Optional. Search text to restrict classification by. Searches classification _name.
+
+##### Result
+
+Json with the following:
+
+1.  count (integer) – number of classifications match criteria.
+
+##### Example(s)
+
+-   Get count of classifications for Fodder Crop Types (taxonomy\_id: 81):
+
+```SELECT * FROM pmt_classification_count(81,null);```
+
+```
+{
+	"count":20
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_classification\_search
+
+##### Description
+
+Listing of classifications, filterable by search text and taxonomy id.
+
+##### Parameter(s)
+
+1.  taxonomy\_id (instance) – **Required**. Taxonomy id for classification listing.
+2.  search\_text (text) – Optional. Search text to restrict classification by. Searches classification _name (of both parent and child if the requested taxonomy is a category).
+3.  offsetter (integer) - Optional. Number of records to offset return by.
+4.  limiter (integer) - Optional. Number of records to limit return by.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – classification id.
+2.  c (character varying(255)) – name of classification.
+3. activities (json[]) - json array of activities using classification
+	1. id (integer) - the parent activity id for activity using classification
+	2. _title (character varying) - parent activity title
+4. children (json[]) - object containing child classification records when taxonomy is a category:
+	1. id (integer) – classification id.
+	2.  c (character varying(255)) – name of classification.
+	3. activities (json[]) - json array of activities using classification
+		1. id (integer) - the parent activity id for activity using classification
+		2. _title (character varying) - parent activity title
+
+
+##### Example(s)
+
+-   Get list of classifications for GTP2 Strategic Objective (taxonomy\_id: 77) that have "agr" in the classification:
+
+```SELECT * FROM pmt_classification_search(77,'agr',null,null);```
+
+```
+{
+	"id":2443,
+	"c":"SO1: Increased market oriented crop production and improved crop productivity focusing on strategic crops","activities":[
+		{
+			"id":29659,
+			"_title":"Fertilizer Blending Project"
+		},{
+			"id":29549,
+			"_title":"Participatory Small Scale Irrigation Development Programme"
+		},
+		...
+	],
+	"children":[
+		{
+			"id":2447,
+			"c":"Agricultural extension",
+			"activities":[
+				{
+					"id":29549,
+					"_title":"Participatory Small Scale Irrigation Development Programme"
+				},{
+					"id":29578,
+					"_title":"SDR_TREE Project - Strengthening Drought Resilience: Trilateral Resilience Enhancement in Ethiop (...)"
+				},
+				...
+			]
+		},{
+			"id":2449,
+			"c":"Agricultural mechanization",
+			"activities":[
+				{
+					"id":29856,
+					"_title":"Bilateral Ethiopian-Netherlands Effort for Food,Income and Trade Partnership (BENEFIT)"
+				},{
+					"id":29573,
+					"_title":"Agro-Business Induced Growth Porgramme in the Amhara National Regional State Phase Two (AgroBIG II)"},{"id":29597,"_title" (...)"
+				},
+				...
+			]
+		},
+		...
+	]
+}
+...
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_classifications
+
+
+##### Description
+
+Returns classifications for a single taxonomy with usage counts.
+
+##### Parameter(s)
+
+1. taxonomy\_id (integer) - **Required** taxonomy id for the requested taxonomy classifications. 
+2. data\_group\_ids (character varying) - comma seperated list of classification\_id(s) from the Data Group taxonomy
+to restrict data (filter). If no data group id is provided, all data groups are included. When data groups are specified
+only in-use classifications for that data group are returned.
+3. instance\_id (integer) - id of the instance to restrict data to (filter). If no instance id is provided, all data groups 
+are included. When an instance is specified only in-use classifications for that instance's data group are returned. The 
+instance\_id parameter overrides the data\_group\_ids parameter when both are provided.
+4. locations\_only (boolean) - t/f in-use applies only to activities with locations.
+
+##### Result
+
+Json object array with the following:
+
+1.  id (integer) - classification id
+2.  c (character varying) - classification name
+3.  ct (integer) - number of activities with classification assignment
+
+##### Example(s)
+
+-   Get classifications for the Activity Status taxonomy (taxonomy\_id: 18) that are in use for ASDP data (data\_group\_id: 1068) not restrictive to 
+activities with locations:
+
+```SELECT * FROM pmt_classifications(18, '1068', null, false);```
+```
+{
+	"id":794,
+	"c":"Active",
+	"ct":96
+},
+{
+	"id":797,
+	"c":"Completed",
+	"ct":15
+},
+{
+	"id":798,
+	"c":"Has not started",
+	"ct":20
+},
+{
+	"id":1239,
+	"c":"Suspended",
+	"ct":1
+}
+```
+
+-   If classifications are from a taxonomy that has child record, those records will be returned as well. Get classifications for the Focus Crop Categories taxonomy (taxonomy\_id: 79) for the RED&FS data group (data\_group\_id: 2237), restricted to locations:
+
+```select * from pmt_classifications(79, '2237', null, true);```
+
+```
+...
+,{
+	"id":2476,
+	"c":"Oilseed",
+	"ct":5,
+	"children":[
+		{
+			"id":2271,
+			"c":"Sesame",
+			"ct":4
+		},{
+			"id":2495,
+			"c":"Ground Nut",
+			"ct":1
+		},{
+			"id":2496,
+			"c":"Linseed",
+			"ct":1}
+		,{
+			"id":2501,
+			"c":"Sunflower",
+			"ct":1
+		}
+	]
+},
+...
+```
+
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_clone\_activity
 
 ##### Description
 
@@ -1918,19 +2473,49 @@ select * from pmt_clone_activity(34, 661, 756 ,null);
 {"id":967,"message":"Success"}
 ```
 
--  Delete activity\_id 15821.
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_consolidate\_orgs
+
+##### Description
+
+Consolidate Organizations. Takes One organization ID to keep, and an array of organizations to consolidate into the Kept organization.
+Tables affected: contact, instance, users, financial, organization, organization_taxonomy, participation, participation_taxonomy
+
+##### Parameter(s)
+
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the request originates.
+2.  user\_id (integer) – **Required**. User\_id of user requesting the consolidation.
+3.  organization\_to\_keep\_id (integer) – **Required** organization id of organiztion to keep.
+4.  organization\_ids\_to\_consolidate (integer[]) - **Required**. array of organization id's to consolidate into organization\_to\_keep\_id
+
+##### Result
+
+Json with the following:
+
+1.  message(character varying) - Message containing either "Success" for a successful transaction 
+or containing an error description regarding the unsuccessful transaction. Possible error messages:
+	- User\_id is a required parameter for all operations. - Received when required parameter is not provided.
+	- Organization_id_to_keep is a required parameter for all operations. - Received when required parameter is not provided.
+	- An array of organization_ids is a required parameter for all operations. - Received when required parameter is not provided.
+	- At least one Organization to consolidate must be passed to this function. - Received when the array of organizations to consolidate is empty.
+	- The organization to keep must not be part of the list or organizations to consolidate. - Received when the organization to keep is included in the organiztions to consolidate array.
+	
+##### Example(s)
+
+-   User sparadee (user\_id: 34) request to consolidate organizations 221,239,277 into 237 from EthAIM (instance\_id: 1):
 
 ```
-select * from pmt_edit_activity(34, 15821, null, null, true);
+SELECT * FROM pmt_consolidate_orgs (1, 34, 237, ARRAY[221,239,277]::integer[]);
 ```
 
 ```
-{"id":15821,"message":"Success"}
+{"id": 237, "message":"Success"}
 ```
 
-<a name="contacts"/>
-pmt\_contacts
-==============
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_contacts
 
 ##### Description
 
@@ -1944,12 +2529,14 @@ No parameters.
 
 Ordered by last name then first name. Json with the following:
 
-1.  c\_id (integer) – contact\_id.
-2.  first_name (character varying(64)) – first name of contact.
-3.  last_name (character varying(128)) – last name of contact.
-4.  email (character varying(100)) - email of contact.
-4.  o\_id (integer) – organization\_id in which the contact belongs to.
-5.  org (character varying(255)) - organization name of the organization in which the contact belongs to.
+1.  id (integer) – contact id.
+2.  \_first\_name (character varying(64)) – first name of contact.
+3.  \_last\_name (character varying(128)) – last name of contact.
+4.  \_title (character varying(75)) - title/position of contact.
+5.  \_email (character varying(100)) - email of contact.
+6.  organization\_id (integer) – organization\_id in which the contact belongs to.
+7.  organization\_name (character varying(255)) - organization name of the organization in which the contact belongs to.
+8.  activities (integer[]) - array of activity ids that the contact is associated with.
 
 ##### Example(s)
 
@@ -1957,87 +2544,20 @@ Ordered by last name then first name. Json with the following:
 
 ```
 ...
-{
-	"c_id":4,
-	"first_name":"John",
-	"last_name":"Doe",
-	"email":"john.doe@mymail.com",
-	"o_id":13,
-	"org":"FAO"
+{	
+	"id":1588,
+	"_first_name":"Assaye",
+	"_last_name":"Legesse",
+	"_title":null,
+	"_email":"alegesse@worldbank.org",
+	"organization_id":2739,
+	"organization_name":"The World Bank",
+	"activities":[26325]
 }
 ...
 ```
 
-<a name="countries"/>
-pmt\_countries
-==============
-
-##### Description
-
- Filter countries by classifications.
-
-##### Parameter(s)
-
-1.  classification\_ids (character varying) – Optional. Restrict data to
-    classification(s).
-
-##### Result
-
-Json with the following:
-
-1.  c\_id (integer) – classification\_id.
-2.  name (character varying(255)) – name of country.
-3.  bounds (json object) – bounding box of country.
-
-##### Example(s)
-
--   Country for Afghanistan:
-
-```SELECT * FROM pmt_countries('24');```
-
-```
-{        
-    "c_id":24,
-    "name":"afghanistan",
-    "bounds":"{
-    	\"type\":\"Polygon\",
-        \"coordinates\":[[[60.4758911132812,29.3773193359375],[60.4758911132812,38.49072265625],[74.889892578125,38.49072265625],[74.889892578125,29.3773193359375],[60.4758911132812,29.3773193359375]]]
-    }                
-}
-```
-
-<a name="create_user"/>
-pmt\_create\_user
-================
-
-##### Description
-
-Create new user.
-
-##### Parameter(s)
-
-1.  organization\_id (integer) – **Required**. Organization id user will be assigned to.
-2.  data\_group\_id (integer) - **Required**. Data group id user will be assigned to.
-3.  role\_id (integer) – **Required**. Role id user will be assigned to.
-4.  username (character varying(255)) - **Required**. User username.
-5.  password (character varying(255)) - **Required**. User password.
-6.  email (character varying(255)) - **Required**. User email address.
-7.  first\_name (character varying(150)) - Optional. User first name.
-8.  last\_name (character varying(150)) - Optional. User last name.
-
-##### Result
-
-Boolean. Successful (true). Unsuccessful (false).
-
-##### Example(s)
-
--   Create new user for Jane Doe as a Reader (role_id:1) for BMGF organization (organization_id:13) in  data group BMGF(classification_id:768):
-
-```SELECT * FROM pmt_create_user(13, 768, 1, 'janedoe', 'secretpassword', 'jane.doe@email.com', 'Jane', 'Doe');```
-
-```
-TRUE
-```
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_data\_groups
 
@@ -2068,11 +2588,10 @@ None.
 | 1068                                 | "AWG"                                |
 | …                                    | …                                    |
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="edit_activity"/>
-pmt\_edit\_activity
-===================
+
+## pmt\_edit\_activity
 
 ##### Description
 
@@ -2080,29 +2599,29 @@ Edit an activity.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  activity\_id (integer) – **Required for delete and update operations**. Activity\_id of activity to update or delete.
-3.  project\_id (integer) – **Required for create operation**. Project\_id of activity to create.
-4.  json (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required for delete and update operations**. Activity id of activity to update or delete.
+4.  data\_group\_id (integer) – **Required for create operation**. Classification id of the Data Group taxonomy in which the activity belongs to.
+5.  key\_value\_data (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
 case sensitive. Enclose all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
 field that exists for activity, even custom fields. The following fields cannot be edited even
 if included: 
-	- activity\_id
-	- project_id
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
 
 	Json key/value format:
 	```
 	{"column_name": "value"}
 	```
-5. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+6. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
 
 ##### Result
 
@@ -2112,7 +2631,6 @@ Json with the following:
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Some possible error messages:
 	- The json parameter is required for a create/update operation
-	- project\_id is required for a create operation - When activity\_id is null a create operation is assumed an project\_id is required.
 	- activity_id is required for a delete operation - When delete\_record is true, an activity\_id is required.
 	- user\_id is a required parameter for all operations
 	- User does NOT have authority to create a new activity for project_id
@@ -2122,11 +2640,11 @@ or containing an error description regarding the unsuccessful transaction. Some 
 
 ##### Example(s)
 
--   Update the title, description and start_date for activity\_id 14863 and set it's opportunity\_id 
- to null. 
+-   Update the title, description and start_date for activity id 14863 from the BMGF instance (instance\_id: 5) 
+and set it's opportunity\_id to null. 
 
 ```
-select * from pmt_edit_activity(34,14863, null,'{"title": "Project Objective 1", 
+select * from pmt_edit_activity(5,34,14863,null,'{"title": "Project Objective 1", 
 "description":"Market opportunities, Policies and Partnerships", "start_date":"9-2-2012", 
 "opportunity_id": "null"}', false);
 ```
@@ -2135,10 +2653,10 @@ select * from pmt_edit_activity(34,14863, null,'{"title": "Project Objective 1",
 {"id":14863,"message":"Success"}
 ```
 
--  Create a new activity for project\_id 749.
+-  Create a new activity for the RED&FS data group (id: 2237) from the EthAIM instance (instance\_id: 1).
 
 ```
-select * from pmt_edit_activity(34, null, 749,'{"title": "A New Activity", 
+select * from pmt_edit_activity(1,34,null,2237,'{"title": "A New Activity", 
 "description":"Doing some good work in Nepal", "start_date":"6-1-2014", "end_date":"5-31-2016"}', false);
 ```
 
@@ -2146,19 +2664,20 @@ select * from pmt_edit_activity(34, null, 749,'{"title": "A New Activity",
 {"id":15821,"message":"Success"}
 ```
 
--  Delete activity\_id 15821.
+-  Delete activity\_id 15821 from the TanAIM instance (instance\_id: 2).
 
 ```
-select * from pmt_edit_activity(34, 15821, null, null, true);
+select * from pmt_edit_activity(2, 34, 15821, null, null, true);
 ```
 
 ```
 {"id":15821,"message":"Success"}
 ```
 
-<a name="edit_activity_contact"/>
-pmt\_edit\_activity\_contact
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_activity\_contact
 
 ##### Description
 
@@ -2202,68 +2721,123 @@ to determine authorization.
 
 	TRUE
 
-<a name="edit_activity_taxonomy"/>
-pmt\_edit\_activity\_taxonomy
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_activity\_taxonomy
 
 ##### Description
 
-Edit the relationship between activity(ies) and a taxonomy classification(s). **Important Note: This function DOES NOT 
-call the refresh\_taxonomy\_lookup() function, which updates the materialized views that support a majority of the functions
-in the database. Be sure to call this function when editing is complete.**
+Edit the relationship between activity(ies) and a taxonomy classification(s). 
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  activity\_ids (character varying) – **Required**. Comma separated list of activity_ids to edit.
-3.  classification\_ids (character varying) – **Required/Optional**.  Comma separated list of  classification\_ids of taxonomy classifications in relationship to activity\_id(s). Not required if using remove\_taxonomy\_ids parameter.
-4.  remove_taxonomy\_ids (character varying) – **Required/Optional**.  Comma separated list of  taxonomy\_ids to remove from relationships to activity\_id(s). Not required if using classification\_ids parameter.
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+3.  activity\_ids (character varying) – **Required**. Comma separated list of activity_ids to edit.
+4.  classification\_ids (character varying) – **Required/Optional**.  Comma separated list of  classification\_ids of taxonomy classifications in relationship to activity\_id(s). Not required if using the "delete" option for the edit\_activity parameter.
+4.  taxonomy\_ids (character varying) – **Required/Optional**.  Comma separated list of  taxonomy\_ids to remove from relationships to activity\_id(s). Not required if not using the "delete" option for the edit\_activity parameter..
 5.  edit\_activity (enum) - Optional. 
 	Options:
-	1. add (default) - will add a relationship between provided activity\_id(s) and classification_id(s)
-	2. delete - will remove the relationship between the provided activity\_id(s) and classification_id(s)
+	1. add (default) - will add a relationship between provided activity\_id(s) and classification\_id(s)
+	2. delete - will remove the relationship between the provided activity\_id(s) and classification_id(s)/taxonomy\_id(s)
 	3. replace - will replace all relationships between the provided activity\_ids(s) and taxonomy of the provided classification\_id(s), with
 a relationship between the provided activity\_id(s) and classification\_id(s) per taxonomy.
 
 ##### Result
 
-Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters or permissions.
+Json with the following:
+
+1.  activity\_ids (integer) – activity\_id(s) of the activity updated.
+2.  message(character varying) - Message containing either "Success" for a successful transaction 
+or containing an error description regarding the unsuccessful transaction. Some possible error messages:
+	- Error: instance_id is a required parameter for all operations.
+	- Error: classification_ids or taxonomy_ids are a required parameter for delete operations.
 
 ##### Example(s)
 
--   Add a relationship to Sub-Imitative 'Headquarters' (classification\_id:779) and to Crops and Livestock 'Cocoa' 
-(classification\_id:1196) to activity\_ids 13264,13355,13361:
+-   User sparadee (user\Id: 34) to add a relationship to Crops 'Barley' & 'Rice' (classification\_id:2243,2250) and to Thematic Area 'Agricultural Growth (AG)' 
+(classification\_id:2416) to activity\_ids 13264,13355,13361 from the EthAIM instance (instance\_id: 1):
 
-```select * from pmt_edit_activity_taxonomy(54,'13264,13355,13361','779,1196', null, 'add');```
+```select * from pmt_edit_activity_taxonomy(1,34,'13264,13355,13361','2243,2250,2416', null, 'add');```
 
-	TRUE
+```{"activity_ids":"13264,13355,13361","message":"Success"}```
 
--   Remove the relationship to Sub-Initiative 'Seed Systems' (classification\_id:791) and to Crops and Livestock 'Oranges' 
-(classification\_id:1192) from activity\_ids 13264,13355,13361:
+-   User sparadee (user\Id: 34) to replace all relationships to Crops with 'Coffee' (classification\_id:2245) and to Thematic Area with 'Agricultural Growth (AG)' 
+(classification\_id:2416) for activity\_id 13264 from the EthAIM instance (instance\_id: 1). This will result in all other reltionships to Crops and Thematic Area
+to be removed leaving **ONLY** the above classification assignments:
 
-```select * from pmt_edit_activity_taxonomy(54,'13264,13355,13361','791,1192', null, 'delete');```
+```select * from pmt_edit_activity_taxonomy(1,34,'13264','2245,2416', null, 'replace');```
 
-	TRUE
+```{"activity_ids":"13264,13355,13361","message":"Success"}```
 
--   Replace  all relationships to the Sub-Initiative taxonomy with the relationship to Sub-Initiative 'Crop Improvements' 
-(classification\_id:773) and replace all the relationships to the Crops and Livestock taxonomy with the relationships to 
-the Crops and Livestock 'Tomatoes' (classification\_id:1180) and 'Sweet Pepper' (classification\_id:1190) for 
-activity\_ids 13264,13355,13361:
 
-```select * from pmt_edit_activity_taxonomy(54, '13264,13355,13361', '773,1180,1190', null, 'replace');```
+-   User sparadee (user\Id: 34) to remoe all relationships to Crops (taxonomy\_id:69) for activity\_id 13264 from the EthAIM instance (instance\_id: 1). This will result in the activity
+having no assignments to Crops:
 
-	TRUE
+```select * from pmt_edit_activity_taxonomy(1,34,'13264',null, 69, 'delete');```
 
--   Remove all the relationships within the Crops and Livestock taxonomy (taxonomy\_id:51) from 
-activity\_ids 13264,13355,13361:
+```{"activity_ids":"13264,13355,13361","message":"Success"}```
 
-```select * from pmt_edit_activity_taxonomy(54, '13264,13355,13361', null, '51', null);```
 
-	TRUE
+[&larr;  Back to Function List](#function-listing)
 
-<a name="edit_contact"/>
-pmt\_edit\_contact
-===================
+## [pmt\_edit\_classification]
+
+##### Description
+
+Edit the classification table. 
+
+##### Parameter(s)
+
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+3.  classification\_id (integer) – **Required for update and delete operations**. Classification record to update.
+4.  taxonomy\_id (integer) – **Required for create operations**. The taxonomy id to create new classification record for.
+5.  key\_value\_data (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
+case sensitive. Enclose all values in double quotes, including null. **If your text values include
+a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
+uses the single quote to encase string constants.** You can include any existing
+field that exists for activity, even custom fields. The following fields cannot be edited even
+if included: 
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
+
+	Json key/value format:
+	```
+	{"column_name": "value"}
+	```
+6. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+ 
+##### Result
+
+Success or Fail message Json message
+
+##### Example(s)
+
+Add a new classification
+``` 
+select * from pmt_edit_classification(1, 272, '{2237}'::integer[], NULL, '{"_name":"Test Classfication","_description":"Test Classification - tester","taxonomy_id":71,"_code":null,"_iati_codelist":null,"parent_id":null}'::json, false);
+```
+
+Update a classification
+``` 
+select * from pmt_edit_classification(1, 272, '{2237}'::integer[], 2244, '{"_name":"New Name For Classfication","_description":"Test Classification - tester","taxonomy_id":71,"_code":null,"_iati_codelist":null,"parent_id":null}'::json, false);
+```
+
+Remove/Deactivate a  classification
+``` 
+select * from pmt_edit_classification(1, 272, '{2237}'::integer[], 2244, '{"_name":"New Name For Classfication","_description":"Test Classification - tester","taxonomy_id":71,"_code":null,"_iati_codelist":null,"parent_id":null}'::json, false);
+```
+
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_contact
 
 ##### Description
 
@@ -2271,27 +2845,30 @@ Edit a contact.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  contact\_id (integer) – **Required for update and delete operations**. Contact\_id of existing contact to update or delete, if left null then a new contact record will be created.
-3.  json (json) - **Required**. Key/value pair as json of field/values to edit. Column names are 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required for delete and update operations**. Activity id of activity to update or delete.
+4.  data\_group\_id – **Required for create operation**. Classification id of the Data Group taxonomy in which the activity belongs to.
+5.  contact\_id (integer) – **Required for delete and update operations**. Contact id of contact to update or delete.
+6.  key\_value\_data (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
 case sensitive. Enclose all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
-field that exists for contact, even custom fields. The following fields cannot be edited even
+field that exists for activity, even custom fields. The following fields cannot be edited even
 if included: 
-	- contact\_id
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
 
 	Json key/value format:
 	```
 	{"column_name": "value"}
 	```
-4. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+7. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
 
 ##### Result
 
@@ -2307,9 +2884,11 @@ or containing an error description regarding the unsuccessful transaction. Possi
 
 ##### Example(s)
 
--   Update the email and title for John Hancock (contact\_id:148) as user sparadee (user\_id:34)
+-   Update the first name, last name, email and title for John Hancock (contact\_id:148) as user sparadee (user\_id:34)
 
-```select * from pmt_edit_contact(34,148,'{"email":"jhanhock@mail.com", "title":"CEO"}', false);```
+```
+SELECT * FROM pmt_edit_contact(1,34,26225,2237,148,'{"id": 148,"_first_name": "John","_last_name": "Hanhock","_email": "jhanhock@mail.com","_title": "CEO"}', false)
+```
 
 ```
 {"id":148,"message":"Success"}
@@ -2318,8 +2897,7 @@ or containing an error description regarding the unsuccessful transaction. Possi
 -   Add new contact for BMGF (organization\_id:13) as user sparadee (user\_id:34)
 
 ```
-select * from pmt_edit_contact(34,null,'{"first_name":"John", "last_name":"Hanhock", "email":"jhanhock@mail.com", 
-"title":"CEO", "organization_id": 13}', false);
+SELECT * FROM pmt_edit_contact(1,34,26225,2237,null,'{"_first_name": "John","_last_name": "Hanhock","_email": "jhanhock@mail.com","_title": "CEO","organization_id": 13}', false);
 ```
 
 ```
@@ -2329,16 +2907,17 @@ select * from pmt_edit_contact(34,null,'{"first_name":"John", "last_name":"Hanho
 -   Delete contact\_id 672 as user sparadee (user\_id:34)
 
 ```
-select * from pmt_edit_contact(34,672,null, true);
+SELECT * FROM pmt_edit_contact(1,34,26225,2237,672,null,true)
 ```
 
 ```
 {"id":672,"message":"Success"}
 ```
 
-<a name="edit_detail"/>
-pmt\_edit\_detail
-===================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_detail
 
 ##### Description
 
@@ -2346,23 +2925,23 @@ Edit a detail.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  detail\_id (integer) – **Required for update and delete operations**. detail\_id of existing detail to update or delete, if left null then a new detail record will be created.
-2.  project\_id (integer) – **Required for create operations on project details**. project\_id of detail to create.
-2.  activity\_id (integer) – **Required for create operations on activity details**. activity\_id of detail to create.
-3.  json (json) - **Required for update and create operations**. Key/value pair as json of field/values to edit. Column names are 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required**. activity id of detail record to create.
+4.  detail\_id (integer) – **Required for update and delete operations**. detail id of existing detail to update or delete, if left null then a new detail record will be created.
+5.  key\_value\_data (json) - **Required for update and create operations**. Key/value pair as json of field/values to edit. Column names are 
 case sensitive. Enclose all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
-field that exists for detail, even custom fields. The following fields cannot be edited even
+field that exists for financial, even custom fields. The following fields cannot be edited even
 if included: 
-	- detail\_id
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
 
 	Json key/value format:
 	```
@@ -2377,60 +2956,104 @@ Json with the following:
 1.  id (integer) – detail\_id of the detail created or updated.
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Possible error messages:
-	- Must include json parameter when delete_record is false
-	- Must include detail_id when delete_record is true
-	- Must include project_id or activity_id parameter when detail_id parameter is null
-	- Must include user_id parameter
-	- Invalid project_id
+	- The json parameter is required for a create/update operation
+	- Must include detail\_id when delete_record is true
+	- Must include activity\_id parameter when detail\_id parameter is null
+	- Must include user\_id parameter
+	- Invalid activity\_id
+
 
 ##### Example(s)
 
--   Update title for detail\_id 136 as user sparadee (user\_id:34)
+-   Update title for detail\_id 136 on activity\_id 29345 as user sparadee (user\_id:34) on the EthAIM instance (instance\_id:1)
 
 ```
-select * from pmt_edit_detail(34,136,null,null,'{"title": "Description of Activities Related to Nutrition"}', 
-false);
+SELECT * FROM pmt_edit_detail(1, 34, 29345, 136,'{"title": "Description of Activities Related to Nutrition"}', false);
 ```
 
 ```
 {"id":136,"message":"Success"}
 ```
 
--   Add new detail for activity\_id 493 as user sparadee (user\_id:34)
+-   Add new detail for activity\_id 493 as user sparadee (user\_id:34) on the AGRA instance (instance\_id:4)
 
 ```
-select * from pmt_edit_detail(34,null, null, 493,'{"title": "Test Title", "description":"a description", 
-"amount":3}', false);
+SELECT * FROM pmt_edit_detail(4, 34, 493, null,'{"title": "Description of Activities Related to Nutrition"}', false);
 ```
 
 ```
 {"id":672,"message":"Success"}
 ```
 
--   Add new detail for project\_id 13 as user sparadee (user\_id:34)
+-   Delete detail\_id 673 for activity\_id 493 as user sparadee (user\_id:34) on the BMGF instance (instance\_id:5)
 
 ```
-select * from pmt_edit_detail(34, null, 13, null, '{"title": "Test Title", "description":"a description", 
-"amount":3}', false);
-```
-
-```
-{"id":673,"message":"Success"}
-```
-
--   Delete detail\_id 673 as user sparadee (user\_id:34)
-
-```
-select * from pmt_edit_detail(34, 673, null, null, null, true);
+select * from pmt_edit_detail(5, 34, 493, 673,  null, true);
 ```
 
 ```
 {"id":673,"message":"Success"}
 ```
 
-<a name="edit_financial"/>
-pmt\_edit\_financial
-===================
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_detail\_taxonomy
+
+##### Description
+
+Edit the relationship between detail(s) and a taxonomy classification(s). 
+
+##### Parameter(s)
+
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  detail\_ids (character varying) – **Required**. Comma separated list of detail ids to edit.
+4.  classification\_ids (character varying) – **Required/Optional**.  Comma separated list of classification ids of taxonomy classifications in relationship to detail id(s). Not required if using taxonomy\_ids parameter with the delete action. Required for add/replace actions.
+5.  taxonomy\_ids (character varying) – **Required/Optional**.  Comma separated list of taxonomy\_ids to remove from relationships to detail\_id(s). Only required if using the delete action.
+6.  edit\_action (enum) - **Required** 
+	Options:
+	1. add (default) - will add a relationship between provided detail id(s) and classification id(s)
+	2. delete - will remove the relationship between the provided detail id(s) and classification id(s)/taxonomy id(s)
+	3. replace - will replace all relationships between the provided detail ids(s) and taxonomy of the provided classification id(s), with
+a relationship between the provided detail id(s) and classification id(s) per taxonomy.
+
+##### Result
+
+Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due invalid parameters or permissions.
+
+##### Example(s)
+
+-   User sparadee (user\_id:34) to add a relationship to GTP2 Program Area 'Agricultural extension' (classification\_id:2447) to detail\_ids 1896,1889,1885 from
+the EthAIM instance (instance\_id:1):
+
+```select * from pmt_edit_detail_taxonomy(1,34,'1896,1889,1885','2447',null,'add');```
+
+	TRUE
+
+-   User sparadee (user\_id:34) to remove a relationship to GTP2 Program Area 'Agricultural extension' (classification\_id:2447) from detail\_ids 1896,1889,1885 in
+the EthAIM instance (instance\_id:1):
+
+```select * from pmt_edit_detail_taxonomy(1,34,'1896,1889,1885','2447',null,'delete');```
+
+	TRUE
+
+-   User sparadee (user\_id:34) to replace all relationships to the GTP2 Program Area taxonomy with a relationship to GTP2 Program Area 'Support to input supply' 
+(classification\_id:2450) for detail\_ids 1896,1889,1885 from the EthAIM instance (instance\_id:1):
+
+```select * from pmt_edit_detail_taxonomy(1, 34,'1896,1889,1885','2450',null,'replace');```
+
+	TRUE
+
+-   User sparadee (user\_id:34) to remove all the relationships within the GTP2 Program Area (taxonomy\_id:78) from 
+detail\_ids 1896,1889,1885 from the TanAIM instance (instance\_id:1):
+
+```select * from pmt_edit_detail_taxonomy(1,34,'1896,1889,1885',null,'78','delete');```
+
+	TRUE
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_financial
 
 ##### Description
 
@@ -2438,23 +3061,23 @@ Edit a financial record.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  financial\_id (integer) – **Required for update and delete operations**. financial\_id of existing financial to update or delete, if left null then a new financial record will be created.
-2.  project\_id (integer) – **Required for create operations on project financials**. project\_id of financial record to create.
-2.  activity\_id (integer) – **Required for create operations on activity financials**. activity\_id of financial record to create.
-3.  json (json) - **Required for update and create operations**. Key/value pair as json of field/values to edit. Column names are 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required for create operations on activity financials**. activity id of financial record to create.
+4.  financial\_id (integer) – **Required for update and delete operations**. financial id of existing financial to update or delete, if left null then a new financial record will be created.
+5.  key\_value\_data (json) - **Required for update and create operations**. Key/value pair as json of field/values to edit. Column names are 
 case sensitive. Enclose all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
 field that exists for financial, even custom fields. The following fields cannot be edited even
 if included: 
-	- financial\_id
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
 
 	Json key/value format:
 	```
@@ -2469,78 +3092,67 @@ Json with the following:
 1.  id (integer) – financial\_id of the financial created or updated.
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Possible error messages:
-	- Must include json parameter when delete_record is false
-	- Must include financial_id when delete_record is true
-	- Must include project_id or activity_id parameter when financial_id parameter is null
-	- Must include user_id parameter
-	- Invalid project_id
+	- The json parameter is required for a create/update operation
+	- Must include financial\_id when delete_record is true
+	- Must include activity\_id parameter when financial\_id parameter is null
+	- Must include user\_id parameter
+	- Invalid activity\_id
 
 ##### Example(s)
 
--   Update amount and start\_date for financial\_id 136 as user sparadee (user\_id:34)
+-   Update amount and start\_date for financial\_id 136 as user sparadee (user\_id:34) from the EthAIM instance (instance\_id:1):
 
 ```
-select * from pmt_edit_financial(34,136,null,null,'{"amount": 130900.00, "start_date":"1-1-2014"}', false);
+select * from pmt_edit_financial(1,34,null,136,'{"_amount": 130900.00, "_start_date":"1-1-2014"}', false);
 ```
 
 ```
 {"id":136,"message":"Success"}
 ```
 
--   Add new financial record for activity\_id 493 as user sparadee (user\_id:34)
+-   Add new financial record for activity\_id 493 as user sparadee (user\_id:34) from the EthAIM instance (instance\_id:1):
 
 ```
-select * from pmt_edit_financial(34,null, null, 493,'{"amount": "100500.00", "start_date":"1-1-2014", 
-"end_date":"12-31-2016"}', false);
+select * from pmt_edit_financial(1,34,493,null,'{"_amount": "100500.00", "_start_date":"1-1-2014", 
+"_end_date":"12-31-2016"}', false);
 ```
 
 ```
 {"id":672,"message":"Success"}
 ```
 
--   Add new financial for project\_id 13 as user sparadee (user\_id:34)
+-   Delete financial\_id 673 as user sparadee (user\_id:34) from the BMGF instance (instance\_id:4):
 
 ```
-select * from pmt_edit_financial(34, null, 13, null, '{"amount": "1000000.00", 
-"start_date":"1-1-2014", "end_date":"12-31-2016"}', false);
-```
-
-```
-{"id":673,"message":"Success"}
-```
-
--   Delete financial\_id 673 as user sparadee (user\_id:34)
-
-```
-select * from pmt_edit_financial(34, 673, null, null, null, true);
+select * from pmt_edit_financial(4, 34, null, 673, null, true);
 ```
 
 ```
 {"id":673,"message":"Success"}
 ```
 
-<a name="edit_financial_taxonomy"/>
-pmt\_edit\_financial\_taxonomy
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_financial\_taxonomy
 
 ##### Description
 
-Edit the relationship between financial(s) and a taxonomy classification(s). **Important Note: This function DOES NOT 
-call the refresh\_taxonomy\_lookup() function, which updates the materialized views that support a majority of the functions
-in the database. Be sure to call this function when editing is complete.**
+Edit the relationship between financial(s) and a taxonomy classification(s). 
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  financial\_ids (character varying) – **Required**. Comma separated list of financial_ids to edit.
-3.  classification\_ids (character varying) – **Required/Optional**.  Comma separated list of  classification\_ids of taxonomy classifications in relationship to financial\_id(s). Not required if using remove\_taxonomy\_ids parameter.
-4.  remove_taxonomy\_ids (character varying) – **Required/Optional**.  Comma separated list of  taxonomy\_ids to remove from relationships to financial\_id(s). Not required if using classification\_ids parameter.
-5.  edit\_financial (enum) - Optional. 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  financial\_ids (character varying) – **Required**. Comma separated list of financial ids to edit.
+4.  classification\_ids (character varying) – **Required/Optional**.  Comma separated list of classification ids of taxonomy classifications in relationship to financial id(s). Not required if using taxonomy\_ids parameter with the delete action. Required for add/replace actions.
+5.  taxonomy\_ids (character varying) – **Required/Optional**.  Comma separated list of taxonomy\_ids to remove from relationships to financial\_id(s). Only required if using the delete action.
+6.  edit\_action (enum) - **Required** 
 	Options:
-	1. add (default) - will add a relationship between provided financial\_id(s) and classification_id(s)
-	2. delete - will remove the relationship between the provided financial\_id(s) and classification_id(s)
-	3. replace - will replace all relationships between the provided financial\_ids(s) and taxonomy of the provided classification\_id(s), with
-a relationship between the provided financial\_id(s) and classification\_id(s) per taxonomy.
+	1. add (default) - will add a relationship between provided financial id(s) and classification id(s)
+	2. delete - will remove the relationship between the provided financial id(s) and classification id(s)/taxonomy id(s)
+	3. replace - will replace all relationships between the provided financial ids(s) and taxonomy of the provided classification id(s), with
+a relationship between the provided financial id(s) and classification id(s) per taxonomy.
 
 ##### Result
 
@@ -2548,72 +3160,77 @@ Boolean. Sucessfull (true) or unsuccessful (false). Unsuccessful is usually due 
 
 ##### Example(s)
 
--   Add a relationship to Currency 'Tanzanian Shilling' (classification\_id:419) to financial\_ids 8061,8062,8063:
+-   User sparadee (user\_id:34) to add a relationship to Currency 'Tanzanian Shilling' (classification\_id:419) to financial\_ids 8061,8062,8063 from
+the TanAIM instance (instance\_id:3):
 
-```select * from pmt_edit_financial_taxonomy(27,'8061,8062,8063','419',null,'add');```
-
-	TRUE
-
--   Remove the relationship to Currency 'Tanzanian Shilling' (classification\_id:419) from financial\_ids 8064,8065,8066,8067:
-
-```select * from pmt_edit_financial_taxonomy(27,'8064,8065,8066,8067',null,'6','delete');```
+```select * from pmt_edit_financial_taxonomy(3,34,'8061,8062,8063','419',null,'add');```
 
 	TRUE
 
--   Replace  all relationships to the Currency taxonomy 'Tanzanian Shilling' with the relationship to Currency 'Lebanese Pound' 
-(classification\_id:356) for financial\_ids 8061,8062,8063:
+-   User sparadee (user\_id:34) to remove the relationship to Currency 'Tanzanian Shilling' (classification\_id:419) from financial\_ids 8064,8065,8066,8067 from
+the TanAIM instance (instance\_id:3):
 
-```select * from pmt_edit_financial_taxonomy(27,'8061,8062,8063','356',null,'replace');```
-
-	TRUE
-
--   Remove all the relationships within the Currency (taxonomy\_id:6) from 
-financial\_ids 8061,8062,8063:
-
-```select * from pmt_edit_financial_taxonomy(27,'8061,8062,8063',null,'6','delete');```
+```select * from pmt_edit_financial_taxonomy(3,34,'8064,8065,8066,8067','419',null,'delete');```
 
 	TRUE
 
-<a name="edit_location"/>
-pmt\_edit\_location
-===================
+-   User sparadee (user\_id:34) to replace  all relationships to the Currency taxonomy 'Tanzanian Shilling' with the relationship to Currency 'Lebanese Pound' 
+(classification\_id:356) for financial\_ids 8061,8062,8063 from the TanAIM instance (instance\_id:3):
+
+```select * from pmt_edit_financial_taxonomy(3, 34,'8061,8062,8063','356',null,'replace');```
+
+	TRUE
+
+-   User sparadee (user\_id:34) to remove all the relationships within the Currency (taxonomy\_id:6) from 
+financial\_ids 8061,8062,8063 from the TanAIM instance (instance\_id:3):
+
+```select * from pmt_edit_financial_taxonomy(3,34,'8061,8062,8063',null,'6','delete');```
+
+	TRUE
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_location
 
 ##### Description
 
-Edit a location.
+Create/delete a location. Locations are currently not editable, to alter a location: delete and create.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  location\_id (integer) – **Required for delete and update operations**. Location\_id of location to update or delete.
-3.  activity\_id (integer) – **Required for create operation**. Activity\_id of the location to create.
-4.  json (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Enclose 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required**. Activity id of the location.
+4.  location\_id (integer) – **Required for delete operation**. Location id of location to update or delete.
+5.  boundary\_id (integer) – **Required for create operation**. Boundary id of boundary the location features is within.
+6.  feature\_id (integer) – **Required for create operation**. Featuere id within the boundary representing the location.
+7.  admin\_level (integer) – **Required for create operation**. Administrative level (0,1,2,3) of the feature representing the location.
+8.  key\_value\_data (json) - **Required for create operation**. Key/value pair as json of field/values to edit. Enclose 
 all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
 field that exists for location, even custom fields. The following fields cannot be edited even
 if included: 
-	- location\_id
-	- project_id
+	- id
 	- activity\_id
-	- x
-	- y
-	- lat_dd
-	- long_dd
-	- latlong
-	- georef
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- _x
+	- _y
+	- _lat_dd
+	- _long_dd
+	- _latlong
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
 
 	Json key/value format:
 	```
 	{"column_name": "value"}
 	```
-5. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+9. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
 
 ##### Result
 
@@ -2622,79 +3239,45 @@ Json with the following:
 1.  id (integer) – location\_id of the location created, updated or deleted.
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Some possible error messages:
-	- The json parameter is required for a create/update operation
-	- activity\_id is required for a create operation - (When location\_id is null a create operation is assumed an activity\_id is required.)
-	- location_id is required for a delete operation - (When delete\_record is true, an location\_id is required.)
+	- The json parameter is required for a create operation
+	- activity\_id is a required parameter for all operations
+	- instance\_id is a required parameter for all operations
 	- user\_id is a required parameter for all operations
-	- User does NOT have authority to create a new location for activity_id
-	- User does NOT have authority to delete this location
-	- activity_id is not valid - (the provided activity\_id is either not active or invalid)
-	- User does NOT have authority to update this location
+	- User does NOT have authority to create/delete a location record for activity id
+	- Invalid boundary\_id & feature\_id
+	- The boundary\_id, feature\_id & admin\_level parameters are required for a create operation
 
 ##### Example(s)
 
--   Update the point geometry for location\_id 81118.
+-  As user sparadee (user\_id:34) create a new location for activity id 23342 in Bole (feature\_id:1322) a woreda in Region 14, Addis Ababa within the 
+UNOCHA Ethiopia Administrative Level 3 (boundary\_id:14) from the EthAIM instance (instance\_id:1):
 
 ```
-select * from pmt_edit_location(3, 81118, null, '{"point":"POINT(4.921875 27.308333052145453)"}', false);
-```
-
-```
-{"id":81118,"message":"Success"}
-```
-
--   Update an existing location to a boundary feature polygon (__Note: Since this is an existing point location, this
-will replace the current point with the centroid of the given boundary feature. If a location record has a boundary_id
-and feature_id the point is ALWAYS the centroid of the associated feature__). 
-
-```
-select * from pmt_edit_location(3, 79564, null, '{"boundary_id":3,"feature_id":25675}', false); 
-```
-
-```
-{"id":79564,"message":"Success"}
-```
-
--  Create a new location with title for activity\_id 6.
-
-```
-select * from pmt_edit_location(3, null, 6, '{"title": "A village in Nepal", "point":"POINT(39.0234375 6.9427857850946015)"}', false); 
+select * from pmt_edit_location(1,34,23342,null,14,1322,3,'{"_admin0": "Ethiopia", "_admin1": "Addis Ababa", "_admin2": "Region 14", "_admin3": "Bole"}', false); 
 ```
 
 ```
 {"id":15821,"message":"Success"}
 ```
 
--  Create a new location as a boundary feature polygon for activity\_id 6 (__Note: You do not have to provide a 
-point value as it is automatically created as the centroid of the provided polygon__).
+-  As user sparadee (user\_id:34) delete location\_id 81116 for activity id 23342 from the EthAIM instance (instance\_id:1):
 
 ```
-select * from pmt_edit_location(3, null, 6, '{"boundary_id":3,"feature_id":25675}', false); 
-```
-
-```
-{"id":15821,"message":"Success"}
-```
-
--  Delete location\_id 81116.
-
-```
-select * from pmt_edit_location(3, 81116, null, null, true);
+select * from pmt_edit_location(1,34,23342,81116,null,null,null,null,true); 
 ```
 
 ```
 {"id":81116,"message":"Success"}
 ```
 
-<a name="edit_location_taxonomy"/>
-pmt\_edit\_location\_taxonomy
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_location\_taxonomy
 
 ##### Description
 
-Edit the relationship between a location(s) and a taxonomy classification(s). **Important Note: This function DOES NOT 
-call the refresh\_taxonomy\_lookup() function, which updates the materialized views that support a majority of the functions
-in the database. Be sure to call this function when editing is complete.**
+Edit the relationship between a location(s) and a taxonomy classification(s).
 
 ##### Parameter(s)
 
@@ -2747,9 +3330,9 @@ relationship to Location Class 'District (level-2)' (classification\_id:970) for
 
 	TRUE
 
-<a name="edit_organization"/>
-pmt\_edit\_organization
-===================
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_organization
 
 ##### Description
 
@@ -2757,27 +3340,28 @@ Edit a organization.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  organization\_id (integer) – **Required for update and delete operations**. organization\_id of existing organization to update or delete, if left null then a new organization record will be created.
-3.  json (json) - **Required**. Key/value pair as json of field/values to edit. Column names are 
-case sensitive. Enclose all values in double quotes, including null. **If your text values include
+1.  instnace\_id (integer) – **Required**. Instance id that the requesting user is editing from.
+2.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+3.  organization\_id (integer) – **Required for update and delete operations**. organization\_id of existing organization to update or delete, if left null then a new organization record will be created.
+4.  json (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
 uses the single quote to encase string constants.** You can include any existing
 field that exists for organization, even custom fields. The following fields cannot be edited even
 if included: 
-	- organization\_id
-	- active
-	- retired_by
-	- created_by
-	- created_date
-	- updated_by
-	- updated_date
+	- id
+	- iati\_import\_id
+	- \_active
+	- \_retired_by
+	- \_created_by
+	- \_created_date
+	- \_updated_by
+	- \_updated_date
 
 	Json key/value format:
 	```
 	{"column_name": "value"}
 	```
-4. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+5. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
 
 ##### Result
 
@@ -2793,20 +3377,20 @@ or containing an error description regarding the unsuccessful transaction. Possi
 
 ##### Example(s)
 
--   Update the email and url for CIAT (organization\_id:25) as user sparadee (user\_id:34)
+-   Update the email and url for CIAT (organization\_id:25) as user sparadee (user\_id:34) in the EthAIM instance (instance\_id:1)
 
 ```
-select * from pmt_edit_organization(34,25,'{"email":"ciatk@mail.com", "url":"www.ciat.org"}', false);
+select * from pmt_edit_organization(1,34,25,'{"email":"ciatk@mail.com", "url":"www.ciat.org"}', false);
 ```
 
 ```
 {"id":25,"message":"Success"}
 ```
 
--   Add new organization as user sparadee (user\_id:34)
+-   Add new organization as user sparadee (user\_id:34) in the EthAIM instance (instance\_id:1)
 
 ```
-select * from pmt_edit_organization(34,null,'{"name":"SpatialDev", "url":"www.spatialdev.com", 
+select * from pmt_edit_organization(4,34,null,'{"name":"SpatialDev", "url":"www.spatialdev.com", 
 "email":"info@spatialdev.com"}', false);
 ```
 
@@ -2814,38 +3398,37 @@ select * from pmt_edit_organization(34,null,'{"name":"SpatialDev", "url":"www.sp
 {"id":672,"message":"Success"}
 ```
 
--   Delete organization\_id 672 as user sparadee (user\_id:34)
+-   Delete organization\_id 672 as user sparadee (user\_id:34) from EthAIM instance (instance\_id:1)
 
 ```
-select * from pmt_edit_organization(34,672,null, true);
+select * from pmt_edit_organization(1, 34,672,null, true);
 ```
 
 ```
 {"id":672,"message":"Success"}
 ```
 
-<a name="edit_participation"/>
-pmt\_edit\_participation
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_participation
 
 ##### Description
 
-Edit the relationship between projects, activities and organizations.
+Edit the relationship between activities and organizations.
 
 ##### Parameter(s)
 
-1.  user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  participation\_id (integer) – **Required when edit\_activity option is delete**. participation\_id of participation record to edit.
-3.  project\_id (integer) – **Required for project participation when edit\_activity option is add/replace**. Project\_id of project that organization has participation in.
-4.  activity\_id (integer) – **Required for activity participation when edit\_activity option is add/replace**. Activity\_id of activity that organization has participation in.
-5.  organiation\_id (integer) – **Required when edit\_activity option is add/replace***.  Organiation\_id of organization that is participating in the project/activity.
-6.  classification\_ids (character varying) – **Required when edit\_action option is add/replace***.  Classification\_ids from Organisation Role taxonomy that represents the organizations
-participation role in the project/activity.
-7.  edit\_action (enum) - Optional. 
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User id of user requesting edits.
+3.  activity\_id (integer) – **Required**. Activity id of activity that organization has participation in.
+4.  organiation\_id (integer) – **Required**. Organiation id of organization that is participating in the activity.
+5.  participation\_id (integer) – **Required for delete/replace operations**. participation id of participation record to edit.
+6.  classification\_ids (character varying) – **Required for add/replace operations**.  Classification ids from Organisation Role taxonomy that represents the organizations participation role in the activity.
+7.  edit\_action (enum) - **Required** 
 	Options:
-	1. add (default) - will add a participation record to project/activity.
-	2. delete - will remove  a participation record.
-	3. replace - will replace all existing participation records with the new participation record for the project/activity **make sure you understand what this is doing before requesting this edit action***
+	1. add (default) - will add a participation record to activity.
+	2. delete - will remove a participation record.
+	3. replace - will replace all existing participation records with the new participation record for the activity **make sure you understand what this is doing before requesting this edit action**
 
 ##### Result
 
@@ -2857,38 +3440,35 @@ or containing an error description regarding the unsuccessful transaction.
 
 ##### Example(s)
 
--   Add IFPRI (organization\_id:519) as a Funding & Implementing (classification\_id:496 & 497) organization for 'STAPLE CROPS PROGRAMME' project 
-(project\_id:463) activity 'P008-09-P1-08-008-Integrated Striga Management For Improved Sorghum Productivity In East And Central Africa'
-(activity\_id:1653) as user sparadee (user\_id:34):
+-   Add AECID (SPAN) (organization\_id:3075) as a Funding & Implementing (classification\_id:496 & 497) organization for activity 'African Stockpiles Project'
+(activity\_id:26271) as user sparadee (user\_id:34) from the EthAIM instance (instance\_id:1):
 
-```select * from pmt_edit_participation(34, null, 463, 1653, 519, '496,497', 'add');```
+```select * from pmt_edit_participation(1, 34, 26271, 3075, null, '496,497', 'add');```
 
-```{"id":618,"message":"Success"}```
+```{"id":56667,"message":"Success"}```
 
--   Delete IFPRI as an Implementing organization for 'STAPLE CROPS PROGRAMME' project activity 'P008-09-P1-08-008-Integrated Striga Management 
-For Improved Sorghum Productivity In East And Central Africa'(participation\_id:10708) as user sparadee (user\_id:34):
+-   Delete Government of Ethiopia (GoE) (paricipation\_id:10708) as a participating organization for activity 'African Stockpiles Project'
+(activity\_id:26271) as user sparadee (user\_id:34) from the EthAIM instance (instance\_id:1):
 
-```select * from pmt_edit_participation(34, 10708, null, null, null, null, 'delete');```
+```select * from pmt_edit_participation(1, 34, 26271, null, 10708, null, 'delete');```
 
 ```{"id":10708,"message":"Success"}```
 
--   Replace **ALL** participation records for 'STAPLE CROPS PROGRAMME' project (project\_id:463) activity 
-'P008-09-P1-08-008-Integrated Striga Management For Improved Sorghum Productivity In East And Central Africa'
-(activity\_id:1653) with IFPRI as an Implementing organization as user sparadee (user\_id:34). 
+-   Replace Government of Ethiopia (GoE) (paricipation\_id:10708) as a participating organization for activity 'African Stockpiles Project'
+(activity\_id:26271) with AECID (SPAN) (organization\_id:3075) as a Funding & Implementing (classification\_id:496 & 497) organization as user 
+sparadee (user\_id:34) from the EthAIM instance (instance\_id:1):
 
-```select * from pmt_edit_participation(34, null, 463, 1653, 519, '497', 'replace');```
+```select * from pmt_edit_participation(1, 34, 26271, 3075, 10708, '496,497', 'replace');```
 
-```{"id":1058,"message":"Success"}```
+```{"id":10708,"message":"Success"}```
 
-<a name="edit_participation_taxonomy"/>
-pmt\_edit\_participation\_taxonomy
-=============================
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_edit\_participation\_taxonomy
 
 ##### Description
 
-Edit the relationship between a participation and a taxonomy classification. **Important Note: This function DOES NOT 
-call the refresh\_taxonomy\_lookup() function, which updates the materialized views that support a majority of the functions
-in the database. Be sure to call this function when editing is complete.**
+Edit the relationship between a participation and a taxonomy classification.
 
 ##### Parameter(s)
 
@@ -2931,6 +3511,63 @@ to Organisation Role 'Implementing' (classification\_id:497) to participation\_i
 
 	TRUE
 
+[&larr;  Back to Function List](#function-listing)
+
+## [pmt\_edit\_taxonomy]
+
+##### Description
+
+Edit the taxonomy table. 
+
+##### Parameter(s)
+
+1.  instance\_id (integer) – **Required**. Instance id of the instance where the edit request originates.
+2.  user\_id (integer) – **Required**. User\_id of user requesting edits.
+3.  taxonomy\_id (integer) – **Required for update and delete operations**. Taxonomy id of record to update or delete.
+4.  key\_value\_data (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
+case sensitive. Enclose all values in double quotes, including null. **If your text values include
+a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
+uses the single quote to encase string constants.** You can include any existing
+field that exists for activity, even custom fields. The following fields cannot be edited even
+if included: 
+	- id
+	- _active
+	- _retired_by
+	- _created_by
+	- _created_date
+	- _updated_by
+	- _updated_date
+	- _core
+	- data_group_ids (this are copied from the instance on create operations)
+
+	Json key/value format:
+	```
+	{"column_name": "value"}
+	```
+5. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+ 
+##### Result
+
+Success or Fail message Json message
+
+##### Example(s)
+
+Add a new taxonomy "Test Taxonomy" from EthAIM instance (instance\_id: 1) as user\_id 272:
+``` 
+select * from pmt_edit_taxonomy(1, 272, null, '{"_name":"Test Taxonomy","_description":"Test Taxonomy - tester"}', false);
+```
+
+Update the "Test Taxonomy" (taxonomy\_id: 85) from EthAIM instance (instance\_id: 1) as user\_id 272:
+``` 
+select * from pmt_edit_taxonomy(1, 272, 85, '{"_description":"Test Taxonomy - updating the description"}', false);
+```
+
+Delete the "Test Taxonomy" (taxonomy\_id: 85) from EthAIM instance (instance\_id: 1) as user\_id 272:
+``` 
+select * from pmt_edit_taxonomy(1, 272, 85, null, true);
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_edit\_user
 
@@ -2940,8 +3577,9 @@ Edit a user.
 
 ##### Parameter(s)
 
-1.  request\_user\_id (integer) – **Required**. User\_id of user requesting edits.
-2.  target\_user\_id (integer) – **Required for delete and update operations**. User\_id of user record to be updated or deleted.
+1.  instnace\_id (integer) – **Required**. Instance id that the requesting user is editing from.
+1.  request\_user\_id (integer) – **Required**. User id of user requesting edits.
+2.  target\_user\_id (integer) – **Required for delete and update operations**. User id of user record to be updated or deleted.
 3.  json (json) - **Required for create and update operations**. Key/value pair as json of field/values to edit. Column names are 
 case sensitive. Enclose all values in double quotes, including null. **If your text values include
 a single quote, use two adjacent single quotes, e.g., 'Dianne''s dog'. This is because PostgreSQL
@@ -2959,13 +3597,14 @@ if included:
 	```
 	{"column_name": "value"}
 	```
-4. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
+4. role\_id (integer) **Required for create and update operations**. The role id of the edited user record for the instance.
+5. delete\_record (boolean) - Optional, default is false. True to request the record be deleted.
 
 ##### Result
 
 Json with the following:
 
-1.  id (integer) – project\_id of the project created, updated or deleted.
+1.  id (integer) – user\_id of the user that was created, updated or deleted.
 2.  message(character varying) - Message containing either "Success" for a successful transaction 
 or containing an error description regarding the unsuccessful transaction. Some possible error messages:
 	- Must include json parameter when delete_record is false.
@@ -2977,42 +3616,100 @@ or containing an error description regarding the unsuccessful transaction. Some 
 
 ##### Example(s)
 
--   User updates their own email and password. Users can change any element of their user record
-with the exception of their role\_id which determines thier database level permissions.
+-   User (user\_id: 34) updates their own email and password from the SpatialDev instance (instance\_id: 1) where they are have a
+Administrator role (role\_id: 4). Users can change any 
+element of their user record with the exception of their role\_id which determines thier instance level permissions.
 
 ```
-select * from pmt_edit_user(4,4, '{"email": "mymail@email.com", "password":"Summ3r!"}', false);
+select * from pmt_edit_user(1, 34, 34, '{"email": "mymail@email.com", "password":"Summ3r!"}', 4, false);
 ```
 
 ```
 {"id":4,"message":"Success"}
 ```
 
--  Create a new user as user (user\_id:3) with with either the Administrator or Super role. The following 
-fields are required for a new user: email, username and password.
+-  Create a new user with Editor role (role\_id: 2) on the EthAIM instance (instance\_id: 3) as user (user\_id:34) with the an 
+Administrator role (role\_id: 4). The following fields are required for a new user: \_first\_name, \_last\_name, \_email, \_username, 
+\_password & organization\_id.
 
 ```
-select * from pmt_edit_user(3,null,'{"email":"jhanhock@mail.com", "username":"jhanhock1", 
-"password":"p@ssw0rd"}', false);
+select * from pmt_edit_user(1, 34, null, '{"organization_id": 2672, "_username":"testuser", "_password":"testpassword","_email":"test@mail.com","_first_name":"Test","_last_name":"User"}', 2, false)
+```
+
+```
+{"id":45,"message":"Success"}
+```
+
+-  Delete user\_id 45 as user (user\_id:34) with either the Administrator role on the TanAIM instance (instance\_id: 3).
+
+```
+select * from pmt_edit_user(3, 34, 45, null, null, true);
+
 ```
 
 ```
 {"id":45,"message":"Success"}
 ```
 
--  Delete user\_id 45 as user (user\_id:3) with with either the Administrator or Super role
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_edit\_user\_activity
+
+##### Description
+
+Edit a user's authorization to access activities for editing by activity id or classification id.
+
+##### Parameter(s)
+
+1.  instnace\_id (integer) – **Required**. Instance id that the requesting user is editing from.
+1.  request\_user\_id (integer) – **Required**. User id of user requesting edits.
+2.  target\_user\_id (integer) – **Required**. User id of user record to be authorized for access to activities.
+3.  activity\_ids (integer[]) - Array of activity ids to authorize or remove access to. 
+4.  classification\_ids (integer[]) - Array of classification ids to authorize or remove access to.
+5.  delete\_record (boolean) - Optional, default is false. True to request removal of authorization to activities.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – user\_id of the user in which authorization was edited.
+2.  message(character varying) - Message containing either "Success" for a successful transaction 
+or containing an error description regarding the unsuccessful transaction. Some possible error messages:
+	- The requesting user must have security rights on instance.
+	- The target user must have edit rights on instance.
+	- The target user must have access to instance.
+	- A valid instance_id is a required.
+
+##### Example(s)
+
+-   Administrator user (user\_id: 227) removes access to activity ids 26197 & 26200 for an editor user (user\_id: 275)
+on the EthAIM instance (instance\_id: 1). _Note: The user's permissions on these activities is dependent on their role on the instance._
 
 ```
-select * from pmt_edit_user(3, 45, null, true);
-
+select * from pmt_edit_user_activity(1, 277, 275, ARRAY[26197,26200], null, true);
 ```
 
 ```
-{"id":45,"message":"Success"}
+{"id":275,"message":"Success"}
 ```
+
+-   Administrator user (user\_id: 227) authorizes access to all activities for an editor user (user\_id: 275) that are associated to
+the "Stand Alone Project" & "Agricultural Growth Program" (classification\id: 2239,2242) for the Category Taxonomy.
+on the EthAIM instance (instance\_id: 1). _Note: The user's permissions on these activities is dependent on their role on the instance._
+
+```
+select * from pmt_edit_user_activity(1, 277, 275, null, ARRAY[2239,2242], false);
+```
+
+```
+{"id":275,"message":"Success"}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
 
 ## pmt\_export
-=================
 
 ##### Description
 
@@ -3095,8 +3792,30 @@ A json object containing columns of data by row:
 ...
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
+## pmt\_exists\_activity_contact
+
+##### Description
+
+Confirm if a contact is assigned to an activity.
+
+##### Parameter(s)
+
+1. activity\_id (integer) -  **Required**. activity_id to lookup.
+1. contact\_id (integer) -  **Required**. contact_id to lookup.
+
+##### Result
+
+Boolean. True/False valid.
+
+##### Example(s)
+
+```SELECT * FROM pmt_exists_activity_contact(26225,2355);```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_filter
 
@@ -3134,11 +3853,9 @@ Integer array of filtered activity ids. Only active activity ids will be returne
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="filter_iati"/>
-pmt\_filter\_iati
-=================
+## pmt\_filter\_iati
 
 ##### Description
 
@@ -3171,6 +3888,7 @@ A xml document of in the IATI Activity Schema.
 
 	TRUE
 
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_filter\_string
@@ -3209,8 +3927,294 @@ A string.
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
+
+## pmt\_find\_users
+
+##### Description
+
+Returns all users with first name, last name or email equal or like passed parameters.  Useful for 
+finding potential matching or existing users.
+
+##### Parameter(s)
+
+1. first\_name (character varying) - first name to search.
+2. last\_name (character varying) - last name to search.
+3. email (character varying) - email to search.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – user id.
+2.  _first\_name (character varying) – first name of user.
+3.  _last\_name (character varying) – last name of user.
+4.  _username (character varying) – username of user.
+5.  _email (character varying) – email address of user.
+6.  \_phone (character varying) - phone number of user.
+7.  organization\_id (integer) – organization id for organization of user.
+8.  organization (character varying) – organization name for organization of user.
+9.  instances (json[]) - object containing instance information user has access to
+    a. instance\_id (integer) - the instance id.
+	b. instance (character varying) - the theme name of the instance
+    c. role\_id (integer) - the role id.
+	d. role (character varying) - the name of the role.
+10.  _access\_date (timestamp without time zone) - most recent user login timestamp.
+11. _active (boolean) - t/f user account is active.
+
+##### Example(s)
+
+```SELECT * FROM pmt_find_users('Jane','Doe','jdoe@email.com');```
+
+```
+{
+	"id":315,
+	"_first_name":"Jane",
+	"_last_name":"Doe",
+	"_username":"myusername",
+	"_email":"jane.doe@email.com",
+	"_phone":"123-456-7890",
+	"organization_id":13,
+	"organization": "BMGF",
+	"instances":[
+		"instance_id": 2,
+		"instance": "bmgf",
+		"role_id": 2,
+		"role": "Editor"
+	],
+	"_access_date": "2014-05-21T23:29:27.497825",
+	"_active":true
+}
+```
+
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_full\_record
+
+
+##### Description
+
+All information for a single activity formatted specifically for editing.
+
+##### Parameter(s)
+
+1. activity_id (integer) - **Required.** Activity id.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – activity id.
+2.  data\_group\_id (integer) – the data group id.
+3.  parent\_id (integer) – the activity's parent id (if null the activity is a parent).
+4.  \_title (character varying) – title of activity.
+5.  \_label (character varying) – short title for activity.
+6.  \_description (character varying) – description of activity.
+7.  \_objective (character varying) – the objective for activity.
+8.  \_content (character varying) – various content for activity.
+9.  \_url (character varying) – url for activity.
+10.  \_start\_date (date) – start date of activity.
+11.  \_planned\_start\_date (date) – planned start date of activity.
+12.  \_planned\_end\_date (date) – end date of activity.
+13.  \_end\_date (date) – planned end date of activity.
+14.  \_tags (character varying) – tags or keywords of activity.
+15.  \_iati\_identifier (integer) – iati identifier or primary key of activity.
+16.  \_iati\_import\_id (integer) – iati import id for the corresponding import record (if null the data was manually loaded).
+17.  \_created\_by (character varying(50)) -  user to create activity information.
+18.  \_created\_date (timestamp) -  date and time activity information was created.
+17.  \_updated\_by (character varying(50)) -  last user to update activity information.
+18.  \_updated\_date (timestamp) -  last date and time activity information was updated.
+19.  custom\_fields (various) - any custom fields in the activity table that are not in the Core PMT will be returned as well.
+20.   data\_group (character varying) – the data group name.
+21.   parent\_title (character varying) – the activity's parent activity title.
+22.  ct (integer) - number of locations for activity.
+23.  taxonomy(object) - An object containing all associated taxonomy for the activity
+	1. taxonomy\_id (integer) - taxonomy id.
+	2. taxonomy (character varying) - taxonomy name.
+	3. classification\_id (integer) - classification id.
+	4. classification (character varying) - classification name.
+	5. code (character varying) - classification code.
+24.  organizations(object) - An object containing all organizations participating in the activity
+	1. id (integer) - organization id
+	2. _name (character varying) - the organization name.
+	3. classification\_id (integer) - the classification id for the assigned organization role
+	4. classification (character varying) - the organization's role in the activity (Implementing, Funding, Accountable, Extending).
+25.  contacts (object) - An object containing all activity contacts.
+	1. id (integer) - the contact id.
+	2. \_first\_name (character varying) - contact's first name.
+	3. \_last\_name (character varying) - contact's last name.
+	4. \_email (character varying) - contact's email address.
+	5. organization\_id (integer) - organization id.
+	6. \_name (character varying) - organization name the contact is associated with.
+27.  financials (object) - An object containing all activity financial data.
+	1. id (integer) - financial id.
+	2. \_amount (numeric (100,2)) - financial amount.	
+	3. \_start\_date (date) – start date for financial amount.
+	4. \_end\_date (date) – end date for financial amount.
+	5. provider\_id (integer) - the organization id for the organization providing the financial amount.
+	5. provider (character varying) - the name of the organization providing the financial amount.
+	6. recipient\_id (integer) - the organization id of the organization receiving the financial amount.
+	6. recipient (character varying) - the name of the organization receiving the financial amount.
+	7. taxonomy(object) - An object containing all associated taxonomy for the financial record
+		1. taxonomy\_id (integer) - taxonomy id.
+		2. taxonomy (character varying) - taxonomy name.
+		3. classification\_id (integer) - classification id.
+		4. classification (character varying) - classification name.
+		5. code (character varying) - classification code.
+29.  locations (object) - An object containing all activity location data.
+	1. id (integer) - location id.
+	2. \_admin0 (character varying) - the name of the administrative level 0 boundray for the location.	
+	2. \_admin1 (character varying) - the name of the administrative level 1 boundray for the location.	
+	3. \_admin2 (character varying) - the name of the administrative level 2 boundray for the location.
+	4. \_admin3 (character varying) - the name of the administrative level 3 boundray for the location.
+	5. \_admin_level (integer) - the administrative boundary level in which the location is mapped to.
+	6. boundary\_id (integer) - boundary id for associated feature.
+	7. feature\_id (integer) - feature id of boundary.
+30.  children (object) - An object containing all activity's children activities.
+	1. id (integer) - child activity id.
+	2. \_title (character varying) - child activity title.
+
+##### Example(s)
+
+```select * from pmt_activity(3);```
+
+```
+{
+	"activity_id":3
+	,"project_id":1
+	,"title":"UN collaborative Program for Reducing Emissions from Deforestation and forest Degradation in developing 
+			countries, Tanzania (UN-REDD)"
+	,"label":null
+	,"description":"The project aims at strengthening Tanzanias readiness for Reducing Emissions from Deforestation and 
+			forest Degradation (REDD) as a component of the Governments evolving REDD Strategy, and integrate it 
+			with other REDD activities in the country"
+	,"content":null
+	,"start_date":"2009-10-01"
+	,"end_date":"2013-12-31"
+	,"tags":null	
+	,"created_by":"IATI XML Import"
+	,"created_date":"2014-01-16 00:00:00"
+	,"updated_by":"IATI XML Import"
+	,"updated_date":"2014-01-16 00:00:00"
+	,"iati_identifier":null
+	,"location_ct":1
+	,"admin_bnds":"United Republic of Tanzania,Singida,Manyoni"
+	,"taxonomy":[{
+		 "taxonomy_id":5
+		,"taxonomy":"Country"
+		,"classification_id":244
+		,"classification":"TANZANIA, UNITED REPUBLIC OF"
+		,"code":"TZ"
+		}
+		,{
+		 "taxonomy_id":14
+		,"taxonomy":"Sector Category"
+		,"classification_id":552
+		,"classification":"Other multisector"
+		,"code":"430"
+		}
+		,{
+		 "taxonomy_id":15
+		,"taxonomy":"Sector"
+		,"classification_id":729
+		,"classification":"Multisector aid"
+		,"code":"43010"
+		}
+		,{
+		 "taxonomy_id":17
+		,"taxonomy":"Category"
+		,"classification_id":779
+		,"classification":"Training and Capacity Building"
+		,"code":null
+		}
+		,{
+		 "taxonomy_id":18
+		,"taxonomy":"Sub-Category"
+		,"classification_id":792
+		,"classification":"Training and Capacity Building"
+		,"code":null
+		}]
+	,"organizations":[
+		{
+		 "id":1
+		,"_name":"FAO/ UNEP/ UNDP"
+		,"classification_id":496
+		,"classification":"Funding"
+		}
+		,{
+		"id":56
+		,"_name":"Tanzania Forestry Service (TFS)"
+		,"classification_id":497
+		,"classification":"Implementing"
+		}
+		,{
+		"id":2
+		,"_name":"MNRT, TFS"
+		,"classification_id":497
+		,"classification":"Implementing"
+		}
+	]
+	,"contacts":[{
+		"contact_id":1
+		,"first_name":"Almas"
+		,"last_name":"Kashindye"
+		,"email":"Almas.Kashindye@fao.org"
+		,"organization_id":1
+		,"name":"FAO/ UNEP/ UNDP"
+		}]
+	,"financials":[{
+		 "financial_id":13
+		,"amount":814972.00
+		,"taxonomy":[{
+			"taxonomy_id":6
+			,"taxonomy":"Currency"
+			,"classification_id":422
+			,"classification":"US Dollar"
+			,"code":"USD"
+			}]
+		}]
+	,"locations":[{3}]
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_get_\_valid\_id
+
+
+##### Description
+
+Returns first valid parent activity id.
+
+##### Parameter(s)
+
+1.  data\_group\_ids (character varying) - comma delimited string of data group ids it restrict search to.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – first valid parent activity id.
+
+
+##### Example(s)
+
+-   Get the first valid parent activity id in the RED&FS data (data_group_id: 2237):
+
+```SELECT * FROM pmt_get_valid_id('2237');```
+
+```
+{
+	"ids":[26255,26257,26259]
+}
+
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_global\_search
 
@@ -3244,7 +4248,7 @@ Json with the following:
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_iati\_import
 
@@ -3272,7 +4276,7 @@ True (success) or false (unsuccessful).
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_is\_data\_group
@@ -3294,16 +4298,42 @@ True or false.
 
 ##### Example(s)
 
-```SELECT * FROM pmt_is_datagroup('Charlie Chocolate');```
+```SELECT * FROM pmt_is_data_group('Charlie Chocolate');```
 
 FALSE
 
-```SELECT SELECT * FROM pmt_is_datagroup(768);```
+```SELECT SELECT * FROM pmt_is_data_group(768);```
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
+## pmt\_is\_data\_groups
+
+##### Description
+
+Validates data group classification\_ids. Data group is a taxonomy that
+is used to determine data validity.
+
+##### Parameter(s)
+
+1. classification\_ids (integer[]) – Array of Data Group ID's to be tested as valid. If parameter is NULL then result will be TRUE.
+
+##### Result
+
+True or false.
+
+##### Example(s)
+
+```SELECT * FROM pmt_is_data_groups(ARRAY[768,1068,1069,2266,2267,769,2237,123456789]);```
+
+FALSE
+
+```SELECT * FROM pmt_is_data_groups(null);```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_isdate
 
@@ -3329,7 +4359,7 @@ FALSE
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_isnumeric
@@ -3356,7 +4386,7 @@ FALSE
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_locations
@@ -3452,7 +4482,7 @@ Json with the following:
 		}
 	
 ```
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 
@@ -3542,7 +4572,7 @@ where Program is "Stand Alone Project" (classification\_id: 2239) and activities
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_org\_inuse
 
@@ -3595,7 +4625,7 @@ in the BMGF data group (classification\_id:768):
 ...
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_orgs
@@ -3613,7 +4643,8 @@ No parameters.
 Json with the following:
 
 1.  id (integer) – id of organization.
-2.  _name (character varying(255)) – name of organization.
+2.  _name (character varying) – name of organization.
+3.  _label (character varying) - label of organization.
 
 ##### Example(s)
 
@@ -3622,13 +4653,15 @@ Json with the following:
 ```
 ...
 {
-	"id":32,
-	"_name":"CARE International"  
+	"id":2071,
+	"_name":"Ohio State University (OSU)",
+	"_label":"OSU",
+	"_url": null
 }
 ...
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_overview\_stats
@@ -3672,7 +4705,7 @@ using the GADM boundary (boundary_id: 15):
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_partner\_pivot
@@ -3882,7 +4915,7 @@ Results can then be rendered as a table:
 |Concern Livlihoods Program|||||||||||Concern Ethiopia, EU, WRDA|
 
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_partner\_sankey
@@ -3992,7 +5025,7 @@ node id + \_ + target node id).
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 
@@ -4045,7 +5078,7 @@ Json with the following:
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_purge\_activities
@@ -4072,6 +5105,9 @@ Boolean. True/False successful.
 
 TRUE
 
+[&larr;  Back to Function List](#function-listing)
+
+
 ## pmt\_purge\_activity
 
 ##### Description
@@ -4082,7 +5118,7 @@ Use [pmt\_activate\_activity](#activate_activity) to deactivate if deletion is n
 
 ##### Parameter(s)
 
-1.  a\_id (integer) – **Required**. Id of the activity to be deleted.
+1.  id (integer) – **Required**. Id of the activity to be deleted.
 
 ##### Result
  
@@ -4096,11 +5132,95 @@ Boolean. True/False successful.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_refresh\_views
+
+##### Description
+
+Refresh all the materialized views in the database. Materialized views must be refreshed to reflect any updates
+to that the source data may have since the last update.
+
+##### Parameter(s)
+
+1. instance\_id (integer) - **Required**. instance id to validate user's authority for.
+2. user\_id (integer) - **Required**. user id of user to validate authority for.
+
+##### Result
+ 
+Json with the following:
+
+1. success (boolean) – t/f process was successful.
+2. message (character varying) – message containing additional information about success/fail.
+
+##### Example(s)
+
+-   Request to refresh views as sparadee (user\_id: 34) from Ethaim (instance\_id: 1)
+
+```SELECT * FROM pmt_refresh_views(1,34);```
+
+```
+{
+	"success":true,
+	"message":"Success"
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_roles
+
+##### Description
+
+List of roles
+
+##### Parameter(s)
+
+No parameters.
+
+##### Result
+ 
+Json with the following:
+
+1. id (integer) – the role id.
+2. \_name (character varying) – the role name
+3. \_active (boolean) - t/f is an active role
+
+##### Example(s)
+
+-   Get all roles.
+
+```SELECT * FROM pmt_roles();```
+
+```
+{
+	"id":1,
+	"_name":"Reader",
+	"_active":true
+},
+{
+	"id":2,
+	"_name":"Editor",
+	"_active":true
+}
+{
+	"id":4,
+	"_name":"Administrator",
+	"_active":true
+},
+{
+	"id":3,
+	"_name":"Super",
+	"_active":true
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_stat\_activity\_by\_tax
-
 
 ##### Description
 
@@ -4117,6 +5237,7 @@ to restrict data. If no data group id is provided, all data groups are included.
 6. boundary\_id (integer) - the boundary id referenced by the feature\_id (filter).
 7. feature\_id (integer) - the feature id to restrict activities to (filter).
 8. record\_limit (integer) - the number of records to limit return to, remaining classifications will be aggregated into an "other" classification.
+9. filter\_classification\_ids (character varying) - comma seperated list of classification ids for provided taxonomy id to restrict returned values to.
 
 ##### Result
 
@@ -4169,7 +5290,7 @@ boundary (boundary\_id: 15):
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_stat_by\_org
@@ -4249,7 +5370,7 @@ in Ethiopia (feature\_id: 74) using GADM boundary (boundary\_id: 15):
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_stat\_invest\_by\_funder
@@ -4333,7 +5454,7 @@ in Ethiopia (feature\_id: 74) using GADM boundary (boundary\_id: 15):
 
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_statistic\_data
@@ -4402,7 +5523,7 @@ Json with the following:
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_statistic\_indicators
@@ -4491,150 +5612,195 @@ Json with the following:
 		
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
-<a name="tax_inuse"/>
-pmt\_tax\_inuse
-===============
+## pmt\_taxonomies
 
 ##### Description
 
-Taxonomy and associated classifications that are in use by any project,
-activity or location.
+Listing of taxonomies, filterable by instance and "core" taxonomies.
 
 ##### Parameter(s)
 
-1.  data\_group\_id (integer) – Optional. Restrict data to data group.
-2.  taxonomy\_ids (character varying) – Optional. Restrict data to
-    taxonomy(ies).
-3.  country\_ids (character varying) – Optional. Restrict data to
-    country(ies).
+1.  instance\_id (instance) – Optional. Instance id of the instance to restrict return data to instance owned taxonomy(ies) (editable taxonomies for given instance).
+2.  return\_core (boolean) - Optional. t/f return core taxonomies (not editable by any instance). Default is false.
 
 ##### Result
 
-Ordered by most used. Json with the following:
+Json with the following:
 
-1.  t\_id (integer) – taxonomy\_id.
-2.  name (character varying(255)) – name of taxonomy.
-3.  Is\_cat (boolean) – is/not a taxonomy category.
-4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
-    taxonomy.
-5.  classifications (object) – classifications in use for this taxonomy.
-	1.  c\_id (integer) – classification\_id.
-	2.  cat\_id (integer) – classification\_id for the category
-    classification.
-	3.  name (character varying(255)) – the name of the classification.
+1.  id (integer) – taxonomy id.
+2.  _name (character varying(255)) – name of taxonomy.
+3. _description (character varying) -  description for taxonomy.
+4. _iati_codelist (character varying(100)) - the codelist name for IATI taxonomies.
+5. parent_id (integer) - id of the parent taxonomy.
+6. _is_category (boolean) - t/f the taxonomy is a parent or category taxonomy.
+7. _core (boolean) - t/f the taxonomy is a "core" taxonomy to the PMT and cannot be edited by the application.
+8. data_group_ids (integer[]) - data group ids that "own" the taxonomy, if NULL then taxonomy is not editable.
 
 ##### Example(s)
 
--   Taxonomy/classifications for the World Bank data group
-    (classification\_id:772) in Bolivia (classification\_id:50):
+-   Get taxonomies for the EthAIM instance (instance\_id:1), excluding core taxonomies :
 
-```SELECT * FROM pmt_tax_inuse(772, '', '50');```
+```SELECT * FROM pmt_taxonomies(1,false);```
 
 ```
 ...
 {
-    "t_id":15,
-    "name":"Sector",
-    "is_cat":false,
-    "cat_id":14,
-    "classifications":
-        [
-            {
-                "c_id":731,
-                "cat_id":552,
-                "name":"Desarrollo rural"
-            },
-            {
-                "c_id":636,
-                "cat_id":540,
-                "name":"Power generation/renewable sources"
-            },
-            ...
-        ]
+	"id":77,
+	"_name":"GTP2 Strategic Objective",
+	"_description":null,
+	"_iati_codelist":null,
+	"parent_id":null,
+	"_is_category":true,
+	"_active":true,
+	"_retired_by":null,
+	"_created_by":"OMK & ONA Import 2017",
+	"_created_date":"2018-06-18 00:00:00",
+	"_updated_by":"ds_eth10.13",
+	"_updated_date":"2018-06-18 00:00:00"
+}
+...
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_taxonomy\_count
+
+##### Description
+
+Count of taxonomies, filterable by search text and taxonomy id.
+
+##### Parameter(s)
+
+1.  instance\_id (instance) – **Required**. Instance id of the instance to restrict return data to instance owned taxonomy(ies) (editable taxonomies for given instance).
+2.  search\_text (text) – Optional. Search text to restrict taxonomies by. Searches taxonony and classification _name.
+3.  exclude\_ids (character varying) - Optional. Comma delimited listing of taxonomy ids to exclude from returned results.
+4.  return\_core (boolean) - Optional. t/f return core taxonomies (not editable by any instance). Default is false.
+
+##### Result
+
+Json with the following:
+
+1.  count (integer) – number of taxonomies that meet the critieria.
+
+##### Example(s)
+
+-   Get number of taxonomies for the EthAIM instance (instance\_id:1), excluding core taxonomies (not editable) where "org" is found in either the taxonomy or classification name:
+
+```SELECT * FROM pmt_taxonomy_count(1,'org',null,false);```
+
+```
+{
+	"count": 2
+}
+```
+
+-   Get number of taxonomies for the EthAIM instance (instance\_id:1), including core taxonomies (not editable) except for the Country taxonomy (taxonomy\id: 5):
+
+```SELECT * FROM pmt_taxonomy_count(1,null,'5',true);```
+
+```
+{
+	"count": 38
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_taxonomy\_search
+
+##### Description
+
+Listing of taxonomies, filterable by search text and taxonomy id, excluding all child taxonomies (which are linked through the parent taxonomies).
+
+##### Parameter(s)
+
+1.  instance\_id (instance) – Optional. Instance id of the instance to restrict return data to instance owned taxonomy(ies) (editable taxonomies for given instance).
+2.  search\_text (text) – Optional. Search text to restrict taxonomies by. Searches taxonony and classification _name.
+3.  offsetter (integer) - Optional. Number of records to offset return by.
+4.  limiter (integer) - Optional. Number of records to limit return by.
+5.  return\_core (boolean) - Optional. t/f return core taxonomies (not editable by any instance). Default is false.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – taxonomy id.
+2.  _name (character varying(255)) – name of taxonomy.
+3. _description (character varying) -  description for taxonomy.
+4. _iati_codelist (character varying(100)) - the codelist name for IATI taxonomies.
+5. parent_id (integer) - id of the parent taxonomy.
+6. _is_category (boolean) - t/f the taxonomy is a parent or category taxonomy.
+7. _core (boolean) - t/f the taxonomy is a "core" taxonomy to the PMT and cannot be edited by the application.
+8. data_group_ids (integer[]) - data group ids that "own" the taxonomy, if NULL then taxonomy is not editable.
+
+##### Example(s)
+
+-   Get taxonomies for the EthAIM instance (instance\_id:1), excluding core taxonomies (not editable) where "org" is found in either the taxonomy or classification name
+and limit return to the first 10 records:
+
+```SELECT * FROM pmt_taxonomy_search(1,'org',0,10,false);```
+
+```
+{
+	"id":11,
+	"_name":"Organisation Type",
+	"_description":"IATI Standards. The IATI codelists ensure activity and organisation information is comparable between different publishers.",
+	"_iati_codelist":"OrganisationType",
+	"parent_id":null,
+	"_is_category":false,
+	"_active":true,
+	"_retired_by":null,
+	"_created_by":"OMK & ONA Import 2017",
+	"_created_date":"2018-06-18 00:00:00",
+	"_updated_by":"ds_eth10.13",
+	"_updated_date":"2018-06-18 00:00:00",
+	"child_id":null
 },
 {
-    "t_id":14,
-    "name":"Sector Category",
-    "is_cat":true,
-    "cat_id":16,
-    "classifications":
-        [
-            {
-                "c_id":552,
-                "cat_id":765,
-                "name":"Other multisector"
-            },
-            ...
-            {
-                "c_id":540,
-                "cat_id":764,
-                "name":"ENERGY GENERATION AND SUPPLY"},
-            ...
-        ]
+	"id":69,
+	"_name":"Focus Crop Categories",
+	"_description":"Ethiopia ATA Taxonomy.",
+	"_iati_codelist":null,
+	"parent_id":80,
+	"_is_category":false,
+	"_active":true,
+	"_retired_by":null,
+	"_created_by":"ds_pmt10.5",
+	"_created_date":"2016-01-21 00:00:00",
+	"_updated_by":"OMK & ONA Import 2017",
+	"_updated_date":"2018-06-18 00:00:00",
+	"child_id": 79
 }
 ```
 
-<a name="taxonomies"/>
-pmt\_taxonomies
-===============
+-   Get taxonomies for the EthAIM instance (instance\_id:1), including core taxonomies (not editable) and limit return to the records 5-10:
 
-##### Description
-
-Taxonomy and associated classifications.
-
-##### Parameter(s)
-
-1.  taxonomy\_ids (character varying) – Optional. Restrict data to taxonomy(ies).
-
-##### Result
-
-Ordered by most used. Json with the following:
-
-1.  t\_id (integer) – taxonomy\_id.
-2.  name (character varying(255)) – name of taxonomy.
-3.  Is\_cat (boolean) – is/not a taxonomy category.
-4.  cat\_id (integer) – taxonomy\_id of the taxonomy category for this
-    taxonomy.
-5.  classifications (object) – classifications in use for this taxonomy.
-	1.  c\_id (integer) – classification\_id.
-	2.  cat\_id (integer) – classification\_id for the category
-    classification.
-	3.  name (character varying(255)) – the name of the classification.
-
-##### Example(s)
-
--   Taxonomy/classifications for the Sector taxonomy (taxonomy\_id:15):
-
-```select * from pmt_taxonomies('15');```
+```SELECT * FROM pmt_taxonomy_search(1,null,5,5,true);```
 
 ```
 ...
 {
-    "t_id":15,
-    "name":"Sector",
-    "is_cat":false,
-    "cat_id":14,
-    "classifications":
-        [
-	    {
-		"c_id":636,
-		"cat_id":540,
-		"name":"Power generation/renewable sources",
-		"code":23030
-	    },
-  	    {
-		"c_id":657,
-		"cat_id":542,
-		"name":"Privatisation",
-		"code": 53030
-	    }            
-            ...
-        ]
+	"id":13,
+	"_name":"Result Type",
+	"_description":"IATI Standards. The IATI codelists ensure activity and organisation information is comparable between different publishers.",
+	"_iati_codelist":"ResultType",
+	"parent_id":null,
+	"_is_category":false,
+	"_active":true,
+	"_created_by":"IATI XML Import",
+	"_created_date":"2014-01-28 00:00:00",
+	"_updated_by":"IATI XML Import",
+	"_updated_date":"2018-08-08 00:00:00",
+	"child_id":null
 }
+...
 ```
+
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_update\_crosswalks
 
@@ -4660,7 +5826,34 @@ Success boolean (True/False).
 TRUE
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_update\_location\_boundaries
+
+##### Description
+
+Recalculates the intersected boundaries for location(s) when no record field changes are needed. This functionality is typically performed
+by the trigger on the location table when a location record is update, however when a boundary or a boundary feature changes the locations
+intersected need to be recalculted. This function provides that mechanism outside the trigger.
+
+##### Parameter(s)
+
+1.  l\_ids (integer[]) – **Required**. Array of location ids to recalculate.
+
+##### Result
+ 
+Boolean. True/False successful.
+
+##### Example(s)
+
+-   Recalcuate boundary intersections for the following locations: 23412,33453,98730
+
+```SELECT * FROM pmt_update_location_boundries([23412,33453,98730]);```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_user\_auth
@@ -4673,6 +5866,7 @@ Authenticate user.
 
 1.  username (character varying) - **Required**. User's username.
 2.  password (character varying) - **Required**. User's password.
+3.  instance\_id (integer) - **Required**. The instance user is requesting access to.
 
 ##### Result
 
@@ -4687,17 +5881,13 @@ Json with the following:
 7.  organization (character varying) – organization name for organization of user.
 8.  role\_id (integer) – database role id user is assigned to.
 9.  role (character varying) – name of database role user is assigned to.
-7.  authorizations (json object) – list of project_ids by user's project role.
-	1.  role\_id (integer) – user's role id on the projects in project\_ids
-	2.  role (character varying) – user's role name on the projects in project\_ids
-	3. project\_ids (integer array) - array of project\_ids users is authorized to 
-access with permissions provided by the role.
+7.  authorizations (integer[]) – array of activity\_ids user is authorized for. If user has the "Super" or "Administrator" role, all activities for the instances data group are authorized.
 
 ##### Example(s)
 
-- Authenticate Reader test user passing its username and password.
+- Authenticate johndoe for the SpatialDev instance (instance\_id: 1).
 
-```SELECT * FROM pmt_user_auth('johndoe', 'password');```
+```SELECT * FROM pmt_user_auth('johndoe', 'password',1);```
 
 ```
 {
@@ -4707,33 +5897,24 @@ access with permissions provided by the role.
 	"_username":"johndoe",
 	"_email":"test@email.com",
 	"organization_id":3,
-	"organization":"spatial dev",
-	"role_id":4,
-	"role":"Administrator",
+	"organization":"Spatial Development International, LLC (SpatialDev)",
+	"role_id":2,
+	"role":"Editor",
 	"role_auth":
 	{
 		"_read":true,
 		"_create":true,
 		"_update":true,
-		"_delete":true,
+		"_delete":false,
 		"_super":true,
-		"_security":true
+		"_security":false
 	},
-	"authorizations":
-	[{
-		"role_id":3,
-		"role":"Super",
-		"activity_ids":[37]
-	},{
-		"role_id":4,
-		"role":"Administrator",
-		"activity_ids":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
-	}]
+	"authorizations":[23345,23367,23388,23389]
 }
 ```
 - Authenticate Reader test user passing its username and an invalid password.
 
-```SELECT * FROM pmt_user_auth('reader', 'bad password');```
+```SELECT * FROM pmt_user_auth('reader', 'bad password', 1);```
 
 ```
 {
@@ -4741,7 +5922,50 @@ access with permissions provided by the role.
 }
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_user\_orgs
+
+##### Description
+
+Get all organizations for a given instance. Returns only organizations that are in use by the instance users or Accountable organizations
+for the instance's data group(s).
+
+##### Parameter(s)
+
+1. instance\_id (integer) - **Required**. id of instance to filter organizations to.
+
+##### Result
+
+Json with the following:
+
+1.  id (integer) – organization id.
+2.  \_name (character varying) – organization name.
+
+##### Example(s)
+
+- Request all organizations for the users and data groups for the EthAIM instance (instance\_id: 2):
+
+```SELECT * FROM pmt_user_orgs(2);```
+
+```
+{
+	"id":3263,
+	"_name":"Aarhus University (AU)"
+},
+{
+	"id":2121,
+	"_name":"Abt Associates, Inc."
+}
+...
+{
+	"id":3112,
+	"_name":"World Bank (WB)"
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_user\_salt
@@ -4768,100 +5992,70 @@ Salt value as text.
 $2a$10$.V0ETMIAW6O9z2wekwMG1.
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="user"/>
-pmt\_user
-=============================
-
-##### Description
-
-Get all user information for a single user.
-
-##### Parameter(s)
-
-1.  user\_id (integer) – **Required**. User id for user.
-
-##### Result
-
-Json with the following:
-
-1.  user\_id (integer) – user id.
-2.  first\_name (character varying) – first name of user.
-3.  last\_name (character varying) – last name of user.
-4.  username (character varying) – username of user.
-5.  email (character varying) – email address of user.
-6.  organization\_id (integer) – organization id for organization of user.
-7.  organization (character varying) – organization name for organization of user.
-8.  role\_id (integer) – database role id user is assigned to.
-9.  role (character varying) – name of database role user is assigned to.
-10. created\_by (character varying) - first and last name OR username (if first name is null) of the user who created the user record.
-10. projects (json object):
-	1.  project\_id (integer) – project id.
-	2.  title (character varying) – title of project.
-	3.  role\_id (integer) – project role id user is assigned to.
-	4.  role (character varying) – name of users role on project.
-
-##### Example(s)
-
-```SELECT * FROM pmt_user(5);```
-
-```
-...
-{
-	"user_id":315,
-	"first_name":"Jane",
-	"last_name":"Doe",
-	"username":"myusername",
-	"email":"jane.doe@email.com",
-	"organization_id":13,
-	"organization": "BMGF",
-	"role_id":1,
-	"role":"Reader",
-	"created_by":"adminbob",
-	"projects":[{
-			"project_id":15
-			,"title":"Policies, Institutions, and Markets"
-			,"role_id":2
-			,"role":"Editor"
-		},{
-			"project_id":16
-			,"title":"Agriculture for Nutrition and Health"
-			,"role_id":5
-			,"role":"Publisher"
-		}],
-	"active":true
-}
-...
-```
 
 ## pmt\_users
 
 ##### Description
 
-Get all user and role information.
+Get all user and role information for the entire database OR a single instance. This is an overloaded method.
 
 ##### Parameter(s)
 
 No parameters.
 
-##### Result
+OR 
 
-Json with the following:
+1. instance\_id (integer) - **Required**. id of instance to filter users to. Only users with access to instance will be returned. 
+
+##### Results
+
+Json with the following with **NO PARAMETERS**:
 
 1.  id (integer) – user id.
-2.  _first\_name (character varying) – first name of user.
-3.  _last\_name (character varying) – last name of user.
-4.  _username (character varying) – username of user.
-5.  _email (character varying) – email address of user.
-6.  organization\_id (integer) – organization id for organization of user.
-7.  organization (character varying) – organization name for organization of user.
-8.  role\_id (integer) – database role id user is assigned to.
-9.  role (character varying) – name of database role user is assigned to.
-10. _access\_date (timestamp without time zone) - most recent user login timestamp.
-11. _active (boolean) - t/f user account is active.
+2.  \_first\_name (character varying) – first name of user.
+3.  \_last\_name (character varying) – last name of user.
+4.  \_username (character varying) – username of user.
+5.  \_email (character varying) – email address of user.
+6.  \_phone (character varying) - phone number of user.
+7.  organization\_id (integer) – organization id for organization of user.
+8.  organization (character varying) – organization name for organization of user.
+9.  instances (json[]) - object containing instance information user has access to
+    a. instance\_id (integer) - the instance id.
+	b. instance (character varying) - the theme name of the instance
+    c. role\_id (integer) - the role id.
+	d. role (character varying) - the name of the role.
+10.  \_access\_date (timestamp without time zone) - most recent user login timestamp.
+12. \_active (boolean) - t/f user account is active.
+
+Json with the following **WITH PARAMETERS**:
+
+1.  id (integer) – user id.
+2.  \_first\_name (character varying) – first name of user.
+3.  \_last\_name (character varying) – last name of user.
+4.  \_username (character varying) – username of user.
+5.  \_email (character varying) – email address of user.
+6.  \_phone (character varying) - phone number of user.
+7.  organization\_id (integer) – organization id for organization of user.
+8.  organization (character varying) – organization name for organization of user.
+9.  role\_id (integer) - the role id.
+10.  role (character varying) - the name of the role.
+11. authorizations (json) - object containing the user's authorization for the instance. _Note: Only editors require authorizations. Administrators and Super roles automatically are granted access to all activities on a given instance, and Readers do not have any access_
+	a. activity\_ids (integer[]) - array of activity ids user has access to edit
+	b. classification\_ids (integer[]) - array of classification ids. Activities assigned to these ids are editable by user.
+12. classifications (json[]) - array of taxonomy information for the user's authorization by taxonomy.
+    a. t (character varying) - the taxonomy name for authorized classifications
+	b. t_id (integer) - the taxonomy id for authorized classifications
+	c. c (json[]) - array of classification information for each classification user is authorized for
+		i. c (character varying) - the classification name
+		ii. c_id (integer) - the classification id
+13. \_access\_date (timestamp without time zone) - most recent user login timestamp.
+14. \_active (boolean) - t/f user account is active.
 
 ##### Example(s)
+
+- Get all users:
 
 ```SELECT * FROM pmt_users();```
 
@@ -4873,17 +6067,66 @@ Json with the following:
 	"_last_name":"Doe",
 	"_username":"myusername",
 	"_email":"jane.doe@email.com",
+	"_phone":"123-456-7890",
 	"organization_id":13,
 	"organization": "BMGF",
-	"role_id":1,
-	"role":"Reader",
+	"instances":[
+		"instance_id": 2,
+		"instance": "bmgf",
+		"role_id": 2,
+		"role": "Editor"
+	],
 	"_access_date": "2014-05-21T23:29:27.497825",
 	"_active":true
 }
 ...
 ```
 
-[&larrhk; Back to Function List](#function-listing)
+- Get all users in the EthAIM instance (instance\_id: 2):
+
+```SELECT * FROM pmt_users(2);```
+
+```
+...
+{
+	"id":315,
+	"_first_name":"Jane",
+	"_last_name":"Doe",
+	"_username":"myusername",
+	"_email":"jane.doe@email.com",
+	"_phone":"123-456-7890",
+	"organization_id":13,
+	"organization": "BMGF",
+	"role_id": 2,
+	"role": "Editor",
+	"authorizations":
+		{
+			"activity_ids":[27252,27252,22610,27631,25502,25461,25514],
+			"classification_ids":[1081,1076]
+		},
+	"classifications":[
+		{
+			"t":"Program"
+			"t_id":68,
+			"c":[
+				{
+					"c":"Food Security Program",
+					"c_id": 2240
+				},
+				{
+					"c":"Agricultural Growth Program",
+					"c_id": 2241
+				}
+			]
+		}
+	]
+	"_access_date": "2014-05-21T23:29:27.497825",
+	"_active":true
+}
+...
+```
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_activities
@@ -4908,20 +6151,18 @@ Integer array of valid ACTIVE activity ids.
 |-------------|
 | {11879,15432,15725}|
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
-<a name="validate_activity"/>
-pmt\_validate\_activity
-===========================
+## pmt\_validate\_activity
 
 ##### Description
 
-Validate an activity\_id.
+Validate an activity id.
 
 ##### Parameter(s)
 
-1. activity\_id (integer) - **Required**. activity_id to validate.
+1. id (integer) - **Required**. activity id to validate.
 
 ##### Result
 
@@ -4932,6 +6173,8 @@ Boolean. True/False valid.
 ```SELECT * FROM pmt_validate_activity(11879);```
 
 TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_boundary\_feature
@@ -4955,7 +6198,7 @@ Boolean. True/False valid.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_classification
@@ -4979,7 +6222,7 @@ Boolean. True/False valid.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_classifications
@@ -5005,11 +6248,10 @@ Integer array of valid ACTIVE classification ids in ascending order.
 |-------------|
 | {50,720}|
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="validate_contact"/>
-pmt\_validate\_contact
-===========================
+
+## pmt\_validate\_contact
 
 ##### Description
 
@@ -5029,9 +6271,10 @@ Boolean. True/False valid.
 
 TRUE
 
-<a name="validate_contacts"/>
-pmt\_validate\_contacts
-==============================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_contacts
 
 ##### Description
 
@@ -5053,9 +6296,10 @@ Integer array of valid ACTIVE contact_ids.
 |-------------|
 | {145,169}|
 
-<a name="validate_detail"/>
-pmt\_validate\_detail
-===========================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_detail
 
 ##### Description
 
@@ -5075,17 +6319,43 @@ Boolean. True/False valid.
 
 TRUE
 
-<a name="validate_financial"/>
-pmt\_validate\_financial
-===========================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_details
 
 ##### Description
 
-Validate a financial\_id.
+Validate an array of detail ids.
 
 ##### Parameter(s)
 
-1. financial\_id (integer) -  **Required**. financial_id to validate.
+1. detail\_ids (character varying) -  **Required**. comma delimited list of detail ids to validate.
+
+##### Result
+
+Array of valid ACTIVE detail ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_details('156,169,171,26373');```
+
+| integer[]   |
+|-------------|
+| {156,169,171}	  |
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_financial
+
+##### Description
+
+Validate a financial id.
+
+##### Parameter(s)
+
+1. id (integer) -  **Required**. financial id to validate.
 
 ##### Result
 
@@ -5096,6 +6366,33 @@ Boolean. True/False valid.
 ```SELECT * FROM pmt_validate_financial(19);```
 
 TRUE
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_financials
+
+##### Description
+
+Validate an array of financial ids.
+
+##### Parameter(s)
+
+1. financial\_ids (character varying) -  **Required**. comma delimited list of financial ids to validate.
+
+##### Result
+
+Array of valid ACTIVE financial ids.
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_financials('9999999,26371,26372,26373,26374');```
+
+| integer[]   |
+|-------------|
+| {26371,26372,26373,26374}	  |
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_location
@@ -5118,7 +6415,7 @@ Boolean. True/False valid.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 ## pmt\_validate\_locations
 
@@ -5142,7 +6439,7 @@ Integer array of valid ACTIVE location_ids.
 |-------------|
 | {9,12,15}|
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_organization
@@ -5165,11 +6462,10 @@ Boolean. True/False valid.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="validate_organizations"/>
-pmt\_validate\_organizations
-==============================
+
+## pmt\_validate\_organizations
 
 ##### Description
 
@@ -5191,17 +6487,18 @@ Integer array of valid ACTIVE organization_ids.
 |-------------|
 | {13,27}|
 
-<a name="validate_participation"/>
-pmt\_validate\_participation
-===========================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_participation
 
 ##### Description
 
-Validate a participation\_id.
+Validate a participation id.
 
 ##### Parameter(s)
 
-1. participation\_id (integer) - **Required**. participation_id to validate.
+1. id (integer) - **Required**. participation id to validate.
 
 ##### Result
 
@@ -5213,9 +6510,10 @@ Boolean. True/False valid.
 
 TRUE
 
-<a name="validate_participations"/>
-pmt\_validate\_participations
-==============================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_participations
 
 ##### Description
 
@@ -5237,10 +6535,10 @@ Integer array of valid ACTIVE participation_ids.
 |-------------|
 | {2,57789}   |
 
+[&larr;  Back to Function List](#function-listing)
 
-<a name="validate_role"/>
-pmt\_validate\_role
-===========================
+
+## pmt\_validate\_role
 
 ##### Description
 
@@ -5260,21 +6558,22 @@ Boolean. True/False valid.
 
 TRUE
 
-<a name="validate_taxonomies"/>
-pmt\_validate\_taxonomies
-===========================
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_taxonomies
 
 ##### Description
 
-Validate list of taxonomy\_ids.
+Validate list of taxonomy ids.
 
 ##### Parameter(s)
 
-1. taxonomy\_ids (character varying) - **Required**. comma separated list of taxonomy_ids to validate.
+1. ids (character varying) - **Required**. comma separated list of taxonomy ids to validate.
 
 ##### Result
 
-Integer array of valid ACTIVE taxonomy_ids.
+Integer array of valid ACTIVE taxonomy ids.
 
 ##### Example(s)
 
@@ -5282,7 +6581,9 @@ Integer array of valid ACTIVE taxonomy_ids.
 
 | integer[]   |
 |-------------|
-| {5,10}|
+| {5,10}	  |
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_validate\_taxonomy
@@ -5305,11 +6606,66 @@ Boolean. True/False valid.
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
-<a name="validate_user"/>
-pmt\_validate\_user
-===========================
+## [pmt\_taxonomy]
+##### Description
+
+Return a list of taxonomies
+
+##### Parameter(s)
+
+1. instance\_id (integer) - **Required**. instance id in which the requesting edit originates.                     
+2. core (boolean) - optional, defaults to false. Inclused core taxonomies or not.
+
+##### Result
+
+Json with all the columns in the Taxomomy table that match the Instance Id :
+[{
+    "response": {
+        "id": 47,
+        "_name": "Category",
+        "_description": "Tan-AIM taxonomy.",
+        "_iati_codelist": null,
+        "parent_id": null,
+        "_is_category": false,
+        "_active": true,
+        "_retired_by": null,
+        "_created_by": "Tan-AIM Data Load",
+        "_created_date": "2013-12-17 00:00:00",
+        "_updated_by": "Tan-AIM Data Load",
+        "_updated_date": "2018-06-18 00:00:00",
+        "_core": false,
+        "data_group_ids": [1068,1069,2266,2267]
+    }
+}]    
+
+##### Example(s)
+
+```SELECT * FROM pmt_validate_user(2,false);```
+
+```
+{
+    "id": 47,
+    "_name": "Category",
+    "_description": "Tan-AIM taxonomy.",
+    "_iati_codelist": null,
+    "parent_id": null,
+    "_is_category": false,
+    "_active": true,
+    "_retired_by": null,
+    "_created_by": "Tan-AIM Data Load",
+    "_created_date": "2013-12-17 00:00:00",
+    "_updated_by": "Tan-AIM Data Load",
+    "_updated_date": "2018-06-18 00:00:00",
+    "_core": false,
+    "data_group_ids": [1068,1069,2266,2267]
+}
+```
+
+[&larr;  Back to Function List](#function-listing)
+
+## pmt\_validate\_user
 
 ##### Description
 
@@ -5329,19 +6685,22 @@ Boolean. True/False valid.
 
 TRUE
 
+[&larr;  Back to Function List](#function-listing)
+
 
 ## pmt\_validate\_user\_authority
 
 ##### Description
 
-Validate a user's authority on an activity or the database and the level of authority (CRUD).
+Validate a user's authority on an activity and the level of authority (CRUD).
 
 ##### Parameter(s)
 
-1. user\_id (integer) - **Required**. user_id of user to validate authority for.
-2. activity\_id (integer) - activity\_id to validate authority for user to edit. If left blank
-then the function assumes you are validating CRUD action on database (adding new activities).
-3. auth\_type (enum) - **Required**. authority type.
+1. instance\_id (integer) - **Required**. instance id to validate user's authority for.
+2. user\_id (integer) - **Required**. user id of user to validate authority for.
+3. activity\_id (integer) - **Required for auth types: read, update, delete**. activity id to validate authority for user to edit.
+4. data\_group\_id (integer) - **Required for auth types: create**. data group id to validate authority for user to create activity in.
+5. auth\_type (enum) - **Required**. authority type.
 	Options:
 	1. create - user has ability to create new records.
 	2. read - user has ability to read records.
@@ -5350,15 +6709,57 @@ then the function assumes you are validating CRUD action on database (adding new
 
 ##### Result
 
-Boolean. True/False user has authority on database or activity with authority type.
+Boolean. True/False user has authority on activity with authority type.
 
 ##### Example(s)
 
-```select * from pmt_validate_user_authority(34, 422, 'update');```
+- User sparadee (user\_id: 34) has authority to update activity id 34 on EthAIM instance (instance\_id: 1):
+
+```select * from pmt_validate_user_authority(1, 34, 422, null, 'update');```
 
 TRUE
 
-[&larrhk; Back to Function List](#function-listing)
+- User sparadee (user\_id: 34) has authority to create a new activity in the RED&FS data group (data\_group\_id: 2237) 
+in EthAIM instance (instance\_id: 1):
+
+```select * from pmt_validate_user_authority(1, 34, null, 2237, 'create');```
+
+TRUE
+
+- User sparadee (user\_id: 34) has authority to delete activity 5674 in EthAIM instance (instance\_id: 1):
+
+```select * from pmt_validate_user_authority(1, 34, 5674, null, 'delete');```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
+
+
+## pmt\_validate\_username
+
+##### Description
+
+Validate a username is available for use.
+
+##### Parameter(s)
+
+1. username (character varying) - **Required**. username to validate as available.
+
+##### Result
+
+Boolean. True/False username is available.
+
+##### Example(s)
+
+```select * from pmt_validate_username('sparadee');```
+
+FALSE
+
+```select * from pmt_validate_username('junebug');```
+
+TRUE
+
+[&larr;  Back to Function List](#function-listing)
 
 
 ## pmt\_version
@@ -5418,7 +6819,7 @@ Unit testing complete: pass (32) fail (0) execution_failures(0) total(32)
 
 ```SELECT * FROM unit_test;```
 
-[&larrhk; Back to Function List](#function-listing)
+[&larr;  Back to Function List](#function-listing)
 
 
 * * * * *
