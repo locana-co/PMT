@@ -1,0 +1,21 @@
+.locs-filter-datasource {
+  font-family: @reg-font-family;
+  border-bottom: 1px @light-element-bg-color solid;
+  
+  .checkbox-group {
+    padding: 0 10px;
+    font-family: @reg-font-family;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+  // checkbox color
+  md-checkbox.md-default-theme.md-checked .md-icon, md-checkbox.md-checked .md-icon{
+    background-color: @main-bg-color;
+  }
+
+  md-checkbox[disabled].md-checked .md-icon {
+    background-color: rgba(0, 0, 0, 0.26);
+  }
+
+}

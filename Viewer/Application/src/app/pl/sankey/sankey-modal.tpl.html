@@ -1,0 +1,19 @@
+<md-dialog id="pl-sankey-modal" aria-label="List dialog">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="sub-header">{{terminology.activity_terminology.plural}} [{{data.length}}] : {{orgName}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="closeDialog();">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div id="pl-sankey-modal-{{d.activity_id}}" ng-repeat="d in data | orderBy:'title' " class="activity-title md-dialog-content" ng-class="{active: d.active}">
+                    <span class="title-label">{{d.title}}</span>
+                    <span class="view-activity-details md-button" ng-click="goToActivity(d.activity_id)">View {{terminology.activity_terminology.singular}} details</span>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

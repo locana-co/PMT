@@ -1,0 +1,226 @@
+#acts-detail-locations-long {
+
+  .all-locations {
+    .loc {
+      display: inline-block;
+      padding: 20px;
+      width: 33%;
+      .adm-title {
+        text-transform: capitalize;
+        font-size: 16px;
+        line-height: 2;
+        color: @text-color-1;
+        font-weight: bold;
+      }
+      .adm-region {
+        text-transform: capitalize;
+        font-size: 16px;
+        line-height: 2;
+      }
+      table {
+        tr {
+          th {
+            text-transform: capitalize;
+            .pmt-small-print;
+            min-width: 24px;
+            font-weight: 400;
+            padding: 5px 0;
+            font-size: 12px;
+
+          }
+          th.dash {
+            text-align: center;
+          }
+          td {
+            min-width: 20px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+
+  .admin1{
+    margin: 15px 0;
+    .admin1-title{
+      border-bottom: 1px solid @text-color-2;
+      text-transform: capitalize;
+      .pmt-h2;
+    }
+    .admin2{
+      margin: 5px 0 30px 15px;
+      .admin2-title{
+        text-transform: capitalize;
+        .pmt-h3;
+      }
+      .header {
+        .pmt-table-header;
+        margin-left: 15px;
+        font-size: 14px;
+        text-transform: capitalize;
+        line-height: 2;
+        font-style: italic;
+      }
+      .adm3s {
+        margin-left: 15px;
+        -webkit-column-count: 3; /* Chrome, Safari, Opera */
+        -moz-column-count: 3; /* Firefox */
+        column-count: 3;
+        .admin3 {
+          .admin3-title {
+            text-transform: capitalize;
+            line-height: 1.5;
+            color: @text-color-1;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+    //// pivot table
+    //table {
+    //  margin-left: 35px;
+    //  width: ~"calc(100% - 55px)";
+    //  overflow-x: hidden;
+    //  min-height: 210px;
+    //
+    //  tr {
+    //    border-bottom: 2px solid @text-color-2;
+    //    th {
+    //      line-height: 50px;
+    //    }
+    //  }
+    //
+    //  td {
+    //    //background: white;
+    //    border-bottom: 1px solid @text-color-2;
+    //
+    //    .adm2-3 {
+    //      border-bottom: 1px solid @text-color-2;
+    //
+    //      .adm2 {
+    //        width: 50%;
+    //        //  background: red;
+    //      }
+    //      .adm3 {
+    //        width: 50%;
+    //        // background: yellow;
+    //        margin-left: 50%;
+    //      }
+    //    }
+    //    .adm2-3:last-child {
+    //      border-bottom: none;
+    //    }
+    //
+    //    //
+    //    //    // header fields
+    //    //    th {
+    //    //      padding: 10px 7px 5px 7px;
+    //    //      font-family: @title-font-family;
+    //    //      text-align: center;
+    //    //      border-bottom: 2px solid @text-color-2;
+    //    //    }
+    //    //    //top left grid element
+    //    //    th:first-child {
+    //    //      border-bottom: none;
+    //    //    }
+    //    //    // header fields
+    //    //    th:last-child {
+    //    //      padding: 0 15px;
+    //    //    }
+    //    //    // columns: every other (odd)
+    //    //    th:nth-child(even) {
+    //    //      /*background: #eeeeee;*/
+    //    //    }
+    //    //    // row fields
+    //    //    td {
+    //    //      //background: white;
+    //    //      border-bottom: 1px solid @text-color-2;
+    //    //
+    //    //      .pivot-cell {
+    //    //        cursor: default;
+    //    //      }
+    //    //
+    //    //      .pivot-cell:hover {
+    //    //        color: #333333;
+    //    //        font-weight: 500;
+    //    //      }
+    //    //    }
+    //    //    // rows
+    //    //    tr:not(:first-child) {
+    //    //      min-height: 50px;
+    //    //      border-bottom: 1px solid #b5b5b6;
+    //    //    }
+    //    //    // columns: every other (even)
+    //    //    td:nth-child(even) {
+    //    //      background: #eeeeee;
+    //    //    }
+    //    //    // cells
+    //    //    td {
+    //    //      min-width: 50px;
+    //    //      -ms-word-wrap: break-word;
+    //    //      word-wrap: break-word;
+    //    //      font-size: 13px;
+    //    //      padding: 5px;
+    //    //      text-align: center;
+    //    //      max-width: 50%;
+    //    //    }
+    //    //    //list of items in table
+    //    //    td .item {
+    //    //      display: inline-block;
+    //    //      width: auto;
+    //    //      text-align: left;
+    //    //    }
+    //    //  }
+    //    //
+    //    //  .pivot-cell {
+    //    //    cursor: help;
+    //    //    position: relative;
+    //    //    display: inline-block;
+    //    //
+    //    //    .pivot-tooltip {
+    //    //      visibility: hidden;
+    //    //      text-align: center;
+    //    //      bottom: 100%;
+    //    //      left: 50%;
+    //    //      margin-left: -100px;
+    //    //      margin-bottom: 10px;
+    //    //      z-index: 1000;
+    //    //      width: 200px;
+    //    //      position: absolute;
+    //    //      height: auto;
+    //    //      padding: 10px;
+    //    //      background-color: #fff;
+    //    //      color: #3A3E3F;
+    //    //      border-radius: 10px;
+    //    //      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    //    //    }
+    //    //
+    //    //    .pivot-tooltip::after {
+    //    //      border-top: 10px solid #fff;
+    //    //      border-left: 10px solid transparent;
+    //    //      border-right: 10px solid transparent;
+    //    //      width: 0;
+    //    //      height: 0;
+    //    //      content: "";
+    //    //      display: block;
+    //    //      position: absolute;
+    //    //      top: 100%;
+    //    //      left: 6em;
+    //    //    }
+    //    //
+    //    //    &:hover {
+    //    //      font-weight: 600;
+    //    //      color: @main-bg-color;
+    //    //
+    //    //      .pivot-tooltip {
+    //    //        visibility: visible;
+    //    //      }
+    //    //    }
+    //    //  }
+    //    //}
+    //  }
+    //}
+}

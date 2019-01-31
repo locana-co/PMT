@@ -1,0 +1,43 @@
+﻿<div class="map-contextual-selection" ng-controller="MapContextualSelectionCtrl">
+    <!-- selected contextual layers (only displays when one or more layers are selected)-->
+    <div class="layers-tool" ng-class="{active: activeOverlays}">
+        <!-- header for selected layer tools -->
+        <div class="selection-header">
+            Your selection:
+            <div class="clear-all" ng-click="removeAllOverlays();">Clear All</div>
+        </div>
+        <div class="selection-wrapper">
+            <!-- tools for each selected layer (opacity, draw position, remove layer) -->
+            <div sv-root sv-on-sort="sortChanged();" sv-part="selectedOverlays" class="selected-layers-tools">
+                <!-- non vector tile layers-->
+                <div sv-element class="selected-layer-tools" ng-show="layer.active && layer.type!=='vectortile'" ng-repeat="layer in selectedOverlays"
+                    class="legend-item">
+                    <!-- layer's name -->
+                    <div class="layer-label">
+                        <i class="material-icons sort" sv-handle>dehaze</i>
+                        <div class="layer-name">{{ layer.label }}</div>
+                        <i class="material-icons cancel" ng-click="optionChanged(layer)">cancel</i>
+                    </div>
+                    <!-- layer's tool set-->
+                    <div class="tools">
+                        Opacity
+                        <md-slider flex min="0.01" max="1.00" step=".05" round="2" aria-label="opacity-slider" id="blue-slider" class="md-primary"
+                            ng-model="layer.opacity" ng-mouseup="opacityChanged(layer)" ng-mouseout="opacityChangedToZero(layer)"></md-slider>
+                        <span class="tools-label">{{layer.opacity * 100 | number:0}}%</span>
+                    </div>
+                </div>
+                <!-- vectortile layers-->
+                <div class="selected-layer-tools legend-item" ng-show="layer.active && layer.type=='vectortile'" ng-repeat="layer in selectedOverlays">
+                    <!-- layer's name -->
+                    <div class="layer-label">
+                        <div class="layer-name">
+                            {{ layer.label }}
+                            <span class="no-ordering"> - no ordering or sort capability </span>
+                        </div>
+                        <i class="material-icons cancel" ng-click="optionChanged(layer)">cancel</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<!-- print -->
+<md-dialog id="locs-widget-print-modal" class="locs-pivot-modal" aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header">Download Pivot Chart</h2>
+            <md-button class="md-icon-button" ng-click="closeDialog()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="print" title="File Download" aria-label="File Download" ng-click="exportPivotasCSV()" ng-show="!loading && !noData">Download CSV
+            <i class="material-icons">file_download</i>
+        </div>
+        <div class="print" title="File Download" aria-label="File Download" print="{{widget.id}}">Download Image
+            <i class="material-icons">file_download</i>
+        </div>
+    </md-dialog-content>
+</md-dialog>

@@ -1,0 +1,669 @@
+/**
+ * This is the main application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+// this is the default theme, but will be overidden when using the --theme parameter
+// on build. DO NOT ALTER THIS LINE OF CODE.
+@theme: 'spatialdev';
+
+/**
+ * First, we include the Twitter Bootstrap LESS files. Only the ones used in the
+ * project should be imported as the rest are just wasting space.
+ */
+
+@import '../../vendor/bootstrap/less/bootstrap.less';
+
+/**
+ * This is our main variables file. We must include it last so we can overwrite any variable
+ * definitions in our imported stylesheets.
+ */
+
+@import 'variables.less';
+
+/**
+ * Application
+ * (global)
+ */
+#app {
+    font-family: @reg-font-family;
+}
+
+/**
+ * Header
+ * (top, fixed header bar)
+ */
+#header {
+    font-family: @title-font-family;
+    width: 100%;
+    height: @height-header; // height of the top header
+    z-index: 1000 !important;
+    box-shadow: 1px 0 5px @shadow-color;
+    position: fixed;
+    top: 0;
+    background-color: @light-bg-color;
+    padding-left: 20px;
+    img {
+        height: @height-header - 2px;
+    }
+    .login-title {
+        text-align: center;
+        color: #fff;
+        font-size: 24px;
+        text-transform: uppercase;
+        margin: 14px 0 0 0;
+        font-family: @bold-font-family;
+    }
+    .login-sub-title {
+        text-align: center;
+        color: #fff;
+        font-size: 16px;
+        margin: -7px 0 0 0;
+        font-family: @title-font-family;
+        font-style: italic;
+    }
+    // login (far right)
+    .login {
+        float: right;
+        color: @main-bg-color;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 7px 5px 7px 16px;
+        border-left: solid 1px @element-border-color;
+        height: 100%;
+        cursor: pointer;
+        // login icon
+        i {
+            float: left;
+            margin-right: 7px;
+            margin-top: 2px;
+        }
+        i.logout{
+            float: right;
+            margin: 3px 5px 0 9px;
+        }
+        // login menu option (username)
+        .md-select-value{
+            color: transparent;
+            border-bottom-color: transparent !important;            
+        }
+        // login menu option (username)
+        .md-select-placeholder{
+            color: transparent;            
+        }
+        md-select{
+            margin-top: -46px;
+        }
+    }
+    // environment notification
+    .environment{
+        color: darkred;
+        font-size: 17px;
+        padding: 4px 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: auto;
+        display: inline;
+    }
+    .environment.hiddden{
+        display: none;
+    }
+}
+#header.login {
+    background-color: #191919;
+    height: 70px;
+}
+
+/**
+ * Navigation
+ * (left side, fixed navigation bar)
+ */
+#navigation {
+    height: 100%;
+    overflow: visible;
+    z-index: 1000 !important;
+    box-shadow: 1px 0 1px @shadow-color;
+    position: fixed;
+    width: @width-navigation; // width of the left hand navigation bar
+    top: @height-header; // height header
+    font-family: @reg-font-family;
+    background-color: @dark-bg-color;
+    color: @light-font-color;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        cursor: pointer;
+        height: 70px;
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        font-family: @title-font-family;
+        // link text
+        a, a:visited {
+            position: relative;
+            top: 50%;
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            font-style: normal;
+            font-size: 12px;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            color: @light-font-color;
+            // icon
+            i {
+                font-size: 20px;
+            }
+
+            .url-icon {
+                width: 0;
+                height: 0;
+            }
+
+            .url-icon svg {
+                fill: #fff;
+                width: 20px;
+                height: 20px;
+                -moz-transform: translate(111%);
+                -ms-transform: translate(111%);
+                -o-transform: translate(111%);
+                -webkit-transform: translate(111%);
+                transform: translate(111%);
+            }
+        }
+    }
+
+    li:hover {
+        background-color: @main-bg-color;
+    }
+
+    li.active {
+        background-color: @main-bg-color;
+    }
+
+    .demo-video {
+        position: absolute;
+        bottom: 30px;
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/**
+ * Main
+ */
+#main {
+    height: 100vh;
+    width: 100%;
+    padding: @height-header 0 35px 65px; // margins are height/width of header, navigation and footer
+    //position: fixed;
+
+}
+#main.login {
+    padding: 70px 0 35px 0;
+    position: fixed;
+}
+/**
+ * Footer
+ */
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: @width-navigation; // width of navigation
+    right: 0;
+    height: @height-footer; // height of the footer
+    z-index: 1000 !important;
+    box-shadow: 1px 0 5px @shadow-color;
+    background-color: @light-element-bg-color;
+    padding: 0 20px;
+    // copyright statement
+    .bottom-text {
+        font-size: 9px;
+        color: @dark-font-color;
+        margin-top: 13px;
+
+        a, a:visited {
+            color: @dark-font-color;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        td {
+            padding-right: 12px;
+        } 
+
+        .social-media a:hover {
+            color: @main-font-color !important;
+        }
+    }
+    // bottom left theme banner
+    .bottom-banner {
+        float: right;
+    }
+    // environment notification
+    .environment{
+        color: darkred;
+        font-size: 17px;
+        padding: 9px 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        float: right;
+    }
+
+    .glossary {
+        font-size: 12px;
+        padding: 10px 16px;
+        font-weight: 700;
+        /* text-transform: uppercase; */
+        float: right;
+    }
+}
+#footer.login {
+    left: 0;
+}
+/**
+ * Print Download div
+ * 
+ */
+ #print-download{
+     display: none;
+ }
+/**
+ * Global Classes
+ * 
+ */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+// removing outlining on focus
+textarea:focus, input:focus {
+    outline: 0;
+}
+// scrollable settings
+.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.btn:focus {
+    outline: none !important;
+}
+
+.btn:active {
+    outline: none !important;
+}
+
+*:focus {
+    outline: none !important;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+/**
+ * PMT Style Guide
+ * See https://app.frontify.com/d/5XPvmVZz1L6I/project-managing-tool-style-guide#/typography/typography
+ * (global)
+ */
+// style guideline variables
+@text-color-1 : #333333;
+@text-color-2: #727273;
+@h1-color: #3B3A3E;
+@background-grey: #f2f2f2;
+@secondary-color: #8cB7C7;
+@primary-color:#9b242d;
+@link-color: #3E7F98;
+@secondary-grey: #8d99a9;
+@color-button-color:@link-color;
+
+.pmt-h1 {
+    font-family: @title-font-family;
+    font-size: 20px;
+    line-height: 1.5;
+    color: @h1-color;
+    background-color: #fff;
+}
+
+.pmt-h2 {
+    font-size: 18px;
+    font-family: @reg-font-family;
+    line-height: 1.5;
+    color: @text-color-2;
+    background-color: #fff;
+}
+
+.pmt-h3 {
+    font-size: 15px;
+    font-family: @reg-font-family;
+    line-height: 1.5;
+    color: @text-color-2;
+    background-color: #fff;
+}
+
+.pmt-paragraph {
+    font-size: 12px;
+    font-family: @reg-font-family;
+    line-height: 1.5;
+    color: @text-color-2;
+    background-color: #fff;
+}
+
+.pmt-hyperlink {
+    font-family: @title-font-family;
+    font-size: 12px;
+    line-height: 1.5;
+    color: @link-color;
+    background-color: #fff;
+}
+
+.pmt-table-header {
+    font-family: @title-font-family;
+    font-size: 12px;
+    line-height: 1.5;
+    color: @h1-color;
+    background-color: #fff;
+    text-transform: uppercase;
+}
+
+.pmt-small-print {
+    font-size: 10px;
+    font-family: @reg-font-family;
+    line-height: 1.5px;
+    color: @text-color-1;
+    background-color: #fff;
+}
+
+.pmt-table-body {
+    font-size: 12px;
+    font-family: @reg-font-family;
+    line-height: 1.5;
+    color: @text-color-1;
+    background-color: #fff;
+}
+
+.pmt-field-title {
+    font-size: 10px;
+    font-family: @bold-font-family;
+    line-height: 1.5;
+    color: @text-color-1;
+    background-color: #fff;
+}
+
+.pmt-button {
+    text-transform: uppercase;
+    font-weight: 800;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.pmt-color-button {
+    .pmt-button;
+    color: #ffffff;
+    font-family: @title-font-family;
+    background-color: @color-button-color;
+}
+
+.pmt-color-button:hover {
+    color: #ffffff;
+    background-color: #377086;
+}
+
+.pmt-gray-button {
+    .pmt-button;
+    color: #ffffff;
+    font-family: @title-font-family;
+    background-color: #7B838E;
+}
+
+.pmt-gray-button:hover {
+    color: #ffffff;
+    background-color: #6D747D;
+}
+
+.pmt-enable-button {
+    .pmt-button;
+    color: #ffffff;
+    font-family: @title-font-family;
+    background-color: #dddddc;
+}
+
+.pmt-enable-button:hover {
+    color: #ffffff;
+    background-color: @link-color;
+}
+
+.pmt-back-button {
+    color: @link-color;
+    font-family: @title-font-family;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+//select boxes should always be in front
+.md-select-menu-container.md-active {
+    z-index: 1000;
+}
+
+//check boxes
+md-checkbox {
+    vertical-align: top;
+    .md-icon {
+        width: 14px;
+        height: 14px;
+    }
+    .md-label {
+        margin-top: -7px;
+    }
+}
+
+md-checkbox.md-checked .md-icon:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+}
+
+md-checkbox.md-default-theme.md-checked .md-ink-ripple, md-checkbox.md-checked .md-ink-ripple {
+    color: @main-bg-color;
+}
+
+md-checkbox.md-default-theme.md-checked .md-icon, md-checkbox.md-checked .md-icon {
+    background-color: @main-bg-color;
+}
+
+// select drop-down menus
+md-option .md-text {
+    font-family: @reg-font-family;
+    font-size: 14px;
+}
+
+md-select-menu {
+    max-width: 300px;
+}
+
+md-select-menu md-option[selected], md-select-menu md-option[selected]:focus {
+    color: #fff;
+    background-color: @main-bg-color;
+}
+
+// loaders
+md-progress-circular svg path { 
+    stroke: #cecece; 
+}
+
+// toolbars
+md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
+    background-color: @main-bg-color;
+}
+
+//dialog boxes should always be on top
+.md-dialog-container {
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+//styling for multi/single select dropdowns
+.select-container {
+    .select-searchbox {
+      border: none;
+      outline: none;
+      height: 100%;
+      width: 100%;
+      padding: 0; 
+    }
+    .select-header {
+      box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+      padding-left: 10.667px;
+      height: 48px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: auto; 
+    }
+    md-content._md {
+      max-height: 240px; 
+    }
+  }
+
+/**
+ * Now that all app-wide styles have been applied, we can load the styles for
+ * all the submodules and components we are using. 
+ */
+// login page
+@import '../app/login/less/login.less';
+@import '../app/login/login-public/less/login-public.less';
+@import '../app/login/timeout/less/timeout.less';
+// home page
+@import '../app/home/less/home.less';
+// vieo page
+@import '../app/video/less/video.less';
+// locations page
+@import '../app/locs/less/locs.less';
+@import '../app/locs/map/less/map.less';
+@import '../app/locs/map/map-bar/less/map-bar.less';
+@import '../app/locs/map/map-summary/less/map-summary.less';
+@import '../app/locs/mid-bar/less/mid-bar.less';
+@import '../app/locs/top-bar/less/top-bar.less';
+@import '../app/locs/filter/less/filter.less';
+@import '../app/locs/filter/datasource/less/datasource.less';
+@import '../app/locs/filter/taxonomy/less/taxonomy.less';
+@import '../app/locs/filter/date/less/date.less';
+@import '../app/locs/widget/less/widget.less';
+@import '../app/locs/widget/overview/less/overview.less';
+@import '../app/locs/widget/tax-summary/less/tax-summary.less';
+@import '../app/locs/widget/top-dollar/less/top-dollar.less';
+@import '../app/locs/widget/top-taxonomy/less/top-taxonomy.less';
+@import '../app/locs/widget/stories/less/stories.less';
+@import '../app/locs/widget/valuable-activities/less/valuable-activities.less';
+@import '../app/locs/widget/pivot/less/pivot.less';
+@import '../app/locs/widget/external-link/less/external-link.less';
+// activitiess page
+@import '../app/acts/less/acts.less';
+@import '../app/acts/filter/less/filter.less';
+@import '../app/acts/filter/datasource/less/datasource.less';
+@import '../app/acts/filter/organization/less/organization.less';
+@import '../app/acts/filter/taxonomy/less/taxonomy.less';
+@import '../app/acts/filter/geographic/less/geographic.less';
+@import '../app/acts/list/less/list.less';
+@import '../app/acts/detail/less/detail.less';
+@import '../app/acts/detail/locations/less/locations-national.less';
+@import '../app/acts/detail/locations/less/locations-long.less';
+@import '../app/acts/detail/locations/less/locations-short.less';
+@import '../app/acts/top-bar/less/top-bar.less';
+@import '../app/acts/children/details/less/details.less';
+@import '../app/acts/children/organization/less/organization.less';
+@import '../app/acts/children/taxonomy/less/taxonomy.less';
+// map page
+@import '../app/map/less/map.less';
+@import '../app/map/basemap/less/basemap.less';
+@import '../app/map/bottom-bar/less/bottom-bar.less';
+@import '../app/map/bottom-bar/legend/less/legend.less';
+@import '../app/map/bottom-bar/timeline/less/timeline.less';
+@import '../app/map/left-panel/less/left-panel.less';
+@import '../app/map/left-panel/contextual/less/contextual.less';
+@import '../app/map/left-panel/contextual/selection/less/selection.less';
+@import '../app/map/left-panel/filter/less/filter.less';
+@import '../app/map/left-panel/filter/datasource/less/datasource.less';
+@import '../app/map/left-panel/filter/organization/less/organization.less';
+@import '../app/map/left-panel/filter/taxonomy/less/taxonomy.less';
+@import '../app/map/left-panel/filter/geographic/less/geographic.less';
+@import '../app/map/map/less/map.less';
+@import '../app/map/zoomTo/less/zoomTo.less';
+@import '../app/map/right-panel/less/right-panel.less';
+@import '../app/map/right-panel/detail/less/detail.less';
+@import '../app/map/right-panel/target-analysis/less/target-analysis.less';
+@import '../app/map/right-panel/travel/less/travel.less';
+@import '../app/map/top-bar/less/top-bar.less';
+@import '../app/map/top-bar/export/less/export.less';
+@import '../app/map/right-panel/children/details/less/details.less';
+@import '../app/map/right-panel/children/organization/less/organization.less';
+@import '../app/map/right-panel/children/taxonomy/less/taxonomy.less';
+@import '../app/map/right-panel/children/location/less/location.less';
+// partnerlink page
+@import '../app/pl/less/pl.less';
+@import '../app/pl/filter/less/filter.less';
+@import '../app/pl/filter/datasource/less/datasource.less';
+@import '../app/pl/filter/organization/less/organization.less';
+@import '../app/pl/sankey/less/sankey.less';
+// editor page
+@import '../app/editor/less/editor.less';
+@import '../app/editor/detail/less/detail.less';
+@import '../app/editor/list/less/list.less';
+@import '../app/editor/top-bar/less/top-bar.less';
+@import '../app/editor/org-selector/less/org-selector.less';
+@import '../app/editor/contact-selector/less/contact-selector.less';
+@import '../app/editor/location-selector/less/location-selector.less';
+@import '../app/editor/file-selector/less/file-selector.less';
+// agra integration page
+@import '../app/agra/less/agra.less';
+@import '../app/agra/detail/less/detail.less';
+@import '../app/agra/integrator/less/integrator.less';
+@import '../app/agra/top-bar/less/top-bar.less';
+// orgs page
+@import '../app/orgs/less/orgs.less';
+@import '../app/orgs/create-org/less/create-org.less';
+@import '../app/orgs/edit-org/less/edit-org.less';
+@import '../app/orgs/top-bar/less/top-bar.less';
+@import '../app/orgs/list/less/list.less';
+// tax page
+@import '../app/tax/less/tax.less';
+@import '../app/tax/top-bar/less/top-bar.less';
+@import '../app/tax/detail/less/detail.less';
+@import '../app/tax/list/less/list.less';
+@import '../app/tax/create-tax/less/create-tax.less';
+@import '../app/tax/create-class/less/create-class.less';
+// admin page
+@import '../app/admin/less/admin.less';
+@import '../app/admin/org-selector/less/org-selector.less';
+@import '../app/admin/create-user/less/create-user.less';
+@import '../app/admin/password-reset/less/password-reset.less';
+@import '../app/admin/add-existing-user/less/add-existing-user.less';
+@import '../app/admin/edit-permissions/less/edit-permissions.less';
+/**
+ * Last but not least, apply a theme
+ * Themes must follow this naming convension to be picked up on the build
+ */
+@import "themes/@{theme}-theme.less";

@@ -1,0 +1,78 @@
+﻿#org-selector {
+    position: relative;
+    top: 20px;
+    height: 600px;
+    width: 800px;
+    font-family: @reg-font-family;
+        
+    // modal header
+    .sub-header{
+        font-family: @title-font-family;
+        text-transform: uppercase;
+    }
+    // loading animation
+    .loading {
+        margin: auto;
+        .md-left .md-half-circle {
+            border-top-color: @main-bg-color;
+            border-left-color: @main-bg-color;
+        }
+        .md-right .md-half-circle {
+            border-top-color: @main-bg-color;
+            border-right-color: @main-bg-color;
+        }
+    }
+
+    input[type="radio"]:checked {
+        font-weight: 700;
+    }
+    
+    md-dialog {
+        min-height: 460px;
+        left: 65px; // width of left navbar
+    }
+
+    md-dialog-content {
+        padding: 20px;
+    }
+    
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+
+    button {
+        font-family: @title-font-family;
+    }
+
+    button.save {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+    }
+
+    button.md-button.md-raised.morOrgs {
+        float:left;
+    }
+
+    button.md-button.md-raised[disabled] {
+        background-color: rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .orgList {
+        padding-left:1px;
+    }
+
+    .extendedOrgList {
+        max-height:175px;
+        overflow-y:scroll;
+        border-top: 1px solid #e5e5e5;
+        padding-left: 1px;
+    }
+
+    .modal-footer {
+        padding: 19px 20px 0;
+    }
+}
+
+#org-selector.modal {
+    height:100%;
+}

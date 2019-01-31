@@ -1,0 +1,74 @@
+<div id="edit-org">
+    <md-dialog aria-label="edit org dialog">
+        <form name="editOrgForm">
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Edit Organization</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- description -->
+            <md-content class="description md-padding" ng-show="!loading">
+                <p>
+                    Fill out form to edit existing organization.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- submit loading message -->
+            <md-content class="description md-padding" ng-show="loading">
+                <p>
+                    Your request is currently being processed.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- loading animation -->
+            <div>
+                <md-progress-circular ng-show="loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <!-- edit org form -->
+            <md-dialog-content ng-show="!loading">
+                <!-- name -->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Name</label>
+                        <input name="name" ng-model="org.name" ng-required="name.touched" ng-focus="setFocused('name')" ng-blur="setBlurred('name')">
+                        <div ng-messages="editOrgForm.name.$error">
+                            <div ng-message="required">Name is required.</div>
+                            <div ng-message="unique">Name already exists.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- label (abbreviation - optional)-->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Abbreviation</label>
+                        <input name="label" ng-model="org.label" ng-focus="setFocused('label')" ng-blur="setBlurred('label')">
+                    </md-input-container>
+                </div>
+                <!-- url (optional) -->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Url</label>
+                        <input name="url" ng-model="org.url" ng-focus="setFocused('url')" ng-blur="setBlurred('url')">
+                        <div ng-messages="editOrgForm.url.$error">
+                            <div ng-message="pattern">Must be a valid url.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- buttons -->
+                <!--delete save cancel-->
+                <div class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                    <md-button ng-disabled="editOrgForm.$invalid" class="delete md-raised" ng-click="delete($event, org)">Delete</md-button>
+                    <md-button ng-disabled="editOrgForm.$invalid" class="save md-raised" ng-click="save(org)">Save</md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

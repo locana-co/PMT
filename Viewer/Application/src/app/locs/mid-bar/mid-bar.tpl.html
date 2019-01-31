@@ -1,0 +1,12 @@
+<div id="locs-mid-bar" ng-controller="LocsMidBarCtrl" ng-show="stateParams.area!='world'" >
+    <div class="title-text col-md-12 col-lg-8 col-sm-12">
+        <div class="title">{{title}}</div>
+        <div class="subtitle">{{subtitle}}</div>
+    </div>
+    <!-- investment-->
+    <div class="investment col-md-12 col-lg-4 col-sm-12" ng-show="stateParams.area == 'national' && !investmentLoading" >{{investmentLabel}}: {{investment || '--'}}</div>
+
+    <!-- loader-->
+    <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="stateParams.area == 'national' && investmentLoading" md-diameter="50"></md-progress-circular>-->
+
+</div>

@@ -1,0 +1,126 @@
+<div id="tax-list" ng-controller="TaxListCtrl" class="scrollable ui-layout-center" ng-show="stateService.isNotParam('tax_id')">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+    <md-content layout-padding ng-show="!loading && !error">
+        <!-- user message -->
+        <div class="message" ng-show="!loading && error">You have not been granted access to edit, please contact your administrator.</div>
+        <!-- list of taxonomies editable by the user -->
+        <form name="taxonomyForm" class="taxonomyForm" ng-show="!loading && !error">
+            <md-input-container md-no-float="" class="search md-block ng-scope md-input-has-placeholder">
+                <input ng-model="searchText" ng-keyup="searchTaxList($event)" placeholder="Search..." class="md-input">
+            </md-input-container>
+            <div class="instructions red" ng-show="errorOnForm"><i class="material-icons">error</i> {{errorMessage}}</div>
+            <!-- no taxonomies message -->
+            <div class="instructions" ng-show="taxonomyList===null">{{settings.instructions}} taxonomies.</div>
+            <div class="tax-wrapper">
+                <div class="tax-container">
+                    <div class="repeated-tax" ng-repeat="tax in taxonomyList" ng-if="!tax.delete && tax.inFilter" flex>
+                        <!-- taxonomy title bar -->
+                        <div class="repeated-title-bar">{{tax._name}}
+                            <div class="tools">
+                                <md-button class="md-mini md-fab icon-button" ng-click="editDetail(tax, $event)" aria-label="edit assignments">
+                                    <md-tooltip md-direction="bottom">Edit Assignments</md-tooltip>
+                                    <i class="material-icons">assignment</i>
+                                </md-button>
+                                <md-button class="md-mini md-fab icon-button" ng-click="deleteTax(tax, $event)" aria-label="delete taxonomy">
+                                    <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                    <i class="material-icons">delete_forever</i>
+                                </md-button>
+                            </div>
+                        </div>
+                        <div class="repeated-tax-info" layout-gt-sm="row">
+                            <!-- name -->
+                            <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._name.visible">
+                                <label>{{settings.fields._name.label}}</label>
+                                <input name="_name{{$index}}" ng-model="tax._name" ng-required="settings.fields._name.required" ng-change="makeDirty(tax)"
+                                />
+                                <div class="instructions red" ng-messages="taxonomyForm['_name' + $index].$error" ng-show="taxonomyForm['_name' + $index].$dirty">
+                                    <div ng-message="required">This a required field!</div>
+                                </div>
+                            </md-input-container>
+                            <!-- description -->
+                            <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._description.visible">
+                                <label>{{settings.fields._description.label}}</label>
+                                <input name="{{$index}}_description" ng-model="tax._description" ng-required="settings.fields._description.required" ng-change="makeDirty(tax)"
+                                />
+                                <div class="instructions red" ng-messages="taxonomyForm[$index + '_description'].$error" ng-show="taxonomyForm[$index + '_description'].$dirty">
+                                    <div ng-message="required">This a required field!</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- classifications title bar -->
+                        <div class="repeated-title-bar">
+                            <span>Classifications</span>
+                            <!-- <span class="child-class-title" ng-show="activeClassifications[tax.id].showNest">Child Classifications</span> -->
+                            <div class="tools">
+                                <md-button class="md-mini md-fab icon-button" ng-click="addClassificationRecord(tax)" ng-disabled="!tax.id" aria-label="add classification">
+                                    <md-tooltip md-direction="bottom">Add Classification</md-tooltip>
+                                    <i class="material-icons">playlist_add</i>
+                                </md-button>
+                            </div>
+                        </div>
+                        <div class="instructions grey" ng-show="tax.classifications.numItems===0">Please create at least
+                            one classification.</div>
+                        <div class="repeated-tax-classifications" layout-gt-sm="row">
+                            <md-virtual-repeat-container class="class-wrapper" layout-gt-sm="row" ng-if="tax.id">
+                                <div class="repeated-item" md-virtual-repeat="classification in tax.classifications" md-on-demand md-item-size="60" md-auto-shrink="true"
+                                    ng-show="!classification.delete" ng-class="{activeItem: activeClassifications[tax.id].showNest && activeClassifications[tax.id].id === classification.id}">
+                                    <md-input-container class="align-left" flex-gt-sm ng-show="settings.fields.classification.name.visible">
+                                        <label>{{settings.fields.classification.name.label}}</label>
+                                        <input name="{{classification.id}}_class" ng-model="classification.c" ng-required="settings.fields.classification.name.required"
+                                            ng-change="makeDirty(classification)" />
+                                        <div class="instructions red" ng-messages="taxonomyForm[classification.id + '_class'].$error" ng-show="taxonomyForm[classification.id + '_class'].$dirty">
+                                            <div ng-message="required">This a required field!</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div flex-gt-sm class="align-right buttons">
+                                        <md-button class="md-mini md-fab icon-button" ng-click="viewDetail(classification, $event)" aria-label="view assignments">
+                                            <md-tooltip md-direction="bottom">View Assignments</md-tooltip>
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </md-button>
+                                        <md-button class="md-mini md-fab icon-button" ng-if="tax._is_category" ng-click="onArrowClicked(classification, tax.id, $event);"
+                                            aria-label="add/edit children">
+                                            <md-tooltip md-direction="bottom">Add/Edit Children</md-tooltip>
+                                            <i class="material-icons">vertical_split</i>
+                                        </md-button>
+                                        <md-button class="md-mini md-fab icon-button" ng-click="deleteClassificationRecord(tax, classification, $event)" aria-label="delete classification">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+
+                                </div>
+                            </md-virtual-repeat-container>
+                            <div class="nested-column class-wrapper class-wrapper-right" ng-if="tax._is_category" ng-show="activeClassifications[tax.id].showNest">
+                                <div class="child-tools">
+                                    <md-button class="md-mini md-fab icon-button" ng-click="addChildRecord(activeClassifications[tax.id],tax.child_id);" aria-label="add Child classification">
+                                        <md-tooltip md-direction="bottom">Add Child Classification</md-tooltip>
+                                        <i class="material-icons">add_circle_outline</i>
+                                    </md-button>
+                                </div>
+                                <!-- child classifications -->
+                                <div class="repeated-title-bar">{{activeClassifications[tax.id].c}}</div>
+                                <div layout-gt-sm="row" style="padding-top:5px;" ng-repeat="child in activeClassifications[tax.id].children | filter:{delete:false}">
+                                    <md-input-container class="md-block repeated-child" flex-gt-sm ng-show="settings.fields.classification.name.visible">
+                                        <label>{{settings.fields.classification.name.label}}</label>
+                                        <input name="{{child.id}}_child" ng-model="child.c" ng-required="settings.fields.classification.name.required" ng-change="makeDirty(child);"
+                                        />
+                                        <div class="instructions red" ng-messages="taxonomyForm[child.id + '_child'].$error" ng-show="taxonomyForm[child.id + '_child'].$dirty">
+                                            <div ng-message="required">This a required field!</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div flex-gt-sm class="align-right buttons">
+                                        <md-button class="md-mini md-fab icon-button" ng-click="deleteChildRecord(child, $event)" aria-label="delete child">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </md-virtual-repeat-container>
+                </div>
+        </form>
+    </md-content>
+    </div>

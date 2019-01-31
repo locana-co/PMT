@@ -1,0 +1,38 @@
+<div id="editor-top-bar" ng-controller="EditorTopBarCtrl">
+    <!-- back button-->
+    <div class="back-button" title="Back to List" ng-show="stateService.isParam('editor_activity_id')" ng-click="returnToActivityList($event)"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+     <!-- back button to parent-->
+     <div class="parent-crumb title" title="Back to Parent" ng-show="stateService.isParam('editor_parent_id') && stateService.getState().editor_parent_id" >
+        <a href="#" class="crumb-link" ng-click="returnToParent($event, stateService.getState().editor_parent_id)">
+            {{stateService.getState().editor_parent_title}}
+        </a>
+        <div class="crumb-separator">></div>
+    </div>
+    <!-- activity detail -->
+    <div ng-show="stateService.isParam('editor_activity_id')" class="title">
+        {{activityTitle | cut:true:100:'...'}}
+    </div>
+    <!-- all activities list-->
+    <div ng-show="stateService.isNotParam('editor_activity_id')" class="title">
+        Editable {{terminology.activity_terminology.plural}} ({{activityCt}})
+    </div>
+    <!-- toolbar -->
+    <div class="toolbar">
+        <md-button class="md-mini md-fab icon-button" aria-label="new" ng-click="createActivity($event)">
+            <md-tooltip md-direction="bottom">Add New {{terminology.activity_terminology.singular}}</md-tooltip>
+            <i class="material-icons">add</i>
+        </md-button>
+        <md-button ng-show="stateService.isParam('editor_activity_id')" class="md-mini md-fab icon-button" aria-label="save" ng-click="saveActivity($event)">
+            <md-tooltip md-direction="bottom">Save</md-tooltip>
+            <i class="material-icons">save</i>
+        </md-button>
+        <md-button ng-show="stateService.isParam('editor_activity_id')" class="md-mini md-fab icon-button" aria-label="cancel" ng-click="cancelActivity($event)">
+            <md-tooltip md-direction="bottom">Cancel</md-tooltip>
+            <i class="material-icons">refresh</i>
+        </md-button>
+        <md-button ng-show="stateService.isParam('editor_activity_id')" ng-hide="stateService.isNotParam('editor_activity_id')||currentUser.user.role==='Reader'||currentUser.user.role==='Editor'" class="md-mini md-fab icon-button" aria-label="delete" ng-click="deleteActivity($event)">
+            <md-tooltip md-direction="bottom">Delete</md-tooltip>
+            <i class="material-icons">delete_forever</i>
+        </md-button>
+    </div>
+</div>

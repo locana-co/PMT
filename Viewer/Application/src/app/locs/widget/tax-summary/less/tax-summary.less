@@ -1,0 +1,136 @@
+﻿.locs-widget-tax-summary {
+    font-family: @reg-font-family;
+    width: 100%;
+    height: 300px;
+    //loader
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+    // widget title
+    .title {
+        .pmt-h3;
+        padding-top: 5px;
+    }
+    // print icon
+    .print{
+        float: right;
+        cursor: pointer;
+    }
+    .responsive-layout {
+        height: 100%;
+        width: 100%;
+    }
+
+    .legend {
+        color: #868688;
+        font-size: 11px;
+        text-transform: capitalize;
+        max-height: 25%;
+        max-width: 100%;
+        overflow: auto;
+
+        .color {
+            margin-right: 6px;
+            height: 8px;
+            width: 8px;
+            float: left;
+            border-radius: 9px;
+            margin-top: 2px;
+        }
+    }
+    // pie chart
+    pie-chart {
+        cursor: pointer;
+        // chart is a svg
+        svg {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        // pie piece outline
+        .arc path {
+            stroke: #fff;
+        }
+    }
+    // tooltip styling
+    .pie-chart-tooltip {
+        z-index: 1000;
+        width: 230px;
+        position: absolute;
+        height: auto;
+        padding: 10px;
+        background-color: #fff;
+        color: #3A3E3F;
+        border-radius: 10px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+
+        .title {
+            text-transform: uppercase;
+            font-family: @bold-font-family;
+            color: #3A3E3F;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        span {
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 12px;
+        }
+    }
+
+    .pie-chart-tooltip::after {
+        border-top: 10px solid #fff;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        width: 0;
+        height: 0;
+        content: "";
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 6em;
+    }
+}
+
+#locs-top-summary-modal {
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+
+    md-dialog-content {
+        //loader
+        .loader {
+            margin: 0 auto;
+            position: relative;
+            // Overwrite loading animation color
+            .md-left .md-half-circle {
+                border-left-color: #cecece;
+                border-top-color: #cecece;
+            }
+            .md-right .md-half-circle {
+                border-right-color: #cecece;
+                border-top-color: #cecece;
+            }
+        }
+        .activity {
+            .pmt-back-button;
+            cursor: pointer;
+            line-height: 2.5;
+            padding: 0 20px;
+        }
+        .activity:hover {
+            background-color: #d5d5d5;
+        }
+    }
+}

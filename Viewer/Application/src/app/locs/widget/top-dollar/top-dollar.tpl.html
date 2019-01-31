@@ -1,0 +1,24 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-top-dollar widget" ng-controller="LocsWidgetTopDollarCtrl">
+    <!-- no data message-->
+    <div class="no-data-message" ng-show="noData">There is no data to support this widget</div>
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+    <!-- print -->
+    <div class="print" ng-click="printWidget(widget.exports)" title="File Download" aria-label="File Download" ng-show="!loading && !noData">
+        <i class="material-icons">file_download</i>
+    </div>
+    <!-- widget title -->
+    <div class="title" ng-show="!loading">{{widget.title}}</div>
+    <!-- show all organizations list -->
+    <div class="show-all-link">
+        <a ng-if="widget.params.full_list" ng-click="showAll();">All {{terminology.funder_terminology.plural.toTitleCase()}}</a>
+    </div>
+    <!-- chart -->
+    <div class="bar-chart">
+        <horizontal-bar-chart chart-data="chartData" terminology="terminology" showpopup="true" popupurl="'locs/widget/top-dollar/top-dollar-activities-modal.tpl.html'"
+            ng-show="!loading && !noData"></horizontal-bar-chart>
+    </div>
+    <!-- widget footnote -->
+    <div class="footnote" ng-show="!loading && widget.footnote && !noData">{{widget.footnote}}</div>
+</div>

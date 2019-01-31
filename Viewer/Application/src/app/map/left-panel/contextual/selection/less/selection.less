@@ -1,0 +1,150 @@
+﻿.map-contextual-selection {
+    // selected layers section
+    .layers-tool {
+        display: none;
+        position: relative;
+        opacity: 0;
+        z-index: 900;
+        width: 240px;
+        margin-left: -23px;
+        margin-top: -9px;
+        -moz-transition: all .5s ease .3s;
+        -webkit-transition: all .5s ease .3s;
+        -ms-transition: all .5s ease .3s;
+        transition: all .5s ease .3s;
+         // selected layers header
+        .selection-header {
+            margin: 5px 0 -5px 7px;
+            font-size: 12px;
+            background: #f2f2f2;
+            padding: 15px 8px 0px 12px;
+            font-family: @title-font-family;
+            // clear all selected layers link
+            .clear-all {
+                display: inline-block;
+                float: right;
+                color: @link-color;
+                font-family: @bold-font-family;
+                cursor: pointer;
+            }
+            .clear-all:hover {
+                color: #000;
+            }
+        }
+        .selection-wrapper{
+            max-height: 300px;
+            width: 100%;
+            overflow-y: auto;           
+            // selected contextual layers tools
+            .selected-layers-tools {
+                position: relative;
+                margin: 0 0 5px 7px;
+                padding-top: 10px;
+                background: #f2f2f2;
+                // individual layers tools
+                .selected-layer-tools {
+                    font-size: 11px;
+                    font-family: @title-font-family;
+                    margin: 0;
+                    border-bottom: 1px solid #a9aaaa;
+                    background: #f2f2f2;
+                    padding: 11px 0;
+                    // layers name label
+                    .layer-label {
+                        margin: 0 5px;
+                        // sort symbol
+                        i.sort {
+                            float: left;
+                            margin: 0 6px 0 0;
+                            font-size: 15px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        }
+                        // selected layer name
+                        .layer-name {
+                            height: 15px;
+                            font-size: 12px;
+                            width: 162px;
+                            display: inline-block;
+                            .no-ordering {
+                                color: grey;
+                                font-style: italic;
+                                font-size: 10px;
+                            }
+                        }
+                        i.cancel {
+                            color: @primary-color;
+                            display: inline-block;
+                            float: right;
+                            cursor: pointer;
+                            font-size: 14px;
+                        }
+                    }
+                    // layers tool set
+                    .tools {
+                        margin: 0 0 0 8px;
+                        font-size: 10px;
+                        .tools-label{
+                            padding-left: 5px;
+                        }
+                        i {
+                            float: right;
+                            font-size: 16px;
+                            cursor: pointer;
+                            margin: 9px 4px 0;
+                        }
+                        md-slider {
+                            width: 123px;
+                            padding: 0;
+                            margin: 0 0 0 8px;
+                            height: 20px;
+                            display: inline-block;
+
+                            .md-track {
+                                position: absolute;
+                                left: 0;
+                                right: 0;
+                                height: 100%;
+                                bottom: 7px;
+                                border-color: #ffffff;
+                                background-color: #ffffff;
+                            }
+
+                            .md-track.md-track-fill {
+                                border-color: #a9aaaa;
+                                background-color: #a9aaaa;
+                            }
+
+                            .md-thumb {
+                                top: -3px;
+                            }
+
+                            .md-thumb:after {
+                                left: 3px;
+                                top: 8px;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 24px;
+                                border-color: #a9aaaa;
+                                background-color: #a9aaaa;
+                            }                        
+                        }
+                        //remove focus ring around slider
+                        md-slider:not([md-discrete]):not([disabled]).md-active .md-focus-ring, md-slider:not([md-discrete]):not([disabled]):focus .md-focus-ring {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // selected layers section: active
+    .layers-tool.active {
+        display: block;
+        opacity: 1;
+        -moz-transition: all .5s ease .3s;
+        -webkit-transition: all .5s ease .3s;
+        -ms-transition: all .5s ease .3s;
+        transition: all .5s ease .3s;
+    }
+}

@@ -1,0 +1,220 @@
+#add-existing-user {
+    font-family: @reg-font-family;
+
+    .err-message {
+        color: red;
+    }
+
+    .org {
+        font-family: @reg-font-family;
+        font-size: 12px;
+    }
+
+    .description {
+        overflow: hidden;
+    }
+
+    .sub-header {
+        font-family: @title-font-family;
+        text-transform: uppercase;
+    }
+
+    md-content {
+        padding-left: 0;
+    }
+
+    md-dialog {
+        max-height: 560px;
+        max-width: 800px;
+        margin-left: @width-navigation;
+
+        @media (max-width:768px) {
+            max-width: 80%;
+        }
+
+        // loading animation
+        .loading {
+            margin: auto;
+            .md-left .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-left-color: @main-bg-color;
+            }
+            .md-right .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-right-color: @main-bg-color;
+            }
+        }
+    }
+
+    md-dialog-content {
+        padding: 0 20px 20px 20px;
+        overflow-y: hidden;
+    }
+
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+
+    button {
+        font-family: @title-font-family;
+    }
+
+    button.save {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+        font-family: @title-font-family;
+        text-transform: uppercase;
+        padding: 5px 10px;
+    }
+
+    button.md-button.md-raised[disabled] {
+        background-color: rgba(0,0,0,0.12) !important;
+    }
+
+    .modal-footer {
+        border-top: none;
+        margin: 0;
+    }
+
+    md-select {
+        max-width: 200px;
+    }
+
+    md-select-value {
+        max-width: 200px;
+        overflow: hidden;
+    }
+
+    md-option .md-text {
+        font-family: @reg-font-family;
+        font-size: 12px;
+    }
+    // bottom border on edit fields text box & role dropdown
+    md-input-container.md-input-focused input,
+    md-input-container .md-select-value {
+        border-color: @main-bg-color;
+    }
+
+    md-select[disabled] .md-select-value {
+        border-bottom-color: transparent;
+    }
+
+        // input label
+    md-input-container.md-input-focused label {
+        color: @main-bg-color;
+    }
+    // text box margin
+    md-input-container {
+        margin: 10px 0;
+    }
+
+    .searchBar {
+        width: 50%;
+        margin-top: 0;
+    }
+
+    .tableHead {
+        span {
+            width:140px;
+            display: table-cell;
+        }
+
+        div {
+            padding-left: 45px;
+            margin-bottom: 15px;
+        }
+    }
+
+    .userList {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 150px;
+
+        .radioRow {
+            padding-left:30px;
+            align-items:center;
+        }
+    }
+
+    .lastRow {
+        margin-top: 20px;
+    }
+
+    md-radio-button {
+        margin-bottom: 0;
+        height: 40px;
+
+        .md-label {
+            margin-top: 10px;
+        }
+
+        span {
+            width:140px;
+            display: table-cell;
+        }
+    }
+
+    md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused .md-input,
+    md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+        border-color: @main-font-color;
+    }
+    md-radio-button.md-default-theme .md-on, md-radio-button .md-on{
+        background-color: @dark-font-color;
+    }
+    md-radio-button.md-default-theme.md-checked .md-off, md-radio-button.md-checked .md-off{
+        border-color: @dark-font-color;
+    }
+
+        md-radio-group {
+        .row {
+            border-bottom: 1px solid #ddd;
+        }
+
+        div.row:last-child {
+            border-bottom: 0px solid #ddd;
+        }
+
+        .md-checked {
+            //background-color: #ddd;
+            border-radius: 2px;
+        }
+    }
+
+    .radioContent {
+        display: table-cell;
+    }
+
+    .roleSelector {
+        display: table-cell;
+        z-index: 50;
+        padding-left: 20px;
+    }
+
+    .leftPadding {
+        padding-left: 20px;
+    }
+
+    md-option .md-text {
+        font-family: @reg-font-family;
+        font-size: 14px;
+    }
+
+    md-select-menu {
+        max-width: 300px;
+        magin-top: 30px;
+    }
+
+    md-select-menu md-option[selected], md-select-menu md-option[selected]:focus {
+        color: @main-bg-color;
+    }
+
+    // md-select label
+    md-input-container.md-default-theme:not(.md-input-invalid).md-input-has-value label, md-input-container:not(.md-input-invalid).md-input-has-value label {
+        display: none;
+    }
+
+}
+
+#add-existing-user.modal {
+    height: 100%;
+}

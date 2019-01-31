@@ -1,0 +1,267 @@
+#tax-list {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background-color: @background-grey;
+    margin-top: 55px;
+    overflow-y: hidden;
+
+   
+    .message {
+        padding: 40px;
+        font-size: 24px;
+        color: @dark-text-color;
+        i {
+        color: @main-font-color;
+        }
+        .clickable{
+        color: @main-font-color;
+        cursor: pointer;
+        font-size: 20px;
+        }
+        ul{
+        padding-top: 10px;
+        }
+    }
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+        border-left-color: #cecece;
+        border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+        border-right-color: #cecece;
+        border-top-color: #cecece;
+        }
+    }
+
+    md-content {
+        background-color: @background-grey;
+        height:  calc(~"100% - 120px");
+        //overflow-y: hidden;
+    }
+   
+
+    .taxonomyForm{
+        height: calc(~"100% - 135px");
+        .tools {
+            float: right;
+            margin-top: -19px;
+            .icon-button {
+                color: #fff;
+                background-color: @main-bg-color;
+                i {
+                    margin-top: 7px;
+                }
+                &:hover{
+                    background-color: @main-font-color;
+                }
+            }
+        }
+        .child-tools {
+            float: right;
+            .icon-button {
+                color: #fff;
+                background-color: @main-bg-color;
+                margin-right: 18px;
+                i {
+                    margin-top: 7px;
+                }
+                &:hover{
+                    background-color: @main-font-color;
+                }
+            }
+        }
+        .buttons{
+            .icon-button {
+                color: #fff;
+                background-color: @main-bg-color;
+                i {
+                    margin-top: 7px;
+                }
+                &:hover{
+                    background-color: @main-font-color;
+                }
+            }
+        }
+    }
+    
+    md-input-container.search input {
+        width: calc(100% ~'-' 40px);
+        border-color: @main-bg-color;
+        margin: 30px 20px 0px 20px;
+        padding: 5px;
+        height: 100%;
+    }
+
+    .tax-wrapper{
+        padding: 0 40px;
+        height: 100%;
+        .tax-container{
+            height: 100%;
+            width: 100%;
+            .repeated-tax {
+                border: 1px solid #ddd;
+                background-color: #fff;
+                box-sizing: border-box;
+                -webkit-box-shadow: 4px 4px 6px 0px rgba(69,69,69,0.67);
+                -moz-box-shadow: 4px 4px 6px 0px rgba(69,69,69,0.67);
+                box-shadow: 4px 4px 6px 0px rgba(69,69,69,0.67);
+                padding: 10px; 
+                margin: 30px 10px;
+
+                .repeated-title-bar{
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    color: @main-font-color;
+                    padding: 20px 10px 15px 10px;
+                    background-color: @background-grey;
+
+                    .child-class-title{
+                        margin-left: 45%; //this needs to be defined better to always stay aligned.
+                    }
+                }
+                .repeated-tax-info{
+                    margin: 10px 10px 0px 10px;
+                    height:100px !important;
+                    min-height:100px !important;
+                }
+
+                .repeated-tax-classifications{
+                    height: 300px !important;
+                    min-height: 300px !important;
+
+                    .class-wrapper{
+                        height: 300px;
+                        width: 100%;
+                        border: 1px solid #f2f2f2;
+                        margin: 6px 0;
+                        overflow-y: auto;
+
+                        .repeated-item {
+                            box-sizing: border-box;
+                            height: 65px;
+                            padding-top: 10px; 
+                
+                            &.activeItem{
+                                background-color: #336796; //@main-bg-color; //variable wasn't giving the correct color?
+                                label, input, .md-input{
+                                    color: @light-font-color !important;
+                                }
+                                
+                            }
+                
+                            // text align right
+                            .align-left{
+                                position: absolute;
+                                left: 0;
+                                width:  calc(~"100% - 120px");
+                            }
+                
+                            // text align right
+                            .align-right{
+                                text-align: right;
+                                position: absolute;
+                                right: 0;
+                            }
+                
+                        }
+                    }
+
+                    .class-wrapper-right{
+                        margin-left: 10px;
+                    }
+                }
+            }
+
+            .repeated-child{
+                height: 20px;
+            }
+
+            .arrow{
+                display: inline;
+            }
+            //nested taxonomies
+            .nested-column{
+                margin-left: 40px;
+            }   
+        
+            // odd element
+            .grey-background {
+                background-color: lightgray;
+            }
+        
+            md-input-container.search input {
+                width: calc(100% ~'-' 40px);
+                border-color: @main-bg-color;
+                margin: 30px 20px 0px 20px;
+                padding: 5px;
+                height: 100%;
+            }
+        }
+    }
+   
+    .md-virtual-repeat-container .md-virtual-repeat-offsetter {
+        margin: 0 20px;
+    }
+    .md-input-focused .md-input {
+        border-color: @main-font-color;
+    }
+    .md-input-focused label {
+        color: @main-font-color;
+    }
+    
+    // red color
+    .red{
+        color: rgb(221,44,0) !important;
+        padding-left: 25px;
+        vertical-align: middle;
+    }
+
+    // grey color
+    .grey{
+        color: rgba(0,0,0,.50)!important;
+        margin: 15px;
+        font-style: italic;
+        vertical-align: middle;
+    }
+}
+
+// top dollar show all organizations list modal
+// on-click of .show-all-link
+.show-all-modal {
+    // table padding
+    table {
+        margin: 5px 10px 5px 10px;
+    }
+    // table cell
+    td {
+        border-collapse: collapse;
+        padding: 0px 10px 0px 10px;
+    }
+    // table header
+    th {
+        color: black;
+        border-collapse: collapse;
+        padding: 2px 10px 2px 10px;
+        background-color: #ffffff;
+    }
+    th:hover {
+        background-color: #ffffff;
+    }
+    // table row
+    tr {
+        font-family: @reg-font-family;
+        line-height: 2.5;
+    }
+    // organization name
+    .title {
+        float: left;
+        text-transform: capitalize;
+    }
+
+
+}

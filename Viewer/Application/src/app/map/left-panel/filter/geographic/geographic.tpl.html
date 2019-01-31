@@ -1,0 +1,37 @@
+<div class="map-filter-geographic" ng-controller="MapFilterGeographicCtrl">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>   
+    <!-- boundary filter menu -->
+    <div ng-repeat="b0 in geographies.boundaries">
+        <!-- boundary level 0 -->
+        <div class="menu-option" ng-class="{open:b0.active}" ng-attr-id="{{ b0.id }}">
+            <md-checkbox class="menu-checkbox" ng-model="b0.selected" aria-label="Select All" ng-click="onMenuSelected(b0.id,null,null,null)" ng-change="prepareFilter();"></md-checkbox>
+            <div class="boundary-name" ng-click="onMenuClicked(b0.id,null,null,null);">{{b0.n}}</div>
+            <div class="arrow" ng-click="onMenuClicked(b0.id,null,null,null);"><i class="material-icons">{{b0.arrow}}</i></div>
+        </div>
+        <!-- boundary level 1 -->
+        <div ng-attr-id="{{ b0.id }}" ng-show="b0.active" ng-class="{active: b0.active}" class="menu-option level-1">
+            <div ng-repeat="b1 in b0.b">
+                <md-checkbox class="menu-checkbox" ng-model="b1.selected" aria-label="Select All" ng-click="onMenuSelected(b0.id,b1.id,null,null)" ng-change="prepareFilter();"></md-checkbox>
+                <div class="boundary-name" ng-click="onMenuClicked(b0.id,b1.id,null,null);">{{ b1.n }}</div>
+                <div class="arrow" ng-click="onMenuClicked(b0.id,b1.id,null,null);"><i class="material-icons">{{b1.arrow}}</i></div>
+                <!-- boundary level 2 -->
+                <div ng-attr-id="{{ b1.id }}" ng-show="b1.active" ng-class="{active: b1.active}" class="menu-option level-2">
+                    <div ng-repeat="b2 in b1.b">
+                        <md-checkbox class="menu-checkbox" ng-model="b2.selected" aria-label="Select All" ng-click="onMenuSelected(b0.id,b1.id,b2.id,null)" ng-change="prepareFilter();"></md-checkbox>
+                        <div class="boundary-name" ng-click="onMenuClicked(b0.id,b1.id,b2.id,null);">{{ b2.n }}</div>
+                        <div class="arrow" ng-click="onMenuClicked(b0.id,b1.id,b2.id,null);"><i class="material-icons">{{b2.arrow}}</i></div>
+                        <!-- boundary level 3 -->
+                        <div ng-attr-id="{{ b2.id }}" ng-show="b2.active" ng-class="{active: b2.active}" class="menu-option level-3">
+                            <div ng-repeat="b3 in b2.b">
+                                <md-checkbox class="menu-checkbox" ng-model="b3.selected" aria-label="Select All" ng-click="onMenuSelected(b0.id,b1.id,b2.id,b3.id)" ng-change="prepareFilter();"></md-checkbox>
+                                <div class="boundary-name" ng-click="onMenuClicked(b0.id,b1.id,b2.id,b3.id);">{{ b3.n }}</div>
+                                <div class="arrow" ng-click="onMenuClicked(b0.id,b1.id,b2.id,b3.id);"><i class="material-icons">{{b3.arrow}}</i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

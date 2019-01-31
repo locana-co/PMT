@@ -1,0 +1,34 @@
+﻿#map-export {
+
+    md-dialog {
+        // loading animation
+        .loading {
+            margin: auto;
+
+            .md-left .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-left-color: @main-bg-color;
+            }
+
+            .md-right .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-right-color: @main-bg-color;
+            }
+        }
+        // model label
+        label {
+            font: 11pt @title-font-family;
+            font-weight: 400;
+            margin-left: 31px;
+        }
+    }
+
+    md-dialog-content {
+        padding: 20px;
+        overflow: auto;
+    }
+
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+}

@@ -1,0 +1,32 @@
+#pl-filter{
+  width:  @pl-filter-width;
+  border: 1px @light-element-bg-color solid;
+  position: absolute;
+  // each filter element
+  .filterType{
+    padding: 10px;
+    border-bottom: 1px @light-element-bg-color solid;
+    // filter element label
+    .label{
+      color: @dark-text-color;
+      font-family: @bold-font-family;
+      font-size: 12px;
+    }
+    .label.filterBy {
+      border-bottom: none;
+      .pmt-h3;
+    }
+    // dropdown arrow
+    .arrow {
+      float: right;
+    }
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+  //no border when filter is open
+  .filterType.open {
+    border-bottom: none;
+  }
+}

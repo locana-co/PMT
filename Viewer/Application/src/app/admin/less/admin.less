@@ -1,0 +1,367 @@
+﻿#admin {
+    background-color: @background-grey;
+    height: 100%;
+    overflow: hidden;
+
+    .wrapper {
+        padding: 30px 25px;
+        height: 100%;
+        overflow-y: scroll;
+
+        md-input-container.search input{
+            border-color: #606062;
+        }
+
+        // active switch horizontal line
+        md-switch.md-checked .md-bar {
+            background: @main-bg-color;
+            opacity: .5;
+        }
+
+        // inactive switch horizontal line
+        md-switch .md-bar {
+            background-color: rgb(158,158,158);
+        }
+
+        // active/inactive switch circular button
+        md-switch.md-checked .md-thumb {
+            background-color: @main-bg-color;
+        }
+
+        // active/inactive switch ripple
+        md-switch.md-checked .md-ink-ripple {
+            color: @main-bg-color;
+        }
+
+        // user search  
+        .search {
+            margin: 0;
+        }
+
+        // loading animation
+        .loading {
+            margin: auto;
+            .md-left .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-left-color: @main-bg-color;
+            }
+            .md-right .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-right-color: @main-bg-color;
+            }
+        }
+
+        // bottom border on edit fields text box & role dropdown
+        md-input-container.md-input-focused input,
+        md-input-container .md-select-value {
+            border-color: @main-bg-color;
+        }
+
+        .title {
+            text-transform: uppercase;
+            font-size: 15px;
+            color: #606062;
+        }
+
+        .sub-title {
+            text-transform: uppercase;
+            font-size: 25px;
+            color: #727273;
+            float: left;
+        }
+
+        .sub-title-wrapper {
+            width: 100%;
+            padding: 0 0 15px 0;
+            display: inline-block;
+        }
+
+        .new-user{
+            float: right;
+            background-color: @main-bg-color;
+            color: @light-font-color;
+            font-family: @title-font-family;
+            text-transform: uppercase;
+            padding: 5px 10px;
+        }
+
+        i {
+            cursor: pointer;
+        }
+
+        .list-wrapper {
+            background: #fff;
+            border: #e2e2e2 solid 1px;
+
+            // table header
+            .list-item.header{
+                border-bottom: none;
+                padding: 9px 5px;
+
+                .data {
+                    padding: 0 5px;
+
+                    .username {
+                        color: @main-bg-color;
+                        margin: 10px 10px 0 0;
+                        text-transform: uppercase;
+                        font-family: @title-font-family;
+                        font-size: 13px;
+                    }
+
+                    .row {
+                        background-color: #f1f1f1;
+                        height: 40px;
+                        margin: 5px 0;
+                    }
+                }
+            }
+
+            .list-item {
+                font-size: 13px;
+                color: #606060;
+                padding: 10px 5px;
+                margin: 0;
+
+                .data {
+                    font-family: @reg-font-family;
+
+                    .row {
+                        margin: 10px 0;
+                    }
+                    // indented rows
+                    .indented {
+                        margin-left: 10px;
+                    }
+                    // username settings
+                    .username {
+                        font-size: 14px;
+                        color: @main-font-color;
+                        font-weight: 600;
+                        text-align: left;
+                        word-wrap: break-word;
+                        font-family: @title-font-family;
+                    }
+
+                    // inactive user settings
+                    .username.inactive {
+                        color: red;
+                    }
+                    // data wrapper (wraps data elements)
+                    .data-wrapper {
+                        display: inline-block;
+                        font-family: @title-font-family;
+                        width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-size: 13px;
+                        // data lable
+                        .data-label{
+                            font-size: 13px;
+                            color: rgb(51,51,51);
+                            font-weight: 600;
+                        }
+                        // data value (uneditable data value)
+                        .data-value {
+                            display: flex;
+                            font-family: @reg-font-family;
+                            font-size: 13px;
+                        }
+
+                        // organization label, looks like an input
+                        .data-value.org {
+                            cursor: pointer;
+                            padding: 6px 0;
+                            background-position: 0 bottom;
+                            background-size: 4px 1px;
+                            background-repeat: repeat-x;
+                            margin-bottom: -1px;
+                            border-bottom-color: transparent;
+                            color: black;
+                            background-image: linear-gradient(to right, rgba(0,0,0,0.26) 0%, rgba(0,0,0,0.26) 33%, transparent 0%);
+                            background-image: -ms-linear-gradient(left, transparent 0%, rgba(0,0,0,0.26) 100%);
+                        }
+                        // input container
+                        md-input-container{
+                            padding: 0;
+                            margin: 0;
+                        }
+                        // data input (editable data value)
+                        .data-input {
+                            display: inline;
+                            font-family: @reg-font-family;
+                            min-width: 240px;
+                            padding: 0;
+                            margin: 0;
+                        }
+                        // org text box
+                        .data-input.md-input[disabled] {
+                            color: black;
+                            text-overflow: ellipsis;
+                            cursor: pointer;
+                        }
+                        // data note
+                        .data-note{
+                            font-size: 11px;
+                            margin: 10px 0 0 0;
+                            font-style: italic;
+                            position: absolute;
+                        }
+                        // permissions row
+                        .permissions{
+                            display: inline-flex;
+                            vertical-align: middle;
+                            padding: 0;
+                            .permissions{
+                                min-width: 150px;
+                            }
+                            cursor: pointer;
+                            i{
+                                padding-right: 7px;
+                            }
+                            i:not(:first-child){
+                                padding-left: 7px;
+                            }
+                        }
+                        .permissions.first{
+                            max-width: 150px;
+                        }
+                    }
+                    
+                    // group of data elements
+                    .item-group {
+                        padding-right: 0 !important;
+                    }
+                    // dropdown list
+                    .dropdown {
+                        display: inline;
+                        list-style: none;
+                        font-weight: 400;
+                        margin-left: 5px;
+                        // link (selected item)
+                        a, a:hover, a:visited, a:link, a:active {
+                            cursor: pointer;
+                            text-decoration: none;
+                            color: #606060;
+                        }
+                        // list of items in dropdown
+                        ul {
+                            // individual items in list
+                            li {
+                                padding: 5px;
+                                cursor: pointer;
+                            }
+                            // individual items in list: hover state
+                            li:hover {
+                                background-color: @link-color;
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+
+                .tools {
+                    height: 50px;
+
+                    @media (max-width: 992px) {
+                        margin: 0 0 0 12px;
+                    }
+
+                    // create circle around icon
+                    i {
+                        cursor: pointer;
+                        font-size: 20px;
+                        vertical-align: middle;
+                    }
+
+                    // tool setting
+                    .tool {
+                        color: #fff;
+                        background-color: @main-bg-color;
+                    }
+                    // tool buttons
+                    .md-button.md-fab {
+                        line-height: 30px;
+                        width: 32px;
+                        height: 32px;
+                        min-height: 0;
+                        margin-right: 0px;
+                        float: right;
+                    }
+                    // disabled button
+                    .md-button.md-fab[disabled] {
+                        background-color: rgba(0,0,0,0.12) !important;
+                        cursor: default !important;
+                    }
+
+                    .md-button.md-fab[disabled] i {
+                        cursor: default !important;
+                    }
+                }
+            }
+
+            // odd rows
+            .list-item.odd {
+                background-color: #f1f1f1;
+            }
+
+            .deleteCheckbox {
+                width: 150px;
+                height: 25px;
+                color: rgb(221,44,0);
+                .md-container {
+                    width: 25px;
+                    height: 25px;
+                }
+
+                md-checkbox.md-ink-ripple {
+                    color: rgb(221,44,0);
+                }
+                .md-icon {
+                    border-color: rgb(221,44,0);
+                }
+            }
+        }
+    }
+
+    .editByProject {
+        float: left;
+    }
+}
+
+// org dropdown content
+.create-user-org-select {
+    md-select-menu {
+        position: relative;
+        bottom: 75px;
+        max-width: 500px;
+    }
+}
+
+// role dropdown content
+.create-user-role-select {
+    md-select-menu {
+        position: relative;
+        bottom: 35px;
+    }
+}
+
+// confirm dialog content
+md-dialog-content {
+    // title
+    .md-title {
+        font-family: @title-font-family;
+    }
+    // content
+    p {
+        font-family: @reg-font-family;
+    }
+}
+
+// confirm dialog action buttons
+md-dialog-actions {
+    button {
+        font-family: @title-font-family !important;
+        color: @main-bg-color !important;
+    }
+}

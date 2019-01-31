@@ -1,0 +1,39 @@
+<div id="editor-org-selector">
+    <md-dialog aria-label="choose an organization dialog">
+        <!--<div class="org-form">
+            <form>-->
+                <!-- header -->
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2 class="sub-header">Organization List</h2>
+                        <span flex></span>
+                        <md-button class="md-icon-button" ng-click="cancel()">
+                            <i class="material-icons">close</i>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <!-- organizatons -->
+                <md-dialog-content>
+                    <!-- loading animation -->
+                    <div>
+                        <md-progress-circular ng-show="loadingOrgs" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                    <!-- search -->
+                    <!-- [sparadee] need to update the ink on the input here to be the main theme color, this was a left over issue on this feature. see input css for ink on admin module. -->
+                    <md-input-container md-no-float class="md-block search" ng-show="!loadingOrgs">
+                        <input ng-model="searchText" type="text" placeholder="Search organizations">
+                    </md-input-container>
+                    <!-- organization list -->
+                    <div class="scrollable org-list" dynamic="menuUI">
+                    </div>
+                    <!-- buttons -->
+                    <div ng-show="!loadingOrgs" class="modal-footer">
+                        <md-button class="md-raised" ng-click="loadAllOrgs()" ng-hide="dialogSettings.orgType=='all'">Load All Organizations</md-button>
+                        <md-button class="md-raised" ng-click="cancel()">Close</md-button>
+                        <md-button class="save md-raised" ng-click="updateOrg()">Save Changes</md-button>
+                    </div>
+                </md-dialog-content>
+            <!--</form>
+        </div>-->
+    </md-dialog>
+</div>

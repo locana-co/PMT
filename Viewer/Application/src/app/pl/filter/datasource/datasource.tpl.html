@@ -1,0 +1,9 @@
+<div id="pl-filter-datasource" ng-controller="PLFilterDataSourceCtrl" ng-show="options.length > 1">
+    <div class="checkbox-group">
+        <div ng-repeat="option in options">
+            <md-checkbox ng-disabled="LoadingCharts" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)">
+                {{option.label}}
+            </md-checkbox>
+        </div>
+    </div>
+</div>

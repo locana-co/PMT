@@ -1,0 +1,38 @@
+<div id="locs-filter" ng-controller="LocsFilterCtrl">
+    <!-- box to show filter selection-->
+    <div class="selection" ng-show="filterCount > 0">
+        <!-- header for selected layer tools -->
+        <div class="selection-header">
+            Your selection:
+            <div class="clear-all" ng-click="removeAllFilters();">Clear All</div>
+        </div>
+        <!-- tools for each selected filter -->
+        <div class="selected-filters">
+            <div class="selected-filter" ng-repeat="v in selectedFilters | orderBy:'label' ">
+                <div class="layer-label">
+                    <div class="layer-name">{{ v.label }}</div>
+                    <i class="material-icons cancel" ng-click="removeFilter(v)">cancel</i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="filterType filterBy">
+        <div class="pmt-h3">Filter By:</div>
+    </div>
+    <!-- activity filters -->
+    <div ng-repeat="filter in page.tools.map.filters">
+        <div class="filterType pointer" ng-class="{open:filter.active}" ng-click="onMenuClicked(filter.id);" ng-attr-id="{{ filter.id }}" ng-hide="filter.enable===false">
+            <div class="label">
+                {{filter.label}} 
+                <span ng-hide="filter.type==='date'">(<md-progress-circular ng-show="filter.size===null || filter.size < 0" class="filter-loading loading" md-diameter="15" md-mode="indeterminate"></md-progress-circular>{{filter.size}})</span>   
+                <span class="arrow"><i class="material-icons">{{filter.arrow}}</i></span>
+            </div>
+        </div>
+        <!-- template for filter (set in the config) -->
+        <div ng-attr-id="{{ filter.id }}" ng-show="filter.active" ng-class="{active: filter.active}" class="filter-options">
+            <div ng-include src="filter.tpl"></div>
+        </div>
+    </div>
+
+
+</div>

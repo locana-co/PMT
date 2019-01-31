@@ -1,0 +1,62 @@
+<div id="edit-permissions">
+    <md-dialog aria-label="edit permissions dialog" style="width: 500px">
+        <form>
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Edit User's {{terminology.activity_terminology.singular}} Permissions</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelPermissions()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- description -->
+            <md-content class="description md-padding" ng-show="!loading">
+                <p>You can grant <strong>{{activeUser._username}}</strong> permissions to edit a {{terminology.activity_terminology.singular}}
+                    by granting permissions directly to the {{terminology.activity_terminology.singular}} and/or by granting
+                    permissions through a taxonomy. </p>
+                <span ng-show="errorMessage" class="err-message"><br/>{{errorMessage}}</span>
+            </md-content>
+            <!-- submit loading message -->
+            <md-content class="description md-padding" ng-show="loading">
+                <p>
+                    Your request is currently being processed.
+                    <span ng-show="errorMessage" class="err-message"><br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- loading animation -->
+            <div ng-show="loading">
+                <md-progress-circular class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <!-- tabs -->
+            <md-dialog-content ng-show="!loading">
+                <md-tabs md-selected="tabIndex" md-dynamic-height md-border-bottom>
+                    <!-- activities -->
+                    <md-tab label="Project">
+                        <md-content class="md-padding" style="max-height: 250px; overflow-y:scroll">
+                            <div class="instructions">The user will be granted access to edit any project that is selected below:</div>
+                            <div flex="100" dynamic="activityUI">
+                            </div>
+                        </md-content>
+                    </md-tab>
+                    <!-- classifications -->
+                    <md-tab label="Taxonomies">
+                        <md-content class="md-padding" style="max-height: 250px; overflow-y:scroll">
+                            <div class="instructions">The user will be granted access to edit any project that is associated to the below selected
+                                taxonomy classifications:</div>
+                            <div flex="100" dynamic="taxonomyUI">
+                            </div>
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+                <!-- buttons -->
+                <div class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancelPermissions()">Cancel</md-button>
+                    <md-button ng-disabled="newUser.$invalid" class="save md-raised" ng-click="setPermissions()">Update Permissions
+                    </md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

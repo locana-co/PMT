@@ -1,0 +1,18 @@
+<div id="agra-top-bar" ng-controller="AgraTopBarCtrl" ng-show="stateService.isState('agra')">
+
+    <div class="title">
+        {{page.title}}
+    </div>
+
+    <!-- toolbar -->
+    <div class="toolbar" ng-if="false">
+        <md-button class="md-mini md-fab icon-button" aria-label="save" ng-click="saveIntegration($event)">
+            <md-tooltip md-direction="bottom">Save</md-tooltip>
+            <i class="material-icons">save</i>
+        </md-button>
+        <md-button class="md-mini md-fab icon-button" aria-label="cancel" ng-click="cancelIntegration()">
+            <md-tooltip md-direction="bottom">Cancel</md-tooltip>
+            <i class="material-icons">refresh</i>
+        </md-button>
+    </div>
+</div>

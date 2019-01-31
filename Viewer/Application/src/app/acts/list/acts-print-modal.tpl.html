@@ -1,0 +1,14 @@
+<!-- print -->
+<md-dialog id="acts-print-modal" class="locs-pivot-modal" aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header">Download {{terminology.activity_terminology.singular}} list</h2>
+            <md-button class="md-icon-button" ng-click="closeDialog()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="print" ng-click="exportActivityList()" title="File Download" aria-label="File Download" ng-show="!loading && !noData">Download CSV<i class="material-icons">file_download</i></div>
+    </md-dialog-content>
+</md-dialog>

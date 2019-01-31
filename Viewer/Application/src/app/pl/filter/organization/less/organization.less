@@ -1,0 +1,35 @@
+#pl-filter-organization {
+  font-family: @light-font-family;
+  
+  .checkbox-group.selected-orgs {
+    max-height: 150px;
+  }
+
+  .checkbox-group {
+    padding: 0 1px 0 10px;
+    font-size: 12px;
+    max-height: 500px;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .org-filter {
+    margin: 0 0 0 14px;
+    height: 35px;
+    width: 180px;
+  }
+
+  .md-input-focused .md-input {
+    border-color: @main-font-color;
+  }
+
+  // checkbox color
+  md-checkbox.md-default-theme.md-checked .md-icon, md-checkbox.md-checked .md-icon{
+    background-color: @main-bg-color;
+  }
+
+  md-checkbox:last-of-type {
+    padding-top: 4px;
+  }
+
+}

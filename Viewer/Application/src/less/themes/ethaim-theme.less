@@ -1,0 +1,82 @@
+﻿/**
+ * Theme Specific Less (Overrides)
+ */
+@import '../app/map/left-panel/contextual/selection/less/selection-ethaim.less';
+@import '../app/map/left-panel/less/left-panel-ethaim.less';
+@import '../app/map/map/less/map-ethaim.less';
+
+/**
+ * Less Variable (Overrides)
+ */
+@reg-font-family: Open Sans;
+@title-font-family: Open Sans;
+@light-font-family: Open Sans;
+@bold-font-family: Open Sans;
+@main-bg-color: #1d2b37;
+@dark-bg-color: #263947;
+@mod-bg-color: #337ab7;
+@main-font-color: #337ab7;
+@dark-font-color: #263947;
+@link-color: #337ab7;
+
+/**
+* General application
+*/
+@light-element-bg-color: #f4f4f4;
+@dark-text-color: #4f4f4f;
+
+
+/**
+ * Application (Overrides)
+ */
+#app {
+}
+
+/**
+ * Header (Overrides)
+ */
+#header {
+    background-color: @main-bg-color;
+    // login (far right)
+    .login {
+        color: @light-font-color;
+    }    
+}
+/**
+ * Navigation (Overrides)
+ */
+#navigation {
+    background-color: @dark-bg-color;
+
+    li {
+        a, a:visited {
+            color: @light-font-color;
+        }
+
+        &:hover {
+            background-color: @mod-bg-color;
+        }
+
+        &.active {
+            background-color: @mod-bg-color;
+        }
+    }
+}
+
+/**
+ * Footer (Overrides)
+ */
+#footer {
+    .social {
+        li {
+
+            a, a:visited {
+                color: @light-font-color;
+
+                &:hover {
+                    color: @main-bg-color;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+<div ng-controller="LocsMapCtrl" class="ui-layout-center" id="locs-mapCtrl">
+    <!-- map -->
+    <div id="locs-map" ng-class="{shrink:mapShrink}">
+        <!-- map bar -->
+        <ng-include src="'locs/map/map-bar/map-bar.tpl.html'"></ng-include>
+        <!-- toggle boundary -->
+        <div class="boundary-toggle" ng-show="page.tools.map.toggleBoundaries">
+            <div class="boundary-toggle-label pmt-h3"> View data by: </div>
+            <md-radio-group ng-model="activeBoundaryGroup" ng-change='toggleBoundary()'>
+                <md-radio-button ng-repeat="b in page.tools.map.toggleBoundaries" ng-value="b" class="md-primary">
+                    {{b.label}}
+                </md-radio-button>
+            </md-radio-group>
+        </div>
+    </div>
+    <!-- map summary -->
+    <ng-include src="'locs/map/map-summary/map-summary.tpl.html'"></ng-include>
+</div>

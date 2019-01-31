@@ -1,0 +1,50 @@
+<div id="org-selector" ng-controller="AdminOrgSelectorCtrl">
+    <md-dialog aria-label="choose an organization dialog">
+        <form>
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Organization List</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- organizatons -->
+            <md-dialog-content>
+                <!-- common organization list -->
+                <div class="orgList">
+                    <div ng-show="!LoadingOrgs" ng-repeat="org in commonOrgs" class="org-wrapper radio">
+                        <label>
+                            <input type="radio" ng-value="org.id" ng-model="$parent.activeUser.organization_id">
+                            {{org._name}}
+                        </label>
+                    </div>
+                </div>
+
+                <!-- loading animation -->
+                <div>
+                    <md-progress-circular ng-show="LoadingOrgs" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                </div>
+
+                <!-- extended organization list -->
+                <div ng-show="!LoadingOrgs && moreOrgs" class="extendedOrgList">
+                    <div ng-show="!LoadingOrgs" ng-repeat="org in orgs" class="org-wrapper radio">
+                        <label>
+                            <input type="radio" ng-value="org.id" ng-model="$parent.activeUser.organization_id">
+                            {{org._name}}
+                        </label>
+                    </div>
+                </div>
+
+                <!-- buttons -->
+                <div ng-show="!LoadingOrgs" class="modal-footer">
+                    <md-button class="save md-raised md-button morOrgs" ng-click="getOrgs()" ng-disabled="moreOrgs==true">Load more organizations</md-button>
+                    <md-button class="md-raised" ng-click="cancel()">Close</md-button>
+                    <md-button class="save md-raised" ng-click="updateActiveUser()">Save Changes</md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

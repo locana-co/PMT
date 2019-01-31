@@ -1,0 +1,49 @@
+<div id="editor-list" ng-controller="EditorListCtrl" class="scrollable ui-layout-center" ng-show="stateService.isNotParam('editor_activity_id')">
+    <!-- loader-->
+    <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>-->
+     <!-- user message -->
+    <div class="message" ng-show="!loading && error">You have not been granted access to edit any {{terminology.activity_terminology.plural}}, contact your administrator for project access.
+        <br>Please click on the 
+        <md-button disabled class="md-mini md-fab icon-button" aria-label="new" >
+        <md-tooltip md-direction="bottom">Add New {{terminology.activity_terminology.singular}}</md-tooltip>
+        <i class="material-icons">add</i>
+        </md-button> above to create a new project.
+    </div>
+    <!-- list of activities editable by the user -->
+    <!-- <div dynamic="htmlList" ng-show="!loading && !error">
+    </div> -->
+    <md-table-container>
+        <table md-table class="acts-table" id="acts-table" ng-show="!loading && activitiesList.length > 0">
+            <thead md-head md-order="query.order">
+                <tr md-row class="header-row">
+                    <th class="header-data pmt-table-header" md-column md-order-by="t">{{terminology.activity_terminology.singular}} Name</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="version.v">Version</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="a">Budget</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="sd">Start Date</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="ed">End Date</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="f | filterListOrgs">{{terminology.funder_terminology.singular}}</th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <!-- primary list data-->
+                <tr md-row class="activity-row" ng-repeat="activity in activitiesList | orderBy: query.order:decending | limitTo: query.limit: (query.page - 1) * query.limit">
+                    <td class="activity-data link title" ng-click="goToActivity(activity.id)">{{activity.t}}</td>
+                    <td class="activity-data"> 
+                        <i class="fas fa-circle" ng-class="[activity.version.c]"></i>
+                        <span>{{activity.version.v }}</span>
+                    </td>
+                    <td class="activity-data" ng-show="activity.a > 0">{{(activity.a | currency :"USD $":0 )}} {{activity.currency | currency :"USD $":0}}</td>
+                    <td class="activity-data" ng-show="activity.a === 0">{{(activity.a)}}</td>
+                    <td class="activity-data" ng-show="activity.a == null"> -- </td>
+                    <td class="activity-data">{{activity.sd | date : 'yyyy/MM/dd'}}</td>
+                    <td class="activity-data">{{activity.ed | date : 'yyyy/MM/dd'}}</td>
+                    <td class="activity-data">{{activity.f | filterListOrgs}}</td>                    
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+     <!-- pagination-->
+     <md-table-pagination md-limit="query.limit" md-limit-options="[25,50,100]" md-page="query.page" md-total="{{activitiesList.length}}"
+     md-page-select ng-show="!loading && activitiesList.length > 0"></md-table-pagination>
+
+</div>

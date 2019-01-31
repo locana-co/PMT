@@ -1,0 +1,104 @@
+<div id="editor-file-selector">
+    <md-dialog aria-label="choose a file to upload">
+        <div class="file-form">
+            <form name="locationFile">
+                <!-- header -->
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2 class="sub-header">Location Import Tool</h2>
+                        <span flex></span>
+                        <md-button class="md-icon-button" ng-click="cancel()">
+                            <i class="material-icons">close</i>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <!-- file import -->
+                <md-dialog-content>
+                    <!-- loading animation  ngf-accept="'application/vnd.ms-excel, text/csv, *'" -->
+                    <div class="progress">
+                        <md-progress-circular ng-show="fileSettings.loadingFiles" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                    <div class="modal-body scrollable">
+                        <div ngf-drop ngf-select ng-model="fileSettings.file" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false"
+                            ngf-allow-dir="true" ngf-pattern="'application/vnd.ms-excel, text/csv'">Drop CSV file here or click to upload</div>
+                        <div ngf-no-file-drop>
+                            File Drag/Drop is not supported for this browser
+                            <br>
+                            <!-- upload input -->
+                            <div class="button" ngf-select ng-model="file" ngf-multiple="false">Select File</div>
+                        </div>
+                        <label class="import-message" ng-show="fileSettings.file">Selected File: {{fileSettings.file.name}}</label>
+
+                        <p class="instructions" ng-show="fileSettings.importSuccess">
+                            File read successfully! Please review the results below for are any unexpected results. If needed, make changes to the file
+                            and upload again. Once ready, click 'Import' to add all new locations to this {{$scope.terminology.activity_terminology.singular}}.
+                        </p>
+                        <div ng-show="fileSettings.importError">
+                            <h3>
+                                <i class="material-icons">error</i>Error:</h3>
+                            <p class="instructions">An error has occured during your import, please make all necessary edits and try uploading again.</p>
+                            <div class="instructions red">{{fileSettings.importError}}</div>
+                        </div>
+                        <!-- for the following 3 sections, only show if they have data and there isn't an error -->
+                        <div ng-show="fileSettings.invalidRecords && fileSettings.invalidRecords.length>0 && !fileSettings.importError">
+                            <h3 aria-label="Location name does not match our records">
+                                <i class="material-icons">error</i>Invalid Location(s)</h3>
+                            <p class="instructions">The following were not found on this {{$scope.terminology.activity_terminology.singular}} and
+                                cannot be imported.</p>
+                            <ul ng-repeat="rec in fileSettings.invalidRecords">
+                                <li ng-show="rec._admin_level === 1" class="location-name">{{rec._admin1}}</li>
+                                <li ng-show="rec._admin_level === 2" class="location-name">{{rec._admin1}} > {{rec._admin2}}</li>
+                                <li ng-show="rec._admin_level === 3" class="location-name">{{rec._admin1}} > {{rec._admin2}} > {{rec._admin3}}</li>
+                            </ul>
+                        </div>
+                        <div ng-show="fileSettings.duplicateRecords && fileSettings.duplicateRecords.length>0 && !fileSettings.importError">
+                            <h3 aria-label="Location already exists and will not be imported">
+                                <i class="material-icons">warning</i>Duplicate Location(s)</h3>
+                            <p class="instructions">The following are already selected by this {{$scope.terminology.activity_terminology.singular}}
+                                and cannot be imported again.</p>
+                            <ul ng-repeat="rec in fileSettings.duplicateRecords">
+                                <li ng-show="rec._admin_level === 1" class="location-name">{{rec._admin1}}</li>
+                                <li ng-show="rec._admin_level === 2" class="location-name">{{rec._admin1}} > {{rec._admin2}}</li>
+                                <li ng-show="rec._admin_level === 3" class="location-name">{{rec._admin1}} > {{rec._admin2}} > {{rec._admin3}}</li>
+                            </ul>
+                        </div>
+                        <div ng-show="fileSettings.newRecords && fileSettings.newRecords.length>0 && !fileSettings.importError">
+                            <h3 aria-label="Valid locations that will be imported">
+                                <i class="material-icons">done</i>New Location(s)</h3>
+                            <p class="instructions">The following are valid and can be imported.</p>
+                            <ul ng-repeat="rec in fileSettings.newRecords">
+                                <li ng-show="rec._admin_level === 1" class="location-name">{{rec._admin1}}</li>
+                                <li ng-show="rec._admin_level === 2" class="location-name">{{rec._admin1}} > {{rec._admin2}}</li>
+                                <li ng-show="rec._admin_level === 3" class="location-name">{{rec._admin1}} > {{rec._admin2}} > {{rec._admin3}}</li>
+                            </ul>
+                        </div>
+                        <div ng-show="fileSettings.doReplace && fileSettings.allRecords && fileSettings.allRecords.length>0 && !fileSettings.importError">
+                            <h3 aria-label="Valid locations that will be imported">
+                                <i class="material-icons">done</i>Location(s)</h3>
+                            <p class="instructions">The following are valid and will replace all existing locations.</p>
+                            <ul ng-repeat="rec in fileSettings.allRecords">
+                                <li ng-show="rec._admin_level === 1" class="location-name">{{rec._admin1}}</li>
+                                <li ng-show="rec._admin_level === 2" class="location-name">{{rec._admin1}} > {{rec._admin2}}</li>
+                                <li ng-show="rec._admin_level === 3" class="location-name">{{rec._admin1}} > {{rec._admin2}} > {{rec._admin3}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- buttons -->
+                    <div ng-show="!fileSettings.loadingFiles" class="modal-footer">
+                        <!-- checkbox only shows and is editable before a record is selected -->
+                        <div class="row1" ng-show="!fileSettings.importSuccess || doReplace">
+                            <md-checkbox class="check-all" ng-model="fileSettings.doReplace" aria-label="Replace all?" ng-disabled="fileSettings.importSuccess">
+                                Replace all existing locations?
+                            </md-checkbox>
+                        </div>
+                        <div class="row2">
+                            <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                            <md-button class="save md-raised" aria-label="Import only new locations" ng-show="!fileSettings.importError" ng-disabled="!fileSettings.allRecords || fileSettings.allRecords.length === 0"
+                                ng-click="import()">Import</md-button>
+                        </div>
+                    </div>
+                </md-dialog-content>
+            </form>
+        </div>
+    </md-dialog>
+</div>

@@ -1,0 +1,38 @@
+<div id="editor-contacts-selector">
+    <md-dialog aria-label="choose a contact dialog">
+        <!--<div class="contact-form">
+            <form>-->
+                <!-- header -->
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2 class="sub-header">Contacts List</h2>
+                        <span flex></span>
+                        <md-button class="md-icon-button" ng-click="cancel()">
+                            <i class="material-icons">close</i>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <!-- contacts -->
+                <md-dialog-content>
+                    <!-- loading animation -->
+                    <div>
+                        <md-progress-circular ng-show="loadingContacts" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+                    <!-- search -->
+                    <md-input-container md-no-float class="md-block search" ng-show="!loadingContacts">
+                        <input ng-model="searchConText" type="text" placeholder="Search contacts">
+                    </md-input-container>
+                    <!-- contacts list -->
+                    <div class="scrollable contact-list" dynamic="menuUI">
+                    </div>
+                    <!-- buttons -->
+                    <div ng-show="!loadingContacts" class="modal-footer">
+                        <md-button class="md-raised" ng-click="loadContacts()" ng-hide="dialogSettings.orgType=='all'">Reload All Contacts</md-button>
+                        <md-button class="md-raised" ng-click="cancel()">Close</md-button>
+                        <md-button class="save md-raised" ng-click="updateContact()">Select Contact</md-button>
+                    </div>
+                </md-dialog-content>
+            <!--</form>
+        </div>-->
+    </md-dialog>
+</div>

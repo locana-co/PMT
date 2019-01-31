@@ -1,0 +1,45 @@
+// organization filter feature
+.map-filter-organization {
+    // organization name list
+    .org-list {
+        // menu checkbox
+        .menu-checkbox{
+            cursor: pointer;
+            margin:0;
+        }
+        // menu checkbox and label
+        .menu-option{
+            margin: 10px 0;
+            font-family: @reg-font-family;
+            color: @text-color-1;
+            .menu-label {
+                display: inline-block;
+                width: 143px;
+                font-size: 13px;
+                margin-left: -7px;
+                margin-top: -3px;
+            }
+        }
+    }
+    // letter index
+    .org-index {
+        position: absolute;
+        bottom: 0;
+        right: 1px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: @main-font-color;
+        cursor: pointer;
+        background-color: @light-element-bg-color;
+        // individual letter label
+        .menu-label:hover {
+            color: @dark-font-color;
+        }
+        // letter text
+        tbody tr td {
+            padding: 0 3px;
+            text-align: center;
+            font-size: 10px;
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿#locs-top-bar {
+    height: @locs-top-bar-height;
+    background: @secondary-grey;
+    position: absolute;
+    top: @height-header;
+    width: calc( ~'100% - 10px');
+    margin-left: -(@width-navigation);
+    padding: 5px 0 5px @width-navigation;
+    z-index: 900;
+
+    .title {
+       color: #fff;
+        font-size: 14px;
+        font-weight: 600;  
+    }
+
+    .menu {
+        font-family: @title-font-family;
+        font-size: 20px;
+
+        .menu-label {
+            color:#fff;
+            float: left;
+            padding-right: 7px;
+            padding-top: 15px;
+        }
+    }
+
+    .md-text {
+        font-family: @title-font-family;
+    }
+    // selected dropdown item bottom border
+    md-select.md-default-theme:not([disabled]):focus .md-select-value, md-select:not([disabled]):focus .md-select-value {
+        border-bottom: none;
+        color: #fff;
+    }
+    // dropdown item color
+    md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[selected] {
+        color: #fff;
+    }
+    md-input-container {
+        min-width: 200px;
+        margin: -6px 0 0 0;
+        padding: 0;
+        color: #fff;
+        border-bottom: 2px solid white;
+        height: 28px;
+        .md-select-value {
+            font-size: 20px;
+            border-bottom: none;
+            margin-top: -4px;
+        }
+    }
+    .location-title {
+        color: #fff;
+    }
+
+}

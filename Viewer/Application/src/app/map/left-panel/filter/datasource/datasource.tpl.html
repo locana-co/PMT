@@ -1,0 +1,12 @@
+<div id="map-filter-datasource" ng-controller="MapFilterDataSourceCtrl">
+    <div ng-repeat="option in options" class="menu-options" ng-click="optionClicked(option)">
+        <!-- checkbox -->
+        <md-checkbox class="menu-checkbox" ng-checked="option.active"></md-checkbox>
+        <div class="menu-option">
+            <!-- legend -->
+            <div ng-class="option.alias" class="legend"></div>
+            <!-- label -->
+            <div class="menu-label">{{option.label}}</div>
+        </div>
+    </div>
+</div>

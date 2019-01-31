@@ -1,0 +1,138 @@
+#edit-permissions {
+    font-family: @reg-font-family;
+
+    .err-message {
+        color: red;
+    }
+
+    .org {
+        font-family: @reg-font-family;
+        font-size: 12px;
+    }
+
+    .description {
+        overflow: hidden;
+        padding-bottom: 0;
+    }
+    .instructions{
+        font-style: italic;
+        font-size: 13px;
+        padding-bottom: 5px;
+        margin-top: -10px;
+    }
+
+    .sub-header {
+        font-family: @title-font-family;
+        text-transform: uppercase;
+    }
+
+    md-dialog {
+        left: 32px; // half the width of left navbar
+        max-height: 560px;
+        max-width: 800px;
+        margin: auto;
+
+        @media (max-width:768px) {
+            max-width: 80%;
+        }
+
+        // loading animation
+        .loading {
+            margin: auto;
+            .md-left .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-left-color: @main-bg-color;
+            }
+            .md-right .md-half-circle {
+                border-top-color: @main-bg-color;
+                border-right-color: @main-bg-color;
+            }
+        }
+    }
+
+    md-dialog-content {
+        //padding: 20px;
+        overflow: auto;
+    }
+
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+
+    button {
+        font-family: @title-font-family;
+    }
+
+    button.save {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+        font-family: @title-font-family;
+        text-transform: uppercase;
+        padding: 5px 10px;
+    }
+
+    button.md-button.md-raised[disabled] {
+        background-color: rgba(0,0,0,0.12) !important;
+    }
+
+    .modal-footer {
+        border-top: none;
+        margin: 0;
+    }
+
+    md-select-value {
+        max-width: 296px;
+        overflow-x: scroll;
+    }
+
+    md-option .md-text {
+        font-family: @reg-font-family;
+        font-size: 12px;
+    }
+    // bottom border on edit fields text box & role dropdown
+    md-input-container.md-input-focused input,
+    md-input-container .md-select-value {
+        border-color: @main-bg-color;
+    }
+    // input label
+    md-input-container.md-input-focused label {
+        color: @main-bg-color;
+    }
+    // text box margin
+    md-input-container {
+        margin: 10px 0;
+    }
+
+    // tabs
+    md-tabs {
+        padding: 0 20px 20px 20px;
+        width: 100%;
+        float: left;
+        // tab
+        .md-tab {
+            background: white;
+            border-bottom: 1px solid @element-border-color;
+            border-radius: 5px 5px 0 0;
+            font-family: @bold-font-family;
+        }
+        // active tab
+        .md-tab.md-active {
+            background: white;
+            border-bottom: 1px solid @element-border-color;
+            border-radius: 5px 5px 0 0;
+            color: @main-font-color;
+            font-family: @bold-font-family;
+        }
+
+        // ink bars
+        md-ink-bar {
+            color: transparent;
+            background-color: @main-font-color;
+        }
+    }
+}
+
+#edit-permissions.modal {
+    height: 100%;
+}
+

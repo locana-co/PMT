@@ -1,0 +1,45 @@
+<div id="map-target-analysis" class="right-panel" ng-controller="MapTargetAnalysisCtrl" ng-class="{on: stateService.isParam('target-analysis-panel'), wide: analysis2x2.length>0}" ng-show="stateService.isParam('target-analysis-panel')">
+    <!-- top menu (next record, previous record, record count, close panel) -->
+    <div class="top-menu">
+        <!-- close button -->
+        <div class="close-button" ng-click="stateService.toggleParam('target-analysis-panel'); repositionMapControls()">X</div>
+    </div>
+    <div class="content-wrapper">
+        <div class="instructions" ng-class="{shrink: analysis2x2.length>0}">
+            <div class="title">Target Analysis Tool</div>
+            <p>
+                In order to get the target analysis of a certain region's districts, you must first turn on the regions map, then
+                click on the region you would like to view.
+            </p>
+            <p>Turn regions map off at any time to go back to the projects map.</p>
+        </div>
+        <!-- toggle target analysis tool map on/off -->
+        <div class="toggle">            
+            <span ng-show="!targetAnalysisActive">Turn on Target Analysis Map:</span>
+            <span ng-show="targetAnalysisActive">Turn off Target Analysis Map:</span>
+            <md-switch ng-model="targetAnalysisActive" aria-label="active" ng-change="toggleMap()">               
+            </md-switch>
+        </div>
+        <div class="results" ng-show="analysis2x2.length>0">
+            <div class="title">{{country}},{{region}}</div>
+            <table>
+                <tr>
+                    <th width="15%">Ag Potential - Market Access</th>
+                    <th width="25%">Districts</th>
+                    <th width="20%">Area Sq KM</th>
+                    <th width="20%">Population</th>
+                    <th width="10%">Pop Dens (avg ppl/sq km)</th>
+                    <th width="10%">Poverty Dens (avg ppl/sq km)</th>
+                </tr>
+                <tr ng-repeat="analysis in analysis2x2">
+                    <td width="15%">{{analysis.category}}</td>
+                    <td width="25%">{{analysis.districts}}</td>
+                    <td width="20%">{{analysis.area | number: 0}}</td>
+                    <td width="20%">{{analysis.pop | number: 0}}</td>
+                    <td width="10%">{{analysis.popden | number: 0}}</td>
+                    <td width="10%">{{analysis.povden | number: 1}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>  

@@ -1,0 +1,60 @@
+<div id="login" ng-controller="LoginCtrl">
+    <div class="login-wrapper" ng-if="!public && customizations===null">
+        <div class="login-container">
+            <h1 class="login-text">Log In</h1>
+            <form class="login">
+                <div class="row">
+                    <input class="user-input" name="user" id="user" type="text" ng-model="user.username" placeholder="Username" onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'Username'">
+                </div>
+                <div class="row">
+                    <input class="user-input password" name="password" id="password" type="password" ng-model="user.password" placeholder="Password"
+                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                </div>
+                <div class="row">
+                    <md-button class="submit-button" ng-click="logIn(user)" type="submit" value="Log In">Log In</md-button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="login-wrapper" ng-if="!public && customizations!==null">
+        <div class="login-container-customizations">
+            <table>
+                <tr>
+                    <td>
+                        <img ng-src="{{customizations.image}}" alt="Login Image">
+                    </td>
+                    <td>
+                        <div class="info-1">{{customizations.info1}}</div>
+                        <h1 class="login-text">Log In</h1>
+                        <form class="login">
+                            <div class="row">
+                                <input class="user-input" name="user" id="user" type="text" ng-model="user.username" placeholder="Username" onfocus="this.placeholder = ''"
+                                    onblur="this.placeholder = 'Username'">
+                            </div>
+                            <div class="row">
+                                <input class="user-input password" name="password" id="password" type="password" ng-model="user.password" placeholder="Password"
+                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                            </div>
+                            <div class="row">
+                                <md-button class="submit-button" ng-click="logIn(user)" type="submit" value="Log In">Log In</md-button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="info-2">{{customizations.info2}}</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="disclaimer">
+            <p ng-repeat="info in customizations.info3">{{info}}</p>
+        </div>
+    </div>
+    <div class="login-wrapper" ng-show="public">
+        <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>-->
+        <div id="login-error" class="pmt-h2"></div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div id="acts-children-details" ng-controller="ActsChildrenDetailsCtrl">
+    <!-- PARENT details -->
+    <div ng-if="$parent.selectedActivity.details">
+        <table>
+            <tr>
+                <th class="section-header-left">Activity Detail</th>
+            </tr>
+            <tbody ng-if= "detail._title" ng-repeat="detail in $parent.selectedActivity.details | orderBy:'id'">
+                <tr>
+                    <td class="section-row-left">{{detail._title}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- no-data CHILD details -->
+    <div ng-if="$parent.selectedActivity.details">
+        <table>
+            <tr>
+                <th class="section-header-left">Activity Detail By Region</th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td class="section-row-left">There is no activity detail information by region.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- CHILD details -->
+    <div ng-if="$parent.selectedActivity.children">
+        <table>
+            <tr>
+                <th colspan="2" class="section-header-left">Activity Detail By Region</th>
+            </tr>
+            <tr>
+                <th class="section-row-col1">Region</th>
+                <th class="section-row-col2">Activity Detail</th>
+            </tr>
+            <tbody ng-repeat="child in $parent.selectedActivity.children | orderBy:'_title'">
+                <tr ng-if= "detail._title" ng-repeat="detail in child.selectedActivity.details | orderBy:'id'">
+                    <td class="section-row-left">{{child._title}}</td>
+                    <td class="section-row-left">{{detail._title}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

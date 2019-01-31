@@ -1,0 +1,27 @@
+<div id="map-map" ng-controller="MapMapCtrl" class="ui-layout-center">
+    <!-- left panel -->
+    <ng-include src="'map/left-panel/left-panel.tpl.html'"></ng-include>
+    <!-- right panel -->
+    <ng-include src="'map/right-panel/right-panel.tpl.html'"></ng-include>
+    <!-- top bar -->
+    <ng-include src="'map/top-bar/top-bar.tpl.html'"></ng-include>
+    <!-- group by boundary -->
+    <div class="group-by " ng-show="page.tools.map.toggleBoundaries">
+        <div class="group-by-label pmt-h3"> View clusters by: </div>
+        <md-radio-group ng-model="groupBy" ng-change='toggleBoundary()'>
+            <md-radio-button
+                    ng-repeat="b in page.tools.map.toggleBoundaries"
+                    ng-value="b" class="md-primary" >
+                {{b.label}}
+            </md-radio-button>
+        </md-radio-group>
+    </div>
+    <!-- zoom to -->
+    <ng-include src="'map/zoomTo/zoomTo.tpl.html'"></ng-include>
+    <!-- bottom bar -->
+    <ng-include src="'map/bottom-bar/bottom-bar.tpl.html'"></ng-include>
+    <!-- basemap -->
+    <ng-include src="'map/basemap/basemap.tpl.html'"></ng-include>
+    <!-- interactive map -->
+    <div id="interactive-map"></div>
+</div>

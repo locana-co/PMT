@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>PMT Viewer Portal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:400,200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <style>
+        *,
+        *:after,
+        *:before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /**
+ * Basics Styles
+ */
+        
+        html {
+            font-size: 62.5%;
+        }
+        
+        body {
+            background-color: #eee;
+            font-family: Roboto;
+            font-weight: 400;
+            font-size: 1.6em;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+        
+        a:hover {
+            color: #3498db;
+        }
+        
+        div {
+            line-height: 1.2;
+            margin-bottom: 1.6rem;
+        }
+        
+        .wrapper {
+            margin: 50px auto;
+            padding-left: 1em;
+            padding-right: 1em;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            margin: 0 50px;
+        }
+        
+        .footer {
+            margin: 50px auto;
+            padding-left: 1em;
+            padding-right: 1em;
+            font-family: Raleway;
+            font-size: 12px;
+        }
+        
+        .header {
+            font-size: 30px;
+            margin: 50px auto 20px;
+            padding-left: 1em;
+            padding-right: 1em;
+            font-family: Raleway;
+            font-weight: bold;
+            text-align: center;
+        }
+        /**
+ * Helpers
+ */
+        
+        .border-tlr-radius {
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .radius {
+            border-radius: 2px;
+        }
+        
+        .padding-tb {
+            padding-top: 1.6rem;
+            padding-bottom: 1.6rem;
+        }
+        
+        .shadowDepth0 {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+        
+        .shadowDepth1 {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+        /**
+ * Card Styles
+ */
+        
+        .card {
+            background-color: #fff;
+            max-width: 300px;
+            height: 370px;
+            margin: 10px auto;
+        }
+        
+        .card__padding {
+            padding: 0 10px;
+        }
+        
+        .card__image {
+            height: 180px;
+            background-color: #fff;
+            margin: 7px;
+            width: 286px;
+            display: block;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .card__image img {
+            height: 100%;
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .card__content {
+            position: relative;
+        }
+
+        /* card article */
+        
+        .card__article {
+            padding: 10px 0;
+        }
+        
+        .card__article div {
+            font-size: 18px;
+            color: #333;
+            font-family: Raleway;
+            margin: 0 0 5px 0;
+        }
+        
+        .card__article div:hover {
+            color: #3498db;
+        }
+
+        .card__article time {
+            font-size: 12px;
+            color: #b1b1b1;
+            font-family: Raleway;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .card__article version {
+            font-size: 12px;
+            color: #b1b1b1;
+            font-family: Raleway;
+        }
+        a {
+            font-size: 12px;
+            color: #b1b1b1;
+            font-family: Raleway;
+        }
+
+        .card__article p {
+            font-size: 12px;
+            color: #333;
+            font-family: Raleway;
+        }
+        /* card action */
+        
+        .card__action {
+            overflow: hidden;
+            padding-right: 1.6rem;
+            padding-left: 1.6rem;
+            padding-bottom: 1.6rem;
+        }
+        
+        .card__author {}
+        
+        .card__author img,
+        .card__author-content {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .card__author img {
+            border-radius: 50%;
+            margin-right: 0.6em;
+        }
+        
+        .card__share {
+            float: right;
+            position: relative;
+            margin-top: -42px;
+        }
+        
+        .card__social {
+            position: absolute;
+            top: 0;
+            right: 0;
+            visibility: hidden;
+            width: 160px;
+            transform: translateZ(0);
+            transform: translateX(0px);
+            transition: transform 0.35s ease;
+        }
+        
+        .card__social--active {
+            visibility: visible;
+            /*z-index: 3;*/
+            transform: translateZ(0);
+            transform: translateX(-48px);
+            transition: transform 0.35s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Portfolio Mapping Tool (PMT) Portal </div>
+    <div class="wrapper">
+        <div class="card radius shadowDepth1">
+            <a href="http://v10.investmentmapping.org/spatialdev/" target="_blank">
+                <div class="card__image border-tlr-radius">
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/spatialdev/logo_SD.jpg" alt="image" class="border-tlr-radius">
+                </div>
+                <div class="card__content card__padding">
+                    <article class="card__article">
+                        <div>SpatialDev's PMT Viewer</div>
+                        <version> Version: <a href="http://v10.investmentmapping.org/version_history.html#3.10.6">3.10.6</a></version>
+                        </br>
+                        <time>Last Update December 2017 </time>
+                        <p>Demonstration of the potential of the PMT Viewer. Intended to serve as an example.</p>
+                    </article>
+                </div>
+            </a>
+        </div>
+
+        <div class="card radius shadowDepth1">
+            <a href="http://v10.investmentmapping.org/bmgf/" target="_blank">
+                <div class="card__image border-tlr-radius">
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/bmgf/BMGF_logo.jpg" alt="image" class="border-tlr-radius"
+                        style="width:100%">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>BMGF PMT Viewer</div>
+        <version> Version: <a href="http://v10.investmentmapping.org/version_history.html#3.10.6">3.10.6</a></version>
+        </br>
+        <time>Last Update December 2017</time>
+        <p>Bill &amp; Melinda Gates Foundation PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/tanaim/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/tanaim/CoatofArms.png" alt="image" class="border-tlr-radius"
+                style=" padding: 10px;">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>TanAIM PMT Viewer</div>
+        <version> Version: <a href="http://v10.investmentmapping.org/version_history.html#3.10.6">3.10.6</a></version>
+        </br>
+        <time>Last Update December 2017</time>
+        <p>Tanzania Agriculture Investment Mapping PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/ethaim/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/ethaim/ATALogo.jpg" alt="image" class="border-tlr-radius"
+                style="">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>EthAIM PMT Viewer</div>
+        <version> Version: <a href="http://v10.investmentmapping.org/version_history.html#3.10.9">3.10.9</a></version>
+        </br>
+        <time>Last Update Sept 4, 2018</time>
+        <p>Ethiopian Agriculture Transformation Agency Investment Mapping PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/agra/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/agra/top_banner.png" alt="image" class="border-tlr-radius"
+                style="padding: 65px 20px;">
+</div>
+
+<div class="card__content card__padding">
+
+    <article class="card__article">
+        <div>AGRA PMT Viewer</div>
+        <version> Version: <a href="http://v10.investmentmapping.org/version_history.html#3.10.6">3.10.6</a></version>
+        </br>
+        <time>Last Update December 2017</time>
+        <p>Alliance for a Green Revolution in Africa Investment Mapping PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/usaidnp/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/usaidnp/USAID-Nepal-Logo.jpg" alt="image" class="border-tlr-radius"
+                style=" padding: 70px 20px;">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>USAID Nepal PMT Viewer</div>
+        <time>Last Update June 2016</time>
+        <p>USAID Nepal Investment Mapping PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/usaideth/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/usaideth/New-USAID-logo.jpg" alt="image" class="border-tlr-radius"
+                style="padding: 0 25px;">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>USAID Ethiopia PMT Viewer</div>
+        <time>Last Update June 2016</time>
+        <p>USAID Ethiopia Investment Mapping PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+<div class="card radius shadowDepth1">
+    <a href="http://v10.investmentmapping.org/usaidme/" target="_blank">
+        <div class="card__image border-tlr-radius">
+            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/usaideth/New-USAID-logo.jpg" alt="image" class="border-tlr-radius"
+                style="padding: 0 25px;">
+</div>
+
+<div class="card__content card__padding">
+    <article class="card__article">
+        <div>USAID M&E PMT Viewer</div>
+        <time>Last Update June 2016</time>
+        <p>USAID Monitoring & Evaluation PMT Viewer.</p>
+    </article>
+</div>
+</a>
+</div>
+
+</div>
+<div class="footer">
+    <p class="text-center">Learn more about <a href="http://www.spatialdev.com" target="_blank">Spatial Development International, LLC</a></p>
+    <p class="text-center">See <a href="http://v10.investmentmapping.org/version_history.html" target="_blank">Version History</a></p>
+
+</div>
+</body>
+<script>
+    var $mainButton = $(".main-button"),
+        $closeButton = $(".close-button"),
+        $buttonWrapper = $(".button-wrapper"),
+        $ripple = $(".ripple"),
+        $layer = $(".layered-content");
+
+    $mainButton.on("click", function () {
+        $ripple.addClass("rippling");
+        $buttonWrapper.addClass("clicked").delay(1500).queue(function () {
+            $layer.addClass("active");
+        });
+    });
+
+    $closeButton.on("click", function () {
+        $buttonWrapper.removeClass("clicked");
+        $ripple.removeClass("rippling");
+        $layer.removeClass("active");
+    });
+
+    // copy
+    balapaCop("Material Overlay Animation", "#777");
+</script>
+
+</html>

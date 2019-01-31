@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>PMT User Guide</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/user-guide.css">
+    <!-- theme from https://bootswatch.com/ -->
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/bootstrap.min.css">
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/jquery.min.js"></script>
+    <script src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <div class="jumbotron text-center">
+        <h1>The Portfolio Mapping Tool (PMT) User Guide</h1>
+        <p>The Portfolio Mapping Tool 3.0 (PMT 3.0) is a web-based mapping application intended to visualize
+            development work
+            in a variety of ways. The features of this web application allow users to browse, map, add, edit, and share
+            projects
+            without the need for geographic information systems expertise. This User Guide provides the basic
+            information
+            necessary to understand how to use the PMT 3.0.
+        </p>
+    </div>
+    <!-- MENU -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav" id="menu">
+                    <!-- Getting Started -->
+                    <li class="dropdown active">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Getting
+                            Started <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="#intro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#help" data-toggle="tab" aria-expanded="false">Help</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#features" data-toggle="tab" aria-expanded="false">Features &amp;
+                                    Capabilities</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#access" data-toggle="tab" aria-expanded="false">Gaining Access</a></li>
+                        </ul>
+                    </li>
+                    <!-- Summaries -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Summaries
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#summaryintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#summaryfilter" data-toggle="tab" aria-expanded="true">Filtering</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#summarynational" data-toggle="tab" aria-expanded="true">National
+                                    Investment Summaries</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#summaryregional" data-toggle="tab" aria-expanded="true">Regional
+                                    Investment Summaries</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#summaryexport" data-toggle="tab" aria-expanded="true">Download &amp;
+                                    Export</a></li>
+                        </ul>
+                    </li>
+                    <!-- Activities -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Projects <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#activityintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#activityfilter" data-toggle="tab" aria-expanded="true">Search &amp;
+                                    Filtering</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#activitysort" data-toggle="tab" aria-expanded="true">Sorting</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#activitypaging" data-toggle="tab" aria-expanded="true">Pagination</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#activitydownload" data-toggle="tab" aria-expanded="true">Download
+                                    Data</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#activitydetails" data-toggle="tab" aria-expanded="true">Project
+                                    Details</a></li>
+                        </ul>
+                    </li>
+                    <!-- Map -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Map <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#mapintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#mapsearch" data-toggle="tab" aria-expanded="true">Search</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#mapfilter" data-toggle="tab" aria-expanded="true">Filtering</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#maplayers" data-toggle="tab" aria-expanded="true">Map Layers</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#mapclusters" data-toggle="tab" aria-expanded="true">Map Clusters</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#mapwalkshed" data-toggle="tab" aria-expanded="true">Walkshed Tool</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#mapexport" data-toggle="tab" aria-expanded="true">Export Data</a></li>
+                        </ul>
+                    </li>
+                    <!-- Partnerlink -->
+                    <li class="dropdown theme tanaim">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Partnerlink
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#plintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                        </ul>
+                    </li>
+                    <!-- Administrative Console -->
+                    <li class="dropdown role super administrator">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Administrative
+                            Console <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#adminintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#adminsearch" data-toggle="tab" aria-expanded="true">Search</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#admininfo" data-toggle="tab" aria-expanded="true">User Information</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#adminedit" data-toggle="tab" aria-expanded="true">Editing a User</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#admincreate" data-toggle="tab" aria-expanded="true">Creating a User</a></li>
+                            <li class="divider role super"></li>
+                            <li class="role super"><a href="#adminviews" data-toggle="tab" aria-expanded="true">Refresh
+                                    Views</a></li>
+                        </ul>
+                    </li>
+                    <!-- Editor -->
+                    <li class="dropdown theme ethaim role editor super administrator">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Editor <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="#editorintro" data-toggle="tab" aria-expanded="true">Introduction</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editor" data-toggle="tab" aria-expanded="true">Project Editor</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editorinfo" data-toggle="tab" aria-expanded="true">Record
+                                    Information</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editoractivity" data-toggle="tab" aria-expanded="true">Project Tab</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editortaxonomy" data-toggle="tab" aria-expanded="true">Taxonomies
+                                    Tab</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editorfinancial" data-toggle="tab" aria-expanded="true">Financials
+                                    Tab</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editororganization" data-toggle="tab" aria-expanded="true">Organizations
+                                    Tab</a></li>
+                            <li class="divider"></li>
+                            <li class=""><a href="#editorlocation" data-toggle="tab" aria-expanded="true">Locations Tab</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- PAGES -->
+    <div class="container">
+        <div id="myTabContent" class="tab-content">
+            <!-- INTRODUCTION (GETTING STARTED) -->
+            <div class="tab-pane fade active in" id="intro">
+                <ul class="pager breadcrumbs">
+                    <li class="next"><a href="#help" onClick="resetMenu('#help')" data-toggle="tab">Next Section <b>"Help
+                                Resources"</b> &rarr;</a></li>
+                </ul>
+                <h2>Introduction</h2>
+                <p>The Portfolio Mapping Tool 3.0 (PMT 3.0) is a web-based mapping application intended to visualize
+                    development
+                    work in a variety of ways. The features of this web application allow users to browse, map, add,
+                    edit,
+                    and share projects without the need for geographic information systems expertise. This User Guide
+                    provides
+                    the basic information necessary to understand how to use the PMT 3.0.
+                </p>
+                <h2>Purpose</h2>
+                <p>
+                    The PMT 3.0 is ultimately intended to help users improve project strategies and partnerships for
+                    greater impact in their
+                    work. Its features and functions have been designed to provide the following benefits:
+                    <ul>
+                        <li><strong>Inform strategic and project management decisions.</strong> The PMT 3.0 can help
+                            inform decisions
+                            by allowing users to take geographic information into account, whether it is the location
+                            of
+                            markets, related projects and partners, travel time, annual precipitation, or maize crop
+                            yields.</li>
+                        <li><strong>Communicate programmatic projects to key stakeholders.</strong> A primary benefit
+                            to users
+                            of the PMT 3.0 is to see the spatial layout of their projects relative to context. Users
+                            have
+                            the ability to add their projects to the PMT 3.0 database and then visualize those projects
+                            in
+                            a variety of ways. </li>
+                        <li><strong>Understand how programmatic efforts relate to other projects as well as to useful
+                                agricultural
+                                information.</strong> Users have the ability to browse and map other people’s projects
+                            alone
+                            and alongside their own projects. This functionality provides the framework for multiple
+                            organizations
+                            to communicate vital strategic information together in a coordinated fashion.</li>
+                    </ul>
+                    The PMT 3.0 is designed to be flexible and expandable, allowing users to develop unique ways of
+                    applying the tool to their
+                    work.
+                </p>
+                <hr />
+            </div>
+            <!-- HELP (GETTING STARTED) -->
+            <div class="tab-pane fade" id="help">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#intro" onClick="resetMenu('#intro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction"</b></a></li>
+                    <li class="next"><a href="#features" onClick="resetMenu('#features')" data-toggle="tab">Next
+                            Section <b>"Features and Capabilities"</b> &rarr;</a></li>
+                </ul>
+                <h2>Help Resources</h2>
+                <p>
+                    The User Guide is one of several help resources available with PMT 3.0. You can access the <strong>Video
+                        Tutorial</strong> which introduces the various features of PMT 3.0 from anywhere in the system.
+                    Simply click on the icon
+                    <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_video.png" />
+                    in the lower left of the browser frame.
+                </p>
+                <p>
+                    You can access this user guide via the <strong>User Guide</strong> link in the footer of the page.
+                    There
+                    is also a <strong>Feedback</strong> link located within footer. This will allow you to comment on
+                    or
+                    ask questions related to PMT 3.0 data, suggest features, and inform the development team of bugs.
+                </p>
+                </br>
+                <img style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/video_tutorial.png" />
+                <hr />
+            </div>
+            <!-- FEATURES & CAPABILITIES (GETTING STARTED) -->
+            <div class="tab-pane fade" id="features">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#help" onClick="resetMenu('#help')" data-toggle="tab">&larr; Previous
+                            Section <b>"Help Resources"</b></a></li>
+                    <li class="next"><a href="#access" onClick="resetMenu('#access')" data-toggle="tab">Next Section <b>"Gaining
+                                Access to PMT 3.0"</b> &rarr;</a></li>
+                </ul>
+                <h2>Features and Capabilities</h2>
+                <p>
+                    The PMT 3.0 enables users to find projects, make maps with those projects, and enter new project
+                    data. Each of these primary
+                    features is described in greater detail in corresponding sections of this User Guide.
+                    <ul class="theme ethaim">
+                        <li><strong>Summaries Module:</strong> Users are presented with a set of project filters and
+                            summary
+                            visualizations that characterize the project information.</li>
+                        <ul>
+                            <li><strong>Filter by</strong>: Region, Agricultural Commercialization Clusters (ACC),
+                                Activity Status
+                                and Date Range</li>
+                            <li><strong>National Summaries:</strong> Top Funding Partners by Investment, Share of
+                                Investments
+                                by Program, Project Investments Matrix, Project Count by Crop, Project Count by
+                                Livestock
+                                and Project Counts by Investment Sector</li>
+                            <li><strong>Regional Summaries:</strong> Top Projects, Projects by Program, Projects by
+                                Sector Category,
+                                Project Investments Matrix, Project County by Crop, Project Count by Livestock and
+                                Project
+                                Counts by Investment Sector</li>
+                            <li><strong>Export data:</strong> Download graphic or export data into csv format for use
+                                offline</li>
+                        </ul>
+                        <li><strong>Projects Module:</strong> Users have the ability view, filter and explore the
+                            project information
+                            in detail from a tabular perspective.
+                        </li>
+                        <ul>
+                            <li><strong>Filter by</strong>: Keyword (free text), Funding Partners, Implementers,
+                                Program, Sector
+                                Category, Sector, Thematic Area, Crops, Livestock, Women in Development, Activity
+                                Status,
+                                National or Local and by UNOCHA Boundaries</li>
+                            <li><strong>Sort by</strong>: Project Name, Budget, Start Date, End Date or Funding Partner</li>
+                            <li><strong>View project details</strong>: Description, Project Footprint, Locations,
+                                Contacts, Dates,
+                                Investment Information, Taxonomies and Participating Organizations (funding,
+                                implementing,
+                                accountable)
+                            </li>
+                            <li><strong>Export data:</strong> Export data into csv format for use offline</li>
+                        </ul>
+                        <li><strong>Map Module:</strong> Users have the ability view, filter and explore the project
+                            information
+                            in detail from a spatial perspective, in connection with other spatially related
+                            information.
+                        </li>
+                        <ul>
+                            <li><strong>Filter by</strong>: Keyword (free text), Funding Partners, Implementing
+                                Organizations,
+                                Program, Sector Category, Sector, Thematic Area, Crops, Livestock, Women in
+                                Development,
+                                Activity Status, National or Local and by UNOCHA Boundaries</li>
+                            <li><strong>Cluster by:</strong> Regions or Agricultural Commercialization Clusters (ACC)
+                            </li>
+                            <li><strong>View project details</strong>: Description, Locations, Contacts, Dates,
+                                Investment Information,
+                                Taxonomies and Participating Organizations (funding, implementing, accountable)
+                            </li>
+                            <li><strong>Map Overlays:</strong> Institutional Surveys, Elevation, Rainfall, Crop
+                                Statistics, Demographics,
+                                Land Use and Soil Resources.</li>
+                            <li><strong>Reference Layers:</strong> Change basemaps, add region and/or district
+                                administrative
+                                boundaries
+                            </li>
+                            <li><strong>Tools:</strong> Search for a geographic location and Walkshed Tool
+                            </li>
+                            <li><strong>Export data:</strong> Export data into csv format for use offline</li>
+                        </ul>
+                        <li class="role editor administrator super"><strong>Editor Module:</strong> Users have the
+                            ability to create new projects, edit existing project
+                            information or delete projects. This feature requires a login with appropriate rights.</li>
+                        <ul class="role editor administrator super">
+                            <li><strong>Project management</strong>: Create new project, edit existing project
+                                information (financials,
+                                organizations, taxonomies, locations), delete project.</li>
+                        </ul>
+                        <li class="role administrator super"><strong>Administrative Console:</strong> Users have the
+                            ability manage user access and permissions
+                            and perform routine data management tasks. This feature requires a login with appropriate
+                            rights.</li>
+                        <ul class="role administrator super">
+                            <li><strong>User management</strong>: Create new user, grant/revoke access to existing
+                                user, delete
+                                users, update user role, grant editing permissions to projects, reset password.</li>
+                            <li class="role super"><strong>Data management</strong>: Rebuild database views.</li>
+                            <li><strong>Login</strong>: View user's last login information</li>
+                        </ul>
+                    </ul>
+                    <ul class="theme tanaim">
+                        <span class="highlight">The TanAIM instance needs a personalized section, please see
+                            Administrator.</span>
+                    </ul>
+                </p>
+                <hr />
+            </div>
+            <!-- GAINING ACCESS (GETTING STARTED) -->
+            <div class="tab-pane fade" id="access">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#features" onClick="resetMenu('#features')" data-toggle="tab">&larr;
+                            Previous Section <b>"Features and Capabilities"</b></a></li>
+                    <li class="next"><a href="#summaryintro" onClick="resetMenu('#summaryintro')" data-toggle="tab">Next
+                            Topic <b>"Summaries"</b> &rarr;</a></li>
+                </ul>
+                <h2>Gaining Access to PMT 3.0</h2>
+                <div class="theme ethaim">
+                    <p>The web address for PMT 3.0 is <a href="http://v10.investmentmapping.org/ethaim/" target="blank">http://v10.investmentmapping.org/ethaim/</a>.</p>
+                    <p>Access to the PMT 3.0 is open to the public, however there is a login option for features that
+                        require
+                        authenticated access. If you would like to request access to these features, please contact
+                        <span class="highlight">somebody from UDBS</span>. Access is granted at the discretion of the
+                        University
+                        of Dar es Salaam Business School (UDBS).</p>
+                </div>
+                <div class="theme tanaim">
+                    <p>The web address for PMT 3.0 is <a href="http://v10.investmentmapping.org/tanaim" target="blank">http://v10.investmentmapping.org/tanaim/</a>.</p>
+                    <p>Access to the PMT 3.0 is by invitation only. If you would like to request one, please do so via
+                        the link
+                        on the login page. Access is granted at the discretion of the Bill and Melinda Gates
+                        Foundation.</p>
+                </div>
+                <hr />
+                <h2>System Requirements</h2>
+                <p>In order to access the PMT 3.0, you will need an internet connection with a minimum speed of 32k and
+                    a web
+                    browser. The recommended web browser for PMT 3.0 at this time is Chrome™, however the PMT 3.0 will
+                    work
+                    with other browsers such as Firefox™, Internet Explorer™ (version 11 or higher), and Safari™. The
+                    screen
+                    resolution for your computer should be set at a minimum of 1024 x 768.</p>
+                <hr />
+                <h2>Logging In to PMT 3.0</h2>
+                <p class="theme ethaim">
+                    The PMT 3.0 is open to the public. However, in order to get access to restricted functionality like
+                    the <strong>Editor</strong> or <strong>Admin</strong> pages you will be required to login. To
+                    login, first click on the
+                    <img class="signin-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_signin.png" />
+                    link in the upper right corner of the application header.
+                    </br>
+                    </br>
+                    The login page will appear. Then simply enter your Username and Password into the corresponding
+                    boxes and click the <strong>LOG IN</strong> button.
+                    </br>
+                    </br>
+                    <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/login.png" />
+                </p>
+                <p class="theme tanaim">The PMT 3.0 is an access controlled website. On the login page, simply enter
+                    your Username and Password into
+                    the corresponding boxes and click the <strong>LOG IN</strong> button. If your login is successful,
+                    you
+                    will land on the PMT 3.0 <strong>Summaries</strong> page.
+                    </br>
+                    </br>
+                    <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/login.png" />
+                </p>
+                <hr />
+            </div>
+            <!-- INTRODUCTION  (SUMMARIES)-->
+            <div class="tab-pane fade" id="summaryintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#intro" onClick="resetMenu('#intro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Getting Started"</b></a></li>
+                    <li class="next"><a href="#summaryfilter" onClick="resetMenu('#summaryfilter')" data-toggle="tab">Next
+                            Section <b>"Filtering"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_summaries.png" />
+                <h2 class="header-with-button">Summaries Module</h2>
+                </br>
+                <p>
+                    The summaries module provides a number of summarization visualizations that aggregate project
+                    information from a number of
+                    perspectives. This is the default module when first entering the application. You can get to this
+                    module
+                    by clicking on the
+                    <strong>Summaries</strong> button in the left navigation bar.
+                </p>
+                </br>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_page.png" />
+            </div>
+            <!-- FILTER  (SUMMARIES)-->
+            <div class="tab-pane fade" id="summaryfilter">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#summaryintro" onClick="resetMenu('#summaryintro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction to the Summaries Module"</b></a></li>
+                    <li class="next"><a href="#summarynational" onClick="resetMenu('#summarynational')" data-toggle="tab">Next
+                            Section <b>"National Investment Summaries"</b> &rarr;</a></li>
+                </ul>
+                <h2>Filtering</h2>
+                <p>Data can be filtered in a couple of different ways:
+                    <ul>
+                        <li>Attribute</li>
+                        <li>Geographically</li>
+                    </ul>
+                </p>
+                <div class="indent">
+                    <hr />
+                    <h3>Filter by Attribute</h3>
+                    <p class="theme ethaim">Data can be filtered either by <strong>Activity Status</strong> or by
+                        <strong>Date</strong>. To filter
+                        data by attribute select parameters from the left hand menu:</p>
+                    <p class="theme tanaim">Data can be filtered either by <strong>Activity Status</strong>, by <strong>Date</strong>
+                        or by <strong>Data Source</strong>.
+                        To filter data by attribute select parameters from the left hand menu:</p>
+                    </br>
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_filters.png" />
+                    <p> To remove the a single filter click the <i class="fa fa-times-circle" aria-hidden="true"></i>
+                        to the
+                        right of the filter. To remove all filters select the "Clear All" option.</p>
+                    </br>
+                    </br>
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_clear.png" />
+                    <hr />
+                    <h3>Filter Geographically</h3>
+                    <p>Data can be filtered geographically by either selecting a feature from the map or by selecting a
+                        feature
+                        name from the dropdown list. Selecting a feature will filter the data to that selected
+                        geographic
+                        region.
+                    </p>
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_select_feature.png" />
+
+                    <p class="theme ethaim">
+                        </br>
+                        </br>To change the map geography use the "View data by:" in the lower right hand corner of the
+                        map:
+                    </p>
+                    <img class="theme ethaim" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_map_toggle.png" />
+                    </br>
+                    </br>
+                    <p>To go back to the National Summary after applying a geographic filter, click on the country name
+                        in the
+                        breadcrumbs.
+                    </p>
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_breadcrumbs.png" />
+                </div>
+            </div>
+            <!-- NATIONAL  (SUMMARIES)-->
+            <div class="tab-pane fade" id="summarynational">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#summaryfilter" onClick="resetMenu('#summaryfilter')" data-toggle="tab">&larr;
+                            Previous Section <b>"Filtering"</b></a></li>
+                    <li class="next"><a href="#summaryregional" onClick="resetMenu('#summaryregional')" data-toggle="tab">Next
+                            Section <b>"Regional Investment Summaries"</b> &rarr;</a></li>
+                </ul>
+                <h2>National Investment Summaries</h2>
+                At the national level there are several summary visualizations available. Each visualization provides a
+                piece of the overall
+                agricultural investment story.
+                <div class="indent">
+                    </br>
+                    <table class="table  table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <h3>Top Funding Partners by Investment</h3>
+                                    <p>This visual shows the top funders ordered by investment. To see the projects
+                                        that are
+                                        funded by each of the reported funders, click on the funder bar. This will open
+                                        a
+                                        dialog with a listing of projects funded by the funder. Click on any of these
+                                        listed
+                                        projects, within the dialog, to visit the project's detail page.</p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_top_funder.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3 class="theme ethaim">Share of Total Investments by Program</h3>
+                                    <h3 class="theme tanaim">Share of Total Investments by Category</h3>
+                                    <p>This visual shows share of investment by Program. Hovering over a pie piece will
+                                        provide
+                                        you a summary of the number of projects and total investment for that project.
+                                        To
+                                        see the projects that are included, click on the pie piece. This will open a
+                                        dialog
+                                        with a listing of projects aggregated. Click on any of these listed projects,
+                                        within
+                                        the dialog, to visit the project's detail page.</p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_national_pie.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3>Investments Matrix</h3>
+                                    <p>This visual shows allows users to see investments by either funder or
+                                        implementer, pivoted
+                                        on geographic and attribute information. Use the dropdown menus at the top and
+                                        on
+                                        the left hand side of the feature to alter the information presented in the
+                                        table.
+                                        Hovering over any acronym in the table will cause a popup to appear with the
+                                        full
+                                        name of the organization. Clicking on "x more", will initiate a dialog with a
+                                        full
+                                        listing of organizations.
+                                    </p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_national_pivot.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3 class="theme ethaim">Projects by Crop, Livestock &amp; Sector</h3>
+                                    <h3 class="theme tanaim">Projects by Sector &amp; Crops and Livestock</h3>
+                                    <p>These visuals show the number of projects by either Crop, Livestock or Sector.
+                                        Hover
+                                        over any bar to get the number of projects and classification. Clicking on any
+                                        bar
+                                        will open a dialog with a listing of projects included in selected
+                                        classification.
+                                        Click on any of these listed projects, within the dialog, to visit the
+                                        project's
+                                        detail page.
+                                    </p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_national_bar.png" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+            </div>
+            <!-- REGIONAL  (SUMMARIES)-->
+            <div class="tab-pane fade" id="summaryregional">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#summarynational" onClick="resetMenu('#summarynational')" data-toggle="tab">&larr;
+                            Previous Section <b>"National Investment Summaries"</b></a></li>
+                    <li class="next"><a href="#summaryexport" onClick="resetMenu('#summaryexport')" data-toggle="tab">Next
+                            Section <b>"Download &amp; Export"</b> &rarr;</a></li>
+                </ul>
+                <h2>Regional Investment Summaries</h2>
+                <div class="indent">
+                    </br>
+                    <table class="table  table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <h3 class="theme ethaim">Top Projects</h3>
+                                    <h3 class="theme tanaim">Top Projects by Investment Amount</h3>
+                                    <p>This visual shows the top projects by investment for the selected geographic
+                                        area. Click
+                                        on any project name to visit the project's detail page.</p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_top.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3 class="theme ethaim">Share of Total Projects by Program &amp; Sector Category</h3>
+                                    <h3 class="theme tanaim">Share of Total Projects by Category &amp; Sector</h3>
+                                    <p>This visual shows share of projects by Program or Sector Category. Hovering over
+                                        a pie
+                                        piece will provide you a count of projects for that classification. To see the
+                                        projects
+                                        that are included, click on the pie piece. This will open a dialog with a
+                                        listing
+                                        of projects aggregated. Click on any of these listed projects, within the
+                                        dialog,
+                                        to visit the project's detail page.</p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_region_pie.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3>Project Matrix</h3>
+                                    <p class="theme ethaim">This visual shows allows users to see projects by either
+                                        funder or implementer, pivoted
+                                        on geographic and attribute information. Use the dropdown menus at the top and
+                                        on
+                                        the left hand side of the feature to alter the information presented in the
+                                        table.
+                                        Hovering over any acronym in the table will cause a popup to appear with the
+                                        full
+                                        name of the organization. Clicking on "x more", will initiate a dialog with a
+                                        full
+                                        listing of organizations.
+                                    </p>
+                                    <p class="theme tanaim">This visual shows allows users to see projects by
+                                        implementer, pivoted on Category and
+                                        Crops &amp; Livestock. Hovering over any acronym in the table will cause a
+                                        popup
+                                        to appear with the full name of the organization. Clicking on "x more", will
+                                        initiate
+                                        a dialog with a full listing of organizations.
+                                    </p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_region_pivot.png" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3 class="theme ethaim">Projects by Crop, Livestock &amp; Sector</h3>
+                                    <h3 class="theme tanaim">Projects by Crops and Livestock</h3>
+                                    <p>These visuals show the number of projects by either Crop, Livestock or Sector.
+                                        Hover
+                                        over any bar to get the number of projects and classification. Clicking on any
+                                        bar
+                                        will open a dialog with a listing of projects included in selected
+                                        classification.
+                                        Click on any of these listed projects, within the dialog, to visit the
+                                        project's
+                                        detail page.
+                                    </p>
+                                </td>
+                                <td> <img style="max-width: 800px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_region_bar.png" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+            </div>
+            <!-- EXPORT  (SUMMARIES)-->
+            <div class="tab-pane fade" id="summaryexport">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#summaryregional" onClick="resetMenu('#summaryregional')" data-toggle="tab">&larr;
+                            Previous Section <b>"Regional Investment Summaries"</b></a></li>
+                    <li class="next"><a href="#activityintro" onClick="resetMenu('#activityintro')" data-toggle="tab">Next
+                            Topic <b>"Projects"</b> &rarr;</a></li>
+                </ul>
+                <h2>Download &amp; Export</h2>
+                All charts are downloadable in a .png format and the table visuals are downloadable both in a .png and
+                .csv format by clicking
+                on the download icon <i class="material-icons">file_download</i> in the upper right corner
+                of the visuals. A popup module will appear with the download options:<br /><br />
+                <img class="center-img" style="max-width:60%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/summary_download_popup.png" />
+                <hr />
+            </div>
+            <!-- INTRODUCTION  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activityintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#summaryintro" onClick="resetMenu('#intro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Summaries"</b></a></li>
+                    <li class="next"><a href="#activityfilter" onClick="resetMenu('#activityfilter')" data-toggle="tab">Next
+                            Section <b>"Search &amp; Filtering"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_activities.png" />
+                <h2 class="header-with-button">Projects Module</h2>
+                </br>
+                <p>
+                    The project module provides a tabular look at the complete inventory of projects. You can get to
+                    this module by clicking
+                    on the
+                    <strong>Projects</strong> button in the left navigation bar.
+                </p>
+                </br>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_page.png" />
+            </div>
+            <!-- FILTER/SEARCH  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activityfilter">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activityintro" onClick="resetMenu('#activityintro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction to the Projects Module"</b></a></li>
+                    <li class="next"><a href="#activitysort" onClick="resetMenu('#activitysort')" data-toggle="tab">Next
+                            Section <b>"Sorting"</b> &rarr;</a></li>
+                </ul>
+                <h2>Search</h2>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_search.png" /></br>
+                <p>Users can search any textual content of a project using the <strong>keyword</strong> search. Type
+                    one or
+                    more keywords in to the keyword search then click the search icon <i class="material-icons search">search</i>.
+                    The keyword(s) will then appear in the grey <strong>Your selection</strong> box above the keyword
+                    search.
+                    To remove the keyword filter click the <i class="fa fa-times-circle"></i> to the right of the
+                    keyword(s).
+                </p>
+                <hr />
+                <h2>Filters</h2>
+                <table class="table  table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_filters.png" /></td>
+                            <td>
+                                <p>Data can be filtered using a number of filters located in the left hand menu. Click
+                                    on a
+                                    filter heading or the arrows
+                                    <i class="material-icons ng-binding">keyboard_arrow_up</i><i class="material-icons ng-binding">keyboard_arrow_down</i>
+                                    to open and close a filter menu. The number within the parenthesis in the filter
+                                    heading
+                                    represents the number of menu options. Selecting a filter option will place that
+                                    option
+                                    in the grey <strong>Your selection</strong> box above all the filters. To remove
+                                    the
+                                    a single filter click the <i class="fa fa-times-circle" aria-hidden="true"></i> to
+                                    the
+                                    right of the filter. To clear all filters click the "Clear All".</p>
+                                </br>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_selections.png" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>Filters with a large number of options, have a search feature to assist users in
+                                    locating
+                                    their desired option. Typing in the search field, will reduce the filter menu
+                                    options
+                                    to those that match the search string. To remove the search filter, delete all text
+                                    in
+                                    the search field.
+                                </p>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_filter_search.png" />
+                            </td>
+                        </tr>
+                        <tr></tr>
+                    </tbody>
+                </table>
+                <hr />
+            </div>
+            <!-- SORT  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activitysort">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activityfilter" onClick="resetMenu('#activityfilter')" data-toggle="tab">&larr;
+                            Previous Section <b>"Search &amp; Filtering"</b></a></li>
+                    <li class="next"><a href="#activitypaging" onClick="resetMenu('#activitypaging')" data-toggle="tab">Next
+                            Section <b>"Pagination"</b> &rarr;</a></li>
+                </ul>
+                <h2>Sorting</h2>
+                <p>The listing of projects in the table can be sorted by any column. To sort by a column, click on the
+                    column
+                    header. Clicking the column header will toggle the sort between ascending and descending order. An
+                    up
+                    arrow
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i> will appear next to the column header to indicate
+                    the
+                    column has been sorted in ascending order. A down arrow <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    will appear next to the column header to indicate the column has been sorted in descending order.</p>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_table.png" /></br>
+                <hr />
+            </div>
+            <!-- PAGINATION  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activitypaging">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activitysort" onClick="resetMenu('#activitysort')" data-toggle="tab">&larr;
+                            Previous Section <b>"Sorting"</b></a></li>
+                    <li class="next"><a href="#activitydownload" onClick="resetMenu('#activitydownload')" data-toggle="tab">Next
+                            Section <b>"Download Data"</b> &rarr;</a></li>
+                </ul>
+                <h2>Pagination</h2>
+                <p>The total number of projects displayed in the table is reflected in the upper left corner of the
+                    application.</p>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_count.png" /></br>
+                <p>You can navigate through the pages of projects with the pagination toolbar located at the bottom of
+                    the table.
+                    Use the <strong>Page</strong> dropdown to select a specific page or the arrow keys <i class="material-icons align-bottom">keyboard_arrow_left</i>
+                    <i class="material-icons align-bottom">keyboard_arrow_right</i> to move forward and backward
+                    through
+                    the pages. Use the <strong>Rows per page</strong> dropdown to adjust the number of projects listed
+                    on
+                    one page.
+                </p>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_paging.png" />
+                <hr />
+            </div>
+            <!-- DOWNLOAD  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activitydownload">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activitypaging" onClick="resetMenu('#activitypaging')" data-toggle="tab">&larr;
+                            Previous Section <b>"Pagination"</b></a></li>
+                    <li class="next"><a href="#activitydetails" onClick="resetMenu('#activitydetails')" data-toggle="tab">Next
+                            Section <b>"Project Details"</b> &rarr;</a></li>
+                </ul>
+                <h2>Download Data</h2>
+                <p>Download the listing of projects as a <a href="https://en.wikipedia.org/wiki/Comma-separated_values"
+                        target="blank">CSV</a> by clicking on the <strong>Download project list <i class="material-icons align-bottom">file_download</i></strong>
+                    link at the top right of the table. A popup module will appear with the download options:<br /><br />
+                    <img class="center-img" style="max-width:60%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_download_popup.png" /></p>
+                <hr />
+            </div>
+            <!-- DETAILS  (ACTIVITIES)-->
+            <div class="tab-pane fade" id="activitydetails">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activitydownload" onClick="resetMenu('#activitydownload')"
+                            data-toggle="tab">&larr; Previous Section <b>"Download Data"</b></a></li>
+                    <li class="next"><a href="#mapintro" onClick="resetMenu('#mapintro')" data-toggle="tab">Next Topic
+                            <b>"Map"</b> &rarr;</a></li>
+                </ul>
+                <h2>Project Details</h2>
+                <p>To view the project details of any project, click on the project title in the table. This will load
+                    the selected
+                    project's detail page. Click on the tabs to view specific project details:
+                    <ul>
+                        <li><strong>Overview</strong>: provides basic information about the project</li>
+                        <li><strong>Taxonomies</strong>: shows all the taxonomies (how a project is classified)
+                            associated to
+                            the project</li>
+                        <li><strong>Financials</strong>: describes the details of the total investment amount</li>
+                        <li><strong>Organizations</strong>: listing of all the organizations involved in the project
+                            and their
+                            roles
+                        </li>
+                        <li><strong>Locations</strong>: a tabular listing of the locations associated to the project as
+                            shown
+                            in the map</li>
+                    </ul>
+                    To return to the project list, click the back button
+                    <div class="back-button"><i class="fa fa-angle-left back-button-i" aria-hidden="true"></i></div>
+                    to the left of the project title at the top of the project detail page.
+                </p>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_detail.png" /></br>
+                <hr />
+            </div>
+            <!-- INTRODUCTION  (MAP)-->
+            <div class="tab-pane fade" id="mapintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#activityintro" onClick="resetMenu('#activityintro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Projects"</b></a></li>
+                    <li class="next"><a href="#mapsearch" onClick="resetMenu('#mapsearch')" data-toggle="tab">Next
+                            Section <b>"Search"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_map.png" />
+                <h2 class="header-with-button">Map Module</h2>
+                </br>
+                <p>
+                    The map module provides a spatial look at the complete inventory of projects. You can get to this
+                    module by clicking on the
+                    <strong>Map</strong> button in the left navigation bar.
+                </p>
+                </br>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_page.png" />
+            </div>
+            <!-- SEARCH  (MAP)-->
+            <div class="tab-pane fade" id="mapsearch">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapintro" onClick="resetMenu('#mapintro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction to the Map Module"</b></a></li>
+                    <li class="next"><a href="#mapfilter" onClick="resetMenu('#mapfilter')" data-toggle="tab">Next
+                            Section <b>"Filtering"</b> &rarr;</a></li>
+                </ul>
+                <h2>Search</h2>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_search.png" /></br>
+                <p>Users can search any textual content of a project using the <strong>keyword</strong> search. Type
+                    one or
+                    more keywords in to the keyword search then click the search icon <i class="material-icons search">search</i>.
+                    The keyword(s) will then appear in the grey <strong>Your selection</strong> box above the keyword
+                    search.
+                    To remove the keyword filter click the <i class="fa fa-times-circle"></i> to the right of the
+                    keyword(s).
+                </p>
+                <p>Users can also search and zoom to a location, using the <strong>Zoom to a location</strong> feature
+                    in the
+                    upper right corner of the map.
+                    <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_btn_search.png" />
+                </p>
+                <img style="max-width:182px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_search.png" />
+                <hr />
+            </div>
+            <!-- FILTERS  (MAP)-->
+            <div class="tab-pane fade" id="mapfilter">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapsearch" onClick="resetMenu('#mapsearch')" data-toggle="tab">&larr;
+                            Previous Section <b>"Search"</b></a></li>
+                    <li class="next"><a href="#maplayers" onClick="resetMenu('#maplayers')" data-toggle="tab">Next
+                            Section <b>"Map Layers"</b> &rarr;</a></li>
+                </ul>
+                <h2>Filters</h2>
+                <table class="table  table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_filters.png" /></td>
+                            <td>
+                                <p>Data can be filtered using a number of filters located in the left hand menu. Click
+                                    on a
+                                    filter heading to reveal the filter menu options. Selecting a filter option will
+                                    place
+                                    that option in the grey <strong>Your selection</strong> box above all the filters.
+                                    To
+                                    remove the a single filter click the <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    to the right of the filter. To clear all filters click the "Clear All". To return
+                                    the
+                                    the list of filters click on the <strong>BACK TO FILTER LIST</strong> link at the
+                                    top
+                                    of the menu panel.</p>
+                                </br>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/activity_selections.png" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>Filters with a large number of options, have index option to the right. Options are
+                                    ordered
+                                    alphabetically and selecting a letter from the index will shift the listing to the
+                                    options
+                                    that begin with the selected letter.
+                                </p>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_filter_index.png" />
+                            </td>
+                        </tr>
+                        <tr></tr>
+                    </tbody>
+                </table>
+                <p>Data can also be filtered by date, using the time slider below the map. Adjust the sliders start and
+                    stop
+                    points to select the year range. To disable the date filter, click the disable checkbox.</p>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_timeslider.png" />
+                <hr />
+            </div>
+            <!-- MAP LAYERS  (MAP)-->
+            <div class="tab-pane fade" id="maplayers">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapfilter" onClick="resetMenu('#mapfilter')" data-toggle="tab">&larr;
+                            Previous Section <b>"Filtering"</b></a></li>
+                    <li class="next"><a href="#mapclusters" onClick="resetMenu('#mapclusters')" data-toggle="tab">Next
+                            Section <b>"Map Clusters"</b> &rarr;</a></li>
+                </ul>
+                <h2>Map Layers</h2>
+                <table class="table  table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_layers.png" /></td>
+                            <td>
+                                <p>There are a number of contextual map layers available. These layers are grouped into
+                                    categories
+                                    under the <strong>MAP LAYERS</strong> tab. Click on a layer category to reveal the
+                                    layer
+                                    options. Selecting a layer will place the layer on the map and the layer will be
+                                    listed
+                                    in the grey <strong>Your selection</strong> box above all the layer list.</p>
+                                </br>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_selections.png" />
+                                </br>
+                                </br>
+                                <p> To change the order of the layers on the map click and hold <i class="material-icons align-bottom"
+                                        sv-handle="">dehaze</i> and drag the layer to the desired position. Use the
+                                    slider to
+                                    alter a layers opacity. To remove a layer from the map click the
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> to the right of the layer
+                                    name.
+                                    To clear all layers click the "Clear All". To return the list of filters click on
+                                    the
+                                    <strong>BACK TO MAP LAYER LIST</strong> link at the top of the menu panel.</p>
+                                <p>To toggle the project location clusters on/off, use the <strong>Show project
+                                        clusters</strong> toggle switch.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <h2>Metadata</h2>
+                <p>To view the metadata for a set of layers, hover over the info <i class="material-icons align-bottom">info_outline</i>
+                    icon.
+                </p>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_tooltip.png" />
+                </br>
+                </br>
+                <hr />
+                <h2>Legend</h2>
+                <p>The map legend is located in the bottom right corner of the map. Click <strong> LEGEND </strong> to
+                    toggle
+                    the legend open/closed.
+                </p>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_legend.png" />
+                </br>
+                </br>
+                <hr />
+                <h2>Basemaps</h2>
+                <p>A number of basemap options are available. Click the basemap button <img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_btn_basemap.png" />
+                    in the lower left corner of the map to open the basemap options. Click any of the options to change
+                    the basemap.
+                </p>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_basemap.png" />
+                </br>
+                <hr />
+            </div>
+            <!-- MAP CLUSTERS  (MAP)-->
+            <div class="tab-pane fade" id="mapclusters">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#maplayers" onClick="resetMenu('#maplayers')" data-toggle="tab">&larr;
+                            Previous Section <b>"Map Layers"</b></a></li>
+                    <li class="next"><a href="#mapwalkshed" onClick="resetMenu('#mapwalkshed')" data-toggle="tab">Next
+                            Section <b>"Walkshed Tool"</b> &rarr;</a></li>
+                </ul>
+                <h2>Map Clusters</h2>
+                <table>
+                    <tr>
+                        <td colspan="3">Project locations are clustered by administrative boundaries. Each cluster
+                            contains a number representing
+                            the amount of project locations within that administrative boundary feature. Hovering over
+                            a
+                            cluster will reveal a popup containing additional information about the contents of the
+                            project
+                            cluster. As you zoom into the map, the administrative boundaries will automatically update
+                            to
+                            reflect the next administrative boundary level.</td>
+                    </tr>
+                    <tr class="theme ethaim">
+                        <td> <img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_clusters_1.png" /></td>
+                        <td> <img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_clusters_2.png" /></td>
+                        <td> <img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_clusters_3.png" /></td>
+                    </tr>
+                    <tr class="theme tanaim">
+                        <td> <img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_clusters_1.png" /></td>
+                        <td> <img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_clusters_2.png" /></td>
+                    </tr>
+                    <tr class="theme ethaim">
+                        <td colspan="2">Clusters can be viewed by either the UNOCHA administrative boundries or the
+                            Agricultural Commercialization
+                            Clusters (ACC) boundaries. To change the boundaries use the <strong> View clusters by</strong>
+                            menu in the bottom right corner of the map.
+                        </td>
+                        <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_cluster_menu.png" /></td>
+                    </tr>
+                </table>
+                <hr />
+                <h2>Selecting Clusters</h2>
+                <table>
+                    <tr>
+                        <td colspan="2"><img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_cluster_select.png" /></td>
+                        <td>
+                            <p>To view a listing of projects for a given map cluster, click on a cluster. This will
+                                select and
+                                highlight in yellow the cluster and administrative boundary, for which the cluster
+                                represents.
+                                The <strong> Info Panel </strong> on the right will open and list the project titles
+                                that
+                                have a location in the selected administrative boundry feature.</p>
+                            <p>The <strong> Info Panel </strong> can be closed by clicking on the <i class="fa fa-times fa-lg"
+                                    aria-hidden="true"></i> in the upper right corner of the panel. The panel can also
+                                be opened
+                                or closed by clicking on the Info Panel tab.
+                                <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_info_tab.png" /></p>
+                        </td>
+                    </tr>
+                </table>
+                <hr />
+                <h2>Info Panel</h2>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <p>To view the details of a project, click on the project title listed in the <strong> Info
+                                    Panel </strong>.
+                                This will open the project's details.</p>
+                            <p>To navigate through the projects from the details, use the navigation toolbar at the top
+                                of the
+                                <strong> Info Panel </strong>. To go to the previous project in the list, click on the
+                                left
+                                arrow
+                                <i class="fa fa-chevron-left"></i>. To navigate to the next project in the list, click
+                                on
+                                the right arrow <i class="fa fa-chevron-right"></i>. The toolbar will inform you how
+                                many
+                                projects are in the selected cluster and which project of the total projects you are
+                                currently
+                                viewing. To return to the listing of projects click on the <strong>BACK TO PROJECT LIST</strong>
+                                button directly below the toolbar.
+                                </br>
+                                </br>
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_info_toolbar.png" /></br>
+                                </br>
+                            </p>
+                            <p>To view the project information scrolling through the information listed on both the
+                                <strong>OVERVIEW</strong> and <strong>LOCATIONS</strong> tabs. To view the full project
+                                details, click on the <strong>VIEW FULL PROJECT DETAILS</strong> button. This will take
+                                you to the <strong>Projects</strong> module and open the detail page
+                                for the selected project.
+                                <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_activities.png" /></br>
+                                </br>
+                            </p>
+                            <p>On the <strong>LOCATIONS</strong> tab, all the locations of the project are listed. You
+                                can view
+                                all the project locations by clicking the <strong><i class="fa fa-eye show-locations"></i>
+                                    Show Locations on Map</strong> link. Locations can be represented by any
+                                administrative boundary level feature. The different
+                                boundary feature levels are shown by the legend.
+                                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_info_legend.png" />
+                            </p>
+                        </td>
+                        <td style="width:320px"><img style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_info_detail.png" /></td>
+                    </tr>
+                </table>
+                <hr />
+            </div>
+            <!-- WALKSHED  (MAP)-->
+            <div class="tab-pane fade" id="mapwalkshed">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapclusters" onClick="resetMenu('#mapclusters')" data-toggle="tab">&larr;
+                            Previous Section <b>"Map Clusters"</b></a></li>
+                    <li class="next"><a href="#mapexport" onClick="resetMenu('#mapexport')" data-toggle="tab">Next
+                            Section <b>"Export Data"</b> &rarr;</a></li>
+                </ul>
+                <h2>Walkshed Tool</h2>
+                <p>The Walkshed Tool creates a visual representation of travel time for various modes of travel, while
+                    providing
+                    information available in each travel area within a 0-8 hours distance. Click on the <strong>Walkshed
+                        Tool</strong> tab
+                    <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_walkshed_tab.png" />
+                    on the right hand side of the application, to open the tool panel. </p>
+                <img class="center-img" style="max-width:70%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_walkshed.png" /><br />
+                <p>Toggle the switch on the panel to turn the tool on and off. When the walkshed tool is active, the
+                    map pointer
+                    will change
+                    <img class="align-bottom" style="max-width:15px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/icon_pin.png" />
+                    indicating the tool is active. Click anywhere on the map to generate travel time
+                    isochrones and data. Change the mode of travel using the dropdown list. Each tab contains data
+                    specific
+                    to the travel time isochron.
+                </p>
+                <hr />
+            </div>
+            <!-- EXPORT  (MAP)-->
+            <div class="tab-pane fade" id="mapexport">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapwalkshed" onClick="resetMenu('#mapwalkshed')" data-toggle="tab">&larr;
+                            Previous Section <b>"Walkshed Tool"</b></a></li>
+                    <li class="next theme tanaim"><a href="#plintro" onClick="resetMenu('#plintro')" data-toggle="tab">Next
+                            Topic <b>"Partnerlink"</b> &rarr;</a></li>
+                    <li class="next theme ethaim role administrator super"><a href="#adminintro" onClick="resetMenu('#adminintro')"
+                            data-toggle="tab">Next Topic <b>"Administrative Console"</b> &rarr;</a></li>
+                    <li class="next theme ethaim role editor"><a href="#editorintro" onClick="resetMenu('#editorintro')"
+                            data-toggle="tab">Next Topic <b>"Editor"</b> &rarr;</a></li>
+                </ul>
+                <h2>Export</h2>
+                <p>Export the projects shown on the map as a <a href="https://en.wikipedia.org/wiki/Comma-separated_values"
+                        target="blank">CSV</a> by clicking on the export button <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_btn_export.png" />
+                    in the upper right hand corner of the application. A popup module will appear with the export
+                    options:<br /><br />
+                    <img class="center-img" style="max-width:60%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/map_export_popup.png" /></p>
+                <hr />
+            </div>
+            <!-- INTRODUCTION  (PARTNERLINK)-->
+            <div class="tab-pane fade" id="plintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#mapintro" onClick="resetMenu('#mapintro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Map"</b></a></li>
+                    <li class="next"><a href="#adminintro" onClick="resetMenu('#adminintro')" data-toggle="tab">Next
+                            Topic <b>"Administrative Console"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_partnerlink.png" />
+                <h2 class="header-with-button">Partnerlink</h2>
+                <h4 class="text-warning">Currently under development</h4>
+                </br>
+                </br>
+            </div>
+            <!-- INTRODUCTION (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="adminintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous theme tanaim"><a href="#plintro" onClick="resetMenu('#plintro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Partnerlink"</b></a></li>
+                    <li class="previous theme ethaim"><a href="#mapintro" onClick="resetMenu('#mapintro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Map"</b></a></li>
+                    <li class="next"><a href="#adminsearch" onClick="resetMenu('#adminsearch')" data-toggle="tab">Next
+                            Section <b>"Seach"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_admin.png" />
+                <h2 class="header-with-button">Administrative Console</h2>
+                </br>
+                <p>
+                    The administrator console provides the ability to manage user access and permissions and perform
+                    routine data management
+                    tasks. You can get to this module by clicking on the <strong>Admin</strong> button
+                    in the left navigation bar. This feature requires a login with appropriate rights. See the <strong>Gaining
+                        Access</strong> section under <strong>Getting Started</strong> for more information on how to
+                    login.
+                </p>
+                <p>
+                    Initially upon entering the administrative console, the user is presented with a listing of all
+                    users.
+                </p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_list.png" />
+            </div>
+            <!-- SEARCH (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="adminsearch">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#adminintro" onClick="resetMenu('#adminintro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction to the Administrative Console"</b></a></li>
+                    <li class="next"><a href="#admininfo" onClick="resetMenu('#admininfo')" data-toggle="tab">Next
+                            Section <b>"User Information"</b> &rarr;</a></li>
+                </ul>
+                <h2>Search</h2>
+                </br>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_search.png" />
+                </br>
+                <p>The user list can be searched or filtered by typing in the <strong>search</strong> input. The user
+                    list will
+                    be filtered to include <strong>only</strong> those users that have the search text in the username,
+                    first
+                    name, last name, organization, email or role. To remove the filter, delete all text in the search
+                    input.
+                </p>
+                <hr />
+            </div>
+            <!-- USER INFO (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="admininfo">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#adminsearch" onClick="resetMenu('#adminsearch')" data-toggle="tab">&larr;
+                            Previous Section <b>"Search"</b></a></li>
+                    <li class="next"><a href="#adminedit" onClick="resetMenu('#adminedit')" data-toggle="tab">Next
+                            Section <b>"Editing a User"</b> &rarr;</a></li>
+                </ul>
+                <h2>User Information</h2>
+                Each user listed in the user list has a set of information associated to it.</br>
+                </br>
+                <table class="table table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><strong>First Name</strong></td>
+                            <td> the first name of the user, this is required information when editing or adding new
+                                users.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Name</strong></td>
+                            <td> the last name of the user, this is required information when editing or adding new
+                                users.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td> the user's email, this is required information when editing or adding new users. The
+                                email address
+                                is used to email the user when a new account is created or when their password has be
+                                updated.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Organization</strong></td>
+                            <td> the organization in which the user belongs to, this is required information when
+                                editing or adding
+                                a new user.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Role</strong></td>
+                            <td> the user's role in the application, which grants them privileges to features and
+                                functionality.
+                                This is required information when editing or creating new user. Below is a description
+                                of
+                                the four available roles and their privileges:
+                                <table class="table  table-sm table-no-boarder">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Reader</strong></td>
+                                            <td> role allows users only read access to the application and its data.
+                                                Reader role
+                                                does not have access to the Editor or Admin pages. If the application
+                                                is
+                                                open to the public then this role has no value for a user. </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Editor</strong></td>
+                                            <td> role allows users access to the editor page, where user can edit or
+                                                delete only
+                                                those projects he/she has been granted permission to and add new
+                                                projects.
+                                                See the section on this page about editing a user's permissions for how
+                                                to
+                                                grant an Editor permissions to a project. </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Administrator</strong></td>
+                                            <td> role allows users access to the editor page and the administrative
+                                                page. User
+                                                can edit any project, add new projects and delete any project. User can
+                                                edit
+                                                user information, add new users and delete users. </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Super</strong></td>
+                                            <td> role allows access to all areas of the application with no exclusions
+                                                to any
+                                                functionality. </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Login</strong></td>
+                            <td> shows the last day and time the user logged in to the application. The message "User
+                                has never
+                                logged in" will show in place of a date if the user has never logged into the
+                                application.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Permissions</strong></td>
+                            <td> shows a summary of the user's permissions based on their assigned role.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+            </div>
+            <!-- EDIT (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="adminedit">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#admininfo" onClick="resetMenu('#admininfo')" data-toggle="tab">&larr;
+                            Previous Section <b>"User Information"</b></a></li>
+                    <li class="next"><a href="#admincreate" onClick="resetMenu('#admincreate')" data-toggle="tab">Next
+                            Section <b>"Creating a User"</b> &rarr;</a></li>
+                </ul>
+                <h2>Editing A User</h2>
+                To edit a user's information, permissions, role or password, first click on the edit button
+                <img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_edit.png" />
+                to the right of the user you want to edit. Once you have clicked on the edit button it will put the
+                user
+                record in edit mode, as seen in the below image. The user information is now editable. The only element
+                that
+                is not editable is the username.
+                </br>
+                </br>
+                </br>
+                <img class="center-img" style="max-width:100%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_edit_mode.png" />
+                <hr />
+                <div class="indent">
+                    <h3>Edit User Form</h3>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><strong>First Name</strong></td>
+                                <td> Edit the first name by clicking into the textbox and making desired adjustments.
+                                    This is
+                                    a required field, and therefore must have a value. When no value is provided the
+                                    text
+                                    box will be underlined in <strong><span style="color:red">red</span></strong>
+                                    indicating
+                                    an error.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Last Name</strong></td>
+                                <td> Edit the last name by clicking into the textbox and making desired adjustments.
+                                    This is a
+                                    required field, and therefore must have a value. When no value is provided the text
+                                    box
+                                    will be underlined in <strong><span style="color:red">red</span></strong>
+                                    indicating
+                                    an error.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email</strong></td>
+                                <td> Edit the email by clicking into the textbox and making desired adjustments. This
+                                    is a required
+                                    field, and therefore must have a value. When no value is provided the text box will
+                                    be
+                                    underlined in <strong><span style="color:red">red</span></strong> indicating an
+                                    error.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Organization</strong></td>
+                                <td> Edit the organization by clicking on the organization name. This will open the
+                                    Organization
+                                    List dialog. The common organizations will be listed in the dialog initially. If
+                                    the
+                                    desired organization is not listed, you can click the Load More Organization button
+                                    to
+                                    load all the organizations. Select the desired organization then click the Save
+                                    Changes
+                                    button to save the selection and close the dialog. To close the dialog will out
+                                    changing
+                                    the organization, click the Close button.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Role</strong></td>
+                                <td> to edit a user's role, click the role dropdown list.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <h3>Edit Mode Buttons</h3>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_password.png" /></td>
+                                <td><strong>Reset Password</strong></td>
+                                <td>Reset a user's password and send an email to notify them that their credentials
+                                    have changed.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_save.png" /></td>
+                                <td><strong>Save</strong></td>
+                                <td>Save changes made to the user's information.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_delete.png" /></td>
+                                <td><strong>Delete User</strong></td>
+                                <td>Delete a user and revoke access to the application.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_cancel.png" /></td>
+                                <td><strong>Cancel</strong></td>
+                                <td>Cancel changes made to the user's record and reload.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_edit.png" /></td>
+                                <td><strong>Edit User</strong></td>
+                                <td>Activate the edit mode for a user record.</td>
+                            </tr>
+                            <tr class="theme ethaim">
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_btn_permissions.png" /></td>
+                                <td><strong>Permissions</strong></td>
+                                <td>Edit a user's ability to edit projects either by selecting individual projects or
+                                    by selecting
+                                    a taxonomy classification. Permissions only apply the Editor role. </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+            </div>
+            <!-- CREATE (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="admincreate">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#adminedit" onClick="resetMenu('#adminedit')" data-toggle="tab">&larr;
+                            Previous Section <b>"Editing a User"</b></a></li>
+                    <li class="next role super"><a href="#adminviews" onClick="resetMenu('#adminviews')" data-toggle="tab">Next
+                            Section <b>"Refresh Views"</b> &rarr;</a></li>
+                    <li class="next role administrator"><a href="#editorintro" onClick="resetMenu('#editorintro')"
+                            data-toggle="tab">Next Topic <b>"Editor"</b> &rarr;</a></li>
+                </ul>
+                <h2>Creating A User</h2>
+                To add a new user to the application, click on the CREATE NEW USER button
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_create_user.png" />
+                </br>
+                </br>
+                Fill out the new user information in the form. Once created, the user will receive an email
+                notification with their credentials:</br>
+                </br>
+                <img class="center-img" style="max-width:50%; padding-right: 190px;" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_user_form.png" />
+                <hr />
+            </div>
+            <!-- REFRESH VIEWS (ADMINISTRATOR CONSOLE)-->
+            <div class="tab-pane fade" id="adminviews">
+                <div class="role super">
+                    <ul class="pager breadcrumbs">
+                        <li class="previous"><a href="#admincreate" onClick="resetMenu('#admincreate')" data-toggle="tab">&larr;
+                                Previous Section <b>"Creating a User"</b></a></li>
+                        <li class="next"><a href="#editorintro" onClick="resetMenu('#editorintro')" data-toggle="tab">Next
+                                Topic <b>"Editor"</b> &rarr;</a></li>
+                    </ul>
+                    <h2>Refresh Views</h2>
+                    <p>There are several materialized views in the database that support a variety of features in the
+                        application
+                        that need to be updated after data has been edited. This process can take up to 25 minutes and
+                        may
+                        cause application errors or reduce performance will running. This should be executed during low
+                        usage
+                        times.
+                    </p>
+                    <img style="max-width:50%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/admin_refresh_views.png" />
+                </div>
+            </div>
+            <!-- INTRODUCTION (EDITOR)-->
+            <div class="tab-pane fade" id="editorintro">
+                <ul class="pager breadcrumbs">
+                    <li class="previous role administrator super"><a href="#adminintro" onClick="resetMenu('#adminintro')"
+                            data-toggle="tab">&larr; Previous Topic <b>"Administrative Console"</b></a></li>
+                    <li class="previous role editor"><a href="#mapintro" onClick="resetMenu('#mapintro')" data-toggle="tab">&larr;
+                            Previous Topic <b>"Map"</b></a></li>
+                    <li class="next"><a href="#editor" onClick="resetMenu('#editor')" data-toggle="tab">Next Section <b>"Project
+                                Editor"</b> &rarr;</a></li>
+                </ul>
+                <img class="navigation-button-header" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_editor.png" />
+                <h2 class="header-with-button">Editor Module</h2>
+                </br>
+                <p>
+                    The editor module provides the ability to create new projects, edit existing project information or
+                    delete projects. You
+                    can get to this module by clicking on the <strong>Editor</strong> button in the left
+                    navigation bar. This feature requires a login with appropriate rights. See the <strong>Gaining
+                        Access</strong> section under <strong>Getting Started</strong> for more information on how to
+                    login.
+                </p>
+                <p>
+                    Initially upon entering the editor module, the user is presented with a listing of projects in
+                    which they have permissions
+                    to edit.
+                </p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_page.png" />
+            </div>
+            <!-- PROJECT EDITOR (EDITOR)-->
+            <div class="tab-pane fade" id="editor">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editorintro" onClick="resetMenu('#editorintro')" data-toggle="tab">&larr;
+                            Previous Section <b>"Introduction to the Editor Module"</b></a></li>
+                    <li class="next"><a href="#editorinfo" onClick="resetMenu('#editorinfo')" data-toggle="tab">Next
+                            Section <b>"Record Information"</b> &rarr;</a></li>
+                </ul>
+                <h2>Project Editor</h2>
+                <p>There are multiple ways to select a project to edit:
+                    <ul>
+                        <li>Select a project from list in the Editor Module <img style="max-width: 40px;vertical-align: middle;"
+                                src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_editor.png" /></li>
+                        <li>Clicking on edit icon <i class="material-icons ng-scope">mode_edit</i> in the <strong>Project
+                                Details</strong> of the Projects module <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_activities.png" /></li>
+                        <li>Clicking on edit icon <i class="material-icons ng-scope">mode_edit</i> in the <strong>Info
+                                Panel</strong> of the Map module <img class="navigation-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/btn_map.png" /></li>
+                    </ul>
+                    Once a project is selected it is loaded into the project edit page of the Editor module: </br>
+                    </br>
+                    <img class="center-img role super administrator" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_details.png" />
+                    <img class="center-img role editor" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_details_editorrole.png" />
+                </p>
+                <div class="indent">
+                    <h3>Edit Mode Buttons</h3>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_create.png" /></td>
+                                <td><strong>Create New Project</strong></td>
+                                <td>Create a new project.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_save.png" /></td>
+                                <td><strong>Save Changes</strong></td>
+                                <td>Save changes made to the project record.</td>
+                            </tr>
+                            <tr class="role super administrator">
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_delete.png" /></td>
+                                <td><strong>Delete Project</strong></td>
+                                <td>Delete a project.</td>
+                            </tr>
+                            <tr>
+                                <td><img class="circle-button" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_cancel.png" /></td>
+                                <td><strong>Cancel</strong></td>
+                                <td>Cancel changes made a project and reload.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+            </div>
+            <!-- RECORD INFORMATION (EDITOR)-->
+            <div class="tab-pane fade" id="editorinfo">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editor" onClick="resetMenu('#editor')" data-toggle="tab">&larr;
+                            Previous Section <b>"Project Editor"</b></a></li>
+                    <li class="next"><a href="#editoractivity" onClick="resetMenu('#editoractivity')" data-toggle="tab">Next
+                            Section <b>"Project Tab"</b> &rarr;</a></li>
+                </ul>
+                <h2>Record Information</h2>
+                <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_record_info.png" />
+                <p>The project record information is available at the top of the page. These fields are not editable.
+                </p>
+                <table class="table table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><strong>PMT ID</strong></td>
+                            <td>The unique id for the record assigned by the PMT system.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Edited On</strong></td>
+                            <td>The date the project was last edited.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Edited By</strong></td>
+                            <td>The username of the user who last edited the project.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Created On</strong></td>
+                            <td>The date the project was created in the PMT.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Created By</strong></td>
+                            <td>The username of the user who created the project (Database Administrator means the
+                                record loaded
+                                directly into the database).</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+            </div>
+            <!-- PROJECT TAB (EDITOR)-->
+            <div class="tab-pane fade" id="editoractivity">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editorinfo" onClick="resetMenu('#editorinfo')" data-toggle="tab">&larr;
+                            Previous Section <b>"Record Information"</b></a></li>
+                    <li class="next"><a href="#editortaxonomy" onClick="resetMenu('#editortaxonomy')" data-toggle="tab">Next
+                            Section <b>"Taxonomies Tab"</b> &rarr;</a></li>
+                </ul>
+                <h2>Project Tab</h2>
+                <p>The project tab contains general project information. </p>
+                <table class="table table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><strong>Project Title</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td> The title of the project. This value will be used as the main identifier for the
+                                project throughout
+                                the application.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Project Status</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The current status of a project. Used to filter projects in multiple modules (filter
+                                named -
+                                Activity Status). Click the dropdown to select the available options.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start Date</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The date the project started or is planning to start. This information is used filter
+                                projects
+                                by date in multiple modules. Click the calendar icon <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/calendar_icon.png" />
+                                to select a date or enter a date in the MM/DD/YYYY format in the textbox.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>End Date</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The date the project ended or is planning to end. This information is used filter
+                                projects by
+                                date in multiple modules. Click the calendar icon <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/calendar_icon.png" />
+                                to select a date or enter a date in the MM/DD/YYYY format in the textbox.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Description</strong></td>
+                            <td></td>
+                            <td>A detailed description of the project's purpose, objective and/or activities.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i> Denotes that a field is required.</p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_project.png" />
+                <hr />
+            </div>
+            <!-- TAXONOMIES TAB (EDITOR)-->
+            <div class="tab-pane fade" id="editortaxonomy">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editoractivity" onClick="resetMenu('#editoractivity')" data-toggle="tab">&larr;
+                            Previous Section <b>"Project Tab"</b></a></li>
+                    <li class="next"><a href="#editorfinancial" onClick="resetMenu('#editorfinancial')" data-toggle="tab">Next
+                            Section <b>"Financials Tab"</b> &rarr;</a></li>
+                </ul>
+                <h2>Taxonomies Tab</h2>
+                <p>The taxonomies tab contains all available taxonomies that can be associated to a project. Taxonomies
+                    are
+                    used to classify project and are used as filters in multiple modules. </p>
+                <table class="table table-sm table-no-boarder theme ethaim" style="max-width:50%">
+                    <tbody>
+                        <tr>
+                            <td><strong>Program</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The Program in which the project belongs to.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thematic Area</strong></td>
+                            <td></td>
+                            <td>The specific focus of the project.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Crops</strong></td>
+                            <td></td>
+                            <td>Crops associated with the project.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Livestock</strong></td>
+                            <td></td>
+                            <td>Livestock associated with the project.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Women in Development</strong></td>
+                            <td></td>
+                            <td>Project includes women in development.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sector</strong></td>
+                            <td></td>
+                            <td>The sector(s) the project is associated to.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i> Denotes that a field is required.</p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_taxonomy.png" />
+                <hr />
+            </div>
+            <!-- FINANCIALS TAB (EDITOR)-->
+            <div class="tab-pane fade" id="editorfinancial">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editortaxonomy" onClick="resetMenu('#editortaxonomy')" data-toggle="tab">&larr;
+                            Previous Section <b>"Taxonomies Tab"</b></a></li>
+                    <li class="next"><a href="#editororganization" onClick="resetMenu('#editororganization')"
+                            data-toggle="tab">Next Section <b>"Organizations Tab"</b> &rarr;</a></li>
+                </ul>
+                <h2>Financials Tab</h2>
+                <p>The financial tab contains all the disbursements of money in USD that finance the project. There can
+                    be one
+                    or more financial disbursements for a project. It is required to include at least <strong> ONE
+                    </strong> financial record.
+                </p>
+                <table class="table table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><strong>Amount</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The amount of money disbursed for the project in USD.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start Date</strong></td>
+                            <td></td>
+                            <td>The exact date of the planned disbursement OR the starting date of the period in which
+                                this specific
+                                disbursement will be made. Click the calendar icon <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/calendar_icon.png" />
+                                to select a date or enter a date in the MM/DD/YYYY format in the textbox.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>End Date</strong></td>
+                            <td></td>
+                            <td>The ending date for the period in which this specific disbursement will be made. Click
+                                the calendar
+                                icon <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/calendar_icon.png" />
+                                to select a date or enter a date in the MM/DD/YYYY format in the textbox.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Provider</strong></td>
+                            <td></td>
+                            <td>The organization providing the funds. If amount has more than one funder, leave blank.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recipient</strong></td>
+                            <td></td>
+                            <td>The organization receiving the funds. If amount has more than one receiver, leave
+                                blank.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Category</strong></td>
+                            <td></td>
+                            <td>The type of funding received.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transaction Type</strong></td>
+                            <td></td>
+                            <td>The type of funding transaction.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i> Denotes that a field is required.</p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_financial.png" />
+                <div class="indent">
+                    <h3>Selecting an Organization</h3>
+                    <table>
+                        <tr>
+                            <td><img class="center-img" style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_org_list.png" /></td>
+                            <td>
+                                <p>To select an organization for either the <strong>Provider</strong> or the <strong>Recipient</strong>,
+                                    click the field to open the organization list.</p>
+                                <p>The organization list can be searched or filtered by typing in the <strong>Search
+                                        organizations</strong> input. The organization list will be filtered to include
+                                    <strong>only</strong> those
+                                    organizations that have the search text in the name. To remove the filter, delete
+                                    all
+                                    text in the search input.
+                                </p>
+                                <p>By default the list of organizations is limited to those that are in-use. To load
+                                    all the
+                                    organizations in the database, click the <strong>LOAD ALL ORGANIZATIONS</strong>
+                                    button.
+                                </p>
+                                <p>Save your selection by clicking the <strong>SAVE CHANGES</strong> button.
+                                </p>
+                                <p>To close the Organization List without saving your selection, click the <strong>CLOSE</strong>
+                                    button or the
+                                    <i class="material-icons align-bottom">close</i> in the upper right corner of the
+                                    popup.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <h3>Adding/Deleting Financial Records</h3>
+                    <p>Delete financial record <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_delete.png" /></p>
+                    <p>Create a new financial record <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_financial.png" /></p>
+                </div>
+                <hr />
+            </div>
+            <!-- ORGANIZATION TAB (EDITOR)-->
+            <div class="tab-pane fade" id="editororganization">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editorfinancial" onClick="resetMenu('#editorfinancial')" data-toggle="tab">&larr;
+                            Previous Section <b>"Financials Tab"</b></a></li>
+                    <li class="next"><a href="#editorlocation" onClick="resetMenu('#editorlocation')" data-toggle="tab">Next
+                            Section <b>"Locations Tab"</b> &rarr;</a></li>
+                </ul>
+                <h2>Organization Tab</h2>
+                <p>The organization tab contains all the organizations participating in the project and their roles.
+                    There can
+                    be one or more organizations for a project. It is required that there is at least <strong> ONE
+                        FUNDING </strong> organization identified.
+                </p>
+                <table class="table table-sm table-no-boarder">
+                    <tbody>
+                        <tr>
+                            <td><strong>Organization</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The organization participating in the project.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Role</strong></td>
+                            <td><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i></td>
+                            <td>The organization's role in the project:
+                                <table class="table table-sm table-no-boarder">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Funding</strong></td>
+                                            <td>The government or organization which provides funds to the project.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Accountable</strong></td>
+                                            <td>An organization responsible for oversight of the project and its
+                                                outcomes.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Implementing</strong></td>
+                                            <td>The organization that physically carries out the project or
+                                                intervention.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><i class="fa fa-exclamation-triangle red" aria-hidden="true"></i> Denotes that a field is required.</p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_orgs.png" />
+                <div class="indent">
+                    <h3>Selecting an Organization</h3>
+                    <table>
+                        <tr>
+                            <td><img class="center-img" style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_org_list.png" /></td>
+                            <td>
+                                <p>To select an organization, click on the organization field to open the organization
+                                    list.</p>
+                                <p>The organization list can be searched or filtered by typing in the <strong>Search
+                                        organizations</strong> input. The organization list will be filtered to include
+                                    <strong>only</strong> those
+                                    organizations that have the search text in the name. To remove the filter, delete
+                                    all
+                                    text in the search input.
+                                </p>
+                                <p>By default the list of organizations is limited to those that are in-use. To load
+                                    all the
+                                    organizations in the database, click the <strong>LOAD ALL ORGANIZATIONS</strong>
+                                    button.
+                                </p>
+                                <p>Save your selection by clicking the <strong>SAVE CHANGES</strong> button.
+                                </p>
+                                <p>To close the Organization List without saving your selection, click the <strong>CLOSE</strong>
+                                    button or the
+                                    <i class="material-icons align-bottom">close</i> in the upper right corner of the
+                                    popup.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <h3>Adding/Deleting Organization Records</h3>
+                    <p>Delete an organization record <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_delete.png" /></p>
+                    <p>Create a new organization record <img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_orgs.png" /></p>
+                </div>
+                <hr />
+            </div>
+            <!-- LOCATIONS TAB (EDITOR)-->
+            <div class="tab-pane fade" id="editorlocation">
+                <ul class="pager breadcrumbs">
+                    <li class="previous"><a href="#editororganization" onClick="resetMenu('#editororganization')"
+                            data-toggle="tab">&larr; Previous Section <b>"Organizations Tab"</b></a></li>
+                </ul>
+                <h2>Locations Tab</h2>
+                <p>The locations tab contains all the locations associated to a project. There can be one or more
+                    locations
+                    for a project. It is required that there is at least <strong> ONE </strong> location.
+                </p>
+                <img class="center-img" style="max-width:80%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_locations.png" />
+                <div class="indent">
+                    <h3>Editing Locations</h3>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin1.png" /></td>
+                                <td>
+                                    To add a <strong>Region</strong> to the project click the add button <i class="material-icons align-bottom">add_circle</i>
+                                    to open the <strong>ADD REGIONS</strong> popup. To remove a region location, click
+                                    the
+                                    delete <i class="material-icons align-bottom">delete_forever</i> icon adjacent to
+                                    the
+                                    region.
+                                    <br /><br />
+                                    <img style="max-width:50%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin1_popup.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin2.png" /></td>
+                                <td>
+                                    To add a <strong>Zone</strong> to the project click the add button <i class="material-icons align-bottom">add_circle</i>
+                                    to open the <strong>ADD ZONES</strong> popup. Zones are organized by their
+                                    respective
+                                    Regions. To remove a zone location, click the delete <i class="material-icons align-bottom">delete_forever</i>
+                                    icon adjacent to the zone.
+                                    <br /><br />
+                                    <img style="max-width:50%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin2_popup.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin3.png" /></td>
+                                <td>
+                                    To add a <strong>Woreda</strong> to the project click the add button <i class="material-icons align-bottom">add_circle</i>
+                                    to open the <strong>ADD WOREDAS</strong> popup. To filter the woredas, use the
+                                    dropdown
+                                    lists at the top of the window to filter the list to Region and Zone. To remove a
+                                    woreda
+                                    location, click the delete <i class="material-icons align-bottom">delete_forever</i>
+                                    icon adjacent to the woreda.
+                                    <br /><br />
+                                    <img style="max-width:50%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin3_popup.png" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <h3>National Projects</h3>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><img src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin0.png" /></td>
+                                <td>
+                                    To set a project as a national project, click the flag <i class="material-icons align-bottom">flag</i>.
+                                    The project location will then be set to <strong>National</strong>. A project can
+                                    <strong>NOT</strong> have other locations if set to national. To remove a national
+                                    project location, click
+                                    the delete <i class="material-icons align-bottom">delete_forever</i> icon. <br /><br />
+                                    <img style="max-width:50%" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_national.png" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <h3>Highlighting Locations</h3>
+                    <p>Click the highlight icon <i class="material-icons align-bottom">wb_sunny</i> adjacent to any
+                        location
+                        to toggle the location's highlight on and off. Use the <img style="max-width: 133px;" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_btn_highlight.png" />
+                        button in the upper right corner of the map to remove all highlighted locations.</p>
+                    <table class="table table-sm table-no-boarder">
+                        <tbody>
+                            <tr>
+                                <td><img class="center-img" style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin1_highlight.png" /></td>
+                                <td><img class="center-img" style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin2_highlight.png" /></td>
+                                <td><img class="center-img" style="max-width:100%; padding:10px" src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/theme/edit_admin3_highlight.png" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var QueryString = function () {
+            // This function is anonymous, is executed immediately and 
+            // the return value is assigned to QueryString!
+            var query_string = {};
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                // If first entry with this name
+                if (typeof query_string[pair[0]] === "undefined") {
+                    query_string[pair[0]] = decodeURIComponent(pair[1]);
+                    // If second entry with this name
+                } else if (typeof query_string[pair[0]] === "string") {
+                    var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+                    query_string[pair[0]] = arr;
+                    // If third or later entry with this name
+                } else {
+                    query_string[pair[0]].push(decodeURIComponent(pair[1]));
+                }
+            }
+            return query_string;
+        }();
+
+        function setTheme() {
+            // loop through all images and replace text "theme" with the theme name (i.e. tanaim, ethaim)
+            // allows customization of images for themes
+            $('img').each(function () {
+                $(this).attr('src', $(this).attr('src').replace('theme', QueryString.theme.toLowerCase()));
+            });
+            // loop through all elements with the class "theme" and show all matching themes
+            $('.theme').each(function (i, obj) {
+                if ($(this).hasClass(QueryString.theme.toLowerCase())) {
+                    $(this).removeClass("theme");
+                }
+            });
+        }
+        setTheme();
+
+        function setRole() {
+            // loop through all elements with the class "role" and show all matching themes
+            $('.role').each(function (i, obj) {
+                if ($(this).hasClass(QueryString.role.toLowerCase())) {
+                    $(this).removeClass("role");
+                }
+            });
+        }
+        setRole();
+
+        function setPage() {
+            if (QueryString.page) {
+                resetMenu(QueryString.page);
+            }
+        }
+        setPage();
+
+        function resetMenu(option) {
+            $('#menu li').removeClass('active');
+            $('.tab-pane').removeClass('active in');
+            $('a[href="' + option + '"]').parent().addClass('active');
+            $(option).addClass('active in');
+        }
+    </script>
+</body>
+
+</html>

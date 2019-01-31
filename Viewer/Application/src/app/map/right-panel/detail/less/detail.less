@@ -1,0 +1,460 @@
+﻿// detail feature
+#map-detail {
+    font-family: @reg-font-family;
+    // top menu bar (navigation and close)
+    .top-menu {
+        background: #dddddc;
+        height: 25px;
+        //navigation menu
+        .nav-menu {
+            width: 175px;
+            display: inline-block;
+
+            .arrow-box {
+                background-color: #cecece;
+                width: 25px;
+                height: 25px;
+                float: left;
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 1px;
+
+                i {
+                    text-align: center;
+                    float: left;
+                    color: #3b3a3e;
+                    margin: 5px 0 0 7px;
+                }
+            }
+
+            .nav-label {
+                margin: 5px 0 0 10px;
+                font-weight: 300;
+                font-size: 12px;
+                text-align: center;
+                float: left;
+                display: inline-block;
+                text-transform: capitalize;
+            }
+        }
+        // close button
+        .close-button {
+            float: right;
+            margin: 2px 10px 0 0;
+        }
+    }
+    // notification when no details are present
+    .notification {
+        font-size: 12pt;
+        font-weight: 600;
+        margin: 40px 10px;
+    }
+    // loading animation
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+    // list of activities based on user selection
+    .activity-menu {
+        margin: 15px;
+        height: 100%;
+        // menu header (activity count)
+        .menu-header {
+            margin: 7px 0 20px 0;
+            text-transform: capitalize;
+        }
+        // menu option (single activity)
+        .menu-option {
+            font-family: @title-font-family;
+            font-size: 13px;
+            border-bottom: solid 1px #d1d1d3;
+            margin: 16px 0;
+            color: @link-color;
+            line-height: 17px;
+            cursor: pointer;
+            padding-bottom: 5px;
+            .arrow {
+                border: 1px solid @secondary-grey;
+                font-size: 18px;
+                vertical-align: bottom;
+                margin-right: 5px;
+                display: inline-block;
+            }
+            .parent-activity {
+                display: inline-block;
+            }
+            .child-activity {
+                padding: 10px 0 10px 28px;
+            }
+        }
+    }
+    // activity detail (selected activity from menu)
+    .activity-detail {
+        background-color: #f2f2f2;
+        // activity header
+        .header {
+            color: #4f4f4f;
+            line-height: 23px;
+            font-family: @title-font-family;
+            font-size: 15px;
+            padding: 7px 15px 0 15px;
+            .back-button {
+                .pmt-back-button;
+                margin: 5px 0;
+                background-color: #e5e5e5;
+                padding: 0 5px;
+                i {
+                    font-size: 16px;
+                    vertical-align: middle;
+                }
+            }
+            .back-button:hover{
+                background-color: #d9d7d7;
+            }
+            //title
+            .title {
+                .pmt-h2;
+            }
+            // activity description
+            .description {
+                .pmt-h3;
+                max-height: 120px;
+                overflow-y: auto;
+                background-color: transparent;
+                margin-top: 5px;
+                font-size: 13px;
+            }
+            .show-full-details {
+                .pmt-back-button;
+                margin: 5px 0;
+                padding: 0;
+                background-color: #e5e5e5;
+                padding: 0 5px;
+            }
+            .show-full-details:hover{
+                background-color: #d9d7d7;
+            }
+        }
+        // activity detail tabs
+        .detail-tabs {
+            background-color: #ffffff;
+            // material design content
+            md-content {
+                background-color: transparent !important;
+                // material design tab
+                md-tabs {
+                    md-tabs-wrapper {
+                        background: #ffffff;
+                        border: none;
+                    }
+
+                    md-tabs-canvas {
+                        background-color: #f2f2f2;
+                        // tab ink bar
+                        md-ink-bar {
+                            color: transparent;
+                            background-color: transparent;
+                        }
+                        // detail tabs
+                        .md-tab {
+                            color: #a9a9aa;
+                            border: none;
+                            cursor: pointer;
+                            border-radius: 0;
+                            padding: 13px 3px !important;
+                            text-transform: uppercase;
+                            font-family: @bold-font-family;
+                            font-size: 11px;
+                            background-color: #f2f2f2;
+                            font-weight: bold;
+                        }
+                        // detail tab: active
+                        .md-tab.md-active {
+                            color: @color-button-color;
+                            cursor: pointer;
+                            background-color: #ffffff;
+                        }
+                    }
+                    // tab content
+                    md-content {
+                        background-color: #ffffff !important;
+                        height: 100%;
+                        font-size: 13px;
+                        //section header
+                        .section-header {
+                            border-top: 1px solid @text-color-2;
+                            padding: 5px 0;
+                            border-bottom: 1px solid @text-color-2;
+                            margin-top: 20px;
+                        }
+                        // detail element header
+                        .info-header {
+                            margin: 15px 0 0 0;
+                            color: @text-color-2;
+                            font-size: 12px;
+                            font-family: @bold-font-family;
+                            font-weight: 600;
+                            display: inline-block;
+                            text-transform: capitalize;
+                        }
+                        // detail element header (sub/secondary)
+                        .info-secondary-header {
+                            font-family: @bold-font-family;
+                            line-height: 18px;
+                            font-size: 12px;
+                            color: @text-color-2;
+                        }
+                        // detail element content
+                        .info-content {
+                            line-height: 18px;
+                            font-size: 12px;
+                            color: @text-color-2;
+                            display: inline;
+                        }
+                        //organization tab
+                        .info-content.partner-data {
+                            .link {
+                                padding-top: 10px;
+                                font-family: @title-font-family;
+                                margin-left: 20px;
+                            }
+
+                            .org-details {
+                                margin-left: 40px;
+                                line-height: 1;
+                            }
+                        }
+
+                        .info-content.border-bottom {
+                            border-bottom: 1px solid @element-border-color;
+                            padding-bottom: 5px;
+                        }
+
+                        .info-content.show-on-map {
+                            color: @link-color;
+                            cursor: pointer;
+                            font-family: @bold-font-family;
+                        }
+                        .info-content.show-on-map:hover {
+                            color: #000;
+                        }
+                        // location summary information
+                        .summary-stats {
+                            font-size: 13px;
+                            margin: 16px 0;
+                            text-transform: uppercase;
+                            display: inline-block;
+                            font-family: @title-font-family;
+                        }
+                        // individual-location
+                        .individual-element {
+                            border-bottom: 1px solid @element-border-color;
+                            padding: 10px 0;
+
+                            .info-data {
+                                margin-left: 20px;
+                            }
+                        }
+                        //having a revised date
+                        .strikethru{
+                            background-color: transparent;
+                            text-decoration: line-through;
+                        }
+                        // location legend
+                        .legend {
+                            display: inline-block;
+                            border: 1px solid @element-border-color;
+                            padding: 5px 0 2px 15px;
+                            float: right;
+                            margin-top: -5px;
+                            font-size: 12px;
+
+                            .key {
+                                width: 7px;
+                                height: 7px;
+                                border-radius: 7px;
+                                display: inline-block;
+                            }
+
+                            .key.admin1 {
+                                background-color: rgba(208,77,56,1);
+                            }
+
+                            .key.admin2 {
+                                background-color: rgba(51,122,183,1);
+                            }
+
+                            .key.admin3 {
+                                background-color: rgba(205,68,255,1);
+                            }
+
+                            .key-label {
+                                display: inline-block;
+                                margin-right: 20px;
+                                text-transform: capitalize;
+                            }
+                        }
+                        // switch
+                        md-switch {
+                            margin: -14px 0 0 0;
+                        }
+                        // active switch horizontal line
+                        md-switch.md-checked .md-bar {
+                            background: @main-bg-color;
+                            opacity: .5;
+                        }
+                        // inactive switch horizontal line
+                        md-switch .md-bar {
+                            background-color: rgb(158, 158, 158);
+                        }
+                        // active/inactive switch circular button
+                        md-switch.md-checked .md-thumb {
+                            background-color: @main-bg-color;
+                        }
+                        // active/inactive switch ripple
+                        md-switch.md-checked .md-ink-ripple {
+                            color: @main-bg-color;
+                        }
+                        .info-content {
+                            .key {
+                                width: 7px;
+                                height: 7px;
+                                border-radius: 7px;
+                                display: inline-block;
+                            }
+
+                            .key.admin1 {
+                                background-color: rgba(208,77,56,1);
+                            }
+
+                            .key.admin2 {
+                                background-color: rgba(51,122,183,1);
+                            }
+
+                            .key.admin3 {
+                                background-color: rgba(205,68,255,1);
+                            }
+
+                            .location-name {
+                                display: inline-block;
+                                font-family: @bold-font-family;
+                                color: #3a3a3a;
+                            }
+
+                            .info-secondary-content {
+                                line-height: 18px;
+                                font-size: 12px;
+                                color: #707070;
+                                margin-left: 10px;
+                            }
+                        }
+                    }
+                    //additional resources
+                    .additional-resources {
+                        .pmt-h3;
+                        margin: 20px 0 10px 0;
+                        /* background: blue; */
+                        display: block;
+                        border-top: 1px solid @element-border-color;
+                        padding-top: 10px;
+                    }
+                    
+                    //related activities
+                    .related-activities{
+                        .link {
+                            padding: 10px;
+                            color: @main-font-color;
+                            font-family: @title-font-family;
+                            cursor: pointer;
+                        }
+                        .link:hover {
+                            background-color: #f2f2f2;
+                        }
+                    }
+
+                    .related-activities-merged {
+                       .related-header>h3{
+                            margin-top: 10px;
+                            margin-bottom: 5px;
+                       }
+                        .taxonomies{
+                            .pmt-h2.section-header{
+                                background-color: transparent;
+                                border-bottom: transparent;
+                            }
+                        
+                        
+                        }
+              
+                        .partners{
+                            .pmt-h2.section-header{
+                                background-color: transparent;
+                                border-bottom: transparent;
+                            }
+                        }
+                        
+                        
+                    }
+
+                    // show locations icon
+                    .show-locations {
+                        font-size: 12pt;
+
+                        &:hover {
+                            color: @main-font-color;
+                        }
+                    }
+
+                    //external link button for overview
+                    .story-button {
+                        cursor: pointer;
+                        color: @link-color;
+                        font-family: @bold-font-family;
+                        padding: 5px 0;
+                        a {
+                            text-decoration: none;
+                            color: @link-color;
+                        }
+                        a:hover {
+                            text-decoration: none;
+                        }
+                        i {
+                            font-size: 19px;
+                            text-align: initial;
+                            display: inline-block;
+                            padding-right: 5px;
+                            vertical-align: middle;
+                            margin-bottom: 2px;
+                        }
+                    }
+                    .story-button:hover * {
+                        color: #000;
+                    }
+                }
+            }
+        }
+        // link to editor page
+        .edit-link{
+            padding: 0 8px;
+            cursor: pointer;
+            &:hover {
+                color: @main-font-color;
+            }
+        }
+    }
+
+     // odd element
+  .grey-background{
+        background-color: @background-grey;
+    }
+}

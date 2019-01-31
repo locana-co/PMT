@@ -1,0 +1,46 @@
+<div id="acts-list" ng-controller="ActsListCtrl" class="scrollable ui-layout-center" ng-show="stateService.isNotParam('activity_id')">
+
+    <!-- loader-->
+    <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>-->
+
+    <!-- no activities message-->
+    <div class="no-activities" ng-show="!loading && parentActivityCount == 0 ">Your filter has produced zero results.</div>
+
+    <div class="print" ng-click="exportPopup()" title="File Download" aria-label="File Download" ng-show="!loading && parentActivityCount>0 && currentUser.permission >= page.tools.map.downloadAuthorization">Download {{terminology.activity_terminology.singular}} list <i class="material-icons">file_download</i></div>
+
+    <md-table-container>
+        <table md-table class="acts-table" id="acts-table" ng-show="!loading && parentActivityCount > 0">
+            <thead md-head md-order="query.order">
+                <tr md-row class="header-row">
+                    <!--<th class="header-data pmt-table-header"></th>-->
+                    <th class="header-data pmt-table-header" md-column md-order-by="response.t">{{terminology.activity_terminology.singular}} Name</th>
+                    <th class="header-data pmt-table-header" md-column md-order-by="response.a">Budget</th>
+                    <th class="header-data pmt-table-header" ng-show="columnList.indexOf('data_group') >= 0" md-column md-order-by="response.dg">Data Source</th>
+                    <th class="header-data pmt-table-header" ng-show="columnList.indexOf('start_date') >= 0" md-column md-order-by="response.sd">Start Date</th>
+                    <th class="header-data pmt-table-header" ng-show="columnList.indexOf('end_date') >= 0" md-column md-order-by="response.ed">End Date</th>
+                    <th class="header-data pmt-table-header" ng-show="columnList.indexOf('funding') >= 0" md-column md-order-by="response.f | filterListOrgs">{{terminology.funder_terminology.singular}}</th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <!-- primary list data-->
+                <tr md-row class="activity-row" ng-repeat="activity in filteredActivities | orderBy: query.order:decending | limitTo: query.limit: (query.page - 1) * query.limit">
+                    <td class="activity-data link title" ng-click="showActivityDetail(activity.response)">{{activity.response.t}}
+                        <!-- edit link -->
+                        <!--<i class="fa fa-pencil-alt" aria-hidden="true" ng-click="editActivity(activity.response.id);" ng-show="currentUser.user.role==='Super'||currentUser.user.authorizations.indexOf(activity.response.id) >= 0"></i>-->
+                    </td>
+                    <td class="activity-data" ng-show="activity.response.a > 0">{{(activity.response.a | currency :"USD $":0 )}} {{activity.response.currency | currency :"USD $":0}}</td>
+                    <td class="activity-data" ng-show="activity.response.a === 0">{{(activity.response.a )}}</td>
+                    <td class="activity-data" ng-show="activity.response.a == null"> -- </td>
+                    <td class="activity-data" ng-show="columnList.indexOf('data_group') >= 0">{{activity.response.dg}}</td>
+                    <td class="activity-data" ng-show="columnList.indexOf('start_date') >= 0">{{activity.response.sd | date : 'yyyy/MM/dd'}}</td>
+                    <td class="activity-data" ng-show="columnList.indexOf('end_date') >= 0">{{activity.response.ed | date : 'yyyy/MM/dd'}}</td>
+                    <td class="activity-data" ng-show="columnList.indexOf('funding') >= 0">{{activity.response.f | filterListOrgs}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <!-- pagination-->
+    <md-table-pagination md-limit="query.limit" md-limit-options="[25,50,100]" md-page="query.page" md-total="{{parentActivityCount}}"
+        md-page-select ng-show="!loading && parentActivityCount > 0"></md-table-pagination>
+
+</div>

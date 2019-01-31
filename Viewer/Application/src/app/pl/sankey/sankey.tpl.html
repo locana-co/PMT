@@ -1,0 +1,35 @@
+<div id="pl-sankey" ng-controller="PLSankeyCtrl">
+    
+    <!-- filters -->
+    <ng-include src="'pl/filter/filter.tpl.html'"></ng-include>
+    <!-- Tools Tab Menu -->
+    <div class="sankey-tabs" ng-cloak>
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom md-selected="tabs.selectedTab">
+                <md-tab label="Partnerlink">
+                    <md-content class="md-padding sankey-tab">
+                        <!-- sankey diagram -->
+                        <!-- loading animation -->
+                        <div>
+                            <md-progress-circular ng-show="LoadingCharts" class="loading" md-diameter="200" md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                        <div id="pl-sankey-chart"></div>
+                        <div class="empty-sankey" ng-show="sankeyEmpty">Your filter has produced zero results.</div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="{{tabs.detailTabLabel}}">
+                    <md-content class="md-padding sankey-tab">
+                        <div>
+                            <md-progress-circular ng-show="LoadingMiniCharts" class="loading" md-diameter="200" md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                        <div id="pl-sankey-chart-detail">
+                            <div class="modal-body container">
+                                <div id="pl-sankey-chart-detail-popup"></div>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+#login-public{
+    font-family: @reg-font-family;
+    // dialog
+    md-dialog {
+        max-height: 600px;
+        width: 390px;
+        overflow: hidden;
+        // modal header
+        md-toolbar {
+            background-color: @main-bg-color;
+            .sub-header{
+                font-family: @title-font-family;
+                text-transform: uppercase;
+            }
+        }
+        // modal content
+        md-dialog-content {
+            padding: 40px;
+            // user input textboxes
+            .user-input {
+                display: inline-block;
+                outline: 0;
+                font-size: 16px;
+                line-height: 20px;
+                font-family: @title-font-family;
+                text-transform: lowercase;
+                margin: 0 auto 0 0;
+                border: @login-input-border;
+                color: #939292;
+                background-color: @login-input-color;
+                border-radius: 2px;
+                width: 240px;
+                height: 44px;
+                text-align: center;
+            }
+            // row
+            .row {
+                margin: 0 0 12px 0;
+            }
+
+            // submit button
+            .submit-button {
+                .pmt-color-button;
+                width: 240px;
+                height: 44px;
+            }
+            
+            // error messages
+            .error {
+                color: red;
+                font-size: 12px;
+                font-style: italic;
+                text-align: center;
+            }
+            // scrollable list of organizations
+            .scrollable {
+                max-height: 300px;
+            }
+        }
+    }
+}

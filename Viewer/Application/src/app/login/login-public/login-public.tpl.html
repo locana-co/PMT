@@ -1,0 +1,31 @@
+<div id="login-public" ng-controller="LoginPublicCtrl">
+    <md-dialog aria-label="log in dialog">
+        <form class="login">
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Login</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelLogin()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div>
+                    <div class="row">
+                        <input class="user-input" name="user" id="user" type="text" ng-model="user.username" placeholder="Username" onfocus="this.placeholder = ''"
+                            onblur="this.placeholder = 'Username'">
+                    </div>
+                    <div class="row">
+                        <input class="user-input password" name="password" id="password" type="password" ng-model="user.password" placeholder="Password"
+                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                    </div>
+                    <div class="row">
+                        <md-button class="submit-button" ng-click="userLogin(user)" type="submit" value="Log In">Log In</md-button>
+                    </div>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

@@ -1,0 +1,294 @@
+<div id="integration-detail" ng-controller="IntegrationDetailCtrl" class="scrollable ui-layout-center">
+    <!-- loader-->
+    <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>-->
+    <!-- integration detail editor -->
+    <md-content layout-padding ng-show="!loading && !error">
+        <!-- record information -->
+        <md-content class="record-info">
+            <div layout-gt-sm="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>PMT ID</label>
+                    <input ng-model="model.id" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Last Edited On:</label>
+                    <input ng-model="model._updated_date" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Last Edited By:</label>
+                    <input ng-model="model._updated_by" disabled>
+                </md-input-container>
+            </div>
+        </md-content>
+        <!-- editing tabs -->
+        <md-tabs md-selected="tabIndex" md-dynamic-height md-border-bottom>
+            <!-- schedule form -->
+            <md-tab id="integration-tab-schedule">
+                <md-tab-label>
+                    {{terminology.integration_terminology.singular}}
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.scheduleForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="integrationForm" class="integrationForm">
+                            <div class="instructions red pad-bottom" ng-show="forms.integrationForm.error && forms.integrationForm.message!==null">{{forms.integrationForm.message}}</div>
+                            <div layout-gt-sm="row">
+                                <!-- recurrence -->
+                                <div class="md-block recurrence" flex-gt-sm>
+                                    <label>{{settings.schedule.recurrence.label}}</label>
+                                    <md-radio-group name="_recurrence" ng-model="model._recurrence" ng-required="settings.schedule.recurrence.required">
+                                        <md-radio-button ng-repeat="option in settings.schedule.recurrence.options" ng-value="option.value" aria-label="{{option.label}}">
+                                            {{option.label}}
+                                        </md-radio-button>
+                                    </md-radio-group>
+
+                                    <div ng-messages="integrationForm._recurrence.$error" multiple ng-if="(integrationForm['_recurrence'].$error && !integrationForm['_recurrence'].focus && integrationForm['_recurrence'].$dirty)">
+                                        <div ng-message="required">This is a required field.</div>
+                                    </div>
+                                </div>
+                                <div class="md-block" flex-gt-sm>
+                                    <div ng-show="model._recurrence === 'day'">
+                                        <div layout-gt-sm="row">
+                                            <label>Every </label>
+                                            <md-input-container>
+                                                <input type="number" name="dayFrequency" ng-model="model._day._frequency" class="recurrence-frequency" ng-required="settings.schedule.day.fields._frequency.required"
+                                                    minlength="1" />
+                                                <div class="instructions red" ng-messages="recipientForm.dayFrequency.$error" ng-show="_recurrence === 'day' && recipientForm.dayFrequency.$dirty">
+                                                    <div ng-message="required">This a required field!</div>
+                                                    <div ng-message="minlength">The value is too small!</div>
+                                                </div>
+                                            </md-input-container>
+                                            <label> {{settings.schedule.day.fields._frequency.label}}</label>
+                                            <label class="container-label">at</label>
+                                            <mdp-time-picker ng-model="model._day._time"></mdp-time-picker>
+                                        </div>
+                                    </div>
+                                    <div ng-show="model._recurrence === 'week'">
+                                        <div layout-gt-sm="row">
+                                            <label class="container-label">Every </label>
+                                            <md-input-container>
+                                                <input type="number" name="weekFrequency" ng-model="model._week._frequency" class="recurrence-frequency" ng-required="settings.schedule.week.fields._frequency.required"
+                                                    minlength="1" />
+                                                <div class="instructions red" ng-messages="recipientForm.weekFrequency.$error" ng-show="_recurrence === 'week' && recipientForm.weekFrequency.$dirty">
+                                                    <div ng-message="required">This a required field!</div>
+                                                    <div ng-message="minlength">The value is too small!</div>
+                                                </div>
+                                            </md-input-container>
+                                            <label class="container-label"> {{settings.schedule.week.fields._frequency.label}}</label>
+                                        </div>
+                                        <div layout-gt-sm="row">
+                                            <md-input-container layout-gt-sm="row">
+                                                <div class="days" ng-repeat="day in settings.schedule.week.fields.days">
+                                                    <md-checkbox aria-label="{{day.label}}" ng-true-value="true" ng-false-value="false" ng-model="model._week[day.value]">
+                                                        {{day.label}}
+                                                    </md-checkbox>
+                                                </div>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout-gt-sm="row">
+                                            <label class="container-label">at</label>
+                                            <mdp-time-picker ng-model="model._week._time"></mdp-time-picker>
+                                        </div>
+                                    </div>
+                                    <div ng-show="model._recurrence === 'month'">
+                                        <div layout="column">
+                                            <div flex>
+                                                <md-radio-group ng-model="model._month._type" ng-required="model._recurrence === 'month'">
+                                                    <md-radio-button ng-repeat="type in settings.schedule.month.fields.types" ng-value="type.value" aria-label="{{type.label}}">
+                                                        {{type.label}}
+                                                    </md-radio-button>
+                                                </md-radio-group>
+                                            </div>
+                                        </div>
+                                        <div layout="column">
+                                            <div flex layout-gt-sm>
+                                                <md-input-container>
+                                                    <input type="number" name="monthDate" ng-model="model._month.one._date" class="recurrence-type" ng-disabled="!model._month._type || model._month._type === 'many'"
+                                                        ng-required="settings.schedule.month.fields.date.required && model._month._type === 'one'"
+                                                        minlength="1" />
+                                                    <div class="instructions red" ng-messages="recipientForm.monthDate.$error" ng-show="_recurrence === 'week' && recipientForm.monthDate.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                        <div ng-message="minlength">The value is too small!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <label class="container-label"> of every </label>
+                                                <md-input-container>
+                                                    <input type="number" name="manyMonthFrequency" ng-model="model._month.one._frequency" class="recurrence-frequency" ng-disabled="!model._month._type || model._month._type === 'many'"
+                                                        ng-required="settings.schedule.month.fields._frequency.required && model._month._type === 'one'"
+                                                        minlength="1" />
+                                                    <div class="instructions red" ng-messages="recipientForm.manyMonthFrequency.$error" ng-show="_recurrence === 'month' && recipientForm.manyMonthFrequency.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                        <div ng-message="minlength">The value is too small!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <label class="container-label"> {{settings.schedule.month.fields._frequency.label}}</label>
+                                                <label class="container-label">at</label>
+                                                <mdp-time-picker ng-model="model._month.one._time" mdp-disabled="!model._year._type || model._year._type === 'many'"></mdp-time-picker>
+                                            </div>
+                                            <div flex layout-gt-sm>
+                                                <md-input-container>
+                                                    <md-select name="monthRate" ng-model="model._month.many._rate" ng-disabled="!model._month._type || model._month._type === 'one'"
+                                                        ng-required="settings.schedule.month.fields.rate.required && model._month._type === 'many'">
+                                                        <md-option ng-repeat="rate in settings.schedule.month.fields.rates" value="{{rate.value}}">{{rate.label}}</md-option>
+                                                    </md-select>
+                                                    <div class="instructions red" ng-messages="recipientForm.monthRate.$error" ng-show="_recurrence === 'week' && recipientForm.monthRate.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <md-input-container>
+                                                    <md-select name="monthDay" ng-model="model._month.many._day" ng-disabled="!model._month._type || model._month._type === 'one'"
+                                                        ng-required="settings.schedule.month.fields.rate.required && model._month._type === 'many'">
+                                                        <md-option ng-repeat="day in settings.schedule.month.fields.days" value="{{day.value}}">{{day.label}}</md-option>
+                                                    </md-select>
+                                                    <div class="instructions red" ng-messages="recipientForm.monthDay.$error" ng-show="_recurrence === 'week' && recipientForm.monthDay.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <label class="container-label"> of every </label>
+                                                <md-input-container>
+                                                    <input type="number" name="oneMonthFrequency" ng-model="model._month.many._frequency" class="recurrence-frequency" ng-disabled="!model._month._type || model._month._type === 'one'"
+                                                        ng-required="settings.schedule.month.fields._frequency.required && model._month._type === 'many'"
+                                                        minlength="1" />
+                                                    <div class="instructions red" ng-messages="recipientForm.oneMonthFrequency.$error" ng-show="_recurrence === 'month' && recipientForm.oneMonthFrequency.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                        <div ng-message="minlength">The value is too small!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <label class="container-label"> {{settings.schedule.month.fields._frequency.label}}</label>
+                                                <label class="container-label">at</label>
+                                                <mdp-time-picker ng-model="model._month.many._time" mdp-disabled="!model._month._type || model._month._type === 'one'"></mdp-time-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-show="model._recurrence === 'year'">
+                                        <div layout="row">
+                                            <div flex>
+                                                <label class="container-label">Every </label>
+                                                <md-input-container>
+                                                    <input type="number" name="yearFrequency" ng-model="model._year._frequency" class="recurrence-frequency" ng-required="settings.schedule.year.fields._frequency.required && model._recurrence === 'year'"
+                                                        minlength="1" />
+                                                    <div class="instructions red" ng-messages="recipientForm.yearFrequency.$error" ng-show="_recurrence === 'year' && recipientForm.yearFrequency.$dirty">
+                                                        <div ng-message="required">This a required field!</div>
+                                                        <div ng-message="minlength">The value is too small!</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <label class="container-label"> {{settings.schedule.year.fields._frequency.label}}</label>
+                                            </div>
+                                        </div>
+                                        <div layout="row">
+                                            <div layout="column">
+                                                <md-radio-group ng-model="model._year._type" ng-required="model._recurrence === 'year'">
+                                                    <md-radio-button ng-repeat="type in settings.schedule.year.fields.types" ng-value="type.value" aria-label="{{type.label}}">
+                                                        {{type.label}}
+                                                    </md-radio-button>
+                                                </md-radio-group>
+                                            </div>
+                                            <div layout="column">
+                                                <div flex layout-gt-sm>
+                                                    <md-input-container>
+                                                        <md-select name="yearOneMonth" ng-model="model._year.one._month" ng-disabled="!model._year._type || model._year._type === 'many'"
+                                                            ng-required="model._year._type === 'one'">
+                                                            <md-option ng-repeat="month in settings.schedule.year.fields.months" value="{{month.value}}">{{month.label}}</md-option>
+                                                        </md-select>
+                                                        <div class="instructions red" ng-messages="recipientForm.yearOneMonth.$error" ng-show="_recurrence === 'week' && recipientForm.yearOneMonth.$dirty">
+                                                            <div ng-message="required">This a required field!</div>
+                                                        </div>
+                                                    </md-input-container>
+
+                                                    <md-input-container>
+                                                        <input type="number" name="yearDate" ng-model="model._year.one._date" class="recurrence-type" ng-disabled="!model._year._type || model._year._type === 'many'"
+                                                            ng-required="settings.schedule.year.fields.date.required && model._year._type === 'one'"
+                                                            min="1" max="32" />
+                                                        <div class="instructions red" ng-messages="recipientForm.yearDate.$error" ng-show="_recurrence === 'week' && recipientForm.yearDate.$dirty">
+                                                            <div ng-message="required">This a required field!</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <label class="container-label">at</label>
+                                                    <mdp-time-picker ng-model="model._year.one._time" mdp-disabled="!model._year._type || model._year._type === 'many'"></mdp-time-picker>
+                                                </div>
+                                                <div flex layout-gt-sm>
+                                                    <md-input-container>
+                                                        <md-select name="yearRate" ng-model="model._month.many._rate" ng-disabled="!model._month._type || model._year._type === 'one'"
+                                                            ng-required="settings.schedule.month.fields.rate.required && model._month._type === 'many'">
+                                                            <md-option ng-repeat="rate in settings.schedule.month.fields.rates" value="{{rate.value}}">{{rate.label}}</md-option>
+                                                        </md-select>
+                                                        <div class="instructions red" ng-messages="recipientForm.yearRate.$error" ng-show="_recurrence === 'week' && recipientForm.yearRate.$dirty">
+                                                            <div ng-message="required">This a required field!</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container>
+                                                        <md-select name="yearDay" ng-model="model._year.many._day" ng-disabled="!model._year._type || model._year._type === 'one'"
+                                                            ng-required="settings.schedule.year.fields.rate.required && model._year._type === 'many'">
+                                                            <md-option ng-repeat="day in settings.schedule.year.fields.days" value="{{day.value}}">{{day.label}}</md-option>
+                                                        </md-select>
+                                                        <div class="instructions red" ng-messages="recipientForm.yearDay.$error" ng-show="_recurrence === 'week' && recipientForm.yearDay.$dirty">
+                                                            <div ng-message="required">This a required field!</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <label class="container-label">of</label>
+                                                    <md-input-container>
+                                                        <md-select name="yearManyMonth" ng-model="model._year.many._month" ng-disabled="!model._year._type || model._year._type === 'one'"
+                                                            ng-required="model._year._type === 'many'">
+                                                            <md-option ng-repeat="month in settings.schedule.year.fields.months" value="{{month.value}}">{{month.label}}</md-option>
+                                                        </md-select>
+                                                        <div class="instructions red" ng-messages="recipientForm.yearManyMonth.$error" ng-show="_recurrence === 'week' && recipientForm.yearManyMonth.$dirty">
+                                                            <div ng-message="required">This a required field!</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <label class="container-label">at</label>
+                                                    <mdp-time-picker ng-model="model._year.many._time" mdp-disabled="!model._year._type || model._year._type === 'one'"></mdp-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-buttons">
+                            <md-button class="colored-red md-raised" ng-show="model._recurrence" ng-click="deleteSchedule()" aria-label="delete schedule">Delete Schedule</md-button>
+                            <md-button class="colored md-raised" ng-click="runIntegration()" aria-label="run now">Run Integration Now</md-button>
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- recipient form -->
+            <md-tab id="integration-tab-recipient">
+                <md-tab-label>
+                    Recipients
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.recipientForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="recipientForm">
+                            <div class="instructions red" ng-show="forms.recipientForm.error && forms.recipientForm.message!==null">{{forms.recipientForm.message}}</div>
+                            <div layout-gt-sm="column" ng-repeat="recipient in model._recipients | filter:{delete:false} track by $index" class="contact" ng-class-even="'grey-background'">
+                                <div layout-gt-sm="row">
+                                    <!-- email -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.recipients.fields._email.visible">
+                                        <label>{{settings.contacts.fields._email.label}}</label>
+                                        <input type="email" ng-change="changeRecipient($event, recipient)" ng-model="recipient._email" 
+                                            class="contact-email" ng-required="settings.recipients.fields._email.required" />
+                                        <div class="instructions red" ng-show="(contact._email===null || contact._email==='') && forms.recipientForm.error && settings.recipients.fields._email.required">This is a required field.</div>
+                                    </md-input-container>
+                                    <div class="md-block align-right">
+                                        <md-button class="md-mini md-fab icon-button" tabindex="5" data-type="contact" ng-click="deleteRecord($event, contact)" aria-label="delete contact">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- no contacts message -->
+                            <div class="instructions" ng-show="model.recipients===null || model.recipients.length === 0">{{settings.recipients.instructions}} {{terminology.integration_terminology.singular}}.</div>
+                        </form>
+                        <div class="form-buttons">
+                            <md-button class="colored md-raised" ng-click="addRecipientRecord()">Add Recipient</md-button>
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+    <!-- loading error -->
+    <div class="message" ng-show="!loading && error">The requested integration does not exist or you do not have the appropriate permissions.</div>
+</div>

@@ -1,0 +1,30 @@
+<div id="acts-top-bar" ng-controller="ActsTopBarCtrl">
+
+    <!-- back button-->
+    <div class="back-button" ng-show="stateService.isParam('activity_id') && !activity.pid" ng-click="returnToActivityList()"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+
+    <!-- back button to parent-->
+    <div class="back-button" ng-show="stateService.isParam('activity_id') && activity.pid " ng-click="showParentActivity(activity.pid)"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+
+    <!-- activity detail -->
+    <div ng-show="stateService.isParam('activity_id')" class="title" ng-class="{long: titleLength > 150 }">
+        {{ activityTitle }}
+    </div>
+
+    <!-- activity edit button (detail page only) -->
+    <div ng-show="stateService.isParam('activity_id')" class="edit-button">
+        <!-- toolbar -->
+        <div class="toolbar" ng-show="(currentUser.user.role==='Super'||currentUser.user.authorizations.indexOf(activity.id) >= 0) && hasEditor">
+            <md-button ng-show="stateService.isParam('activity_id')" class="md-mini md-fab icon-button" aria-label="save" ng-click="editActivity(activity.id)">
+                <md-tooltip md-direction="bottom">Edit {{config.terminology.activity_terminology.singular}}</md-tooltip>
+                <i class="material-icons">mode_edit</i>
+            </md-button>
+        </div>
+    </div>
+
+    <!-- all activities list-->
+    <div ng-show="stateService.isNotParam('activity_id')">
+        <div class="title">{{terminology.activity_terminology.plural}} ({{activityCount}} total)</div>
+    </div>
+
+</div>

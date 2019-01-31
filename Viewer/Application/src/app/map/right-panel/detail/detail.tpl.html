@@ -1,0 +1,803 @@
+﻿<div id="map-detail" class="right-panel no-select" ng-controller="MapDetailCtrl" ng-class="{on: stateService.isParam('detail-panel')}"
+    ng-show="stateService.isParam('detail-panel')">
+    <!-- top menu (next record, previous record, record count, close panel) -->
+    <div class="top-menu">
+        <!-- navigation menu-->
+        <div class="nav-menu" ng-show="displayDetailsList==false && numDetails>1  && activeDetail.parent_id == null">
+            <div class="arrow-box" ng-click="prevDetail()">
+                <i class="fa fa-chevron-left"></i>
+            </div>
+            <div class="arrow-box" ng-click="nextDetail()">
+                <i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="nav-label">{{terminology.activity_terminology.singular}} {{activeDetailIdx+1}} of {{numDetails}}</div>
+
+        </div>
+        <!-- close button -->
+        <div class="close-button" ng-click="stateService.toggleParam('detail-panel'); repositionMapControls()">X</div>
+    </div>
+    <!-- notification message when no records have been selected -->
+    <div class="notification" ng-show="numDetails==0 && loading==false">
+        Please click on a feature on the map to view the details of those features.
+    </div>
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+    <!-- activity menu (listing of activities based on user selection) -->
+    <div class="activity-menu scrollable" ng-show="displayDetailsList==true && numDetails>1">
+        <div class="menu-header pmt-h3">{{terminology.activity_terminology.plural}} ( {{numDetails}} )</div>
+        <!-- activity list -->
+        <div class="menu-option" ng-repeat="(key, d) in selectedDetails">
+            <!-- parent activities-->
+            <div class="parent-activity" ng-click="showDetail(key, true); toggleDisplayList()">{{ d._title }}</div>
+        </div>
+    </div>
+    <!-- activity detail view (selected activity from menu) -->
+    <!-- parent-->
+    <div class="activity-detail" ng-show="displayDetailsList==false && numDetails>0 && activeDetail.parent_id == null">
+        <!-- detail header -->
+        <div class="header">
+            <md-button class="back-button" ng-click="toggleDisplayList()" ng-show="numDetails>1">
+                <i class="material-icons">arrow_back</i> Back to {{terminology.activity_terminology.singular}} list</md-button>
+            <!-- title-->
+            <div>
+                <!-- show text if no title-->
+                <span ng-show="!activeDetail._title">No title available</span>
+                <span>{{activeDetail._title}}</span>
+                <!-- edit link -->
+                <i class="fa fa-pencil-alt edit-link" aria-hidden="true" ng-click="editActivity(activeDetail.id)" ng-show="(currentUser.user.role==='Super'||currentUser.user.authorizations.indexOf(activeDetail.id) >= 0) && hasEditor"></i>
+            </div>
+            <!-- description-->
+            <div class="description">
+                <!-- show text if no description-->
+                <span ng-show="!activeDetail._description">No description available</span>
+                <span>{{activeDetail._description}}</span>
+            </div>
+            <div class="show-full-details md-button" ng-click="goToActivity(activeDetail.id)">View full {{terminology.activity_terminology.singular}} details</div>
+        </div>
+        <!-- detail information (tabs with details) -->
+        <div ng-cloak class="detail-tabs">
+            <md-content>
+                <md-tabs md-dynamic-height md-stretch-tabs="always" md-border-bottom md-selected="selectedTab">
+                    <!-- activity overview tab -->
+                    <md-tab label="Overview">
+                        <md-content class="md-padding detail-tab-resizing">
+                            <!-- version -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.version">
+                                <div class="info-header">Version:</div>
+                                <div class="info-content" class="label" ng-class=""> {{activeDetail.overviewDetails.version}}</div>
+                            </div>
+                            <!-- start date -->
+                            <div class="info-data">
+                                <div class="info-header">
+                                    <span ng-show="!activeDetail.overviewDetails.plan_start_date">Start date:</span>
+                                    <span ng-show="activeDetail.overviewDetails.plan_start_date">Revised start date:</span>
+                                </div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.start_date">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.start_date"> {{activeDetail.overviewDetails.start_date | date : 'yyyy/MM/dd'}}</div>
+                            </div>
+                            <!-- planned start date -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.plan_start_date">
+                                <div class="info-header">Planned start date:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.plan_start_date"> {{activeDetail.overviewDetails.plan_start_date | date : 'yyyy/MM/dd'}}</div>
+                            </div>
+                            <!-- end date -->
+                            <div class="info-data">
+                                <div class="info-header">
+                                    <span ng-show="!activeDetail.overviewDetails.plan_end_date">End date:</span>
+                                    <span ng-show="activeDetail.overviewDetails.plan_end_date">Revised End date:</span>
+                                </div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.end_date">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.end_date"> {{activeDetail.overviewDetails.end_date}}</div>
+                            </div>
+                            <!-- planned end date -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.plan_end_date">
+                                <div class="info-header">Planned End date:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.plan_end_date"> {{activeDetail.overviewDetails.plan_end_date}}</div>
+                            </div>
+                            <!-- total financials -->
+                            <div class="info-data">
+                                <div class="info-header">Financial Total:</div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.total_amount">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.total_amount"> {{activeDetail.overviewDetails.total_amount | currency:"USD $":0}}</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.currency"> {{activeDetail.overviewDetails.currency | currency:"USD $":0}}</div>
+                            </div>
+                            <!-- activity_status -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.activity_status">{{terminology.activity_terminology.singular}} Status:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.activity_status">{{activeDetail.overviewDetails.activity_status}}</div>
+                            </div>
+                            <!-- beneficiary_type -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.beneficiary_type">
+                                <div class="info-header">{{beneficiaryConfig.beneficiary_type.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.beneficiary_type}}</div>
+                            </div>
+                            <!-- beneficiary_unit -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.beneficiary_unit">
+                                <div class="info-header">{{beneficiaryConfig.beneficiary_unit.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.beneficiary_unit}}</div>
+                            </div>
+                            <!-- direct_beneficiaries -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.direct_beneficiaries">
+                                <div class="info-header">{{beneficiaryConfig.direct_beneficiaries.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.direct_beneficiaries | number:0}}</div>
+                            </div>
+                            <!-- male_individual_direct -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.male_individual_direct">
+                                <div class="info-header">{{beneficiaryConfig.male_individual_direct.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.male_individual_direct | number:0}}</div>
+                            </div>
+                            <!-- female_individual_direct -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.female_individual_direct">
+                                <div class="info-header">{{beneficiaryConfig.female_individual_direct.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.female_individual_direct | number:0}}</div>
+                            </div>
+                            <!-- male_hhds_direct -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.male_hhds_direct">
+                                <div class="info-header">{{beneficiaryConfig.male_hhds_direct.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.male_hhds_direct | number:0}}</div>
+                            </div>
+                            <!-- female_hhds_direct -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.female_hhds_direct">
+                                <div class="info-header">{{beneficiaryConfig.female_hhds_direct.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.female_hhds_direct | number:0}}</div>
+                            </div>
+                            <!-- institutes_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.institutes_indirect">
+                                <div class="info-header">{{beneficiaryConfig.institutes_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.institutes_indirect | number:0}}</div>
+                            </div>
+                            <!-- indirect_beneficiaries -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.indirect_beneficiaries">
+                                <div class="info-header">{{beneficiaryConfig.indirect_beneficiaries.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.indirect_beneficiaries | number:0}}</div>
+                            </div>
+                            <!-- male_individual_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.male_individual_indirect">
+                                <div class="info-header">{{beneficiaryConfig.male_individual_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.male_individual_indirect | number:0}}</div>
+                            </div>
+                            <!-- female_individual_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.female_individual_indirect">
+                                <div class="info-header">{{beneficiaryConfig.female_individual_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.female_individual_indirect | number:0}}</div>
+                            </div>
+                            <!-- male_hhds_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.male_hhds_indirect">
+                                <div class="info-header">{{beneficiaryConfig.male_hhds_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.male_hhds_indirect | number:0}}</div>
+                            </div>
+                            <!-- female_hhds_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.female_hhds_indirect">
+                                <div class="info-header">{{beneficiaryConfig.female_hhds_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.female_hhds_indirect | number:0}}</div>
+                            </div>
+                            <!-- institutes_indirect -->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.institutes_indirect">
+                                <div class="info-header">{{beneficiaryConfig.institutes_indirect.label}}</div>
+                                <div class="info-content">{{activeDetail.overviewDetails.institutes_indirect | number:0}}</div>
+                            </div>
+                            <!-- objective -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.objective">Objective:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.objective"> {{activeDetail.overviewDetails.objective}}</div>
+                            </div>
+                            <!-- IATI sector Category -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.sector_category">Sector Category:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.sector_category"> {{activeDetail.overviewDetails.sector_category}}</div>
+                            </div>
+                            <!-- IATI Sector -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.sector">Sector:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.sector"> {{activeDetail.overviewDetails.sector}}</div>
+                            </div>
+                            <!-- tags -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.tags">Tags:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.tags"> {{activeDetail.overviewDetails.tags}}</div>
+                            </div>
+                            <!-- content -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.content">Content:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.content"> {{activeDetail.overviewDetails.content}}</div>
+                            </div>
+                            <!-- data group -->
+                            <div class="info-data" ng-if="page.tools.map.showDataGroup">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.data_group">Data Group:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.data_group"> {{activeDetail.overviewDetails.data_group}}</div>
+                            </div>
+                            <!-- Additional Resources-->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.additionalResources.length > 0">
+                                <span class="additional-resources">Additional Resources</span>
+                                <div ng-repeat="r in activeDetail.overviewDetails.additionalResources track by $index">
+                                    <div class="story-button">
+                                        <i class="material-icons">{{r.type}}</i>
+                                        <a ng-href={{r.url}} target="_blank">{{r.title}}</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- taxonomies -->
+                            <div class="pmt-h2 section-header">Taxonomy Information</div>
+                            <div class="info-header" ng-show="!activeDetail.taxonomyDetails">No additional taxonomy information available for this Activity.</div>
+                            <!-- activity status-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.activity_status">Activity Status:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.activity_status">{{activeDetail.taxonomyDetails.activity_status}}</div>
+                            </div>
+                            <!-- sector category-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.sector_category">Sector Category:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.sector_category">{{activeDetail.taxonomyDetails.sector_category}}</div>
+                            </div>
+                            <!-- sector -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.sector">Sector:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.sector">{{activeDetail.taxonomyDetails.sector}}</div>
+                            </div>
+                            <!-- sector category-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.activity_scope">Activity Scope:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.activity_scope">{{activeDetail.taxonomyDetails.activity_scope}}</div>
+                            </div>
+                            <!-- custom taxonomy -->
+                            <div ng-repeat="(key,value) in activeDetail.taxonomyDetails.custom_taxonomy">
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="value">{{key}}:</div>
+                                    <div class="info-content" ng-show="value">{{value}}</div>
+                                </div>
+                            </div>
+
+                            <!-- children taxonomy -->
+                            <div ng-if="page.mergeRelatedActivities  && activeDetail.children">
+                                <ng-include id="{{page.children.taxonomy.id}}" ng-show="page.children.taxonomy.visible" src="page.children.taxonomy.tpl"></ng-include>
+                            </div>
+
+                            <!-- organization data -->
+                            <div class="pmt-h2 section-header">Organizations</div>
+                            <div class="info-header" ng-show="!(activeDetail.organizationDetails.organizationCount > 0)">No additional organization information available for this {{terminology.activity_terminology.singular}}.</div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.implementingOrgs.length > 0">
+                                <div class="info-header block"> {{terminology.implementor_terminology.plural}}: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.implementingOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- primary -->
+                                        <div class="info-data" ng-show="org.prime">
+                                            <div class="info-header">Primary Implementer</div>
+                                        </div>
+                                        <!-- org type -->
+                                        <div class="info-data" ng-show="org.type">
+                                            <div class="info-header">Type:</div>
+                                            <div class="info-content"> {{org.type}}</div>
+                                        </div>
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.fundingOrgs.length > 0">
+                                <div class="info-header block"> {{terminology.funder_terminology.plural}}: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.fundingOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- org type -->
+                                        <div class="info-data" ng-show="org.type">
+                                            <div class="info-header">Type:</div>
+                                            <div class="info-content"> {{org.type}}</div>
+                                        </div>
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.accountableOrgs.length > 0">
+                                <div class="info-header block"> Accountable Partners: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.accountableOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- org type -->
+                                        <div class="info-data" ng-show="org.type">
+                                            <div class="info-header">Type:</div>
+                                            <div class="info-content"> {{org.type}}</div>
+                                        </div>
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <!-- children organization -->
+                            <div ng-if="page.mergeRelatedActivities  && activeDetail.children">
+                                <ng-include id="{{page.children.organization.id}}" ng-show="page.children.organization.visible" src="page.children.organization.tpl"></ng-include>
+                            </div>
+
+                            <!-- financial data -->
+                            <div class="pmt-h2 section-header">Financial Information</div>
+                            <div class="info-header" ng-show="activeDetail.financialsDetails.length == 0">No additional financial information available for this {{terminology.activity_terminology.singular}}.</div>
+                            <div ng-repeat="financial in activeDetail.financialsDetails" class="individual-element">
+                                <!-- provider -->
+                                <div class="info-data" ng-if="tabConfig.columns.indexOf('provider')>=0">
+                                    <div class="info-header">Provider:</div>
+                                    <div class="info-content" ng-show="!financial.provider">No provider available</div>
+                                    <div class="info-content" ng-show="financial.provider"> {{financial.provider}}</div>
+                                </div>
+                                <!-- recipient -->
+                                <div class="info-data" ng-if="tabConfig.columns.indexOf('recipient')>=0">
+                                    <div class="info-header">Recipient:</div>
+                                    <div class="info-content" ng-show="!financial.recipient">No recipient available</div>
+                                    <div class="info-content" ng-show="financial.recipient"> {{financial.recipient}}</div>
+                                </div>
+                                <!-- financial type category -->
+                                <div class="info-data" ng-if="tabConfig.columns.indexOf('finance_category')>=0">
+                                    <div class="info-header" ng-show="financial.finance_category">Financial Type Category:</div>
+                                    <div class="info-content" ng-show="financial.finance_category"> {{financial.finance_category}}</div>
+                                </div>
+                                <!-- financial type-->
+                                <div class="info-data" ng-if="tabConfig.columns.indexOf('finance_type')>=0">
+                                    <div class="info-header" ng-show="financial.finance_type">Financial Type:</div>
+                                    <div class="info-content" ng-show="financial.finance_type"> {{financial.finance_type}}</div>
+                                </div>
+                                <!-- transaction type-->
+                                <div class="info-data" ng-if="tabConfig.columns.indexOf('transaction_type')>=0">
+                                    <div class="info-header" ng-show="financial.transaction_type">Transaction Type:</div>
+                                    <div class="info-content" ng-show="financial.transaction_type"> {{financial.transaction_type}}</div>
+                                </div>
+                                <!-- amount -->
+                                <div class="info-data">
+                                    <div class="info-header">Amount:</div>
+                                    <div class="info-content" ng-show="!financial.amount">No amount date available</div>
+                                    <div class="info-content" ng-show="financial.amount"> {{financial.amount | currency:"USD $":0}}</div>
+                                    <div class="info-content" ng-show="financial.currency"> {{financial.currency| currency:"USD $":0}}</div>
+                                </div>
+                            </div>
+                            <div ng-show="tabConfig.details && activeDetail.detailsFinancial" ng-repeat="financial in activeDetail.detailsFinancial"
+                                class="individual-element">
+                                <!-- taxonomy -->
+                                <div class="info-data">
+                                    <div class="info-header">GTP2 Program Area:</div>
+                                    <div class="info-content">{{financial.taxonomy[0].classification}}</div>
+                                </div>
+                                <!-- detail amount -->
+                                <div class="info-data">
+                                    <div class="info-header">Percentage of Investment:</div>
+                                    <div class="info-content">{{financial._amount}}%</div>
+                                </div>
+                                <!-- calculation -->
+                                <div class="info-data">
+                                    <div class="info-header">Investment for Program Area:</div>
+                                    <div class="info-content">{{financial.total | currency:"USD $":0}}</div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-tab>
+
+                    <!-- related activities-->
+                    <md-tab label="{{!page.mergeRelatedActivities ? 'Related Activities' : 'Activities List'}}" ng-if="activeDetail.children.length > 0">
+                        <md-content class="md-padding detail-tab-resizing">
+                            <div class="related-activities" ng-if="!page.mergeRelatedActivities" ng-repeat="a in activeDetail.children | orderBy:'_title'">
+                                <div class="link" ng-click="showDetail(a.id)">{{a._title}}</div>
+                            </div>
+                            <!-- list -->
+                            <div ng-if="page.mergeRelatedActivities  && activeDetail.children">
+                                <ng-include id="{{page.children.details.id}}" ng-show="page.children.details.visible" src="page.children.details.tpl"></ng-include>
+                            </div>
+
+                        </md-content>
+                    </md-tab>
+
+                    <!-- location tab -->
+                    <md-tab label="Locations">
+                        <md-content class="md-padding detail-tab-resizing">
+                            <div class="sub-menu-header" ng-show="(activeDetail.locationDetails.length + (activeDetail.childLocationDetails ? activeDetail.childLocationDetails.length : 0) > 0)">
+                                <!-- number of locations-->
+                                <div class="summary-stats">Locations ({{activeDetail.locationDetails.length + (activeDetail.childLocationDetails ? activeDetail.childLocationDetails.length
+                                    : 0) || 0}})</div>
+                                <div class="legend">
+                                    <div class="key admin1"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin1}}</div>
+                                    <div class="key admin2"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin2}}</div>
+                                    <div class="key admin3"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin3}}</div>
+                                </div>
+                                <div class="toggle">
+                                    <md-switch ng-model="locationsOn" aria-label="Toggle locations on/off map" ng-click="toggleParam()">
+                                        <span ng-hide="locationsOn">Show {{terminology.activity_terminology.singular}} locations on map</span>
+                                        <span ng-show="locationsOn">Remove {{terminology.activity_terminology.singular}} locations from map</span>
+                                    </md-switch>
+                                </div>
+                            </div>
+                            <div class="info-header" ng-show="!(activeDetail.locationDetails.length + (activeDetail.childLocationDetails ? activeDetail.childLocationDetails.length : 0) > 0)">No additional locations information available for this {{terminology.activity_terminology.singular}}.</div>
+                            <!-- locations-->
+                            <div ng-repeat="location in activeDetail.locationDetails" class="individual-element" ng-show="(activeDetail.locationDetails.length > 0)">
+                                <div class="info-header">Location [{{$index + 1}}] </div>
+                                <!-- country -->
+                                <div class="info-data">
+                                    <div class="info-header">Country:</div>
+                                    <div class="info-content" ng-show="!location.country">No country data available</div>
+                                    <div class="info-content" ng-show="location.country">
+                                        <div class="location-name">{{location.country}}</div>
+                                    </div>
+                                </div>
+                                <!-- location national/local -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.national_local">National/Local:</div>
+                                    <div class="info-content" ng-show="location.national_local"> {{location.national_local}}</div>
+                                </div>
+                                <!-- location type -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.location_type">Type:</div>
+                                    <div class="info-content" ng-show="location.location_type"> {{location.location_type}}</div>
+                                </div>
+                                <!-- flag -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.location_flag">Flag:</div>
+                                    <div class="info-content" ng-show="location.location_flag"> {{location.location_flag}}</div>
+                                </div>
+                                <!-- admin 1 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin1">{{terminology.boundary_terminology.singular.admin1}}:</div>
+                                    <div class="info-content" ng-show="location.admin1">
+                                        <div class="key admin1"></div>
+                                        <div class="location-name">{{location.admin1}}</div>
+                                    </div>
+                                </div>
+                                <!-- admin 2 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin2">{{terminology.boundary_terminology.singular.admin2}}:</div>
+                                    <div class="info-content" ng-show="location.admin2">
+                                        <div class="key admin2"></div>
+                                        <div class="location-name">{{location.admin2}}</div>
+                                    </div>
+                                </div>
+                                <!-- admin 3 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin3">{{terminology.boundary_terminology.singular.admin3}}:</div>
+                                    <div class="info-content" ng-show="location.admin3">
+                                        <div class="key admin3"></div>
+                                        <div class="location-name">{{location.admin3}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- child locations -->
+                            <div ng-if="page.mergeRelatedActivities && activeDetail.children">
+                                <ng-include id="{{page.children.location.id}}" ng-show="page.children.location.visible" src="page.children.location.tpl"></ng-include>
+                            </div>
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+            </md-content>
+        </div>
+    </div>
+
+
+    <!-- activity detail view (selected activity from menu) -->
+    <!-- child -->
+    <div class="activity-detail" ng-show="displayDetailsList==false && numDetails>0 && activeDetail.parent_id != null">
+        <!-- detail header -->
+        <div class="header">
+            <md-button class="back-button" ng-click="showDetail(activeDetail.parent_id)" ng-show="numDetails>1">
+                <i class="material-icons">arrow_back</i> Back to parent {{terminology.activity_terminology.singular}}</md-button>
+            <!-- title-->
+            <div>
+                <!-- show text if no title-->
+                <span ng-show="!activeDetail._title">No title available</span>
+                <span>{{activeDetail._title}}</span>
+                <!-- edit link -->
+                <i class="fa fa-pencil-alt edit-link" aria-hidden="true" ng-click="editActivity(activeDetail.id);" ng-show="currentUser.user.role==='Super'||currentUser.user.authorizations.indexOf(activeDetail.id) >= 0"></i>
+            </div>
+            <!-- description-->
+            <div class="description">
+                <!-- show text if no description-->
+                <span ng-show="!activeDetail._description">No description available</span>
+                <span>{{activeDetail._description}}</span>
+            </div>
+            <div class="show-full-details md-button" ng-click="goToActivity(activeDetail.id)">View full activity details</div>
+        </div>
+        <!-- detail information (tabs with details) -->
+        <div ng-cloak class="detail-tabs">
+            <md-content>
+                <md-tabs md-dynamic-height md-stretch-tabs="always" md-border-bottom md-selected="selectedTab2">
+                    <!-- activity overview tab -->
+                    <md-tab label="Overview">
+                        <md-content class="md-padding detail-tab-resizing activity">
+                            <!-- objective -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.objective">Objective:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.objective"> {{activeDetail.overviewDetails.objective}}</div>
+                            </div>
+                            <!-- start date -->
+                            <div class="info-data">
+                                <div class="info-header">Start date:</div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.start_date">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.start_date"> {{activeDetail.overviewDetails.start_date}}</div>
+                            </div>
+                            <!-- end date -->
+                            <div class="info-data">
+                                <div class="info-header">End date:</div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.end_date">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.end_date"> {{activeDetail.overviewDetails.end_date}}</div>
+                            </div>
+                            <!-- total financials -->
+                            <div class="info-data">
+                                <div class="info-header">Financial Total:</div>
+                                <div class="info-content" ng-show="!activeDetail.overviewDetails.total_amount">No date available</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.total_amount"> {{activeDetail.overviewDetails.total_amount | currency:"USD $":0}}</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.currency"> {{activeDetail.overviewDetails.currency | currency:"USD $":0}}</div>
+                            </div>
+                            <!-- activity_status -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.activity_status">Activity Status:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.activity_status"> {{activeDetail.overviewDetails.activity_status}}</div>
+                            </div>
+                            <!-- IATI sector Category -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.sector_category">Sector Category:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.sector_category"> {{activeDetail.overviewDetails.sector_category}}</div>
+                            </div>
+                            <!-- IATI Sector -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.sector">Sector:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.sector"> {{activeDetail.overviewDetails.sector}}</div>
+                            </div>
+                            <!-- tags -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.tags">Tags:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.tags"> {{activeDetail.overviewDetails.tags}}</div>
+                            </div>
+                            <!-- content -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.overviewDetails.content">Content:</div>
+                                <div class="info-content" ng-show="activeDetail.overviewDetails.content"> {{activeDetail.overviewDetails.content}}</div>
+                            </div>
+
+                            <!-- Additional Resources-->
+                            <div class="info-data" ng-show="activeDetail.overviewDetails.additionalResources.length > 0">
+                                <span class="additional-resources">Additional Resources</span>
+                                <div ng-repeat="r in activeDetail.overviewDetails.additionalResources track by $index">
+                                    <div class="story-button">
+                                        <i class="material-icons">{{r.type}}</i>
+                                        <a ng-href={{r.url}} target="_blank">{{r.title}}</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- taxonomies -->
+                            <div class="pmt-h2 section-header">Taxonomy Information</div>
+                            <div class="info-header" ng-show="!activeDetail.taxonomyDetails">No additional taxonomy information available for this Activity.</div>
+                            <!-- activity status-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.activity_status">Activity Status:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.activity_status">{{activeDetail.taxonomyDetails.activity_status}}</div>
+                            </div>
+                            <!-- sector category-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.sector_category">Sector Category:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.sector_category">{{activeDetail.taxonomyDetails.sector_category}}</div>
+                            </div>
+                            <!-- sector -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.sector">Sector:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.sector">{{activeDetail.taxonomyDetails.sector}}</div>
+                            </div>
+                            <!-- sector category-->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="activeDetail.taxonomyDetails.activity_scope">Activity Scope:</div>
+                                <div class="info-content" ng-show="activeDetail.taxonomyDetails.activity_scope">{{activeDetail.taxonomyDetails.activity_scope}}</div>
+                            </div>
+                            <!-- custom taxonomy -->
+                            <div ng-repeat="(key,value) in activeDetail.taxonomyDetails.custom_taxonomy">
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="value">{{key}}:</div>
+                                    <div class="info-content" ng-show="value">{{value}}</div>
+                                </div>
+                            </div>
+
+                            <!-- organiation data -->
+                            <div class="pmt-h2 section-header">Organizations</div>
+                            <div class="info-header" ng-show="!(activeDetail.organizationDetails.organizationCount > 0)">No additional organization information available for this {{terminology.activity_terminology.singular}}.</div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.implementingOrgs.length > 0">
+                                <div class="info-header block"> Implementing Partners: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.implementingOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.fundingOrgs.length > 0">
+                                <div class="info-header block"> Funding Partners: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.fundingOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="info-data" ng-show="activeDetail.organizationDetails.accountableOrgs.length > 0">
+                                <div class="info-header block"> Accountable Partners: </div>
+                                <div ng-repeat="org in activeDetail.organizationDetails.accountableOrgs" class="info-content partner-data block">
+                                    <div class="link">{{org.organization}}</div>
+                                    <div class="org-details">
+                                        <!-- org url -->
+                                        <div class="info-data" ng-show="org.url">
+                                            <div class="info-header">URL:</div>
+                                            <div class="info-content"> {{org.url}}</div>
+                                            <!-- org address -->
+                                            <div class="info-data">
+                                                <div class="info-header" ng-show="org.address">Address:</div>
+                                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+
+
+                            <!-- financial data -->
+                            <div class="pmt-h2 section-header">Financial Information</div>
+                            <div class="info-header" ng-show="activeDetail.financialsDetails.length == 0">No additional financial information available for this {{terminology.activity_terminology.singular}}.</div>
+                            <div ng-repeat="financial in activeDetail.financialsDetails" class="individual-element">
+                                <!-- provider -->
+                                <div class="info-data">
+                                    <div class="info-header">Provider:</div>
+                                    <div class="info-content" ng-show="!financial.provider">No provider available</div>
+                                    <div class="info-content" ng-show="financial.provider"> {{financial.provider}}</div>
+                                </div>
+                                <!-- recipient -->
+                                <div class="info-data">
+                                    <div class="info-header">Recipient:</div>
+                                    <div class="info-content" ng-show="!financial.recipient">No recipient available</div>
+                                    <div class="info-content" ng-show="financial.recipient"> {{financial.recipient}}</div>
+                                </div>
+                                <!-- financial type category -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="financial.finance_category">Financial Type Category:</div>
+                                    <div class="info-content" ng-show="financial.finance_category"> {{financial.finance_category}}</div>
+                                </div>
+                                <!-- financial type-->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="financial.finance_type">Financial Type:</div>
+                                    <div class="info-content" ng-show="financial.finance_type"> {{financial.finance_type}}</div>
+                                </div>
+                                <!-- transaction type-->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="financial.transaction_type">Transaction Type:</div>
+                                    <div class="info-content" ng-show="financial.transaction_type"> {{financial.transaction_type}}</div>
+                                </div>
+                                <!-- amount -->
+                                <div class="info-data">
+                                    <div class="info-header">Amount:</div>
+                                    <div class="info-content" ng-show="!financial.amount">No amount date available</div>
+                                    <div class="info-content" ng-show="financial.amount"> {{financial.amount | currency:"USD $":0}}</div>
+                                    <div class="info-content" ng-show="financial.currency"> {{financial.currency| currency:"USD $":0}}</div>
+                                </div>
+                            </div>
+
+                        </md-content>
+                    </md-tab>
+                    <!-- location tab -->
+                    <md-tab label="Locations">
+                        <md-content class="md-padding detail-tab-resizing activity">
+                            <div class="sub-menu-header" ng-show="(activeDetail.locationDetails.length > 0)">
+                                <!-- number of locations-->
+                                <div class="summary-stats">Locations ({{activeDetail.locationDetails.length || 0}})</div>
+                                <div class="legend">
+                                    <div class="key admin1"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin1}}</div>
+                                    <div class="key admin2"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin2}}</div>
+                                    <div class="key admin3"></div>
+                                    <div class="key-label">{{terminology.boundary_terminology.singular.admin3}}</div>
+                                </div>
+                                <div class="info-data">
+                                    <div class="info-content show-on-map" ng-click="showLocations();">
+                                        <i class="fa fa-eye show-locations"></i> Show Location on Map</div>
+                                </div>
+                            </div>
+                            <div class="info-header" ng-show="!(activeDetail.locationDetails.length > 0)">No additional locations information available for this activity.</div>
+                            <!-- locations-->
+                            <div ng-repeat="location in activeDetail.locationDetails" class="individual-element" ng-show="(activeDetail.locationDetails.length > 0)">
+                                <div class="info-header">Location [{{$index + 1}}] </div>
+                                <!-- country -->
+                                <div class="info-data">
+                                    <div class="info-header">Country:</div>
+                                    <div class="info-content" ng-show="!location.country">No country data available</div>
+                                    <div class="info-content" ng-show="location.country">
+                                        <div class="location-name">{{location.country}}</div>
+                                    </div>
+                                </div>
+                                <!-- location national/local -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.national_local">National/Local:</div>
+                                    <div class="info-content" ng-show="location.national_local"> {{location.national_local}}</div>
+                                </div>
+                                <!-- location type -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.location_type">Type:</div>
+                                    <div class="info-content" ng-show="location.location_type"> {{location.location_type}}</div>
+                                </div>
+                                <!-- flag -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.location_flag">Flag:</div>
+                                    <div class="info-content" ng-show="location.location_flag"> {{location.location_flag}}</div>
+                                </div>
+                                <!-- admin 1 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin1">{{terminology.boundary_terminology.singular.admin1}}:</div>
+                                    <div class="info-content" ng-show="location.admin1">
+                                        <div class="key admin1"></div>
+                                        <div class="location-name">{{location.admin1}}</div>
+                                    </div>
+                                </div>
+                                <!-- admin 2 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin2">{{terminology.boundary_terminology.singular.admin2}}:</div>
+                                    <div class="info-content" ng-show="location.admin2">
+                                        <div class="key admin2"></div>
+                                        <div class="location-name">{{location.admin2}}</div>
+                                    </div>
+                                </div>
+                                <!-- admin 3 -->
+                                <div class="info-data">
+                                    <div class="info-header" ng-show="location.admin3">{{terminology.boundary_terminology.singular.admin3}}:</div>
+                                    <div class="info-content" ng-show="location.admin3">
+                                        <div class="key admin3"></div>
+                                        <div class="location-name">{{location.admin3}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+            </md-content>
+        </div>
+    </div>
+</div>

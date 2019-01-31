@@ -1,0 +1,169 @@
+﻿// contextual layers menu
+#map-contextual {
+    width: 100%;
+    display: none;
+    opacity: 0;
+    -moz-transition: all .5s ease .3s;
+    -webkit-transition: all .5s ease .3s;
+    -ms-transition: all .5s ease .3s;
+    transition: all .5s ease .3s;
+    // menu for all contextual layers (list of categories)
+    .menu {
+        height: 100%;
+        position: relative;
+        left: 0;
+        background-color: #fff;
+        z-index: 1;
+        padding-top: 10px;
+        margin-top: -13px;
+        -moz-transition: all .5s ease .3s;
+        -webkit-transition: all .5s ease .3s;
+        -ms-transition: all .5s ease .3s;
+        transition: all .5s ease .3s;
+        md-switch:last-of-type {
+            margin-left: 25px;
+        }
+        md-switch.md-default-theme.md-checked .md-bar, md-switch.md-checked .md-bar, md-switch.md-checked .md-thumb {
+            background-color: @main-font-color;
+        }
+        // menu options container (list of categories)
+        .menu-option-container {
+            font: 12px @title-font-family;
+            font-weight: 400;
+            text-transform: uppercase;
+            cursor: pointer;
+            background-color: #fff;
+            width: 90%;
+            margin: auto;
+            // menu option
+            .menu-option {
+                padding: 15px 0 15px 15px;
+            }
+            // menu option: hover
+            .menu-option:hover {
+                color: @main-font-color;
+            }
+            // menu option: active
+            .menu-option.active {
+                color: @main-font-color;
+            }
+        }
+    }
+    // menu for all contextual layers: closed state
+    .menu.closed {
+        left: -300px;
+    }
+    //tootlip
+    .left-panel-slide-out {
+        i {
+            cursor: pointer;
+        }
+        .data-element {
+            max-width: 575px;
+            min-width: 300px;
+            .data-title {
+                font-family: @title-font-family;
+            }
+            .data-value {
+                text-transform: initial;
+                font-family: @reg-font-family;
+            }
+        }
+    }
+
+
+    // sub-menu for a category of contextual layers
+    .sub-menu {
+        height: 100%;
+        margin-top: 5px;
+        padding: 0 5px;
+        font-size: 10px;
+        // menu options container (layers in a category)
+        .sub-menu-option-container {
+            display: none;
+            margin-bottom: 25px;
+            -moz-transition: all .5s ease .3s;
+            -webkit-transition: all .5s ease .3s;
+            -ms-transition: all .5s ease .3s;
+            transition: all .5s ease .3s;
+            // menu option
+            .menu-option {
+                margin-bottom: 12px;
+                float: left;
+                // checkbox
+                .menu-checkbox {
+                    float: left;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+                // menu label
+                .menu-label {
+                    font-size: 13px;
+                    color: @text-color-1;
+                    margin-left: 18px;
+                    margin-bottom: 6px;
+                    cursor: pointer;
+                    font-family: @reg-font-family;
+                    width: 178px;
+                    .name {
+                        display: inline-block;
+                        width: 145px;
+                    }
+                    i {
+                        display: inline-block;
+                        font-size: 14px;
+                        float: right;
+                        padding-top: 3px;
+                        cursor: pointer;
+                    }
+                    .layer-tooltip {
+                        position: absolute;
+                        background-color: white;
+                        margin-top: -22px;
+                        padding: 5px 10px;
+                        border: 1px solid grey;
+                        left: 225px;
+                        border-radius: 4px;
+                        .data-element {
+                            white-space: nowrap;
+                            .data-title {
+                                font-family: @title-font-family;
+                                display: block;
+                            }
+                            .data-value {
+                                text-transform: lowercase;
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // menu options container (layers in a category): active
+        .sub-menu-option-container.active {
+            display: block;
+        }
+    }
+    // alignment adjustment for selection template
+    .selection-adjustment {
+        margin-left: 18px;
+        margin-top: 14px;
+    }
+
+    .selection {
+        visibility: hidden;
+    }
+
+    .selection.active {
+        visibility: visible;
+    }
+}
+
+#map-contextual.active {
+    display: block;
+    opacity: 1;
+    -moz-transition: all .5s ease .3s;
+    -webkit-transition: all .5s ease .3s;
+    -ms-transition: all .5s ease .3s;
+    transition: all .5s ease .3s;
+}

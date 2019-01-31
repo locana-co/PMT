@@ -1,0 +1,225 @@
+﻿// top  bar control
+#map-top-bar {
+    // menu
+    .top-bar-menu {
+        font: 11pt @title-font-family;
+        font-weight: 400;
+        position: absolute;
+        height: @map-top-bar-height;
+        top: 0;
+        right: 0;
+        background-color: @secondary-grey;
+        -moz-transition: all .5s ease .2s;
+        -o-transition: all .5s ease .2s;
+        -webkit-transition: all .5s ease .2s;
+        transition: all .5s ease .2s;
+        width: 100%;
+        z-index: 904;
+        // activity count total
+        .activity-summary-count {
+            float: left;
+            margin: 5px 0 0 18px;
+            color: #ffffff;
+            font-family: @title-font-family;
+            font-weight: 800;
+            background-color: transparent;
+            text-transform: uppercase;
+            // number of count
+            .count {
+                float: right;
+                margin-left: 5px;
+            }
+            // loading animation
+            .loader {
+                margin-top: -8px;
+                float: right;
+                // Overwrite loading animation color
+                .md-left .md-half-circle {
+                    border-left-color: #fff;
+                    border-top-color: #fff;
+                }
+
+                .md-right .md-half-circle {
+                    border-right-color: #fff;
+                    border-top-color: #fff;
+                }
+            }
+        }
+        //export button
+        .export {
+            float: right;
+            height: 31px;
+            padding: 0;
+            line-height: 12px;
+            min-height: 0;
+            .pmt-gray-button;
+            background-color: @link-color;
+        }
+        // toggle clusters switch
+        .toggle{
+            // switch
+            md-switch {
+                margin: 0 9px 0 0;
+                span {
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    color: #fff;
+                }
+            }
+            // active switch horizontal line
+            md-switch.md-checked .md-bar {
+                background: @main-bg-color;
+                opacity: .5;
+            }
+            // inactive switch horizontal line
+            md-switch .md-bar {
+                background-color: rgb(199, 199, 199);
+            }
+            // active/inactive switch circular button
+            md-switch.md-checked .md-thumb {
+                background-color: @main-bg-color;
+            }
+            // active/inactive switch ripple
+            md-switch.md-checked .md-ink-ripple {
+                color: @main-bg-color;
+            }
+        }
+        // region menu container
+        .zoom-to {
+            position: relative;
+            display: inline-block;
+            // region menu label
+            .region-menu-label {
+                margin: 4px 0 0 0;
+                color: #fff;
+                display: inline-block;
+            }
+            // region drop down menu container
+            .regionSelect {
+                display: inline-block;
+                padding: 0;
+                margin: 0 15px;
+                width: 175px;
+                float: right;
+                height: 27px;
+                border-bottom: 2px solid white;
+                .md-select-value.md-select-placeholder {
+                    color: #fff;
+                }
+                .md-select-icon {
+                    color: #fff;
+                }
+                .md-select-value {
+                    border-bottom-color: transparent;
+                    color: #fff;
+                }
+            }
+        }
+        // location search
+        .geocoder {
+            position: relative;
+            padding: 0;
+            display: inline-block;
+            height: 26px;
+            border-bottom: 2px solid #fff;
+            width: 175px;
+            margin: 1px 7px 0 0;
+            color: #fff;
+            line-height: 1;
+            label:not(.md-no-float):not(.md-container-ignore) {
+                color: #fff;
+                font-weight: 400;
+                font-size: 14px;
+            }
+
+            input {
+                color: #fff;
+                border-bottom: transparent;
+            }
+
+            .search {
+                position: absolute;
+                right: 3px;
+                cursor: pointer;
+                font-size: 21px;
+            }
+        }
+
+        .geocoder.md-input-focused .md-input {
+            border-color: #fff;
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .right-button {
+            float: right;
+            // search results
+            .search-results {
+                position: absolute;
+                z-index: 902;
+                background-color: #fff;
+                max-height: 350px;
+               max-width: 350px;
+                top: -400px;
+                right: 0;
+                border: 1px solid @element-border-color;
+                -moz-transition: all .5s ease .2s;
+                -o-transition: all .5s ease .2s;
+                -webkit-transition: all .5s ease .2s;
+                transition: all .5s ease .2s;
+
+                .search-results-title {
+                    text-align: center;
+                    font-family: @bold-font-family;
+                    padding: 10px;
+                    .pmt-h2;
+                    .close-button {
+                        float: right;
+                        display: inline-block;
+                        cursor: pointer;
+                    }
+                }
+                // loading animation
+                .loader {
+                    margin: 0 auto;
+                    position: relative;
+                    // Overwrite loading animation color
+                    .md-left .md-half-circle {
+                        border-left-color: #cecece;
+                        border-top-color: #cecece;
+                    }
+
+                    .md-right .md-half-circle {
+                        border-right-color: #cecece;
+                        border-top-color: #cecece;
+                    }
+                }
+
+                .search-results-content {
+                    font-size: 12px;
+                    max-height: 300px;
+                    overflow-y: scroll;
+                    md-list-item.md-3-line {
+                        min-height: 40px;
+                        cursor: pointer;
+                        padding: 10px;
+                        .response-title {
+                            .pmt-hyperlink;
+                            background-color: transparent;
+                        }
+                    }
+                    md-list-item.md-3-line:hover {
+                        background-color: rgba(158,158,158,0.2);
+                    }
+
+                }
+            }
+            .search-results.active {
+                top: 31px;
+                -moz-transition: all .5s ease .2s;
+                -o-transition: all .5s ease .2s;
+                -webkit-transition: all .5s ease .2s;
+                transition: all .5s ease .2s;
+            }
+        }
+    }
+}

@@ -1,0 +1,88 @@
+<div id="add-existing-user">
+    <md-dialog aria-label="add existing user dialog">
+        <form>
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Add Existing User</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <!-- users -->
+            <md-dialog-content ng-show="!Loading">
+
+                <!-- Desription -->
+                <md-content class="description md-padding">
+                    <p>Select an existing user and assign their role:</p>
+                </md-content>
+
+                <!-- Search -->
+                <md-input-container ng-show="!Loading" md-no-float class="search md-block searchBar">
+                    <input ng-model="userSearchQuery" placeholder="Search" ng-click="selectedUser=null">
+                </md-input-container>
+
+                <!-- Header -->
+                <md-content class="tableHead">
+                    <div>
+                        <span class="leftPadding">Last Name</span>
+                        <span>First Name</span>
+                        <span>Username</span>
+                        <span>Email</span>
+                        <span class="leftPadding">Role</span>
+                    </div>
+                </md-content>
+
+                <md-divider></md-divider>
+
+                <div class="userList">
+                    <md-radio-group ng-model="selectedUser">
+                        <div ng-repeat="user in nonInstanceUsers | filterUsers: userSearchQuery" class="row">
+                            <div class="radioRow">
+                                <div class="radioContent">
+                                    <md-radio-button flex ng-value="user.id" ng-model="selectedUser" class="md-primary" aria-label="select existing user" ng-click="resetRole(user)">
+                                        <span class="leftPadding">{{user._last_name}}</span>
+                                        <span>{{user._first_name}}</span>
+                                        <span>{{user._username}}</span>
+                                        <span>{{user._email}}</span>
+                                    </md-radio-button>
+                                </div>
+
+                                <!-- role selector -->
+                                <div class="roleSelector">
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Role</label>
+                                        <md-select required ng-model="user.role_id" md-container-class="create-user-role-select" ng-disabled="selectedUser!==user.id">
+                                            <md-option id="create-user-role" ng-repeat="role in roles" value="{{role.id}}" ng-click="updateRole(user, role)">{{role._name}}</md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </div>
+                    </md-radio-group>
+                </div>
+
+                <md-divider></md-divider>
+
+                <div layout-gt-sm="row" class="lastRow">
+
+                    <!-- loading animation -->
+                    <div>
+                        <md-progress-circular ng-show="Loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+
+                    <!-- buttons -->
+                    <div ng-show="!Loading">
+                        <md-button class="md-raised" ng-click="cancel()">Close</md-button>
+                        <md-button class="save md-raised" ng-disabled="!selectedRole || !selectedUser" ng-click="addUser()">Add User</md-button>
+                    </div>
+                </div>
+
+
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

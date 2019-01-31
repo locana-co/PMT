@@ -1,0 +1,13 @@
+<div id="editor" ng-controller="EditorCtrl">
+    <h1  ng-show="stateService.isNotParam('editor_activity_id')">{{page.title}}</h1>
+
+    <!-- Activity List -->
+    <ng-include src="'editor/top-bar/top-bar.tpl.html'"></ng-include>
+
+    <!-- Activity List -->
+    <ng-include src="'editor/list/list.tpl.html'"></ng-include>
+
+    <!-- Activity Detail -->
+    <ng-include src="'editor/detail/detail.tpl.html'"></ng-include>
+
+</div>

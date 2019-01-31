@@ -1,0 +1,50 @@
+﻿#locs-widget {
+    position: relative;
+    padding: 0 10px 10px 10px;
+    width: calc( ~'100% - 220px ');
+    float: right;
+    // widget rows
+    .row {
+        margin: 10px 0;
+        // containers hold individual widgets
+        .widget-container {
+            padding: 0 5px;
+            // the widget templates
+            .widget-tpl {
+                padding: 10px;
+                background-color: #fff;
+                border: 1px solid #d6d6d5;
+                border-radius: 2px;
+                //box-shadow: 0.5px 0.5px 1px rgba(153,153,153,0.6);
+            }
+        }
+    }
+    .no-data-message {
+        font-size: 18px;
+        padding: 10px;
+        font-family: @title-font-family;
+    }
+}
+
+//print modal
+#locs-widget-modal {
+    min-width: 30%;
+    md-toolbar {
+        background-color: @main-bg-color;
+        .md-icon-button {
+            position: absolute;
+            right: 15px;
+        }
+    }
+    md-dialog-content {
+        padding: 20px;
+        .header {
+            width: 80%;
+            display: inline-block;
+        }
+        .print {
+            float: right;
+            cursor: pointer;
+        }
+    }
+}

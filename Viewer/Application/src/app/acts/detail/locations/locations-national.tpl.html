@@ -1,0 +1,12 @@
+<div id="acts-detail-locations-national" ng-controller="ActsDetailLocationNationalCtrl">
+    <!-- locations template for national activities -->
+    <div class="national-wrapper">
+        <img class="flag" ng-src="{{flag}}">
+        <!-- parent -->
+        <span class="message" ng-show="selectedActivity.parent_id == null">This is a national {{terminology.activity_terminology.singular}} with the potential to reach any location in the
+            country.</span>
+        <!-- child -->
+                <span class="message" ng-show="selectedActivity.parent_id != null">This is a national activity with the potential to reach any location in the
+            country.</span>
+    </div>
+</div>

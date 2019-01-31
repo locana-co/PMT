@@ -1,0 +1,88 @@
+<div id="map-filter" class="left-panel scrollable fade" ng-controller="MapFilterCtrl" ng-class="{active: navTab==='filter'}">
+    <!-- filter menu -->
+    <div class="menu" ng-class="{closed:sideoutOpen}">
+        <!-- box to show filter selection-->
+        <div class="filter-selection" ng-show="filterCount > 0">
+            <!-- header for selected layer tools -->
+            <div class="selection-header">
+                Your selection: <div class="clear-all" ng-click="removeAllFilters();">Clear All</div>
+            </div>
+            <!-- tools for each selected filter -->
+            <div  class="selected-filters">
+                <div class="selected-filter" ng-repeat="(idx, filter) in selectedFilters | orderBy:'label' ">
+                    <div class="layer-label" >
+                        <div class="layer-name">{{ filter.label | cut:true:22:'...' }}</div>
+                        <i class="material-icons cancel" ng-click="removeFilter(filter)">cancel</i>
+                    </div>
+                    <div class="selected-child-filter" ng-repeat="c in filter.children | orderBy:'label' ">
+                        <div class="layer-label">
+                            <div class="layer-name">{{ c.label }}</div>
+                            <i class="material-icons cancel" ng-click="removeFilter(c)">cancel</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- filter by keyword search -->
+        <div class="keyword-search">
+            <div class="keyword-label">Keyword:</div>
+            <md-input-container md-no-float>
+                <input ng-model="keyword" placeholder="Search" ng-change="clearKeywordFilter()" ng-keyup="$event.keyCode == 13 ? filterByKeyword(keyword) : null">
+                <i class="material-icons search" ng-show="keyword.length > 0" ng-click="filterByKeyword(keyword)">search</i>
+            </md-input-container>
+        </div>
+        <!-- filter menu options -->
+        <div ng-repeat="filter in page.tools.map.filters | filter: {isChild:false} as filtered" ng-click="onMenuClicked(filter.id)"
+             class="menu-option-container" ng-hide="filter.enable===false">
+            <div class="menu-option" ng-class="{active: activeFilter.id==filter.id && sideoutOpen}">{{filter.label}}
+            </div>
+        </div>
+    </div>
+    <!-- sub-menu panel -->
+    <div class="left-panel-slide-out" ng-class="{open: sideoutOpen}">
+        <div class="wrapper">
+            <!-- box to show filter selection-->
+            <div class="filter-selection" id='fs' ng-show="filterCount > 0">
+                <!-- header for selected layer tools -->
+                <div class="selection-header">
+                    Your selection: <div class="clear-all" ng-click="removeAllFilters();">Clear All</div>
+                </div>
+                <!-- tools for each selected filter -->
+                <div  class="selected-filters">
+                    <div class="selected-filter" ng-repeat="(idx, filter) in selectedFilters | orderBy:'label' ">
+                        <div class="layer-label" >
+                            <div class="layer-name">{{ filter.label | cut:true:25:'...'}}</div>
+                            <i class="material-icons cancel" ng-click="removeFilter(filter)">cancel</i>
+                        </div>
+                        <div class="selected-child-filter" ng-repeat="c in filter.children | orderBy:'label' ">
+                            <div class="layer-label">
+                                <div class="layer-name">{{ c.label }}</div>
+                                <i class="material-icons cancel" ng-click="removeFilter(c)">cancel</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- back to menu link -->
+            <div class="header md-button pmt-back-button" ng-click="closeSlideOut();">
+                <i class="material-icons">arrow_back</i>
+                Back to filter list
+            </div>
+            <!-- filter -->
+            <div class="title">
+                {{activeFilter.label}}
+            </div>
+            <!-- sub-menu for the selected filter -->
+            <div class="sub-menu scrollable">
+                <div class="sub-menu-option-container" ng-repeat="filter in page.tools.map.filters | filter: {isChild:false} as filtered"
+                     ng-class="{active: activeFilter.id==filter.id}">
+                    <div class="menu-title" ng-show="filter.title!=null">{{filter.title}}</div>
+                    <div class="menu-description" ng-show="filter.description!=null">{{filter.description}}</div>
+                    <!-- template for filter (set in the config) -->
+                    <div ng-include ng-attr-id="{{ filter.id }}" class="tab-pane-tpl" ng-show="filter.tpl!=null"
+                         src="filter.tpl"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

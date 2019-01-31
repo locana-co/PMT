@@ -1,0 +1,17 @@
+<div id="locs-top-bar" ng-controller="LocsTopBarCtrl">      
+    <!-- title -->
+    <div class="title">{{area}} {{title}}</div>
+    <!-- drop down menu -->
+    <div class="menu">
+        <md-input-container class="menu-dropdown" aria-label="Zoom to Region" ng-show="menu.length > 1">
+            <md-select aria-label="Zoom to Region" ng-model="selectedOption">
+                <md-option ng-repeat="option in menu"
+                           ng-click="menuOptionSelected(option)"
+                           aria-label="{{option}}" value="{{option}}">
+                    {{option}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <div class="location-title" ng-show="menu.length <= 1">{{menu[0]}}</div>
+    </div>      
+</div>

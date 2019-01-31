@@ -1,0 +1,11 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-stories widget" ng-controller="LocsWidgetStoriesCtrl">
+    <div class="success-story" ng-repeat="s in stories">
+        <div class="story-link">
+            <span class="header">Success story: </span>
+            {{s.title}}
+            <span class="story-button" ng-click="showSuccessStory(s)">Read story now <i class="material-icons">arrow_forward</i> </span>
+        </div>
+    </div>
+    <div class="no-data" ng-show="stories == null">There are no success stories for this country</div>
+</div>

@@ -1,0 +1,39 @@
+<div id="map-child-taxonomy" ng-controller="MapChildrenTaxonamyCtrl">
+
+    <div class="child-taxonomy-item" ng-repeat="child in $parent.activeDetail.children | orderBy:'_title'">
+        <div class='section-title'>{{child._title}}</div>
+        <md-divider></md-divider>
+        <div layout="row" flex>
+            <div class="activity-detail-data" layout="column" flex>
+                <div class="info-header" ng-show="!child.activeDetail.taxonomy">No additional taxonomy information available for this Activity.</div>
+                <!-- activity status-->
+                <div class="info-data">
+                    <div class="info-header" ng-show="child.activeDetail.taxonomyDetails.activity_status">Activity Status:</div>
+                    <div class="info-content" ng-show="child.activeDetail.taxonomyDetails.activity_status">{{child.activeDetail.taxonomyDetails.activity_status}}</div>
+                </div>
+                <!-- sector category-->
+                <div class="info-data">
+                    <div class="info-header" ng-show="child.activeDetail.taxonomyDetails.sector_category">Sector Category:</div>
+                    <div class="info-content" ng-show="child.activeDetail.taxonomyDetails.sector_category">{{child.activeDetail.taxonomyDetails.sector_category}}</div>
+                </div>
+                <!-- sector -->
+                <div class="info-data">
+                    <div class="info-header" ng-show="child.activeDetail.taxonomyDetails.sector">Sector:</div>
+                    <div class="info-content" ng-show="child.activeDetail.taxonomyDetails.sector">{{child.activeDetail.taxonomyDetails.sector}}</div>
+                </div>
+                <!-- sector category-->
+                <div class="info-data">
+                    <div class="info-header" ng-show="child.activeDetail.taxonomyDetails.activity_scope">Activity Scope:</div>
+                    <div class="info-content" ng-show="child.activeDetail.taxonomyDetails.activity_scope">{{child.activeDetail.taxonomyDetails.activity_scope}}</div>
+                </div>
+                <!-- custom taxonomy -->
+                <div ng-repeat="(key,value) in child.activeDetail.taxonomyDetails.custom_taxonomy">
+                    <div class="info-data">
+                        <div class="info-header" ng-show="value">{{key}}:</div>
+                        <div class="info-content" ng-show="value">{{value}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

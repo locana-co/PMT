@@ -1,0 +1,90 @@
+#locs-mapCtrl {
+    max-height: @locs-map-height-lg;
+    overflow-y: hidden;
+    width: calc(~'100% - 220px');
+    float: right;
+}
+
+#locs-map {
+    height: @locs-map-height-lg;
+    width: 100%;
+    position: relative;
+    -moz-transition: all .3s ease .3s;
+    -webkit-transition: all .3s ease .3s;
+    -ms-transition: all .3s ease .3s;
+    transition: all .3s ease .3s;
+    z-index: 9;
+    border: 1px solid @element-border-color;
+    //border-top: none;
+    cursor: default;
+    padding: 10px;
+    float: right;
+    // leaflet link on map
+    .leaflet-control-attribution {
+        //display: none;
+    }
+    // leaflet zoom controls
+    .leaflet-control-zoom {
+        display: none;
+    }
+    .boundary-toggle {
+        float: right;
+        bottom: 20px;
+        position: absolute;
+        height: 91px;
+        right: 5px;
+        width: auto;
+        padding: 5px;
+        color: #263947;
+        background-color: #fff;
+        cursor: pointer;
+        z-index: 501;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.65);
+
+        .boundary-toggle-label {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        md-radio-button {
+            font-size: 10px;
+            margin-bottom: 12px;
+
+            .md-label {
+                margin-left: 25px;
+            }
+        }
+    }
+}
+
+#locs-map.shrink {
+    float: right;
+    margin-right: 5px;
+    width: calc(~'40% - 5px');
+}
+// media specific targets match Material
+// Design's Layout
+// https://material.angularjs.org/latest/api/service/$mdMedia
+// sx
+@media only screen and (max-width: 599px) {
+    #locsMap {
+        height: @locs-map-height-sx;
+    }
+}
+// sm
+@media only screen and (min-width: 600px) {
+    #locsMap {
+        height: @locs-map-height-sm;
+    }
+}
+// md
+@media only screen and (min-width: 960px) {
+    #locsMap {
+        height: @locs-map-height-md;
+    }
+}
+// lg
+@media only screen and (min-width: 1280px) {
+    #locsMap {
+        height: @locs-map-height-lg;
+    }
+}

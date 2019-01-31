@@ -1,0 +1,38 @@
+<md-dialog class="top-dollar-show-all-modal top-dollar-modal no-select" aria-label="Show All">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header">All {{funder_terminology}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="closeDialog();">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <!-- no data found -->
+        <div ng-if="allOrganizations.length < 1">
+            <div class="no-data">No Organizations Found</div>
+        </div>
+        <!-- organization listing -->
+        <div ng-if="allOrganizations.length > 0">
+            <table>
+                <header>
+                    <th>
+                        <div class="org-name">Organization</div>
+                    </th>
+                    <th>
+                        <div class="amount">Amount</div>
+                    </th>
+                </header>
+                <tr ng-repeat="row in allOrganizations | orderBy: '-sum'">
+                    <td>
+                        <div class="org-name">{{row.label}}</div>
+                    </td>
+                    <td>
+                        <div class="amount">{{row.sumStr}}</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </md-dialog-content>
+</md-dialog>

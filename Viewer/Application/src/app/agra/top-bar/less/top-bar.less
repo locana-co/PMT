@@ -1,0 +1,45 @@
+#agra-top-bar {
+  height: @acts-top-bar-height;
+  background: @secondary-grey;
+  position: fixed;
+  top: @height-header;
+  width: 100%;
+  margin-left: -(@width-navigation);
+  padding: 10px 0 10px @width-navigation;
+  z-index: 900;
+  .title {
+    color: #fff;
+    font-family: @title-font-family;
+    line-height: 21px;
+    font-size: 18px;
+    margin: 6px 20px 0 18px;
+    display: inline-block;
+    float: left;
+    max-width: calc(~"100% - 200px");
+    text-transform: capitalize;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-65%);
+  }
+  .title.long {
+    font-size: 14px;
+    line-height: 17px;
+  }
+  .toolbar{
+    float: right;
+    margin-right: 20px;
+    margin-top: -9px;
+    // button icons
+    .icon-button {
+        color: #fff;
+        background-color: @main-bg-color;
+        // icon
+        i{
+            margin-top: 7px;
+        }
+        &:hover{
+            background-color: @main-font-color;
+        }
+    }
+  }
+}

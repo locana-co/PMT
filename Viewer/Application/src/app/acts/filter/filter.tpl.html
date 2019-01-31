@@ -1,0 +1,52 @@
+<div id="acts-filter" ng-controller="ActsFilterCtrl" ng-show="stateService.isNotParam('activity_id')">
+    <!-- box to show filter selection-->
+    <div class="selection" ng-show="filterCount > 0">
+        <!-- header for selected layer tools -->
+        <div class="selection-header">
+            Your selection:
+            <div class="clear-all" ng-click="removeAllFilters();">Clear All</div>
+        </div>
+        <!-- tools for each selected filter -->
+        <div class="selected-filters">
+            <div class="selected-filter" ng-repeat="v in selectedFilters | orderBy:'label' ">
+                <div class="layer-label">
+                    <div class="layer-name">{{ v.label }}</div>
+                    <i class="material-icons cancel" ng-click="removeFilter(v)">cancel</i>
+                </div>
+                <div class="selected-child-filter" ng-repeat="c in v.children | orderBy:'label' ">
+                    <div class="layer-label">
+                        <div class="layer-name">{{ c.label }}</div>
+                        <i class="material-icons cancel" ng-click="removeFilter(c)">cancel</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- filter by keyword search -->
+    <div class="keyword-search">
+        <div class="keyword-label">Keyword:</div>
+        <md-input-container md-no-float class="geocoder">
+            <input ng-model="keyword" placeholder="Search" ng-change="clearKeywordFilter()" ng-keyup="$event.keyCode == 13 ? filterByKeyword(keyword) : null">
+            <i class="material-icons search" ng-show="keyword.length > 0" ng-click="filterByKeyword(keyword)">search</i>
+        </md-input-container>
+    </div>
+    <!-- filter menu -->
+    <div class="filterType filterBy">
+        <div class="pmt-h3">Filter By:</div>
+    </div>
+    <!-- activity filters -->
+    <div ng-repeat="filter in page.tools.map.filters | filter: {isChild:false} as filtered">
+        <div class="filterType pointer" ng-class="{open:filter.active, disabled: filter.disabled}" ng-click="onMenuClicked(filter.id, $event);"
+            ng-attr-id="{{ filter.id }}" ng-hide="filter.enable===false">
+            <div class="filter-toggle"><span class="arrow"><i class="material-icons">{{filter.arrow}}</i></span></div>
+            <div class="filter-label">
+                {{filter.label}} (<md-progress-circular ng-show="filter.size===null || filter.size < 0" class="filter-loading loading" md-diameter="12" md-mode="indeterminate"></md-progress-circular>{{filter.size}})                                               
+                
+            </div>            
+        </div>
+        <!-- template for filter (set in the config) -->
+        <div ng-attr-id="{{ filter.id }}" ng-show="filter.active" ng-class="{active: filter.active}" class="filter-options">
+            <div ng-include src="filter.tpl"></div>
+        </div>
+    </div>
+</div>

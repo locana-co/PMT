@@ -1,0 +1,38 @@
+<div id="acts-child-partners" ng-controller="ActsChildrenDetailsCtrl">
+    <div class="section-title">Organizations By Region</div>
+    <md-divider></md-divider>
+    <div class="no-info" ng-show="$parent.selectedActivity.childrenOrganizationCount <= 0">
+        There is no organization information by region.
+    </div>
+    <div ng-show="$parent.selectedActivity.childrenOrganizationCount > 0">
+        <table>
+            <tr>
+                <th>Region</th>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+            <tbody ng-repeat="child in $parent.selectedActivity.children | orderBy:'_title'">
+                <tr ng-repeat="org in child.selectedActivity.organizationDetails.implementingOrgs">
+                    <td>{{child._title}}</td>
+                    <td>{{org.role}}</td>
+                    <td>{{org.organization}}</td>
+                    <td>{{org.type}}</td>
+                </tr>
+                <tr ng-repeat="org in child.selectedActivity.organizationDetails.fundingOrgs">
+                    <td>{{child._title}}</td>
+                    <td>{{org.role}}</td>
+                    <td>{{org.organization}}</td>
+                    <td>{{org.type}}</td>
+
+                </tr>
+                <tr ng-repeat="org in child.selectedActivity.organizationDetails.accountableOrgs">
+                    <td>{{child._title}}</td>
+                    <td>Accountable Partner</td>
+                    <td>{{org.organization}}</td>
+                    <td>{{org.type}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

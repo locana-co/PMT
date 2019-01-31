@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>PMT Version History</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/user-guide.css">
+    <!-- theme from https://bootswatch.com/ -->
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/bootstrap.min.css">
+    <link rel="stylesheet" href="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/jquery.min.js"></script>
+    <script src="https://s3.amazonaws.com/v10.investmentmapping.org/userguide/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div class="jumbotron text-center">
+        <h1>The Portfolio Mapping Tool (PMT) Version History</h1>
+        <p>The Portfolio Mapping Tool 3.0 (PMT 3.0) is a web-based mapping application intended to visualize development
+            work in a variety of ways. The features of this web application allow users to browse, map, add, edit, and share
+            projects without the need for geographic information systems expertise. This Version History provides the lastest
+            information on updates, features changes, bug fixes and release dates for the PMT 3.0.</p>
+    </div>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <h2>Version</h2>
+                    </th>
+                    <th>
+                        <h2>Date</h2>
+                    </th>
+                    <th>
+                        <h2>Change List</h2>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="3.10.9">
+                    <td>
+                        <h3>3.10.9</h3>
+                    </td>
+                    <td>
+                        <h3>9/4/2018</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Updated the Editor module to include all new data elements.</li>
+                            <li>Updated the Editor module to allow taxonomy based record versioning.</li>
+                            <li>Created new Taxonomy Editor module to allow managment of taxonomies.</li>
+                            <li>Created new Organization Editor module to allow managment of organizations.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.8">
+                    <td>
+                        <h3>3.10.8</h3>
+                    </td>
+                    <td>
+                        <h3>7/6/2018</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Updated project details page and the map details panel to reflect child data holistically.
+                                New details section.</li>
+                            <li>Updated the bar chart taxonomy widget to allow a drop down of a parent taxonomy for child
+                                taxonomies.</li>
+                            <li>Several underlying logic changes to support the parent -> child data relationships in filters,
+                                counts and aggregations.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.7">
+                    <td>
+                        <h3>3.10.7</h3>
+                    </td>
+                    <td>
+                        <h3>6/1/2018</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Added PMT boundary search to "Zoom to" search feature in the Map Module. Users can search
+                                on text values of in-use administrative boundaries</li>
+                            <li>Added "full funding organization" list link on the Top Funders widget in the Summary module.</li>
+                            <li>Calendar date picker elements configured to start at year/month view to make year the primary
+                                focus.
+                            </li>
+                            <li>Added "Both" to National/Local desgniations.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.6">
+                    <td>
+                        <h3>3.10.6</h3>
+                    </td>
+                    <td>
+                        <h3>12/6/17</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Added dropdown menu to username in header, with one option: logout.</li>
+                            <li>Updated the permissions data model in preparation for adding a editor module. This required
+                                the update of several API and database methods to support the new data model.</li>
+                            <li>Add configurable email message and subject content for new users and update passwords for
+                                user accounts.
+                            </li>
+                            <li>Update save in progress messaging on new user and updated password to be more relevant.</li>
+                            <li>Addressed Summay page bug where summary content was not reflecting selected map or menu selections
+                                for geographic regions</li>
+                            <li>Added dual instance access functionality to allow both public and private access to a single
+                                application. Initially, application is accessable without a login. If user chooses to login
+                                with valid credentials additional functionality will be revealed based on the users authorized
+                                role.
+                            </li>
+                            <li>Added a new
+                                <strong>Editor page</strong>. Allows authorized users (role: Editor, Administrator or Super)
+                                to edit activity information, including: associated taxonomies, locations, financial information
+                                &amp; participating organizations.
+                            </li>
+                            <li>Made significant upgrades to the Admin page functionality.</li>
+                            <li>Added a session timeout and auto-refresh notification.</li>
+                            <li>Upgraded the loading notifications to notify user and restrict user clicks while applciation
+                                is busy.</li>
+                            <li>Added a
+                                <strong>User Guide</strong>, available by link in the footer of the application.</li>
+                            <li>Updated the download feature of the Activity page and the export of the Map page to be autoriztion
+                                based. Authorization level set in the configuration..</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.5">
+                    <td>
+                        <h3>3.10.5</h3>
+                    </td>
+                    <td>
+                        <h3>3/24/17</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Fix issue where only one taxonomy classification is showing, even when the activity has multiple
+                                assigned. Activity detail page and Map detail panel both were affected by resolved issue.</li>
+                            <li>Fixed sub title on summary page so that default filter settings are reflected on load.</li>
+                            <li>Update the location mapping on details page and "Show locations" in map page so that location
+                                colors reflect actual mapping levels and not based on textual data for admin levels.</li>
+                            <li>Update pie chart widget to ensure aggregated "Other" classifications are always assigned
+                                grey.</li>
+                            <li>Update pie chart data logic to properly sort investment amounts when null values are present.</li>
+                            <li>Fix bug in pivot table in the summary page, when configuration is set to hide empty columns.</li>
+                            <li>Add ability to set configuration to hide empty rows for pivot table in summary page.</li>
+                            <li>Added default date filter capability to configuration of the summary page.</li>
+                            <li>Fixed export issue with investment amounts being "undefined" in activity page listing.</li>
+                            <li>Added point clustering to map page for multiple data groups. Now a single point will appear
+                                in each administrative boundary feature with the total number of projects for ALL data groups.
+                                When hovering over a cluster, a pop-up will show with a breakdown of activity counts per
+                                data group.</li>
+                            <li>Updated NBS Region boundary. (TanAIM Only)</li>
+                            <li>Loaded ASDP FY 2013/14 data. (TanAIM Only)</li>
+                            <li>Loaded ASDP FY 2014/15 data. (TanAIM Only)</li>
+                            <li>Updated incorrect currency conversion for investments in ASDP, LIRECE &amp; PSD. (TanAIM
+                                Only)</li>
+                            <li>Consolidated the AWG &amp; PSD data groups and duplicated projects. (TanAIM Only)</li>
+                            <li>Re-map ASDP FY 2011/12 &amp; 2012/13 boundary centroid point locations to NBS polygon features.
+                                (TanAIM Only)
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.4">
+                    <td>
+                        <h3>3.10.4</h3>
+                    </td>
+                    <td>
+                        <h3>2/24/17</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Added geographic filter to the Map page. The geographic filter provides a filter menu of
+                                one or more boundary levels. Selecting a boundary feature will limit the data on the map
+                                to only those activities which have locations within the selected boundary features. </li>
+                            <li>Added geographic filter to the Activity page. The geographic filter provides a filter menu
+                                of one or more boundary levels. Selecting a boundary feature will limit the activities listed
+                                to only those activities which have locations within the selected boundary features. </li>
+                            <li>Expanded the data model so that locations are mapping level aware. This means that any given
+                                location in the database understands what administrative level it is map to and how it is
+                                related to any boundary loaded with in the system. Locaiton mapped at the country level will
+                                not be shown or aggregated below the admin level zero of any boundary. </li>
+                            <li>Added configurable "in-use" option to all taxonomy filters (Summmary, Map &amp; Activity
+                                pages). When enabled, only classifications in-use by the selected data groups will be shown
+                                in the filter options. The filter options are updated when the data group selections are
+                                updated.
+                            </li>
+                            <li>Removed un-used elements from the API end-point serving the Activitiy page listing to improve
+                                performance.
+                            </li>
+                            <li>Added Institutional contextual layers to the Map Page (EthAIM Only).</li>
+                            <li>Added Livestock summary charts to National and Regional areas of the Summary Page (EthAIM
+                                Only).</li>
+                            <li>Update the point symbology configuration and rendering for contextual layers.</li>
+                            <li>Update vertical chart directive to automatically color "Other" summary counts grey and remove
+                                the "Other" from legend when "Other" counts were not present.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.3">
+                    <td>
+                        <h3>3.10.3</h3>
+                    </td>
+                    <td>
+                        <h3>1/27/17</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Added pop-up functionality to vertical bar and pie chart widgets in the summary module to
+                                connect data summarized by a taxonomy to a list of cooresponding activities.</li>
+                            <li>Added functionality to the Summary page to allow users to view summarized data by multiple
+                                boundaries. Feature is currently implmented only in the EthAIM instance, allowing users to
+                                toggle data summaries by UNOCHA and ACC boundaries.</li>
+                            <li>Added a video tutorial option to instances. Currently only the EthAIM instance has a instance
+                                specific user video tutorial.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.2">
+                    <td>
+                        <h3>3.10.2</h3>
+                    </td>
+                    <td>
+                        <h3>1/13/17</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Addressed miscalculation in the vertical bar chart widgets when summarizing "other" classification
+                                groupings, in the summary page.</li>
+                            <li>Updated the map cluster points to reflect number of parent activities, in the map page.</li>
+                            <li>Updated the map page activity counter to only count parent activities, located in the upper
+                                left corner above the map.</li>
+                            <li>Address filtering issue when filter data from multilpe taxonomy filters (site wide).</li>
+                            <li>Address encoding issues in some of the text data.</li>
+                            <li>Users can view cluster data on the interactive map summarized by multiple boundaries. For
+                                example, users can see data by GADM, UNOCHA, or ACC boundaries.</li>
+                            <li>Interactive map clusters are color coded to match boundary level so a user knows when he/she
+                                is looking at country,region or zone data.</li>
+                            <li>Added pop-up functionality to horizontal widgets in the summary module to connect organizations
+                                to a list of their activities.</li>
+                            <li>Removed child activities from the interactive map and activity modules. Child activities
+                                can only be viewed through a parent grant.</li>
+                            <li>Added caveat text to summary page widgets so users know what filters are being applied.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.1">
+                    <td>
+                        <h3>3.10.1</h3>
+                    </td>
+                    <td>
+                        <h3>12/16/16</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Updated activity page keyword search to allow a keyword search of additional activity information,
+                                beyond what is viewable in the list.</li>
+                            <li>Added map page keyword search, which allows users to search textual activity information.</li>
+                            <li>Improved styling of the small map on the activity details of the activity page.</li>
+                            <li>Improved styling of the activity cluster boundaries on the map page.</li>
+                            <li>Improved styling of "show locations on map" in the activity details of the map page, available
+                                under the "Location" tab of a selected activity in the right panel.</li>
+                            <li>Added functionality for toggling clusters in the map page, available under the "Map Layers"
+                                tab in the left menu.</li>
+                            <li>Added associated metadata and legends to the contextual map layers in the map page, available
+                                under the "i" symbol in the "Map Layers" tab of the left menu.</li>
+                            <li>Added a "Zoom to a Location" feature in the map page, to allow users to navigate to a geocoded
+                                location. Available in the upper right corner of the map</li>
+                            <li>Addressed color ramp bug on summary page, for widgets using pie and bar charts.</li>
+                            <li>Expanded organization filtering for both the activity and map page, to allow multiple organization
+                                types (i.e. Funding, Implmenting, Accountable).</li>
+                            <li>Added boundary highlighting on selection of an activity cluster in the map page.</li>
+                            <li>Added activity pop-up feature on hover of an activity cluster in the map page.</li>
+                            <li>Loaded fresh RED&amp;FS data and implemented data feedback provided by ATA during the review
+                                of the latest RED&amp;FS data load (EthAIM Only).</li>
+                            <li>Address aggregation error in the partner pivot table of the summary page when using administrative
+                                boundaries as a option.</li>
+                            <li>Updated the UNOCHA boundaries and included them as a visualization layer in the map page
+                                (EthAIM Only).
+                            </li>
+                            <li>Created the Agricultural Commodity Clusters (ACC) as a boundary, which allows them to be
+                                used in the partner pivot widget of the summary page and as a map layer in the map page (EthAIM
+                                Only).
+                            </li>
+                            <li>Implemented data feedback provided by AGRA during the review of the latest AGRA data load
+                                (AGRA Only).
+                            </li>
+                            <li>Fixed bug which allows partnerlink to work when filtering by a single organization.</li>
+                            <li>Added new global statistics to the overview widget in the summaries page, in addition to
+                                the focus country stats (BMGF &amp; AGRA only).</li>
+                            <li>Added loading symbol to filter counts in activity and summary page (show while the filter
+                                is loading, then is replace by the count of options/values).</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr id="3.10.0">
+                    <td>
+                        <h3>3.10.0</h3>
+                    </td>
+                    <td>
+                        <h3>10/25/16</h3>
+                    </td>
+                    <td>
+                        <h3>Updates</h3>
+                        <ul>
+                            <li>Added download as csv feature to the activity list of the activity page, available in the
+                                top right corner of the list.</li>
+                            <li>Added new AGRA Agrodealers map layers in Burkina Faso, Ghana, Kenya, Malawi, Niger &amp;
+                                Zambia, available in the map page (AGRA Only).</li>
+                            <li>Added download as csv feature for the pivot table widget in the summary page.</li>
+                            <li>Added new summary page widget to link to external content, currently implemented in the AGRA
+                                instance to display videos and impact stories.</li>
+                            <li>Added new map layers for APT, including refugee camps, towns and villages, regional capitals
+                                railways, rivers and roads (EthAIM Only)</li>
+                            <li>Added ability to summarize by region in partner pivot widget of the summary page.</li>
+                            <li>Address currency issues in TanAIM data, by standardizing to USD (TanAIM only).</li>
+                            <li>Add additional data element options to activity list in activity page (title, funder, investment
+                                amount, start date, end date).</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

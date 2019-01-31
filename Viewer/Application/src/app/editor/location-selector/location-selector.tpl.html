@@ -1,0 +1,63 @@
+<div id="editor-location-selector">
+    <md-dialog aria-label="choose an organization dialog">
+        <form>
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header" ng-show="dialogSettings.admin_level===1">Add {{terminology.boundary_terminology.plural.admin1}}</h2>
+                    <h2 class="sub-header" ng-show="dialogSettings.admin_level===2">Add {{terminology.boundary_terminology.plural.admin2}}</h2>
+                    <h2 class="sub-header" ng-show="dialogSettings.admin_level===3">Add {{terminology.boundary_terminology.plural.admin3}}</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- location menu -->
+            <md-dialog-content>
+                <!-- loading animation -->
+                <div>
+                    <md-progress-circular ng-show="loadingLocations" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+                </div>
+                <div class="scrollable" ng-hide="loadingLocations">
+                    <!-- instructions -->
+                    <div layout="row" class="instructions">
+                        <div ng-show="dialogSettings.admin_level===1">Select one or more {{terminology.boundary_terminology.plural.admin1}} below to add to the map:</div>
+                        <div ng-show="dialogSettings.admin_level===2">Select one or more {{terminology.boundary_terminology.plural.admin2}} below to add to the map:</div>
+                        <div ng-show="dialogSettings.admin_level===3">Select one or more {{terminology.boundary_terminology.plural.admin3}} below to add to the map:</div>
+                    </div>
+                    <!-- admin 1 locations -->
+                    <div layout="column" layout-wrap flex ng-show="dialogSettings.admin_level===1" dynamic="menuUI">
+                    </div>
+                    <!-- admin 2 locations -->
+                    <div ng-show="dialogSettings.admin_level===2" dynamic="menuUI"></div>
+                    <!-- admin 3 locations -->
+                    <div layout-gt-sm="row" ng-show="dialogSettings.admin_level===3">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Filter to {{terminology.boundary_terminology.singular.admin1}}</label>
+                            <md-select ng-model="admin1Selection" ng-change="admin1Filter()" placeholder="Select a {{terminology.boundary_terminology.singular.admin1}} to filter the list to">
+                                <md-option ng-repeat="admin1 in admin1List" value="{{admin1.id}}">
+                                    {{admin1.n}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Filter to {{terminology.boundary_terminology.singular.admin2}}</label>
+                            <md-select ng-model="admin2Selection" ng-change="admin2Filter()" ng-disabled="admin1Selection===null" placeholder="Select a {{terminology.boundary_terminology.singular.admin2}} to filter the list to">
+                                <md-option ng-repeat="admin2 in admin2List | filter:{p:admin1Selection}" value="{{admin2.id}}">
+                                    {{admin2.n}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div ng-show="dialogSettings.admin_level===3" dynamic="menuUI"></div>
+                </div>
+                <!-- buttons -->
+                <div ng-hide="loadingLocations" class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancel()">Close</md-button>
+                    <md-button class="save md-raised" ng-click="saveLocations()">Save Changes</md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

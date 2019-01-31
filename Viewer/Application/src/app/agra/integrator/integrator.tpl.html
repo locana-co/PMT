@@ -1,0 +1,333 @@
+<div id="agra-integration" ng-controller="AgraIntegratorCtrl" class="scrollable ui-layout-center">
+    <md-content>
+        <!-- // AGRA MIS Integration model -->
+        <!-- var stats = {
+            total: 0,       // MIS record count
+            new: 0,         // MIS new records (not in PMT)
+            matched: 0,     // MIS matched records (in PMT)
+            changed: 0,     // MIS matched and changed records (in PMT)
+            missing: 0,     // PMT records not in MIS
+            created: 0,     // new MIS grants created in PMT
+            updated: 0,     // matched MIS grants updated in PMT
+            deleted: 0,     // missing MIS grants deleted in PMT
+            untouched: 0    // matched MIS grants unchanged in PMT
+        };
+        var pmt = {
+            total: 0,              // PMT record count (before integration)
+            new_orgs: 0,           // new PMT organizations found in MIS
+            new_contacts: 0,       // new PMT contacts found in MIS 
+            delete_activities: [], // array of pmt activities to delete (not found in MIS)
+            activity: {
+                calls: 0,
+                pass: 0,
+                fail: 0
+            },
+            activity_taxonomy: 
+            contact: 
+            financial: 
+            location: 
+            location_taxonomy: 
+            organization: 
+            participant: 
+        };
+        return {
+            running: false,             // t/f the integrator is running
+            step: 0,                    // step the integrator is currently on (0 - not running)
+            steps: 10,                  // total number of steps in the process
+            step_message: null,         // step message for UI
+            error: null,                // error message, if error occurrs that terminates the integration 
+            issues: [],                 // error messages collected during the process, but were not fatal (integration continues)
+            stats: stats,               // MIS integration statistics object
+            pmt:pmt,                    // PMT integration tracking object
+            instance_id: null,          // PMT instance id (Passed by API call that initiaties integration)
+            user_id: null,              // PMT user id (Passed by API call that initiaties integration)
+            data_group_id: 769,         // PMT data group for AGRA (id does not change from database to database)
+            pmt_id: null                // PMT database id (Passed by API call that initiaties integration)
+        }; -->
+        <div class="row statistics-summary">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h3> Itegration Status</h3>
+                    </div>
+                    <div class="col-sm-4">
+                        <h3>
+                            <span ng-show="progress > 0" class="start-color">RUNNING</span>
+                            <span ng-show="progress === 0 && !finished" class="stop-color">NOT STARTED</span>
+                            <span ng-show="progress === 0 && finished" class="stop-color">FINISHED</span>
+                        </h3>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="buttons">
+                            <md-button class="integration-button md-raised" aria-label="launch integration" ng-click="startIntegration()">
+                                <label>Start Integration</label>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row progress-man">
+                    <div class="col-sm-2"><i class="fas fa-running fa-3x" ng-class="progress === 0 ? 'stop-color' : 'start-color'"></i></div>
+                    <div ng-show="progress >= 10" class="col-sm-2"><i class="fas fa-running fa-3x start-color" class=""></i></div>
+                    <div ng-show="progress >= 20" class="col-sm-2"><i class="fas fa-running fa-3x start-color"></i></div>
+                    <div ng-show="progress >= 40" class="col-sm-2"><i class="fas fa-running fa-3x start-color"></i></div>
+                    <div ng-show="progress >= 60" class="col-sm-2"><i class="fas fa-running fa-3x start-color"></i></div>
+                    <div ng-show="progress >= 80" class="col-sm-2"><i class="fas fa-running fa-3x start-color"></i></div>
+                </div>
+                <div class="row padded">
+                    <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
+                </div>
+                <!-- Itegration Status -->
+                <div class="summary">
+                    <div class="row" style="padding-top: 20px;">
+                        <div class="col-sm-6">Status</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.step_message">...</span>
+                            <span ng-show="status.step_message"> {{status.step_message}} </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Executed Steps</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.step">...</span>
+                            <span ng-show="status.step"> {{status.step}} / {{status.steps}} </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Reporting Error</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.error && !finished">...</span>
+                            <span ng-show="!status.error && finished">
+                                <span ng-show="status.issues.length === 0">No Errors Reported</span>
+                                <span ng-show="status.issues.length > 0">See Reported Errors</span>
+                            </span>
+                            <span ng-show="status.error">{{status.error}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">MIS Record Count</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.stats.total && !finished">...</span>
+                            <span ng-show="!status.stats.total && finished">0</span>
+                            <span ng-show="status.stats.total"> {{status.stats.total}} grants </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">PMT Record Count (before integration)</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.pmt.total && !finished">...</span>
+                            <span ng-show="!status.pmt.total && finished">0</span>
+                            <span ng-show="status.pmt.total"> {{status.pmt.total}} grants </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Itegration Pre-Analysis -->
+                <div class="summary">
+                    <h3> Itegration Pre-Analysis</h3>
+                    <div class="row">
+                        <div class="col-sm-6">Matched/Existing Grants</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.stats.matched && !finished">...</span>
+                            <span ng-show="!status.stats.matched && finished">0</span>
+                            <span ng-show="status.stats.matched"> {{status.stats.matched}} grants </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">New Grants</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.stats.new && !status.api.activity.done">...</span>
+                            <span ng-show="!status.stats.new && status.api.activity.done">0</span>
+                            <span ng-show="status.stats.new"> {{status.stats.new}} grants </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Grants to be Updated in PMT</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.stats.changed && !status.api.activity.done">...</span>
+                            <span ng-show="!status.stats.changed && status.api.activity.done">0</span>
+                            <span ng-show="status.stats.changed"> {{status.stats.changed}} grants </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Grants to be Removed from PMT</div>
+                        <div class="col-sm-6">
+                            <span ng-show="!status.stats.missing && !status.api.activity.done">...</span>
+                            <span ng-show="!status.stats.missing && status.api.activity.done">0</span>
+                            <span ng-show="status.stats.missing"> {{status.stats.missing}} grants </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <!-- Itegration Results -->
+                <div class="summary">
+                    <div class="row">
+                        <h3> Itegration Results</h3>
+                        <md-progress-circular ng-show="!allDone && status.step > 7 && status.step <= 9" class="loader"
+                            md-diameter="40"></md-progress-circular>
+                    </div>
+                    <!-- contacts -->
+                    <div class="summary-sub-section">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4> Contacts</h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <span ng-show="status.api.contact.started && !status.api.contact.finished && status.pmt.new_contacts >= 0"
+                                    class="start-color"><i class="fas fa-play"></i> RUNNING</span>
+                                <span ng-show="!status.api.contact.started && !status.api.contact.finished && status.pmt.new_contacts !== 0"
+                                    class="stop-color"><i class="fas fa-pause"></i> NOT STARTED</span>
+                                <span ng-show="(status.api.contact.finished && status.api.contact.started) || status.pmt.new_contacts === 0"
+                                    class="stop-color"><i class="fas fa-check"></i> FINISHED</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Processing</div>
+                            <div class="col-sm-4">Passed</div>
+                            <div class="col-sm-4">Failed</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.contact.calls">0</span>
+                                <span ng-show="status.api.contact.calls"> {{status.api.contact.calls}} contacts </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.contact.pass">0</span>
+                                <span ng-show="status.api.contact.pass"> {{status.api.contact.pass}} contacts </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.contact.fail">0</span>
+                                <span ng-show="status.api.contact.fail"> {{status.api.contact.fail}} contacts </span>
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                    <!-- organizations -->
+                    <div class="summary-sub-section">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4> Organizations</h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <span ng-show="status.api.organization.started && !status.api.organization.finished"
+                                    class="start-color"><i class="fas fa-play"></i> RUNNING</span>
+                                <span ng-show="!status.api.organization.started && !status.api.organization.finished && status.pmt.new_orgs !== 0"
+                                    class="stop-color"><i class="fas fa-pause"></i> NOT STARTED</span>
+                                <span ng-show="(status.api.organization.finished && status.api.organization.started) || status.pmt.new_orgs === 0"
+                                    class="stop-color"><i class="fas fa-check"></i> FINISHED</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Processing</div>
+                            <div class="col-sm-4">Passed</div>
+                            <div class="col-sm-4">Failed</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.organization.calls">0</span>
+                                <span ng-show="status.api.organization.calls"> {{status.api.organization.calls}}
+                                    organizations </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.organization.pass">0</span>
+                                <span ng-show="status.api.organization.pass"> {{status.api.organization.pass}}
+                                    organizations </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.organization.fail">0</span>
+                                <span ng-show="status.api.organization.fail"> {{status.api.organization.fail}}
+                                    organizations </span>
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                    <!-- grants -->
+                    <div class="summary-sub-section">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4> Grants</h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <span ng-show="status.api.activity.started && !status.api.activity.finished" class="start-color"><i
+                                        class="fas fa-play"></i> RUNNING</span>
+                                <span ng-show="!status.api.activity.started && !status.api.activity.finished && !status.api.activity.done"
+                                    class="stop-color"><i class="fas fa-pause"></i> NOT STARTED</span>
+                                <span ng-show="(status.api.activity.finished && status.api.activity.started) || status.api.activity.done"
+                                    class="stop-color"><i class="fas fa-check"></i> FINISHED</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Processing</div>
+                            <div class="col-sm-4">Passed</div>
+                            <div class="col-sm-4">Failed</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.activity.calls">0</span>
+                                <span ng-show="status.api.activity.calls"> {{status.api.activity.calls}} grants </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.activity.pass">0</span>
+                                <span ng-show="status.api.activity.pass"> {{status.api.activity.pass}} grants </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.activity.fail">0</span>
+                                <span ng-show="status.api.activity.fail"> {{status.api.activity.fail}} grants </span>
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                    <!-- locations -->
+                    <div class="summary-sub-section">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4> Grant Locations</h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <span ng-show="status.api.location.started && !status.api.location.finished" class="start-color">
+                                    <i class="fas fa-play"></i> RUNNING
+                                </span>
+                                <span ng-show="!status.api.location.started && !status.api.location.finished" class="stop-color">
+                                    <i class="fas fa-pause"></i> NOT STARTED
+                                </span>
+                                <span ng-show="( status.api.location.finished && status.api.location.started ) || status.api.location.fail > 0"
+                                    class="stop-color">
+                                    <i class="fas fa-check"></i> FINISHED
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Processing</div>
+                            <div class="col-sm-4">Passed</div>
+                            <div class="col-sm-4">Failed</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.location.calls">0</span>
+                                <span ng-show="status.api.location.calls"> {{status.api.location.calls}} locations
+                                </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.location.pass">0</span>
+                                <span ng-show="status.api.location.pass"> {{status.api.location.pass}} locations </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span ng-show="!status.api.location.fail">0</span>
+                                <span ng-show="status.api.location.fail"> {{status.api.location.fail}} locations </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- issues -->
+                    <md-divider ng-show="status.issues"></md-divider>
+                    <div class="row" ng-show="status.issues.length > 0">
+                        <div class="row">Issues Reported During Integration:</div>
+                        <div class="row" style="text-align: left">
+                            <ul ng-repeat="issue in status.issues">
+                                <li>{{issue.error}} : {{issue.message}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-content>
+</div>

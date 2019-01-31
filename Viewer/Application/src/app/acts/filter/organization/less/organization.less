@@ -1,0 +1,54 @@
+#acts-filter-organization {
+  font-family: @light-font-family;
+  border-bottom: 1px @light-element-bg-color solid;
+
+  //small loader
+  .org-loading {
+    margin: 0 auto;
+    position: relative;
+    // Overwrite loading animation color
+    .md-left .md-half-circle {
+      border-left-color: #cecece;
+      border-top-color: #cecece;
+    }
+
+    .md-right .md-half-circle {
+      border-right-color: #cecece;
+      border-top-color: #cecece;
+    }
+  }
+
+  .checkbox-group {
+    padding: 10px 15px;
+    font-size: 13px;
+    max-height: 500px;
+    overflow-y: auto;
+    font-family: @reg-font-family;
+    overflow-x: hidden;
+  }
+
+  .checkbox-group.selected-orgs {
+    max-height: 150px;
+  }
+
+  .org-filter {
+    margin: 0 0 0 14px;
+    height: 35px;
+    width: 180px;
+  }
+
+  .md-input-focused .md-input {
+    border-color: @main-font-color;
+  }
+
+  // checkbox color
+  md-checkbox.md-default-theme.md-checked .md-icon, md-checkbox.md-checked .md-icon{
+    background-color: @main-bg-color;
+  }
+
+  //disabled checkbox background
+  md-checkbox[disabled].md-checked .md-icon {
+    background-color: rgba(0, 0, 0, 0.26);
+  }
+
+}

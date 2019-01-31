@@ -1,0 +1,157 @@
+.locs-widget-top-taxonomy {
+  height: 300px;
+  width: 100%;
+  //loader
+  .loader {
+    margin: 0 auto;
+    position: relative;
+    // Overwrite loading animation color
+    .md-left .md-half-circle {
+      border-left-color: #cecece;
+      border-top-color: #cecece;
+    }
+    .md-right .md-half-circle {
+      border-right-color: #cecece;
+      border-top-color: #cecece;
+    }
+  }
+  // print icon
+  .print{
+    float: right;
+    cursor: pointer;
+  }
+  //title
+  .title {
+    .pmt-h3;
+    padding-top: 5px;
+  }
+  .subtitle {
+    color: #868688;
+    font-size: 14px;
+    padding-bottom: 5px;
+    text-align: center;
+  }
+  // bar chart container
+  vertical-bar-chart {
+    cursor: pointer;
+    // bar chart
+    .chart {
+      padding: 3px;
+      width: calc(~'100% - 20px');
+      table-layout: fixed;
+      .bar {
+        fill: steelblue;
+      }
+
+      .bar:hover {
+        fill: brown;
+      }
+
+      .axis {
+        font: 10px sans-serif;
+      }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: grey;
+        shape-rendering: crispEdges;
+      }
+    }
+    .vertical-chart-tooltip {
+      width: 125px;
+      position: absolute;
+      height: auto;
+      padding: 5px 10px;
+      background-color: #fff;
+      color: #3A3E3F;
+      border-radius: 10px;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 900;
+      font-size: 12px;
+      .tooltip-title {
+        font-family: @bold-font-family;
+      }
+      .tooltip-data {
+        font-family: @bold-font-family;
+        .sub-title {
+          font-style: italic;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+  // chart legend
+  .legend {
+    margin: -20px 0 0 10px;
+    height: 95px;
+    color: #868688;
+    overflow: auto;
+    .legend-center {
+      .legend-element {
+        display: inline-block;
+        .legend-color {
+            margin-right: 6px;
+            height: 8px;
+            width: 8px;
+            border-radius: 9px;
+            margin-top: 2px;
+            display: inline-block;
+
+        }
+        .legend-label {
+          display: block;
+          padding: 0 20px 0 5px;
+          text-align: left;
+          font-size: 11px;
+          position: relative;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+
+  .tax-selector-wrapper{
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    margin-top: -6px;
+  }
+}
+
+
+#locs-top-taxonomy-modal {
+  md-toolbar {
+    background-color: @main-bg-color;
+  }
+
+  md-dialog-content {
+    //loader
+    .loader {
+      margin: 0 auto;
+      position: relative;
+      // Overwrite loading animation color
+      .md-left .md-half-circle {
+        border-left-color: #cecece;
+        border-top-color: #cecece;
+      }
+      .md-right .md-half-circle {
+        border-right-color: #cecece;
+        border-top-color: #cecece;
+      }
+    }
+    .activity {
+      .pmt-back-button;
+      cursor: pointer;
+      line-height: 2.5;
+      padding: 0 20px;
+    }
+    .activity:hover {
+      background-color: #d5d5d5;
+    }
+  }
+
+}
+

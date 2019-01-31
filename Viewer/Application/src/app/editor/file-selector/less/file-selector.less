@@ -1,0 +1,107 @@
+﻿#editor-file-selector {
+    font-family: @reg-font-family;
+    // dialog
+    md-dialog {
+        max-height: 800px;
+        width: 600px;
+        overflow: hidden;
+        margin-left: @width-navigation;
+        // modal header
+        md-toolbar {
+            background-color: @main-bg-color;
+            .sub-header{
+                font-family: @title-font-family;
+                text-transform: uppercase;
+            }
+        }
+        // modal content
+        md-dialog-content {
+            padding: 20px;
+            // loading animation
+            .loading {
+                margin: auto;
+                .md-left .md-half-circle {
+                    border-top-color: @main-bg-color;
+                    border-left-color: @main-bg-color;
+                }
+                .md-right .md-half-circle {
+                    border-top-color: @main-bg-color;
+                    border-right-color: @main-bg-color;
+                }
+            }
+            // scrollable list of contacts
+            .scrollable {
+                max-height: 300px;
+            }
+        }
+
+        //fix height on popup when there's a lot of data 
+        .modal-body{
+            max-height: 600px !important;
+        }
+    }
+
+    // red color
+    .red{
+        color: rgb(221,44,0) !important;
+    }
+
+    .material-icons{
+        padding-right: 5px;
+        font-size: 20px;
+    }
+
+    md-radio-button.md-checked{
+        font-weight: 600;
+    }
+
+    md-radio-button.md-default-theme .md-on, md-radio-button .md-on{
+        background-color: @main-font-color;
+    }
+
+    md-radio-button.md-default-theme.md-checked .md-off, md-radio-button.md-checked .md-off{
+        border-color: @main-font-color; 
+    }
+    // imitating material design radio buttons
+    .drop-box {
+        background: #F8F8F8;
+        border: 5px dashed #DDD;
+        //width: 200px;
+        //height: 105px;
+        text-align: center;
+        padding: 25px;
+        margin: 10px;
+    }
+    .import-message{
+        text-align: center;
+        width: 100%;
+    }
+    .dragover {
+        border: 5px dashed blue;
+    }
+
+    .progress {
+        position:absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+    
+    button {
+        font-family: @title-font-family;
+    }
+
+    button.save {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+    }
+
+    .modal-footer {
+        padding: 19px 20px 0;
+    }
+}
+
+#editor-contacts-selector.modal {
+    height:100%;
+}

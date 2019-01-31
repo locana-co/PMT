@@ -1,0 +1,851 @@
+<div id="editor-detail" ng-controller="EditorDetailCtrl" class="scrollable ui-layout-center" ng-show="stateService.isParam('editor_activity_id')">
+    <!-- loader-->
+    <!--<md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>-->
+    <!-- activity detail editor -->
+    <md-content layout-padding ng-show="!loading && !error">
+        <!-- record information -->
+        <md-content class="record-info">
+            <div layout-gt-sm="row">
+                <!-- version -->
+                <md-input-container class="md-block version-toggle" ng-show="version !== null">
+                    <label>{{settings.activity.fields.version.label}}</label>
+                    <md-switch ng-model="version" aria-label="version" ng-disabled="!isAdmin" ng-change="changeVersion()">
+                        {{ versionMessage }}
+                    </md-switch>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>PMT ID</label>
+                    <input ng-model="edited_activity.id" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Last Edited On:</label>
+                    <input ng-model="edited_activity._updated_date" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm ng-hide="edited_activity._updated_by.startsWith('ds_')">
+                    <label>Last Edited By:</label>
+                    <input ng-model="edited_activity._updated_by" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm ng-show="edited_activity._updated_by.startsWith('ds_')">
+                    <label>Last Edited By:</label>
+                    <input value="Database Administrator" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Created On:</label>
+                    <input ng-model="edited_activity._created_date" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm ng-hide="edited_activity._created_by.startsWith('ds_')">
+                    <label>Created By:</label>
+                    <input ng-model="edited_activity._created_by" disabled>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm ng-show="edited_activity._created_by.startsWith('ds_')">
+                    <label>Created By:</label>
+                    <input value="Database Administrator" disabled>
+                </md-input-container>
+            </div>
+        </md-content>
+        <!-- editing tabs -->
+        <md-tabs md-selected="tabIndex" md-dynamic-height md-border-bottom>
+            <!-- activity form -->
+            <md-tab id="editor-tab-activity">
+                <md-tab-label>
+                    <span ng-if="stateService.isParam('editor_parent_id') || stateService.getState().editor_parent_id">{{settings.activity.childLabel}}</span>
+                    <span ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">{{terminology.activity_terminology.singular}}</span>
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.activityForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="activityForm">
+                            <div class="instructions red pad-bottom" ng-show="forms.activityForm.error && forms.activityForm.message!==null">{{forms.activityForm.message}}</div>
+                            <div layout-gt-sm="row">
+                                <!-- title -->
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label ng-if="stateService.isParam('editor_parent_id') || stateService.getState().editor_parent_id">{{settings.activity.fields._title.childlabel}}</label>
+                                    <label ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">{{settings.activity.fields._title.label}}</label>
+                                    <input name="_title" ng-model="edited_activity._title" required>
+                                    <div ng-messages="activityForm['_title'].$error" multiple ng-if="(activityForm['_title'].$error && !activityForm['_title'].focus && activityForm['_title'].$dirty)">
+                                        <div ng-message="required">This is a required field.</div>
+                                        <div ng-message="titleError">Project title not unqiue.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="parent-only-wrapper" ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">
+                                <div layout-gt-sm="row">
+                                    <!-- status -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.status.visible">
+                                        <label>{{settings.activity.status.label}}</label>
+                                        <md-select name="status" class="right-padding" ng-model="edited_activity.status" required md-no-asterisk="false">
+                                            <!-- <md-option value="794">Active</md-option>
+                                            <md-option value="797">Completed</md-option> -->
+                                            <md-option ng-selected="edited_activity.status===opt.value" ng-repeat="opt in settings.activity.status.values" value="{{opt.value}}">{{opt.label}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages="activityForm['status'].$error" multiple ng-if="(activityForm['status'].$error && !activityForm['status'].focus && !activityForm['status'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- start date -->
+                                    <div class="md-block bottom-padding" flex-gt-sm ng-show="settings.activity.fields._start_date.visible">
+                                        <label class="form-label date-label">
+                                            <span ng-show="edited_activity._revised_start_date">Planned </span>{{settings.activity.fields._start_date.label}}</label>
+                                        <md-datepicker name="_start_date" ng-model="edited_activity._start_date" md-current-view="year" md-placeholder="Enter start date"
+                                            ng-required="settings.activity.fields._start_date.required"></md-datepicker>
+                                        <div ng-messages="activityForm['_start_date'].$error" multiple ng-if="(activityForm['_start_date'].$error && !activityForm['_start_date'].focus)">
+                                            <div class="error-message" ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </div>
+                                    <!-- end date -->
+                                    <div class="md-block bottom-padding" flex-gt-sm ng-show="settings.activity.fields._end_date.visible">
+                                        <label class="form-label date-label">
+                                            <span ng-show="edited_activity._revised_end_date">Planned </span>{{settings.activity.fields._end_date.label}}</label>
+                                        <md-datepicker name="_end_date" ng-model="edited_activity._end_date" md-current-view="year" md-placeholder="Enter end date"
+                                            ng-required="settings.activity.fields._end_date.required"></md-datepicker>
+                                        <div ng-messages="activityForm['_end_date'].$error" multiple ng-if="(activityForm['_end_date'].$error && !activityForm['_end_date'].focus)">
+                                            <div class="error-message" ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </div>
+                                    <!-- revised start date -->
+                                    <div class="md-block bottom-padding" flex-gt-sm ng-show="settings.activity.fields._revised_start_date.visible">
+                                        <label class="form-label date-label">{{settings.activity.fields._revised_start_date.label}}</label>
+                                        <md-datepicker name="_revised_start_date" ng-model="edited_activity._revised_start_date" md-current-view="year" md-placeholder="Revised start date"></md-datepicker>
+                                    </div>
+                                    <!-- revised end date -->
+                                    <div class="md-block bottom-padding" flex-gt-sm ng-show="settings.activity.fields._revised_end_date.visible">
+                                        <label class="form-label date-label">{{settings.activity.fields._revised_end_date.label}}</label>
+                                        <md-datepicker name="_revised_end_date" ng-model="edited_activity._revised_end_date" md-current-view="year" md-placeholder="Revised end date"></md-datepicker>
+                                    </div>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <!-- description -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.fields._description.visible">
+                                        <label>{{settings.activity.fields._description.label}}</label>
+                                        <textarea ng-model="edited_activity._description" rows="2" md-select-on-focus ng-required="settings.activity.fields._description.required"></textarea>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <!-- objective -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.fields._objective.visible">
+                                        <label>{{settings.activity.fields._objective.label}}</label>
+                                        <textarea ng-model="edited_activity._objective" rows="2" md-select-on-focus ng-required="settings.activity.fields._objective.required"></textarea>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row" ng-show="settings.activity.beneficiary">
+                                    <!-- beneficiary_type -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.beneficiary_type.visible">
+                                        <label>{{settings.activity.beneficiary.beneficiary_type.label}}</label>
+                                        <md-select name="beneficiary_type" class="right-padding" tabindex="0" ng-model="edited_activity.beneficiary_type" ng-required="settings.activity.beneficiary.beneficiary_type.required"
+                                            md-no-asterisk="false" ng-change="beneficiaryChange('{{edited_activity.beneficiary_type}}','{{edited_activity.beneficiary_unit}}')">
+                                            <md-option ng-selected="edited_activity.beneficiary_type===opt.value" ng-repeat="opt in settings.activity.beneficiary.beneficiary_type.values"
+                                                value="{{opt.value}}">{{opt.label}}
+                                                </option>
+                                        </md-select>
+                                        <div ng-messages="activityForm['beneficiary_type'].$error" multiple ng-if="(activityForm['beneficiary_type'].$error && !activityForm['beneficiary_type'].focus && !activityForm['beneficiary_type'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- beneficiary_unit -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.beneficiary_unit.visible">
+                                        <label>{{settings.activity.beneficiary.beneficiary_unit.label}}</label>
+                                        <md-select name="beneficiary_unit" class="right-padding" tabindex="1" ng-model="edited_activity.beneficiary_unit" ng-required="settings.activity.beneficiary.beneficiary_unit.required"
+                                            md-no-asterisk="false" ng-change="beneficiaryChange('{{edited_activity.beneficiary_type}}','{{edited_activity.beneficiary_unit}}')">
+                                            <md-option ng-selected="edited_activity.beneficiary_unit===opt.value" ng-repeat="opt in settings.activity.beneficiary.beneficiary_unit.values"
+                                                value="{{opt.value}}">{{opt.label}}
+                                                </option>
+                                        </md-select>
+                                        <div ng-messages="activityForm['beneficiary_unit'].$error" multiple ng-if="(activityForm['beneficiary_unit'].$error && !activityForm['beneficiary_unit'].focus && !activityForm['beneficiary_unit'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <!-- Individuals -->
+                                <div layout-gt-sm="row" ng-show="edited_activity.beneficiary_unit === 'individual' && (edited_activity.beneficiary_type == 'direct_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                    <!-- direct_beneficiaries -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.direct_beneficiaries.visible">
+                                        <label>{{settings.activity.beneficiary.direct_beneficiaries.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.direct_beneficiaries.inputType}}" tabindex="2" min="1" ng-model="edited_activity.direct_beneficiaries"
+                                            class="" ng-required="settings.activity.beneficiary.direct_beneficiaries.required"
+                                        />
+                                        <div ng-messages="activityForm['direct_beneficiaries'].$error" multiple ng-if="(activityForm['direct_beneficiaries'].$error && !activityForm['direct_beneficiaries'].focus && !activityForm['direct_beneficiaries'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                        <div class="instructions" ng-show="(edited_activity.male_individual_direct || edited_activity.female_individual_direct) && edited_activity.direct_beneficiaries != (edited_activity.male_individual_direct + edited_activity.female_individual_direct)">*Total
+                                            should equal the dispersement and values greater than zero.</div>
+                                    </md-input-container>
+                                    <!-- male -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.male_individual_direct.visible">
+                                        <label>{{settings.activity.beneficiary.male_individual_direct.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.male_individual_direct.inputType}}" tabindex=3 min="1" ng-model="edited_activity.male_individual_direct"
+                                            class="" ng-required="settings.activity.beneficiary.male_individual_direct.required"
+                                        />
+                                        <div ng-messages="activityForm['male_individual_direct'].$error" multiple ng-if="(activityForm['male_individual_direct'].$error && !activityForm['male_individual_direct'].focus && !activityForm['male_individual_direct'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                            <div ng-message="number">Value must be greater than zero.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- female -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.female_individual_direct.visible">
+                                        <label>{{settings.activity.beneficiary.female_individual_direct.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.female_individual_direct.inputType}}" tabindex="4" min="1" ng-model="edited_activity.female_individual_direct"
+                                            class="" ng-required="settings.activity.beneficiary.female_individual_direct.required"
+                                        />
+                                        <div ng-messages="activityForm['female_individual_direct'].$error" multiple ng-if="(activityForm['female_individual_direct'].$error && !activityForm['female_individual_direct'].focus && !activityForm['female_individual_direct'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                            <div ng-message="number">Value must be greater than zero.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row" ng-show="edited_activity.beneficiary_unit === 'individual' && (edited_activity.beneficiary_type == 'indirect_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                    <!-- indirect_beneficiaries -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.indirect_beneficiaries.visible">
+                                        <label>{{settings.activity.beneficiary.indirect_beneficiaries.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.indirect_beneficiaries.inputType}}" tabindex="5" min="1" ng-model="edited_activity.indirect_beneficiaries"
+                                            class="" ng-required="settings.activity.beneficiary.indirect_beneficiaries.required"
+                                        />
+                                        <div ng-messages="activityForm['indirect_beneficiaries'].$error" multiple ng-if="(activityForm['indirect_beneficiaries'].$error && !activityForm['indirect_beneficiaries'].focus && !activityForm['indirect_beneficiaries'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                        <div class="instructions" ng-show="(edited_activity.male_individual_indirect || edited_activity.female_individual_indirect) && edited_activity.indirect_beneficiaries != (edited_activity.male_individual_indirect + edited_activity.female_individual_indirect)">*Total
+                                            should equal the dispersement and values greater than zero.</div>
+                                    </md-input-container>
+                                    <!-- male -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.male_individual_indirect.visible">
+                                        <label>{{settings.activity.beneficiary.male_individual_indirect.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.male_individual_indirect.inputType}}" tabindex="6" min="1" ng-model="edited_activity.male_individual_indirect"
+                                            class="" ng-required="settings.activity.beneficiary.male_individual_indirect.required"
+                                        />
+                                        <div ng-messages="activityForm['male_individual_indirect'].$error" multiple ng-if="(activityForm['male_individual_indirect'].$error && !activityForm['male_individual_indirect'].focus && !activityForm['male_individual_indirect'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- female -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.female_individual_indirect.visible">
+                                        <label>{{settings.activity.beneficiary.female_individual_indirect.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.female_individual_indirect.inputType}}" tabindex="7" min="1" ng-model="edited_activity.female_individual_indirect"
+                                            class="" ng-required="settings.activity.beneficiary.female_individual_indirect.required"
+                                        />
+                                        <div ng-messages="activityForm['female_individual_indirect'].$error" multiple ng-if="(activityForm['female_individual_indirect'].$error && !activityForm['female_individual_indirect'].focus && !activityForm['female_individual_indirect'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <!--Households-->
+                                <div layout-gt-sm="row" ng-show="edited_activity.beneficiary_unit === 'household' && (edited_activity.beneficiary_type == 'direct_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                    <!-- direct_beneficiaries -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.direct_beneficiaries.visible">
+                                        <label>{{settings.activity.beneficiary.direct_beneficiaries.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.direct_beneficiaries.inputType}}" tabindex="8" min="1" ng-model="edited_activity.direct_beneficiaries"
+                                            class="" ng-required="settings.activity.beneficiary.direct_beneficiaries.required"
+                                        />
+                                        <div ng-messages="activityForm['direct_beneficiaries'].$error" multiple ng-if="(activityForm['direct_beneficiaries'].$error && !activityForm['direct_beneficiaries'].focus && !activityForm['direct_beneficiaries'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                        <div class="instructions" ng-show="(edited_activity.male_hhds_direct || edited_activity.female_hhds_direct) && edited_activity.direct_beneficiaries != (edited_activity.male_hhds_direct + edited_activity.female_hhds_direct)">*Total
+                                            should equal the dispersement and values greater than zero.</div>
+                                    </md-input-container>
+                                    <!-- male -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.male_hhds_direct.visible">
+                                        <label>{{settings.activity.beneficiary.male_hhds_direct.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.male_hhds_direct.inputType}}" tabindex="9" min="1" ng-model="edited_activity.male_hhds_direct"
+                                            class="" ng-required="settings.activity.beneficiary.male_hhds_direct.required" />
+                                        <div ng-messages="activityForm['male_hhds_direct'].$error" multiple ng-if="(activityForm['male_hhds_direct'].$error && !activityForm['male_hhds_direct'].focus && !activityForm['male_hhds_direct'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- female -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.female_hhds_direct.visible">
+                                        <label>{{settings.activity.beneficiary.female_hhds_direct.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.female_hhds_direct.inputType}}" tabindex="10" min="1" ng-model="edited_activity.female_hhds_direct"
+                                            class="" ng-required="settings.activity.beneficiary.female_hhds_direct.required"
+                                        />
+                                        <div ng-messages="activityForm['female_hhds_direct'].$error" multiple ng-if="(activityForm['female_hhds_direct'].$error && !activityForm['female_hhds_direct'].focus && !activityForm['female_hhds_direct'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row" ng-show="edited_activity.beneficiary_unit === 'household' && (edited_activity.beneficiary_type == 'indirect_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                    <!-- indirect_beneficiaries -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.indirect_beneficiaries.visible">
+                                        <label>{{settings.activity.beneficiary.indirect_beneficiaries.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.indirect_beneficiaries.inputType}}" tabindex="11" min="1" ng-model="edited_activity.indirect_beneficiaries"
+                                            class="" ng-required="settings.activity.beneficiary.indirect_beneficiaries.required"
+                                        />
+                                        <div ng-messages="activityForm['indirect_beneficiaries'].$error" multiple ng-if="(activityForm['indirect_beneficiaries'].$error && !activityForm['indirect_beneficiaries'].focus && !activityForm['indirect_beneficiaries'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                        <div class="instructions" ng-show="(edited_activity.male_hhds_indirect || edited_activity.female_hhds_indirect) && edited_activity.indirect_beneficiaries != (edited_activity.male_hhds_indirect + edited_activity.female_hhds_indirect)">*Total
+                                            should equal the dispersement and values greater than zero.</div>
+                                    </md-input-container>
+                                    <!-- male -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.male_hhds_indirect.visible">
+                                        <label>{{settings.activity.beneficiary.male_hhds_indirect.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.male_hhds_indirect.inputType}}" tabindex="12" min="1" ng-model="edited_activity.male_hhds_indirect"
+                                            class="" ng-required="settings.activity.beneficiary.male_hhds_indirect.required"
+                                        />
+                                        <div ng-messages="activityForm['male_hhds_indirect'].$error" multiple ng-if="(activityForm['male_hhds_indirect'].$error && !activityForm['male_hhds_indirect'].focus && !activityForm['male_hhds_indirect'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- female -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.female_hhds_indirect.visible">
+                                        <label>{{settings.activity.beneficiary.female_hhds_indirect.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.female_hhds_indirect.inputType}}" tabindex="13" min="1" ng-model="edited_activity.female_hhds_indirect"
+                                            class="" ng-required="settings.activity.beneficiary.female_hhds_indirect.required"
+                                        />
+                                        <div ng-messages="activityForm['female_hhds_indirect'].$error" multiple ng-if="(activityForm['female_hhds_indirect'].$error && !activityForm['female_hhds_indirect'].focus && !activityForm['female_hhds_indirect'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <!--Institutes-->
+                                <div layout-gt-sm="row" ng-show="edited_activity.beneficiary_unit === 'institutes'">
+                                    <!-- institutes_direct -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.institutes_direct.visible && (edited_activity.beneficiary_type == 'direct_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                        <label>{{settings.activity.beneficiary.institutes_direct.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.institutes_direct.inputType}}" tabindex="14" min="1" ng-model="edited_activity.institutes_direct"
+                                            class="" ng-required="settings.activity.beneficiary.institutes_direct.required" />
+                                        <div ng-messages="activityForm['institutes_direct'].$error" multiple ng-if="(activityForm['institutes_direct'].$error && !activityForm['institutes_direct'].focus && !activityForm['institutes_direct'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <!-- institutes_indirect -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.activity.beneficiary.institutes_indirect.visible && (edited_activity.beneficiary_type == 'indirect_beneficiary' ||  edited_activity.beneficiary_type == 'direct_beneficiary indirect_beneficiary')">
+                                        <label>{{settings.activity.beneficiary.institutes_indirect.label}}</label>
+                                        <input type="{{settings.activity.beneficiary.institutes_indirect.inputType}}" tabindex="15" min="1" ng-model="edited_activity.institutes_indirect"
+                                            class="" ng-required="settings.activity.beneficiary.institutes_indirect.required"
+                                        />
+                                        <div ng-messages="activityForm['institutes_indirect'].$error" multiple ng-if="(activityForm['institutes_indirect'].$error && !activityForm['institutes_indirect'].focus && !activityForm['institutes_indirect'].dirty)">
+                                            <div ng-message="required">This is a required field.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </form>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- taxonomy form -->
+            <md-tab id="editor-tab-taxonomy">
+                <md-tab-label>
+                    Taxonomies
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.taxonomyForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form id="taxonomyForm" name="taxonomyForm">
+                            <div layout-gt-sm="column" ng-repeat="taxonomy in taxonomies" ng-if="taxonomy.visible">
+                                <label class="taxonomy-label">{{taxonomy.label}}</label>
+                                <div class="instructions push-up" ng-class="{red: forms.taxonomyForm.error}" ng-show="taxonomy.instructions!==null || taxonomy.instructions!==''">{{taxonomy.instructions}}</div>
+                                <div class="taxonomy-list" flex="100" ng-repeat="classification in taxonomy.classifications" ng-if="!taxonomy.single">
+                                    <div class="arrow" ng-click="onArrowClicked(classification, $event);" ng-show="classification.children && classification.children.length>0">
+                                        <i class="material-icons" ng-show="classification.showNest">keyboard_arrow_down</i>
+                                        <i class="material-icons" ng-hide="classification.showNest">keyboard_arrow_up</i>
+                                    </div>
+                                    <md-checkbox ng-class="{taxonomyOption: !classification.children || classification.children.length === 0}" ng-model="classification.active">
+                                        {{ classification.c }}
+                                    </md-checkbox>
+                                    <div class="nested-column" layout-gt-sm="column" ng-show="classification.showNest">
+                                        <div flex="100" ng-repeat="child in classification.children | orderBy: 'c'">
+                                            <md-checkbox ng-model="child.active" ng-click="onCheckClicked(classification, $event);">
+                                                {{ child.c }}
+                                            </md-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <md-radio-group flex="100" ng-if="taxonomy.single" ng-model="taxonomy.selected">
+                                    <md-radio-button ng-class="{taxonomyOption: !classification.children || classification.children.length === 0}" ng-value="classification.id"
+                                        ng-repeat="classification in taxonomy.classifications">
+                                        {{ classification.c }}
+                                    </md-radio-button>
+                                    <div class="nested-column" layout-gt-sm="column">
+                                        <div flex="100" ng-repeat="child in classification.children | orderBy: 'c'">
+                                            <md-checkbox ng-model="child.active">
+                                                {{ child.c }}
+                                            </md-checkbox>
+                                        </div>
+                                    </div>
+                                </md-radio-group>
+                                <md-divider ng-if="!$last"></md-divider>
+                            </div>
+                        </form>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- financial information -->
+            <md-tab id="editor-tab-financial" ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">
+                <md-tab-label>
+                    Financials
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.financialForm.error || forms.subFinancialForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="financialForm" class="financialForm">
+                            <div class="instructions red" ng-show="forms.financialForm.error && forms.financialForm.message!==null">{{forms.financialForm.message}}</div>
+                            <div layout-gt-sm="column" ng-repeat="financial in edited_activity.financials | filter:{delete:false} as filtered track by $index"
+                                class="financial" ng-class-even="'grey-background'" ng-hide="financial.delete">
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="amount-wrapper md-block" flex-gt-sm>
+                                        <label>Amount in USD</label>
+                                        <!-- <div class="financial-formatted" ng-click="formattedFinancialClicked($event)" ng-show="financial._amount">{{financial._amount | currency:"$"}}</div> -->
+                                        <input name="financial-amount{{$index}}" ng-model="financial._amount" required type="number" min="100" ng-focus="financialForm['financial-amount' + $index].focus=true"
+                                            ng-blur="financialForm['financial-amount' + $index].focus=false" />
+                                        <div ng-messages="financialForm['financial-amount' + $index].$error" multiple ng-if="(financialForm['financial-amount' + $index].$error && !financialForm['financial-amount' + $index].focus && financialForm['financial-amount' + $index].$dirty)">
+                                            <div ng-message="required">Amount is required.</div>
+                                            <div ng-message="min">The amount should be greater than $100 USD.</div>
+                                        </div>
+                                        
+                                    </md-input-container>
+                                    <div class="md-block bottom-padding" flex-gt-sm>
+                                        <label class="form-label">{{settings.activity.fields._start_date.label}}</label>
+                                        <md-datepicker ng-model="financial._start_date" md-current-view="year" md-placeholder="Enter start date">
+                                    </div>
+                                    <div class="md-block bottom-padding" flex-gt-sm>
+                                        <label class="form-label">{{settings.activity.fields._end_date.label}}</label>
+                                        <md-datepicker ng-model="financial._end_date" md-current-view="year" md-placeholder="Enter end date">
+                                    </div>
+                                    <div class="md-block align-right">
+                                        <md-button class="md-mini md-fab icon-button" ng-click="deleteRecord($event, financial)" aria-label="delete financial record">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" ng-click="openOrgSelector($event,'funding',financial.provider_id,'provider',financial)"
+                                        flex-gt-sm>
+                                        <label class="organization-selector-label">Provider</label>
+                                        <input ng-model="financial.provider" class="organization-selector" disabled>
+                                    </md-input-container>
+                                    <md-input-container ng-repeat="taxonomy in financial.taxonomy" class="md-block" flex-gt-sm>
+                                        <label>{{taxonomy.label}}</label>
+                                        <md-select ng-model="taxonomy.classification_id">
+                                            <md-option>
+                                                <em>None</em>
+                                            </md-option>
+                                            <md-option ng-repeat="classification in taxonomy.classifications" ng-value="classification.id">
+                                                {{classification.c}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-buttons">
+                            <div class="financial-total">Total: {{ calculateFinancialTotal() }} USD</div>
+                            <md-button class="colored md-raised" ng-click="addFinancialRecord()">Add Financial Record</md-button>
+                        </div>
+                        <form name="subFinancialForm">
+                            <div class="instructions red" ng-show="forms.subFinancialForm.error && forms.subFinancialForm.message!==null">{{forms.subFinancialForm.message}}</div>
+                            <div layout-gt-sm="column" class="sub-financial-form" ng-if="!edited_activity.parent_id">
+                                <div class="sub-financial-title">Investment Details</div>
+                                <!-- add record dropdown -->
+                                <md-input-container class="add-sub-record md-block" flex-gt-sm>
+                                    <label>Add Investment by {{settings.financial.childFinancialTaxonomyTitle}}</label>
+                                    <md-select ng-model="tempValue" ng-change="addSubFinancialListItem(tempValue); tempValue = null;" ng-disabled="subFinancialList.length ===0">
+                                        <md-option ng-repeat="value in subFinancialList" ng-value="value.id">
+                                            {{value.c}}
+                                        </md-option>
+                                    </md-select>
+                                    <div class="instructions red" ng-show="(org.role_id===null || org.role_id==='') && forms.orgForm.error">This
+                                        is a required field.</div>
+                                </md-input-container>
+                                <table>
+                                    <tr class="sub-finance-header">
+                                        <th>{{settings.financial.childFinancialTaxonomyTitle}}</th>
+                                        <th>Percentage of Investment</th>
+                                        <th>Investment for Program Area</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr ng-repeat="detail in edited_activity.details | filter:{_title:null} | filter:{delete:false}">
+                                        <td>{{detail.taxonomy[0] ? detail.taxonomy[0].classification: ""}}</td>
+                                        <td>
+                                            <md-input-container md-no-float class="md-block sub-finance-amount">
+                                                <input type="number" min="1" max="100" ng-model="detail._amount" />
+                                                <span>%</span>
+                                            </md-input-container>
+                                        </td>
+                                        <td>{{calculatePercentFinancialTotal(detail._amount)}}</td>
+                                        <td>
+                                            <md-button class="md-mini md-fab icon-button" ng-click="deleteSubFinanceRecord($event, detail)" aria-label="delete financial amount">
+                                                <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                                <i class="material-icons">delete_forever</i>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- organization information -->
+            <md-tab id="editor-tab-org">
+                <md-tab-label>
+                    Organizations
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.orgForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="orgForm">
+                            <div class="instructions red" ng-show="forms.orgForm.error && forms.orgForm.message!==null">{{forms.orgForm.message}}</div>
+                            <div layout-gt-sm="column" ng-repeat="org in edited_activity.organizations | filter:{delete:false} track by $index" class="organization"
+                                ng-class-even="'grey-background'">
+                                <div layout-gt-sm="row">
+                                    <!-- organization name -->
+                                    <md-input-container class="md-block" ng-click="openOrgSelector($event,'inuse',org.id,'participant', org)" flex-gt-sm>
+                                        <label class="organization-selector-label">Organization</label>
+                                        <input ng-model="org._name" class="organization-selector" disabled>
+                                        <div class="instructions red" ng-show="(org._name===null || org._name==='') && forms.orgForm.error">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                    <!-- organization role -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-if="!stateService.isParam('editor_parent_id') && !stateService.getState().editor_parent_id">
+                                        <label>Organization Role</label>
+                                        <md-select ng-model="org.role_id" required ng-change="org.imp_type_id=null;">
+                                            <md-option ng-repeat="role in settings.organization.roles" ng-value="role.role_id">
+                                                {{role.label}}
+                                            </md-option>
+                                        </md-select>
+                                        <div class="instructions red" ng-show="(org.role_id===null || org.role_id==='') && forms.orgForm.error">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex-gt-sm ng-if="stateService.isParam('editor_parent_id') && stateService.getState().editor_parent_id">
+                                        <label>Organization Role</label>
+                                        <md-select ng-model="org.role_id" required ng-change="org.imp_type_id=null;">
+                                            <md-option value="497"> Implementing </md-option>
+                                        </md-select>
+                                        <div class="instructions red" ng-show="(org.role_id===null || org.role_id==='') && forms.orgForm.error">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                    <!-- organization type -->
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Organization Type</label>
+                                        <md-select ng-model="org.type_id">
+                                            <md-option ng-repeat="type in organizationTypes" ng-value="type.id">
+                                                {{type.c}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <!-- implementing type -->
+                                    <md-input-container class="md-block" flex-gt-sm style="max-width: 85px;" ng-if="org.role_id === 497">
+                                        <div ng-repeat="type in implementingTypes" ng-disabled="stateService.isParam('editor_parent_id') && stateService.getState().editor_parent_id">
+                                            <md-checkbox ng-model="org.isPrimary" ng-change="changeOrgPrimary($event, org, type)">
+                                                {{ type.c }}
+                                            </md-checkbox>
+                                        </div>
+                                    </md-input-container>
+                                    <div class="md-block align-right">
+                                        <md-button class="md-mini md-fab icon-button" ng-click="deleteRecord($event, org)" aria-label="delete organization record">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-buttons">
+                            <md-button class="colored md-raised" ng-click="addParticipationRecord()">Add Organization Record</md-button>
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- contact information -->
+            <md-tab id="editor-tab-contacts" ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">
+                <md-tab-label>
+                    Contacts
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.contactForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="contactForm">
+                            <div class="instructions red" ng-show="forms.contactForm.error && forms.contactForm.message!==null">{{forms.contactForm.message}}</div>
+                            <div layout-gt-sm="column" ng-repeat="contact in edited_activity.contacts | filter:{delete:false} track by $index" class="contact"
+                                ng-class-even="'grey-background'">
+                                <div layout-gt-sm="row">
+                                    <!-- first name -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.contacts.fields._first_name.visible">
+                                        <label>{{settings.contacts.fields._first_name.label}}</label>
+                                        <input type="{{settings.contacts.fields._first_name.inputType}}" tabindex="0" ng-change="changeContact($event, contact)"
+                                            ng-model="contact._first_name" class="contact-first" ng-required="settings.contacts.fields._first_name.required"
+                                            ng-disabled="contact.activities && (contact.activities.length > 1 || (contact.activities.length === 1 && contact.activities[0] !== edited_activity.id ))"
+                                        />
+                                        <div class="instructions red" ng-show="(contact._first_name===null || contact._first_name==='') && forms.contactForm.error && settings.contacts.fields._first_name.required">This
+                                            is a required field.</div>
+                                        <div class="instructions" ng-show="contact.activities && (contact.activities.length > 1 || (contact.activities.length === 1 && contact.activities[0] !== edited_activity.id ))">*To
+                                            edit, you must first unassign this user from other {{terminology.activity_terminology.singular}}(s).</div>
+                                    </md-input-container>
+                                    <!-- last name -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.contacts.fields._last_name.visible">
+                                        <label>{{settings.contacts.fields._last_name.label}}</label>
+                                        <input type="{{settings.contacts.fields._last_name.inputType}}" tabindex="1" ng-change="changeContact($event, contact)" ng-model="contact._last_name"
+                                            class="contact-last" ng-required="settings.contacts.fields._last_name.required" ng-disabled="contact.activities && (contact.activities.length > 1 || (contact.activities.length === 1 && contact.activities[0] !== edited_activity.id ))"
+                                        />
+                                        <div class="instructions red" ng-show="(contact._last_name===null || contact._last_name==='') && forms.contactForm.error && settings.contacts.fields._last_name.required">This
+                                            is a required field.</div>
+                                        <div class="instructions" ng-show="contact.activities && (contact.activities.length > 1 || (contact.activities.length === 1 && contact.activities[0] !== edited_activity.id ))">*To
+                                            edit, you must first unassign this user from other {{terminology.activity_terminology.singular}}(s).</div>
+                                    </md-input-container>
+                                    <div class="md-block align-right">
+                                        <md-button class="md-mini md-fab icon-button" tabindex="5" data-type="contact" ng-click="deleteRecord($event, contact)" aria-label="delete contact">
+                                            <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                            <i class="material-icons">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <!-- email -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.contacts.fields._email.visible">
+                                        <label>{{settings.contacts.fields._email.label}}</label>
+                                        <input type="{{settings.contacts.fields._email.inputType}}" tabindex="2" ng-change="changeContact($event, contact)" ng-model="contact._email"
+                                            class="contact-email" ng-required="settings.contacts.fields._email.required" />
+                                        <div class="instructions red" ng-show="(contact._email===null || contact._email==='') && forms.contactForm.error && settings.contacts.fields._email.required">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                    <!-- title -->
+                                    <md-input-container class="md-block contact-title" flex-gt-sm ng-show="settings.contacts.fields._title.visible">
+                                        <label>{{settings.contacts.fields._title.label}}</label>
+                                        <input type="{{settings.contacts.fields._title.inputType}}" tabindex="3" ng-model="contact._title" class="contact-title-input"
+                                            ng-required="settings.contacts.fields._title.required" />
+                                        <div class="instructions red" ng-show="(contact._title===null || contact._title==='') && forms.contactForm.error && settings.contacts.fields._title.required">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <!-- phone -->
+                                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.contacts.fields.phone.visible">
+                                        <label>{{settings.contacts.fields.phone.label}}</label>
+                                        <input name="contact_direct_phone" class="data-input" type="text" ng-model="contact._direct_phone">
+                                        <!-- <div ng-messages="contactForm.contact_direct_phone.$error">
+                                            <div ng-message="pattern">###-###-#### - Please enter a valid phone number.</div>
+                                        </div> -->
+                                    </md-input-container>
+                                    <!-- organization -->
+                                    <md-input-container class="md-block" ng-show="settings.contacts.fields.organization_name.visible" ng-click="openOrgSelector($event,'inuse',contact.organization_id,'contact', contact)"
+                                        flex-gt-sm>
+                                        <label class="organization-selector-label">{{settings.contacts.fields.organization_name.label}}</label>
+                                        <input ng-model="contact.organization_name" tabindex="4" class="organization-selector" disabled ng-required="settings.contacts.fields.organization_name.required"
+                                        />
+                                        <div class="instructions red" ng-show="contact.organization_name===null && forms.contactForm.error && settings.contacts.fields.organization_name.required">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                            <!-- no contacts message -->
+                            <div class="instructions" ng-show="edited_activity.contacts===null || edited_activity.contacts.length === 0">{{settings.contacts.instructions}}
+                                {{terminology.activity_terminology.singular}}.
+                            </div>
+                        </form>
+                        <div class="form-buttons">
+                            <md-button class="colored md-raised" ng-click="addContactRecord()">Add Contact Record</md-button>
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- location information -->
+            <md-tab id="editor-tab-location">
+                <md-tab-label>
+                    Locations
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.locationForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding locations-tab"></md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- detail information -->
+            <md-tab id="editor-tab-activities">
+                <md-tab-label>
+                    {{settings.activityList._title}}
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.detailForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="detailForm">
+                            <div class="instructions red" ng-show="forms.detailForm.error && forms.detailForm.message!==null">{{forms.detailForm.message}}</div>
+                            <div layout-gt-sm="column" ng-repeat="detail in edited_activity.details | filter:{delete:false}  track by $index" class="detail-list"
+                                ng-class-even="'grey-background'" ng-if="!detail._amount">
+                                <div layout-gt-sm="row">
+                                    <!-- entry -->
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>{{settings.activityList._label}}</label>
+                                        <input type="text" tabindex="0" ng-model="detail._title" ng-required="settings.activityList.required" />
+                                        <div class="instructions red" ng-show="(detail._title===null || detail._title==='') && forms.detailForm.error && settings.activityList.required">This
+                                            is a required field.</div>
+                                    </md-input-container>
+                                    <div class="md-block align-right">
+                                        <md-button class="md-mini md-fab icon-button " ng-click="deleteRecord($event, detail)
+                                            " aria-label="delete activity record ">
+                                            <md-tooltip md-direction="bottom ">Delete Record</md-tooltip>
+                                            <i class="material-icons ">delete_forever</i>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-buttons ">
+                            <md-button class="colored md-raised " ng-click="addDetailRecord() ">Add {{settings.activityList._title}}
+                                Record
+                            </md-button>
+                        </div>
+                        <!-- no contacts message -->
+                        <div class="instructions" ng-show="edited_activity.details===null || edited_activity.details.length === 0">{{settings.activityList.instructions}}
+                            {{terminology.activity_terminology.singular}}.
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            <!-- child information -->
+            <md-tab id="editor-tab-children" ng-if="page.mergeRelatedActivities && (!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id)">
+                <md-tab-label>
+                    {{settings.children.label}}
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" ng-show="forms.childForm.error"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content class="md-padding">
+                        <form name="childForm">
+                            <div class="instructions red" ng-show="forms.childForm.error && forms.childForm.message!==null">{{forms.childForm.message}}</div>
+                            <div class="related-activities" layout="row" ng-repeat="child in edited_activity.children | filter:{delete:false} track by $index | orderBy:'_title'">
+                                <div class="md-block link" flex-gt-sm ng-click="editChildActivity(child, edited_activity.id, edited_activity._title)" ng-if="child.id">{{child._title}}</div>
+
+                                <md-input-container class="md-block" flex-gt-sm ng-if="!child.id" ng-show="settings.children.fields._title.visible">
+                                    <label>{{settings.children.fields._title.label}}</label>
+                                    <input name="child_title" class="link" ng-model="child._title" ng-required="settings.children.fields._title.required && !child.delete"></input>
+                                    <div ng-messages="childForm['child_title'].$error" multiple ng-if="(childForm['child_title'].$error && !childForm['child_title'].focus && !childForm['child_title'].dirty)">
+                                        <div ng-message="required">This is a required field.</div>
+                                    </div>
+                                </md-input-container>
+
+                                <div class="md-block align-right" flex-gt-sm>
+                                    <md-button class="md-mini md-fab icon-button" tabindex="5" ng-click="deleteRecord($event, child)" title="Delete Child" aria-label="delete child">
+                                        <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                        <i class="material-icons">delete_forever</i>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <div class="form-buttons">
+                                <md-button class="colored md-raised" ng-click="addChildRecord()">{{settings.children.button}}</md-button>
+                            </div>
+                            <!-- no record message -->
+                            <div class="instructions" ng-show="edited_activity.children===null || edited_activity.children.length === 0">{{settings.children.instructions}}
+                                {{terminology.activity_terminology.singular}}.
+                            </div>
+                        </form>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+    <!-- loading error -->
+    <div class="message " ng-show="!loading && error ">The requested activity does not exist or you do not have the appropriate
+        permissions.
+    </div>
+    <!-- map -->
+    <div class="map-container " ng-show="page.mergeRelatedActivities && stateService.isParam( 'editor_parent_id') && stateService.getState().editor_parent_id? tabIndex===3 : tabIndex===5 ">
+        <div class="location-list ">
+            <div class="instructions red " ng-show="forms.locationForm.error ">Must have at least one location.</div>
+            <div class="form-buttons ">
+                <md-button class="colored md-raised " ng-click="clearHighlight() " ng-show="hasHighlights() ">Clear All Highlights</md-button>
+            </div>
+            <md-content class="md-padding ">
+                <div layout-gt-sm="row ">
+                    <md-button class="md-raised location-button " ng-click="exportLocation($event) ">Export Template</md-button>
+                    <md-button class="md-raised location-button " ng-click="importLocation($event) ">Import Locations</md-button>
+                </div>
+                <md-list>
+                    <!-- admin level 0 locations -->
+                    <div ng-if="!stateService.isParam('editor_parent_id') || !stateService.getState().editor_parent_id">
+                        <div ng-show="getLocationCt(edited_activity.locations.national)>0">
+                            <md-subheader class="md-no-sticky">
+                                <md-button class="md-icon-button" ng-click="deleteRecord($event, edited_activity.locations.national[0])" aria-label="delete location record">
+                                    <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                    <i class="material-icons">delete_forever</i>
+                                </md-button>
+                                National {{terminology.activity_terminology.singular}}
+                            </md-subheader>
+                            <img class="flag" ng-src="{{flag}}" />
+                        </div>
+                        <div ng-hide="getLocationCt(edited_activity.locations.national)>0">
+                            <md-subheader class="md-no-sticky">
+                                <md-button class="md-icon-button" ng-click="setNational()" aria-label="set national">
+                                    <md-tooltip md-direction="bottom">Set as national {{terminology.activity_terminology.singular}}</md-tooltip>
+                                    <i class="material-icons">flag</i>
+                                </md-button>
+                                Set as National {{terminology.activity_terminology.singular}}
+                            </md-subheader>
+                        </div>
+                    </div>
+                    <!-- admin level 1 locations -->
+                    <div ng-hide="getLocationCt(edited_activity.locations.national)>0 && getLocationCt(edited_activity.locations.admin1)===0">
+                        <md-subheader class="md-no-sticky" ng-hide="getLocationCt(edited_activity.locations.national)>0">
+                            <md-button class="md-icon-button" ng-click="openLocationSelector($event,1)" aria-label="highlight location">
+                                <md-tooltip md-direction="bottom">Add new {{terminology.boundary_terminology.plural.admin1}}</md-tooltip>
+                                <i class="material-icons">add_circle</i>
+                            </md-button>
+                            {{terminology.boundary_terminology.singular.admin1}} Locations ({{getLocationCt(edited_activity.locations.admin1)}})
+                            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/vector-tiles/legends/mapLegend_admin1.png" />
+                        </md-subheader>
+                        <md-list-item ng-repeat="l1 in edited_activity.locations.admin1 | filter:{delete:false}" class="secondary-button-padding"
+                            ng-class="{highlight: hover}" ng-mouseenter="hover=true" ng-mouseleave="hover=false" ng-show="getLocationCt(edited_activity.locations.admin1)>0">
+                            <p> {{ l1._admin1 }} </p>
+                            <md-button class="md-icon-button" ng-click="toggleHighlight(l1)" aria-label="highlight location" ng-class="{on:l1.highlight}">
+                                <md-tooltip md-direction="bottom">Highlight Location</md-tooltip>
+                                <i class="material-icons">wb_sunny</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteRecord($event, l1)" aria-label="delete location record">
+                                <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                <i class="material-icons">delete_forever</i>
+                            </md-button>
+                        </md-list-item>
+                        <md-divider></md-divider>
+                    </div>
+                    <!-- admin level 2 locations -->
+                    <div ng-hide="getLocationCt(edited_activity.locations.national)>0 && getLocationCt(edited_activity.locations.admin2)===0">
+                        <md-subheader class="md-no-sticky" ng-hide="getLocationCt(edited_activity.locations.national)>0">
+                            <md-button class="md-icon-button" ng-click="openLocationSelector($event,2)" aria-label="highlight location">
+                                <md-tooltip md-direction="bottom">Add new {{terminology.boundary_terminology.plural.admin2}}</md-tooltip>
+                                <i class="material-icons">add_circle</i>
+                            </md-button>
+                            {{terminology.boundary_terminology.singular.admin2}} Locations ({{getLocationCt(edited_activity.locations.admin2)}})
+                            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/vector-tiles/legends/mapLegend_admin2.png" />
+                        </md-subheader>
+                        <md-list-item ng-repeat="l2 in edited_activity.locations.admin2 | filter:{delete:false}" class="secondary-button-padding"
+                            ng-class="{highlight: hover}" ng-mouseenter="hover=true" ng-mouseleave="hover=false" ng-show="getLocationCt(edited_activity.locations.admin2)>0">
+                            <p> {{ l2._admin1 }} - {{ l2._admin2 }}</p>
+                            <md-button class="md-icon-button" ng-click="toggleHighlight(l2)" aria-label="highlight location" ng-class="{on:l2.highlight}">
+                                <md-tooltip md-direction="bottom">Highlight Location</md-tooltip>
+                                <i class="material-icons">wb_sunny</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteRecord($event, l2)" aria-label="delete location record">
+                                <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                <i class="material-icons">delete_forever</i>
+                            </md-button>
+                        </md-list-item>
+                        <md-divider></md-divider>
+                    </div>
+                    <!-- admin level 3 locations -->
+                    <div ng-hide="getLocationCt(edited_activity.locations.national)>0 && getLocationCt(edited_activity.locations.admin3)===0">
+                        <md-subheader class="md-no-sticky" ng-hide="getLocationCt(edited_activity.locations.national)>0">
+                            <md-button class="md-icon-button" ng-click="openLocationSelector($event,3)" aria-label="highlight location">
+                                <md-tooltip md-direction="bottom">Add new {{terminology.boundary_terminology.plural.admin3}}</md-tooltip>
+                                <i class="material-icons">add_circle</i>
+                            </md-button>
+                            {{terminology.boundary_terminology.singular.admin3}} Locations ({{getLocationCt(edited_activity.locations.admin3)}})
+                            <img src="https://s3.amazonaws.com/v10.investmentmapping.org/vector-tiles/legends/mapLegend_admin3.png" />
+                        </md-subheader>
+                        <md-list-item ng-repeat="l3 in edited_activity.locations.admin3 | filter:{delete:false}" class="secondary-button-padding"
+                            ng-class="{highlight: hover}" ng-mouseenter="hover=true" ng-mouseleave="hover=false" ng-show="getLocationCt(edited_activity.locations.admin3)>0">
+                            <p>{{ l3._admin1 }} - {{ l3._admin2 }} - {{ l3._admin3 }}</p>
+                            <md-button class="md-icon-button" ng-click="toggleHighlight(l3)" aria-label="highlight location" ng-class="{on:l3.highlight}">
+                                <md-tooltip md-direction="bottom">Highlight Location</md-tooltip>
+                                <i class="material-icons">wb_sunny</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteRecord($event, l3)" aria-label="delete location record">
+                                <md-tooltip md-direction="bottom">Delete Record</md-tooltip>
+                                <i class="material-icons">delete_forever</i>
+                            </md-button>
+                        </md-list-item>
+                    </div>
+                </md-list>
+            </md-content>
+        </div>
+        <!-- interactive map -->
+        <div id="editor-map"></div>
+    </div>
+</div>

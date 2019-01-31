@@ -1,0 +1,62 @@
+.map-filter-geographic {
+    // loading animation
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        margin-left: -30px;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+    .menu-option{
+        width: 170px;
+        overflow: hidden;
+        white-space: nowrap;
+        // menu checkbox
+        .menu-checkbox {
+            cursor: pointer;
+        }
+        .boundary-name {
+            font-size: 13px;
+            color: @text-color-1;
+            cursor: pointer;
+            display: inline-block;
+            width: 118px;
+            font-family: @reg-font-family;
+            margin-left: -5px;
+            vertical-align: top;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        .arrow {
+            width: 24px;
+            display: inline-block;
+            cursor: pointer;
+        }        
+    }
+    .menu-option.level-1{
+        padding-left: 15px;
+        .boundary-name {
+            width: 103px;
+        }
+    } 
+    .menu-option.level-2{
+        padding-left: 15px;
+        .boundary-name {
+            width: 88px;
+        }
+    }  
+    .menu-option.level-3{
+        padding-left: 15px;
+        .boundary-name {
+            width: 73px;
+        }
+    }       
+}

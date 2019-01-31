@@ -1,0 +1,15 @@
+<div class="locs-filter-taxonomy" ng-controller="LocsFilterTaxonomyCtrl">
+    <div class="checkbox-group">
+        <div ng-show="filter.options.length===0 || (filter.options.length===1 && filter.options.unassigned)">The selected data source(s) do not have any {{filter.label}} classifications assigned.</div>
+        <!--option to filter to none/unspecified for a given taxonomy-->
+        <md-checkbox ng-disabled="filter.disabled" ng-true-value="true" ng-false-value="false" ng-model="unassigned.active" ng-show="filter.options.length>1 && filter.params.unassigned" ng-change="unassignedClicked(unassigned)">
+            {{unassigned.name}}
+        </md-checkbox>
+        <!-- list of classifiications-->
+        <div ng-repeat="option in filter.options">
+            <md-checkbox ng-disabled="filter.disabled" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)">
+                {{option.c}}
+            </md-checkbox>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+/*
+ elements that specific to a theme tag with the class "theme" then 
+ the name of the theme (i.e. ethaim), at runtime the proper theme
+ will be shown based on the passed theme URL paramter 
+*/
+.theme, .role {
+    display: none !important;
+}
+/*
+ jumbotron element adjustemnets
+*/
+.jumbotron {
+    margin-bottom: 0 !important;
+    padding: 20px 70px !important;
+}
+/*
+ use to center an image element
+*/
+.center-img {
+    display: block;
+    margin: 0 auto;
+}
+/*
+ highlight text for review (temporary class for reviewing content) 
+*/
+.highlight {
+    background: rgba(255, 255, 0, .80);
+}
+/*
+ section indent
+*/
+.indent {
+    padding-left: 25px;
+}
+/*
+  image for screenshot navigation button
+*/
+.navigation-button{
+    max-width: 40px;
+    vertical-align: top;
+}
+/*
+  image for screenshot navigation button in header
+*/
+.navigation-button-header{
+    float: left;
+    margin-right: 15px;
+    max-width: 50px;
+    vertical-align: top;
+}
+/*
+  extra padding for headers with nav buttons
+*/
+.header-with-button{
+    padding-top: 7px;
+}
+/*
+  image for signin button
+*/
+.signin-button{
+    max-width: 62px;
+    vertical-align: top;
+}
+/*
+  image for circle buttons
+*/
+.circle-button{
+    max-width: 35px;
+    vertical-align: text-bottom;
+}
+.clear {
+    clear: both;
+}
+/*
+ remove the default table borders
+*/
+.table-no-boarder>thead>tr>th, .table-no-boarder>tbody>tr>th, .table-no-boarder>tfoot>tr>th, .table-no-boarder>thead>tr>td, .table-no-boarder>tbody>tr>td, .table-no-boarder>tfoot>tr>td{
+    border-top: none !important;
+}
+/*
+  pages
+*/
+.tab-pane{
+    padding-bottom: 40px;
+}
+/*
+ text align bottom
+*/
+.align-bottom{
+    vertical-align: bottom;
+}
+/*
+  simulate the back button on activity page
+*/
+.back-button{
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px 0 0 2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 19px;
+    border: 2px solid #8d99a9;
+}
+.back-button-i{
+    color: #8d99a9;
+    font-size: 32px !important;
+    margin: -2px 0 0px 7px;
+    vertical-align: middle;
+}
+table{
+    font-size: 15px !important;
+}
+/*
+  red
+*/
+.red{
+    color: red;
+}
+/*
+  remove spacing in menus for divider
+*/
+.dropdown-menu .divider {
+    margin: 0 !important;
+}

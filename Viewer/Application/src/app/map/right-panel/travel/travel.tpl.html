@@ -1,0 +1,170 @@
+<div id="map-travel" class="right-panel" ng-controller="MapTravelCtrl"
+     ng-class="{on: stateService.isParam('travel-panel')}" ng-show="stateService.isParam('travel-panel')">
+    <div class="top-menu">
+        <!-- close button -->
+        <div class="close-button" ng-click="stateService.toggleParam('travel-panel'); disable();">X</div>
+    </div>
+
+    <!-- Content-->
+    <div class="right-panel-content">
+        <!-- Title-->
+        <div class="travelTitle">WALKSHED TOOL</div>
+
+        <!-- toggle walkshed tool map on/off -->
+        <div class="toggle">
+            <span ng-show="button===false">Turn on Walkshed Tool:</span>
+            <span ng-show="button===true">Turn off Walkshed Tool:</span>
+            <md-switch aria-label="active" ng-model="button" ng-change="toggleButton()">
+            </md-switch>
+        </div>
+
+        <div ng-class="{gray: showSummary === true}" ng-show="stateService.isParam('travel-panel')">
+            <!-- Mode of Travel Menu -->
+            <div class="mode">
+                <div class="modeDescription"><span class="stat-header">Mode of Travel: </span></div>
+
+                <div class="mode-menu">
+                    <md-input-container class="menu-dropdown" aria-label="Mode of travel">
+                        <md-select aria-label="Mode of travel" ng-model="selectedMode.label">
+                            <md-option ng-repeat="mode in travelModes"
+                                       ng-click="selectMode(mode)"
+                                       aria-label="{{mode.label}}" value="{{mode.label}}">
+                                {{mode.label}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+            </div>
+
+            <div class="description" ng-hide="showSummary === true">Drop a pin on the map to summarize resources within
+                travel time intervals from the pin's location.
+            </div>
+
+            <!-- loader-->
+            <md-progress-circular class="loader" md-mode="indeterminate"
+                                  ng-show="loadingMessage==true && button=='DISABLE'"
+                                  md-diameter="250"></md-progress-circular>
+        </div>
+
+        <!-- Summary Data Section -->
+        <div class="summaryContent" ng-show="showSummary===true">
+
+            <div class="nav"></div>
+            <md-content>
+                <md-tabs md-dynamic-height md-stretch-tabs="always" md-border-bottom md-selected="selectedTab">
+                    <md-tab ng-class="{active: intervalTab === 0}"
+                            ng-click="intervalTab=0; expandDropdown = false;">
+                            <md-tab-label>0-2 hours <i class="material-icons legend-icons legend-level-1">&#xE061;</i></md-tab-label>
+                        </md-tab>
+                    <md-tab ng-class="{active: intervalTab === 1}"
+                            ng-click="intervalTab=1; expandDropdown = false;">
+                            <md-tab-label>0-4 hours <i class="material-icons legend-icons legend-level-2">&#xE061;</i></md-tab-label>
+                        </md-tab>
+                    <md-tab ng-class="{active: intervalTab === 2}"
+                            ng-click="intervalTab=2; expandDropdown = false;">
+                            <md-tab-label>0-6 hours <i class="material-icons legend-icons legend-level-3">&#xE061;</i></md-tab-label></md-tab>
+
+                    <md-tab ng-class="{active: intervalTab === 3}"
+                            ng-click="intervalTab=3; expandDropdown = false;">
+                            <md-tab-label>0-8 hours <i class="material-icons legend-icons legend-level-4">&#xE061;</i></md-tab-label></md-tab>
+
+                </md-tabs>
+            </md-content>
+
+            <!-- Selected Menu Option Contents-->
+            <div class="menu-container travel-stats" watch ng-repeat="summary in summaryData track by $index"
+                ng-show="intervalTab === $index">
+
+                <!-- Agriculture Summary Data -->
+                <div class="stat">
+                    <div class="pmt-h3 ">AGRICULTURAL STATISTICS</div>
+
+                    <div class="stat-body">
+                        <div><span class="stat-header">AEZ: </span>{{summary.agStats.aezs[0][0]['AEZ8_CLAS']}}</div>
+                        <!--<div>Farming System: {{farmSys}}</div>-->
+                        <div>
+                            <br><span class="stat-header">Top 3 Crop Yield (Kg/Ha):</span><br>
+
+                            <div ng-show="summary.agStats.cropYield.length > 0"
+                                 ng-repeat="crop in summary.agStats.cropYield[0]">{{crop.name}} ({{crop.value}})
+                            </div>
+                            <div ng-hide="summary.agStats.cropYield.length > 0">N/A</div>
+                        </div>
+
+                        <div>
+                            <br><span class="stat-header">Top 3 Crop Production (Mt):</span><br>
+
+                            <div ng-show="summary.agStats.cropProd.length > 0"
+                                 ng-repeat="prod in summary.agStats.cropProd[0]">{{prod.name}} ({{prod.value}})
+                            </div>
+                            <div ng-hide="summary.agStats.cropProd.length > 0">N/A</div>
+                        </div>
+
+                        <div>
+                            <br><span class="stat-header">Top 3 Harvested Area (Ha):</span><br>
+
+                            <div ng-show="summary.agStats.cropHarvArea.length > 0"
+                                 ng-repeat="harv in summary.agStats.cropHarvArea[0]">{{harv.name}} ({{harv.value}})
+                            </div>
+                            <div ng-hide="summary.agStats.cropHarvArea.length > 0">N/A</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investment Summary Data -->
+                <div class="stat" ng-show="showInvestmentData">
+                    <div class="pmt-h3">INVESTMENTS</div>
+
+                    <div class="stat-body">
+                        <div ng-show="summary.investments.activityCount>0"><span class="stat-header">{{terminology.activity_terminology.singular}} Count:</span>
+                            {{summary.investments.activityCount}}
+                        </div>
+                        <div ng-show="summary.investments.activityCount<=0">Your filter has produced zero results.</div>
+
+                        <div ng-show="summary.investments.tax1ActivityCount.length > 0">
+                            <br><span class="stat-header">{{terminology.activity_terminology.singular}} count by
+                            {{summary.investments.tax1ActivityCount[0].taxonomy}}:</span><br>
+
+                            <div ng-repeat="tax in summary.investments.tax1ActivityCount track by $index"
+                                 ng-class="{grayHighlight: $index % 2 == 0 && summary.investments.tax1ActivityCount.length > 1}">
+                                {{tax.classification}} ({{tax.activity_ct}})
+                            </div>
+                        </div>
+
+                        <div ng-show="summary.investments.tax2ActivityCount.length > 0">
+                            <br><span class="stat-header">{{terminology.activity_terminology.singular}} count by
+                            {{summary.investments.tax2ActivityCount[0].taxonomy}}:</span><br>
+
+                            <div ng-repeat="tax in summary.investments.tax2ActivityCount track by $index"
+                                 ng-class="{grayHighlight: $index % 2 == 0 && summary.investments.tax2ActivityCount.length > 1}">
+                                {{tax.classification}} ({{tax.activity_ct}})
+                            </div>
+                        </div>
+
+                        <div ng-show="summary.investments.implPartnerActivityCount.length > 0">
+                            <br><span class="stat-header">Implementing Partners Ranked by {{terminology.activity_terminology.singular}} count:
+                            ({{summary.investments.implPartnerActivityCount[0].organizations.length}})</span><br>
+
+                            <div ng-repeat="org in summary.investments.implPartnerActivityCount[0].organizations track by $index"
+                                 ng-class="{grayHighlight: $index % 2 == 0 && summary.investments.implPartnerActivityCount[0].organizations.length > 1}">
+                                {{org.name}} ({{org.activity_ct}})
+                            </div>
+                        </div>
+
+                        <div ng-show="summary.investments.donorActivityCount.length > 0">
+                            <br><span class="stat-header">Donors Ranked by {{terminology.activity_terminology.singular}} count:
+                            ({{summary.investments.donorActivityCount[0].organizations.length}})</span><br>
+
+                            <div ng-repeat="org in summary.investments.donorActivityCount[0].organizations track by $index"
+                                 ng-class="{grayHighlight: $index % 2 == 0 && summary.investments.donorActivityCount[0].organizations.length > 1}">
+                                {{org.name}} ({{org.activity_ct}})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

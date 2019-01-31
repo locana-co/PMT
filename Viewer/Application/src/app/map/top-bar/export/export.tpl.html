@@ -1,0 +1,30 @@
+<div id="map-export" ng-controller="MapExportCtrl">
+    <md-dialog aria-label="export">
+        <!-- header -->
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="sub-header">Export</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+
+        <md-content class="md-padding">
+            <!-- loading animation -->
+            <div>
+                <md-progress-circular ng-show="Loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+
+            <p ng-hide="Loading">
+                <label>Download CSV</label>
+                <md-button ng-disabled="!activeDownload" title="File Download" aria-label="File Download"  class="md-icon-button" ng-click="downloadCSV()">
+                    <i class="material-icons">file_download</i>
+                </md-button>
+            </p>
+        </md-content>
+
+    </md-dialog>
+</div>

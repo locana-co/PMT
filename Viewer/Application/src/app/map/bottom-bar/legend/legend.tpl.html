@@ -1,0 +1,46 @@
+<div id="map-legend" ng-controller="MapLegendCtrl">
+    <!-- legend button on the bottom bar-->
+    <div class="legend-button" ng-click="toggleLengend()">
+        <div class="legend-label">Legend</div>
+        <div class="arrow-up" ng-class="{on: legendOpen}"></div>
+    </div>
+    <!-- legend box-->
+    <div id="legend-box" ng-class="{on: legendOpen}">
+
+        <div class="top-menu" ng-click="toggleLengend()">
+            <!-- Navigation Menu-->
+            <span>Legend</span>
+            <!-- Close Button -->
+            <div class="close-button">X</div>
+        </div>
+
+        <div class="legend-message" ng-show="!contextLayersSelected && !showActivityClusters">No overlays have been selected.</div>
+
+        <!-- grab legend from config-->
+        <img class="boundary-legend" ng-src="{{boundaryLegend}}" ng-show="showActivityClusters">
+
+
+
+
+        <!-- Legend Categories -->
+        <div class="legend-content" ng-repeat="category in categories" ng-class="{active: activeCategory==category.alias}">
+            <!-- Context Layers -->
+            <div ng-show="layer.active" ng-repeat="layer in category.layers" class="legend-item">
+                <!-- Label -->
+                <div class="item-label">{{layer.label}}</div>
+                <!-- Legend -->
+                <div class="item-content" ng-bind-html="layer.legendHTML" ng-show="layer.active"></div>
+
+                <!--if legend from json-->
+                <div ng-show="layer.legendObject">
+                    <div ng-repeat="value in layer.legendObject.value track by $index">
+                        <div class="legend-color" ng-style=" {'background-color': layer.legendObject.color[$index]} "></div>
+                        <span class="legend-label">{{value}} {{layer.legendObject.unit}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

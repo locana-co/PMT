@@ -1,0 +1,89 @@
+/**
+ * Theme Specific Less (Overrides)
+ */
+@import '../app/map/map/less/map-agra.less';
+
+/**
+ * Less Variable (Overrides)
+ */
+@main-bg-color: #00ABBD;
+@dark-bg-color: #3b3a3e;
+@dark-font-color: #727273;
+@main-font-color: #F7941D;
+@link-color:  #a8b93b;
+@secondary-grey:  #0E7358;
+@primary-color:#F7941D;
+@color-button-color: @main-font-color;
+//@primary-color:#9b242d;
+@light-element-bg-color: #e0e0e0;
+
+
+//fonts
+@title-font-family: century-gothic-bold;
+
+@reg-font-family : century-gothic-regular;
+
+@light-font-family: century-gothic-regular;
+
+@bold-font-family : century-gothic-bold;
+
+/**
+  * Login Module
+ */
+@login-bg-color: #fff;
+@login-bg-color-2: #f5f8f8;
+@login-input-color:#fff;
+@login-input-border:1px solid #e8e8e7;
+
+
+/**
+  * Map Module
+ */
+//timeline background
+@map-timeline-background-color: #fff;
+//timeline tick color
+@map-timeline-tick-color: #333;
+
+/**
+ * Application (Overrides)
+ */
+#app {
+
+}
+/**
+ * Header (Overrides)
+ */
+#header {
+  background-color: @light-bg-color;
+}
+
+/**
+ * Navigation (Overrides)
+ */
+#navigation {
+  li.active {
+    background-color: #A8BA3B;
+  }
+
+}
+
+/**
+ * Footer (Overrides)
+ */
+#footer {
+  background-color: #0E7358;
+  .bottom-text {
+    color: #fff;
+    a {
+      color: #fff !important;
+    }
+  }
+  .social {
+    li {
+      a, a:visited {
+        color: @light-font-color;
+
+      }
+    }
+  }
+}

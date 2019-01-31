@@ -1,0 +1,21 @@
+<div id="map-left-panel" ng-controller="MapLeftPanelCtrl" class="no-select" ng-class="{open: stateService.isParam('left-panel')}">
+    <!-- filter by / overlays tabs -->
+    <ul class="nav nav-tabs" ng-class="{}">
+        <li ng-class="{active: navTab==='filter'}"><a data-toggle="tab" ng-click="toggleNavTab('filter')">Filter By</a></li>
+        <li ng-class="{active: navTab==='contextual'}"><a data-toggle="tab" ng-click="toggleNavTab('contextual')">Map Layers</a></li>
+    </ul>
+    <!-- tab content panel -->
+    <div class="panel">
+        <!-- open/close panel button -->
+        <div class="open-panel-button" ng-show="sideoutOpen===false" ng-click="toggleParam()"
+             ng-class="{active: sideoutOpen===false}">
+            <i class="material-icons">
+                <span>chevron_{{chevronDirection}}</span>
+            </i>
+        </div>
+        <!-- filter -->
+        <ng-include src="'map/left-panel/filter/filter.tpl.html'"></ng-include>
+        <!-- contextual (overlays) -->
+        <ng-include src="'map/left-panel/contextual/contextual.tpl.html'"></ng-include>
+    </div>
+</div>

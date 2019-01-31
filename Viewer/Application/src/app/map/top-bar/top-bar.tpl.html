@@ -1,0 +1,22 @@
+<div id="map-top-bar" ng-controller="MapTopBarCtrl">
+    <!-- menu bar -->
+    <div class="top-bar-menu">
+        <!-- activity total count -->
+        <div class="activity-summary-count">
+            Number of {{terminology.activity_terminology.plural}}:
+            <div class="count" ng-show="!activityCountUpdating">{{activityCount | number:0}}</div>
+            <!-- loader-->
+            <md-progress-circular class="loader" md-mode="indeterminate" ng-show="activityCountUpdating" md-diameter="30"></md-progress-circular>
+        </div>
+        <div class="right-button" ng-show="currentUser.permission >= page.tools.map.exportAuthorization">
+            <!-- export -->
+            <md-button class="export" ng-click="openExportModal($event)">Export</md-button>
+        </div>
+        <div class="right-button toggle">
+            <md-switch ng-model="showClusters" ng-change="togglePointClusters()" aria-label="Toggle location clusters on/off map" ng-click="toggleParam()">
+                <span ng-hide="showClusters">Show {{terminology.activity_terminology.singular}} clusters</span>
+                <span ng-show="showClusters">Hide {{terminology.activity_terminology.singular}} clusters</span>
+            </md-switch>
+        </div>
+    </div>
+</div>

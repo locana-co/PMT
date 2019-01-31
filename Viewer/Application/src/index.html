@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html ng-app="PMTViewer">
+
+<head>
+    <title idle-disabled="true" ng-bind="config.meta.title">PMT</title>
+    <meta name="description" content="{{config.meta.description}}" />
+    <meta name="author" content="{{config.meta.author}}">
+    <meta name="generator" content="{{config.meta.author}}">
+
+    <!-- social media tags -->
+    <meta property="og:title" content="{{config.meta.title}}" />
+    <meta property="og:description" content="{{config.meta.description}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{config.meta.url}}" />
+    <meta property="og:image" content="{{config.meta.image}}" />
+    <meta name="twitter:description" content="{{config.meta.description}}">
+    <meta name="twitter:title" content="{{config.meta.title}}">
+    <meta name="twitter:creator" content="{{config.meta.twitterHandle}}">
+    <meta name="twitter:site" content="{{config.meta.twitterHandle}}" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- force favicon assignment -->
+    <link rel="icon" href="{{config.url}}/favicon.ico" />
+
+    <!-- fonts listed in the app.config.js dynamically written during build -->
+    <% fonts.forEach( function ( file ) { %>
+        <link rel="stylesheet" type="text/css" href="<%= file %>" />
+        <% }); %>
+
+            <!-- compiled css dynamically written during build -->
+            <% styles.forEach( function ( file ) { %>
+                <link rel="stylesheet" type="text/css" href="<%= file %>" />
+                <% }); %>
+
+                    <!-- compiled javaScript dynamically written during build -->
+                    <% scripts.forEach( function ( file ) { %>
+                        <script type="text/javascript" src="<%= file %>"></script>
+                        <% }); %>
+
+</head>
+
+<body ng-app>
+    <div id="app" class="no-select">
+        <!--HEADER-->
+        <div id="header" ng-class="{login: currentUser == null}">
+            <!-- LOGIN HEADER (before login) -->
+            <div ng-show="currentUser == null" ng-hide="config.login.public" class="login-title">{{config.theme.name}}</div>
+            <div ng-show="currentUser == null" ng-hide="config.login.public" class="login-sub-title"> Coordination / Collaboration / Colocation </div>
+            <!-- APPLICATION HEADER (after login) -->
+            <img ng-src="{{config.theme.topbanner}}" alt="Top banner" ng-show="currentUser != null">
+            <!-- USER MENU (non-public) -->
+            <div class="login" ng-show="(currentUser != null) && (!config.login.public || config.login.loginSuccess)" ng-click="logOut();">
+                <i class="fa fa-user"></i> {{currentUser.user._username}}
+                <i class="logout fa fa-sign-out-alt" title="Sign Out" ng-click="logOut();"></i>
+            </div>
+            <!-- USER MENU (public access with login) -->
+            <div class="login" ng-show="currentUser !== null && config.login.public && config.login.allowLogin" ng-hide="config.login.loginSuccess || !config.login.public || !config.login.allowLogin"
+                ng-click="logIn();">
+                Sign In
+                <i class="logout fa fa-sign-in" ng-click="logIn();"></i>
+            </div>
+            <!-- ENVIRONMENT NOTICE -->
+            <div class="environment" ng-class="{hiddden: currentUser == null}" ng-hide="environment==='production'">ENVIRONMENT {{environment}}</div>
+        </div>
+        <!--NAVIGATION-->
+        <div id="navigation" ng-show="currentUser != null">
+            <ul>
+                <li ui-sref-active="active" ng-repeat="state in config.states | filter:{route:''} " ng-show="state.enable && currentUser.permission >= state.authorization"
+                    ng-class="{active: $state.includes(state.route)}">
+                    <a href="#/{{state.route}}" ui-sref="{{state.route}}">
+                        <i ng-class="state.navIcon" ng-show="state.navURL===null"></i>
+                        <div class="url-icon" ng-include="state.navURL" ng-show="state.navURL"></div>
+                        <br /> {{state.navLabel}}
+                    </a>
+                </li>
+                <!-- add new li for the video link controller to the button-->
+                <li ng-repeat="state in config.states | filter:{route:'!'}" ng-show="state.enable && state.route == null" class="demo-video">
+                    <ng-include src="state.template"></ng-include>
+                </li>
+            </ul>
+        </div>
+        <!--MAIN-->
+        <div id="main" ui-view="main" ng-class="{login: currentUser == null}"></div>
+        <!--FOOTER-->
+        <div id="footer" ng-class="{login: currentUser == null}">
+            <!-- config: global.bottombanner (height must be 35px and width must be 185px) -->
+            <a ng-href="{{config.theme.url}}" target="_blank"><img class="bottom-banner" ng-show="config.theme.bottombanner" ng-src="{{config.theme.bottombanner}}" alt="Bottom banner"
+                    height="35" width="185"></a>
+            <div class="environment" ng-class="{hiddden: currentUser == null}" ng-hide="environment==='production'">ENVIRONMENT {{environment}}</div>
+            <div class="glossary"><a target="_blank" href="{{global.woofoo}}" ng-show="global.woofoo">Feedback</a></div>
+            <div class="glossary"><a target="_blank" href="{{config.links.glossary}}" ng-show="config.links.glossary">Glossary & Terms</a></div>
+            <div class="glossary"><a target="_blank" href="{{global.userGuide}}?theme={{config.theme.alias}}&role={{currentUser.user.role}}" ng-show="config.userguide">User Guide</a></div>
+            <table class="bottom-text">
+                <tr>
+                    <!-- copyright text-->
+                    <td class="copyright"><i class="fa fa-copyright"></i> {{currentYear}} <a ng-href="{{config.theme.url}}" target="_blank">{{config.theme.name}}.</a>                        All rights reserved.</td>
+                    <!-- version text-->
+                    <td class="copyright"><a ng-href="{{global.versionHistory}}#{{global.version}}" target="_blank">Version {{global.version}}</a></td>
+                    <!-- social media icons -->
+                    <td class="social-media">
+                        <a target="_blank" href="{{config.links.socialmedia.twitter}}" ng-show="config.links.socialmedia.twitter"><i class="fa fa-twitter"></i></a>
+                    </td>
+                    <td class="social-media">
+                        <a target="_blank" href="{{config.links.socialmedia.linkedin}}" ng-show="config.links.socialmedia.linkedin"><i class="fa fa-linkedin"></i></a>
+                    </td>
+                    <td class="social-media">
+                        <a target="_blank" href="{{config.links.socialmedia.github}}" ng-show="config.links.socialmedia.github"><i class="fa fa-github-alt"></i></a>
+                    </td>
+                    <td class="social-media">
+                        <a target="_blank" href="{{config.links.socialmedia.facebook}}" ng-show="config.links.socialmedia.facebook"><i class="fa fa-facebook"></i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- print download (is not a visible UI element, used by the print directive to initiate download of image)-->
+        <div id="print-download"></div>
+    </div>
+
+    <!-- Templates (*.tpl.html files) -->
+    <% tpls.forEach( function ( obj ) { %>
+        <script type="text/ng-template" id="<%= obj.name %>">
+            <!--(bake /<%= obj.path %>)-->
+        </script>
+        <% }); %>
+</body>
+
+</html>

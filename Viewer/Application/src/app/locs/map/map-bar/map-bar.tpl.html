@@ -1,0 +1,24 @@
+<div id="locs-map-bar" ng-controller="LocsMapBarCtrl" ng-class="{show:stateParams.area!=='world'}" ng-hide="stateParams.area==='world'">
+    <!-- title -->
+    <div class="map-breadcrumbs" ng-show="breadcrumbs.length>0">
+        <span class="map-breadcrumb clickable" ng-click="setAreaToWorld();" ng-show="countryCount > 1">World</span>
+        <span class="map-breadcrumb-divider" ng-show=" countryCount > 1 && breadcrumbs.length > 0"> > </span>
+        <div class="map-breadcrumb" ng-repeat="breadcrumb in breadcrumbs">
+            <!--<span ng-show="!$first"> > </span>-->
+            <span ng-show="!$first" ng-click="clickedBreadcrumb(breadcrumb);" ng-class="{clickable: !$last}"> > {{breadcrumb}} </span>
+            <span ng-show="$first" ng-click="clickedBreadcrumb(breadcrumb);" ng-class="{clickable: !$last}"> {{breadcrumb}} </span>
+        </div>
+    </div>
+    <!-- drop down menu -->
+    <div class="menu">
+        <md-input-container class="menu-dropdown" aria-label="Zoom to Region">
+            <md-select aria-label="Zoom to Region" ng-model="selectedOption" placeholder="Select a sub-region">
+                <md-option ng-repeat="option in menu"
+                           ng-click="menuOptionSelected(option)"
+                           aria-label="{{option}}" value="{{option}}">
+                            {{option}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>       
+</div>

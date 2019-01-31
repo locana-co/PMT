@@ -1,0 +1,46 @@
+<div id="map-zoomTo" ng-controller="MapZoomToCtrl" class="ui-layout-center">
+
+    <div class="search-box" ng-class="{open : showSearchInputBox}">
+        <i class="material-icons search" ng-click="toggleSearchInputBox(); getOpenCageSearchData()">search</i>
+
+        <!-- location search -->
+        <md-input-container md-no-float class="geocoder" ng-show="showSearchInputBox">
+            <label>Zoom to a location</label>
+            <input ng-model="searchText" onfocus="javascript:searchText=''" ng-keyup="$event.keyCode == 13 ? getOpenCageSearchData() : null">
+
+        </md-input-container>
+    </div>
+
+
+    <!-- search results-->
+    <div class="search-results" ng-class="{active: showResponse}" ng-show="showResponse">
+        <!-- results summary -->
+        <div class="search-results-title">
+            <div class="close-button" ng-click="closeSearchResults()">X</div>
+            Found ({{searchResponse.features.length || 0}}) results for "{{ searchDisplayText }} "   
+        </div>
+        <!-- loader-->
+        <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+        <!-- results drop down -->
+        <div class="search-results-content" ng-show="!loading">
+            <md-list flex>
+                <md-list-item class="md-3-line" ng-repeat="result in searchResponse.features" ng-click="fitBounds(result.properties.bounds);">
+                    <div class="md-list-item-text" layout="column">
+                        <div class="response-title">{{result.properties.formatted}}</div>
+                        <span class="response-detail" ng-show="result.properties.components.country"> Country: {{result.properties.components.country}}</span>
+                        <span class="response-detail" ng-show="result.properties.components.state"> {{terminology.boundary_terminology.singular.admin1.toTitleCase()}}: {{result.properties.components.state}}</span>
+                        <span class="response-detail" ng-show="result.properties.components.county"> {{terminology.boundary_terminology.singular.admin2.toTitleCase()}}: {{result.properties.components.county}}</span>
+                        <span class="response-detail" ng-show="result.properties.components.city"> {{terminology.boundary_terminology.singular.admin3.toTitleCase()}}: {{result.properties.components.city}}</span>
+                        <span class="response-detail" ng-show="result.properties.components.town"> {{terminology.boundary_terminology.singular.admin4.toTitleCase() || 'Town'}}: {{result.properties.components.town}}</span>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </div>
+    </div>
+
+
+
+
+
+
+</div>

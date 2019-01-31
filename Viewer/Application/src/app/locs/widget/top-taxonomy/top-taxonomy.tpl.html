@@ -1,0 +1,44 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-top-taxonomy widget" ng-controller="LocsWidgetTopTaxonomyCtrl">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+
+    <!-- print -->
+    <div class="print" ng-click="printWidget(widget.exports)" title="File Download" aria-label="File Download"  ng-show="!loading && !noData">
+        <i class="material-icons">file_download</i>
+    </div>
+
+    <!-- widget title -->
+    <div class="title" ng-show="!loading">
+        {{widget.title}}
+        <!-- widget data selector -->
+        <md-input-container class="tax-selector-wrapper" class="md-block" flex-gt-sm ng-show="widget.params.mode && widget.params.mode !== 'top'">
+            <md-select ng-model="widget.params.selected_id" aria-label="child filter selection" ng-change="taxonomyChange()">
+                <md-option ng-repeat="tax in widget.params.classifications" ng-value="tax.id" >{{tax.c}}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <!-- widget subtitle -->
+    <div class="subtitle" ng-show="!loading && !noData">{{widget.subtitle}}</div>
+
+    <!-- chart -->
+    <vertical-bar-chart chart-data="chartData" terminology="terminology" colors="colors" showpopup="true" other="widget.params.show_other"
+        popupurl="'locs/widget/top-taxonomy/top-taxonomy-modal.tpl.html'" ng-show="!loading && !noData"></vertical-bar-chart>
+    <!-- legend-->
+    <div class="legend" ng-show="!loading && !noData">
+        <div class="legend-center">
+            <div class="legend-element" ng-repeat="datum in chartData track by $index">
+                <div ng-hide="datum.count===0">
+                    <div class="legend-color" ng-style="{'background-color' : colors[$index]}"></div>
+                    <div class="legend-label">{{datum.classification}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- widget footnote -->
+    <div class="footnote">{{widget.footnote}}</div>
+
+    <!-- no data message-->
+    <div class="no-data-message" ng-show="noData">There is no data to support this widget</div>
+</div>

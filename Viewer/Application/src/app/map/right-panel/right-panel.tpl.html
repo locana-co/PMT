@@ -1,0 +1,30 @@
+﻿<div id="map-right-panel" ng-controller="MapRightPanelCtrl" class="no-select" ng-class="{open: isPanelOpen(), wide: rightPanelWide===true}">
+    <!-- Menu Buttons-->
+    <div class="menu">
+        <!-- Details Menu -->
+        <div class="menu-button btn" ng-click="stateService.toggleParam('detail-panel'); repositionMapControls()" ng-class="{on: stateService.isParam('detail-panel')}">
+            <i class="material-icons info">info_outline</i>
+            <span class="detail-menu-label info"> Info Panel </span>
+        </div>
+        <!-- Travel Tool Menu -->
+        <div class="menu-button btn" ng-click="stateService.toggleParam('travel-panel'); repositionMapControls()" ng-class="{on: stateService.isParam('travel-panel')}" ng-show="page.tools.map.travel.active" >
+            <i class="fa fa-cog"></i>
+            <span class="detail-menu-label"> Walkshed Tool </span>
+        </div>
+        <!-- Target Analysis (only available when active in the config) -->
+        <div class="menu-button btn" ng-click="stateService.toggleParam('target-analysis-panel'); repositionMapControls()" ng-class="{on: stateService.isParam('target-analysis-panel')}"
+             ng-show="page.tools.map.targetAnalysis.active">
+            <i class="material-icons">gps_not_fixed</i>
+            <span class="detail-menu-label"> Target Analysis </span>
+        </div>
+    </div>
+    <!-- Panels -->
+    <div class="panel">
+        <!-- Travel Tool -->
+        <ng-include src="'map/right-panel/travel/travel.tpl.html'"></ng-include>
+        <!-- Details -->
+        <ng-include src="'map/right-panel/detail/detail.tpl.html'"></ng-include>
+        <!-- Target Analysis -->
+        <ng-include src="'map/right-panel/target-analysis/target-analysis.tpl.html'"></ng-include>
+    </div>
+</div>

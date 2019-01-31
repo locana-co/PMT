@@ -1,0 +1,12 @@
+<div id="map-timeline" ng-controller="MapTimelineCtrl">
+    <!-- disable button -->
+    <md-checkbox ng-model="timelineDisabled" aria-label="Disable Timeline" ng-click="toggleDisableTimeline()"></md-checkbox>
+    <div class="disable">Disable</div>
+
+    <!-- timeline tool -->
+    <div class="timeline-wrapper">
+        <rzslider rz-slider-model="slider.minValue"
+                  rz-slider-high="slider.maxValue"
+                  rz-slider-options="slider.options"></rzslider>
+    </div>
+</div>

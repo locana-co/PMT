@@ -1,0 +1,24 @@
+<div id="acts-filter-organization" ng-controller="ActsFilterOrganizationCtrl">
+    <!-- loader for getting orgs-->
+    <md-progress-circular ng-show="loadingOrgs" class="org-loading loading" md-diameter="50" md-mode="indeterminate"></md-progress-circular>
+    <div ng-show="!loadingOrgs">
+        <md-input-container md-no-float class="md-block org-filter">
+            <input ng-model="searchText" type="text" placeholder="Search">
+        </md-input-container>
+        <!-- selected organizations-->
+        <div class="checkbox-group selected-orgs" ng-hide="true">
+            <div ng-repeat="option in filter.options">
+                <md-checkbox ng-disabled="filter.disabled" aria-label="organizations" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)" ng-show="option.active">
+                    {{option.n}}
+                </md-checkbox>
+            </div>
+        </div>
+        <div class="checkbox-group un-selected-orgs">
+            <div ng-repeat="option in filter.options | filter:searchText">
+                <md-checkbox ng-disabled="filter.disabled" aria-label="organizations" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)">
+                    {{option.n}}
+                </md-checkbox>
+            </div>
+        </div>
+    </div>
+</div>

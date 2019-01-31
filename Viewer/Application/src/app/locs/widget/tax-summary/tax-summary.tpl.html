@@ -1,0 +1,22 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-tax-summary widget" ng-controller="LocsWidgetTaxSummaryCtrl">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+
+    <!-- the pie chart requires a parent div with height & width for responsive sizing -->
+    <div class="responsive-layout">
+        <!-- print -->
+        <div class="print"  ng-click="printWidget(widget.exports)" title="File Download" aria-label="File Download"  ng-show="!loading && !noData"><i class="material-icons">file_download</i></div>
+        <!-- widget title -->
+        <div class="title" ng-show="!loading">{{widget.title}}</div>
+        <!-- pie chart directive -->
+        <pie-chart chart-data="chartData" color-range="widget.colors" other="widget.params.show_other" showpopup="true" terminology="terminology"  popupurl="'locs/widget/tax-summary/tax-summary-modal.tpl.html'" ng-show="!loading && !noData"></pie-chart>
+        <div class="legend" ng-show="!loading && !noData">
+            <div ng-repeat="data in chartData">
+                <div class="color" ng-style="{'background-color': data.color}"></div> {{data.label}}
+            </div>
+        </div>
+        <!-- no data message-->
+        <div class="no-data-message" ng-show="noData">There is no data to support this widget</div>
+    </div>
+</div>

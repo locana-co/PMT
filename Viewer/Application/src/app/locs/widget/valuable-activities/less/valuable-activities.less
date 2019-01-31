@@ -1,0 +1,218 @@
+﻿.locs-widget-valuable-activity {
+    min-height: 285px;
+    //loader
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+    // widget title
+    .title {
+        .pmt-h3;
+        padding-top: 5px;
+
+        md-input-container {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+            font-size: 15px;
+            margin-top: -6px;
+        }
+    }
+    // widget sub-title
+    .subtitle {
+        color: #868688;
+        font-size: 14px;
+        text-transform: uppercase;
+        margin-left: 50%;
+        font-family: @bold-font-family;
+        padding: 15px 0 5px 0;
+    }
+
+    .row-header {
+        transform: rotate(-90deg);
+        float: left;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        left: -43px;
+        top: 204px;
+        font-family: @bold-font-family;
+        color: #868688;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    .pivot-table {
+        // pivot table
+        margin-top: 25px;
+        width: 100%;
+        overflow-x: auto;
+        table {
+            margin-left: 35px;
+            width: ~"calc(100% - 55px)";
+            overflow-x: hidden;
+            min-height: 210px;
+            table-layout: fixed;
+            // header fields
+            th {
+                padding: 10px 7px 5px 7px;
+                font-family: @title-font-family;
+                text-align: center;
+                border-bottom: 2px solid @text-color-2;
+            }
+            //top left grid element
+            th:first-child {
+                border-bottom: none;
+            }
+            // header fields
+            th:last-child {
+                padding: 0 15px;
+            }
+            // columns: every other (odd)
+            th:nth-child(even) {
+                /*background: #eeeeee;*/
+            }
+            // row fields
+            td:first-child {
+                background: white;
+                border-bottom: 1px solid white;
+                text-align: right;
+                font-style: italic;
+                color: @link-color;
+                cursor: pointer;
+                min-width: 150px;
+
+                .pivot-cell {
+                    cursor: default;
+                }
+
+                .pivot-cell:hover {
+                    color: #333333;
+                    font-weight: 500;
+                }
+            }
+            // rows
+            tr:not(:first-child) {
+                min-height: 50px;
+                border-bottom: 1px solid #b5b5b6;
+            }
+            // columns: every other (even)
+            td:nth-child(even) {
+                background: #eeeeee;
+            }
+            // cells
+            td {
+                min-width: 50px;
+                -ms-word-wrap: break-word;
+                word-wrap: break-word;
+                font-size: 13px;
+                padding: 5px;
+                text-align: center;
+                max-width: 50%;                
+            }
+            td.text-left{
+                text-align: left;
+            }
+            td.text-right{
+                text-align: right;
+            }
+            td.text-center{
+                text-align: center;
+            }
+            //list of items in table
+            td .item {
+                display: inline-block;
+                width: auto;
+                text-align: left;
+            }
+            // hidden columns
+            td.hidden{
+                display: none;
+            }
+        }
+
+        .pivot-cell {
+            cursor: help;
+            position: relative;
+            display: inline-block;
+
+            .pivot-tooltip {
+                visibility: hidden;
+                text-align: center;
+                bottom: 100%;
+                left: 50%;
+                margin-left: -100px;
+                margin-bottom: 10px;
+                z-index: 1000;
+                width: 200px;
+                position: absolute;
+                height: auto;
+                padding: 10px;
+                background-color: #fff;
+                color: #3A3E3F;
+                border-radius: 10px;
+                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            }
+
+            .pivot-tooltip::after {
+                border-top: 10px solid #fff;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                width: 0;
+                height: 0;
+                content: "";
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 6em;
+            }
+
+            &:hover {
+                font-weight: 600;
+                color: @main-bg-color;
+
+                .pivot-tooltip {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
+    .print{
+        float: right;
+        cursor: pointer;
+    }
+
+    .footnote{
+    	font-size: 13px;
+        padding-top: 20px;
+        font-style: italic;
+        color: #727273;
+    }   
+}
+
+//styling for modal
+.locs-pivot-modal {
+    md-toolbar {
+        background-color: @main-bg-color;
+    }
+
+    md-dialog-content {
+        padding: 20px;
+
+        .partner {
+            line-height: 24px;
+            font-family: @reg-font-family;
+        }
+    }
+}

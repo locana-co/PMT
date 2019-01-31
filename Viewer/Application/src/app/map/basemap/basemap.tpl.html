@@ -1,0 +1,13 @@
+﻿<div id="map-basemap" ng-controller="MapBasemapCtrl">
+    <div class="menu" ng-class="{open: stateService.isParam('basemap-menu')}">
+        <div class="menu-option" ng-repeat="basemap in basemaps" ng-click="onOptionSelected(basemap.alias)">
+            <table>
+                <tr><td><img ng-src="https://s3.amazonaws.com/v10.investmentmapping.org/themes/basemap/{{basemap.alias}}.jpg" alt="{{basemap.name}}"></td></tr>
+                <tr><td>{{basemap.name}}</td></tr>
+            </table>            
+        </div>
+    </div>
+    <div class="menu-button" ng-click="stateService.toggleParam('basemap-menu')" ng-class="{on: stateService.isParam('basemap-menu')}">
+        <i class="fa fa-globe fa-lg"></i>
+    </div>
+</div>

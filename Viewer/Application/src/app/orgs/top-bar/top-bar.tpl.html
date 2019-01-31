@@ -1,0 +1,18 @@
+<div id="org-top-bar" ng-controller="OrgsTopBarCtrl">
+    <!-- title -->
+    <div class="title">
+        Editable Organizations ({{organizationCount}})
+    </div>
+    <!-- toolbar -->
+    <div class="toolbar">
+        <md-switch md-invert md-no-ink ng-model="isConsolidate" ng-change="onModeChange()">{{message}}</md-switch>
+        <md-button class="md-mini md-fab icon-button" aria-label="new" ng-click="createOrg($event)" ng-hide="isConsolidate">
+            <md-tooltip md-direction="bottom">Add a New Organization</md-tooltip>
+            <i class="material-icons">add</i>
+        </md-button>
+        <md-button class="md-mini md-fab icon-button" aria-label="new" ng-hide="!isConsolidate" ng-click="submit()" ng-disabled="!submitConsolidate">
+            <md-tooltip md-direction="bottom">Submit Consolidation</md-tooltip>
+            <i class="material-icons">done</i>
+        </md-button>
+    </div>
+</div>

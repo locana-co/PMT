@@ -1,0 +1,184 @@
+id,adm0_name,adm1_name,ame,integer2x2,agpot_prox2mark,sqkm,source
+37846,Tanzania,Arusha,Arusha Urban,203,hi-hi,267.199506,Calculated from polygon area
+37847,Tanzania,Arusha,Arusha,203,hi-hi,1238.1269,Calculated from polygon area
+37848,Tanzania,Arusha,Karatu,102,lo-lo,3247.65571,Calculated from polygon area
+37849,Tanzania,Arusha,Lake Eyasi,102,lo-lo,923.44819,Calculated from polygon area
+37850,Tanzania,Arusha,Lake Manyara,202,lo-hi,192.90767,Calculated from polygon area
+37851,Tanzania,Arusha,Longido,102,lo-lo,8065.64715,Calculated from polygon area
+37852,Tanzania,Arusha,Meru,203,hi-hi,1266.54725,Calculated from polygon area
+37853,Tanzania,Arusha,Monduli,102,lo-lo,6991.8668,Calculated from polygon area
+37854,Tanzania,Arusha,Ngorongoro,102,lo-lo,15953.4883,Calculated from polygon area
+37855,Tanzania,Dar es Salaam,Ilala,203,hi-hi,364.732356,Calculated from polygon area
+37856,Tanzania,Dar es Salaam,Kinondoni,103,hi-lo,538.721975,Calculated from polygon area
+37857,Tanzania,Dar es Salaam,Temeke,103,hi-lo,734.459914,Calculated from polygon area
+37858,Tanzania,Dodoma,Bahi,202,lo-hi,5647.28989,Calculated from polygon area
+37859,Tanzania,Dodoma,Chamwino,102,lo-lo,9152.09021,Calculated from polygon area
+37860,Tanzania,Dodoma,Chemba,103,hi-lo,7308.2201,Calculated from polygon area
+37861,Tanzania,Dodoma,Dodoma Urban,202,lo-hi,2613.47589,Calculated from polygon area
+37862,Tanzania,Dodoma,Kondoa,103,hi-lo,5804.24351,Calculated from polygon area
+37863,Tanzania,Dodoma,Kongwa,203,hi-hi,3962.49882,Calculated from polygon area
+37864,Tanzania,Dodoma,Mpwapwa,102,lo-lo,7464.82255,Calculated from polygon area
+37865,Tanzania,Geita,Bukombe,103,hi-lo,8184.54461,Calculated from polygon area
+37866,Tanzania,Geita,Chato,103,hi-lo,3122.50447,Calculated from polygon area
+37867,Tanzania,Geita,Geita,203,hi-hi,4771.00094,Calculated from polygon area
+37868,Tanzania,Geita,Mbogwe,103,hi-lo,2311.84897,Calculated from polygon area
+37869,Tanzania,Geita,Nyang'wale,103,hi-lo,1625.42205,Calculated from polygon area
+37870,Tanzania,Iringa,Iringa Rural,103,hi-lo,18851.4827,Calculated from polygon area
+37871,Tanzania,Iringa,Iringa Urban,203,hi-hi,369.992124,Calculated from polygon area
+37872,Tanzania,Iringa,Kilolo,102,lo-lo,9257.50671,Calculated from polygon area
+37873,Tanzania,Iringa,Mafinga Township Authority,103,hi-lo,574.454768,Calculated from polygon area
+37874,Tanzania,Iringa,Mufindi,103,hi-lo,7539.44646,Calculated from polygon area
+37875,Tanzania,Kagera,Biharamulo,103,hi-lo,7595.71465,Calculated from polygon area
+37876,Tanzania,Kagera,Bukoba Rural,102,lo-lo,1680.63628,Calculated from polygon area
+37877,Tanzania,Kagera,Bukoba Urban,,,84.501635,Calculated from polygon area
+37878,Tanzania,Kagera,Karagwe,102,lo-lo,5240.92167,Calculated from polygon area
+37879,Tanzania,Kagera,Kyerwa,102,lo-lo,2637.07082,Calculated from polygon area
+37880,Tanzania,Kagera,Lake Victoria,102,lo-lo,10269.0545,Calculated from polygon area
+37881,Tanzania,Kagera,Missenyi,102,lo-lo,2876.32003,Calculated from polygon area
+37882,Tanzania,Kagera,Muleba,102,lo-lo,3560.28493,Calculated from polygon area
+37883,Tanzania,Kagera,Ngara,102,lo-lo,3313.74752,Calculated from polygon area
+37884,Tanzania,Katavi,Lake Rukwa,,,807.465194,Calculated from polygon area
+37885,Tanzania,Katavi,Lake Tanganyika,103,hi-lo,1445.116,Calculated from polygon area
+37886,Tanzania,Katavi,Mlele,103,hi-lo,30074.2247,Calculated from polygon area
+37887,Tanzania,Katavi,Mpanda Urban,102,lo-lo,324.422769,Calculated from polygon area
+37888,Tanzania,Katavi,Mpanda,102,lo-lo,17294.6787,Calculated from polygon area
+37889,Tanzania,Kigoma,Buhigwe,103,hi-lo,1538.10097,Calculated from polygon area
+37890,Tanzania,Kigoma,Kakonko,103,hi-lo,2245.40227,Calculated from polygon area
+37891,Tanzania,Kigoma,Kasulu Township Authority,203,hi-hi,933.402776,Calculated from polygon area
+37892,Tanzania,Kigoma,Kasulu,103,hi-lo,7360.11001,Calculated from polygon area
+37893,Tanzania,Kigoma,Kibondo,103,hi-lo,13657.712,Calculated from polygon area
+37894,Tanzania,Kigoma,Kigoma Rural,103,hi-lo,993.328683,Calculated from polygon area
+37895,Tanzania,Kigoma,Kigoma Urban,203,hi-hi,95.0961987,Calculated from polygon area
+37896,Tanzania,Kigoma,Lake Tanganyika,203,hi-hi,8229.74045,Calculated from polygon area
+37897,Tanzania,Kigoma,Uvinza,102,lo-lo,10287.6863,Calculated from polygon area
+37898,Tanzania,Kilimanjaro,Hai,203,hi-hi,902.91647,Calculated from polygon area
+37899,Tanzania,Kilimanjaro,Moshi Rural,203,hi-hi,1378.9129,Calculated from polygon area
+37900,Tanzania,Kilimanjaro,Moshi Urban,,,63.3884558,Calculated from polygon area
+37901,Tanzania,Kilimanjaro,Mwanga,203,hi-hi,1958.61078,Calculated from polygon area
+37902,Tanzania,Kilimanjaro,Rombo,102,lo-lo,1463.99311,Calculated from polygon area
+37903,Tanzania,Kilimanjaro,Same,202,lo-hi,6217.41532,Calculated from polygon area
+37904,Tanzania,Kilimanjaro,Siha,203,hi-hi,1217.08442,Calculated from polygon area
+37905,Tanzania,Lindi,Kilwa,103,hi-lo,15260.5117,Calculated from polygon area
+37906,Tanzania,Lindi,Lindi Rural,102,lo-lo,5941.37184,Calculated from polygon area
+37907,Tanzania,Lindi,Lindi Urban,103,hi-lo,1086.48891,Calculated from polygon area
+37908,Tanzania,Lindi,Liwale,102,lo-lo,34298.2855,Calculated from polygon area
+37909,Tanzania,Lindi,Nachingwea,103,hi-lo,5969.63185,Calculated from polygon area
+37910,Tanzania,Lindi,Ruangwa,103,hi-lo,2513.39922,Calculated from polygon area
+37911,Tanzania,Manyara,Babati Urban,203,hi-hi,472.111966,Calculated from polygon area
+37912,Tanzania,Manyara,Babati,103,hi-lo,5581.11859,Calculated from polygon area
+37913,Tanzania,Manyara,Hanang,103,hi-lo,3686.82714,Calculated from polygon area
+37914,Tanzania,Manyara,Kiteto,103,hi-lo,13140.4107,Calculated from polygon area
+37915,Tanzania,Manyara,Lake Manyara,202,lo-hi,243.37403,Calculated from polygon area
+37916,Tanzania,Manyara,Mbulu,103,hi-lo,3812.25638,Calculated from polygon area
+37917,Tanzania,Manyara,Simanjiro,103,hi-lo,19824.3664,Calculated from polygon area
+37918,Tanzania,Mara,Bunda,103,hi-lo,3115.05816,Calculated from polygon area
+37919,Tanzania,Mara,Butiama,202,lo-hi,2182.87567,Calculated from polygon area
+37920,Tanzania,Mara,Lake Victoria,202,lo-hi,9564.25417,Calculated from polygon area
+37921,Tanzania,Mara,Musoma Rural,103,hi-lo,1078.68618,Calculated from polygon area
+37922,Tanzania,Mara,Musoma Urban,,,65.3202995,Calculated from polygon area
+37923,Tanzania,Mara,Rorya,102,lo-lo,2007.59026,Calculated from polygon area
+37924,Tanzania,Mara,Serengeti,103,hi-lo,11270.0546,Calculated from polygon area
+37925,Tanzania,Mara,Tarime,102,lo-lo,1533.97558,Calculated from polygon area
+37926,Tanzania,Mbeya,Chunya,103,hi-lo,28946.0503,Calculated from polygon area
+37927,Tanzania,Mbeya,Ileje,102,lo-lo,1896.24598,Calculated from polygon area
+37928,Tanzania,Mbeya,Kyela,103,hi-lo,745.509811,Calculated from polygon area
+37929,Tanzania,Mbeya,Lake Rukwa,103,hi-lo,2112.84866,Calculated from polygon area
+37930,Tanzania,Mbeya,Mbarali,103,hi-lo,14525.652,Calculated from polygon area
+37931,Tanzania,Mbeya,Mbeya Rural,102,lo-lo,2837.02986,Calculated from polygon area
+37932,Tanzania,Mbeya,Mbeya Urban,202,lo-hi,254.643927,Calculated from polygon area
+37933,Tanzania,Mbeya,Mbozi,102,lo-lo,3897.44954,Calculated from polygon area
+37934,Tanzania,Mbeya,Momba,103,hi-lo,4759.02964,Calculated from polygon area
+37935,Tanzania,Mbeya,Rungwe,102,lo-lo,2171.48736,Calculated from polygon area
+37936,Tanzania,Mbeya,Tunduma,203,hi-hi,93.7074603,Calculated from polygon area
+37937,Tanzania,Morogoro,Gairo,102,lo-lo,1972.26991,Calculated from polygon area
+37938,Tanzania,Morogoro,Kilombero,103,hi-lo,13560.1967,Calculated from polygon area
+37939,Tanzania,Morogoro,Kilosa,102,lo-lo,11778.3204,Calculated from polygon area
+37940,Tanzania,Morogoro,Morogoro Rural,103,hi-lo,12452.4298,Calculated from polygon area
+37941,Tanzania,Morogoro,Morogoro Urban,202,lo-hi,288.252548,Calculated from polygon area
+37942,Tanzania,Morogoro,Mvomero,203,hi-hi,6630.07368,Calculated from polygon area
+37943,Tanzania,Morogoro,Ulanga,102,lo-lo,23482.1227,Calculated from polygon area
+37944,Tanzania,Mtwara,Masasi Township Authority,103,hi-lo,752.692712,Calculated from polygon area
+37945,Tanzania,Mtwara,Masasi,102,lo-lo,4023.55964,Calculated from polygon area
+37946,Tanzania,Mtwara,Mtwara Rural,103,hi-lo,3769.71362,Calculated from polygon area
+37947,Tanzania,Mtwara,Mtwara Urban,203,hi-hi,163.281187,Calculated from polygon area
+37948,Tanzania,Mtwara,Nanyumbu,103,hi-lo,5213.4537,Calculated from polygon area
+37949,Tanzania,Mtwara,Newala,102,lo-lo,1954.92731,Calculated from polygon area
+37950,Tanzania,Mtwara,Tandahimba,103,hi-lo,2073.26605,Calculated from polygon area
+37951,Tanzania,Mwanza,Ilemela,202,lo-hi,257.280169,Calculated from polygon area
+37952,Tanzania,Mwanza,Kwimba,203,hi-hi,3284.13665,Calculated from polygon area
+37953,Tanzania,Mwanza,Lake Victoria,203,hi-hi,14560.5612,Calculated from polygon area
+37954,Tanzania,Mwanza,Magu,202,lo-hi,1530.6098,Calculated from polygon area
+37955,Tanzania,Mwanza,Misungwi,202,lo-hi,2605.60067,Calculated from polygon area
+37956,Tanzania,Mwanza,Nyamagana,202,lo-hi,184.633211,Calculated from polygon area
+37957,Tanzania,Mwanza,Sengerema,103,hi-lo,3191.15745,Calculated from polygon area
+37958,Tanzania,Mwanza,Ukerewe,202,lo-hi,634.504255,Calculated from polygon area
+37959,Tanzania,Njombe,Ludewa,102,lo-lo,6041.53614,Calculated from polygon area
+37960,Tanzania,Njombe,Makambako Township Authority,103,hi-lo,887.050551,Calculated from polygon area
+37961,Tanzania,Njombe,Makete,102,lo-lo,4021.14589,Calculated from polygon area
+37962,Tanzania,Njombe,Njombe Urban,102,lo-lo,3550.91954,Calculated from polygon area
+37963,Tanzania,Njombe,Njombe,102,lo-lo,3466.28867,Calculated from polygon area
+37964,Tanzania,Njombe,Wanging'ombe,103,hi-lo,3454.44461,Calculated from polygon area
+37965,Tanzania,Pemba North,Micheweni,203,hi-hi,254.96155,Calculated from polygon area
+37966,Tanzania,Pemba North,Wete,202,lo-hi,305.282885,Calculated from polygon area
+37967,Tanzania,Pemba South,Chake,202,lo-hi,225.5066,Calculated from polygon area
+37968,Tanzania,Pemba South,Mkoani,203,hi-hi,268.279032,Calculated from polygon area
+37969,Tanzania,Pwani,Bagamoyo,103,hi-lo,8470.49866,Calculated from polygon area
+37970,Tanzania,Pwani,Kibaha Urban,203,hi-hi,704.674009,Calculated from polygon area
+37971,Tanzania,Pwani,Kibaha,203,hi-hi,1498.27926,Calculated from polygon area
+37972,Tanzania,Pwani,Kisarawe,203,hi-hi,5027.03796,Calculated from polygon area
+37973,Tanzania,Pwani,Mafia,103,hi-lo,476.659919,Calculated from polygon area
+37974,Tanzania,Pwani,Mkuranga,203,hi-hi,2822.03908,Calculated from polygon area
+37975,Tanzania,Pwani,Rufiji,103,hi-lo,13561.2318,Calculated from polygon area
+37976,Tanzania,Rukwa,Kalambo,102,lo-lo,5667.38534,Calculated from polygon area
+37977,Tanzania,Rukwa,Lake Rukwa,102,lo-lo,2184.59262,Calculated from polygon area
+37978,Tanzania,Rukwa,Lake Tanganyika,103,hi-lo,4140.72477,Calculated from polygon area
+37979,Tanzania,Rukwa,Nkasi,102,lo-lo,10007.3158,Calculated from polygon area
+37980,Tanzania,Rukwa,Sumbawanga Rural,102,lo-lo,5223.64166,Calculated from polygon area
+37981,Tanzania,Rukwa,Sumbawanga Urban,202,lo-hi,1395.39594,Calculated from polygon area
+37982,Tanzania,Ruvuma,Mbinga,102,lo-lo,4858.85279,Calculated from polygon area
+37983,Tanzania,Ruvuma,Namtumbo,102,lo-lo,21886.878,Calculated from polygon area
+37984,Tanzania,Ruvuma,Nyasa,102,lo-lo,3214.78838,Calculated from polygon area
+37985,Tanzania,Ruvuma,Songea Rural,102,lo-lo,14199.0468,Calculated from polygon area
+37986,Tanzania,Ruvuma,Songea Urban,203,hi-hi,579.749914,Calculated from polygon area
+37987,Tanzania,Ruvuma,Tunduru,103,hi-lo,18441.3071,Calculated from polygon area
+37988,Tanzania,Shinyanga,Kahama Township Authority,203,hi-hi,1379.20483,Calculated from polygon area
+37989,Tanzania,Shinyanga,Kahama,102,lo-lo,6840.36205,Calculated from polygon area
+37990,Tanzania,Shinyanga,Kishapu,103,hi-lo,4214.03632,Calculated from polygon area
+37991,Tanzania,Shinyanga,Shinyanga Rural,103,hi-lo,3603.76834,Calculated from polygon area
+37992,Tanzania,Shinyanga,Shinyanga Urban,202,lo-hi,559.450719,Calculated from polygon area
+37993,Tanzania,Simiyu,Bariadi,103,hi-lo,5517.11322,Calculated from polygon area
+37994,Tanzania,Simiyu,Busega,102,lo-lo,1337.95569,Calculated from polygon area
+37995,Tanzania,Simiyu,Itilima,103,hi-lo,4715.60529,Calculated from polygon area
+37996,Tanzania,Simiyu,Lake Eyasi,103,hi-lo,176.328355,Calculated from polygon area
+37997,Tanzania,Simiyu,Lake Victoria,203,hi-hi,702.633614,Calculated from polygon area
+37998,Tanzania,Simiyu,Maswa,103,hi-lo,3694.41112,Calculated from polygon area
+37999,Tanzania,Simiyu,Meatu,103,hi-lo,9067.28671,Calculated from polygon area
+38000,Tanzania,Singida,Ikungi,103,hi-lo,8907.59675,Calculated from polygon area
+38001,Tanzania,Singida,Iramba,103,hi-lo,4547.57923,Calculated from polygon area
+38002,Tanzania,Singida,Manyoni,103,hi-lo,29091.8946,Calculated from polygon area
+38003,Tanzania,Singida,Mkalama,103,hi-lo,3135.66023,Calculated from polygon area
+38004,Tanzania,Singida,Singida Rural,102,lo-lo,2409.71965,Calculated from polygon area
+38005,Tanzania,Singida,Singida Urban,102,lo-lo,723.96132,Calculated from polygon area
+38006,Tanzania,Tabora,Igunga,103,hi-lo,7119.46562,Calculated from polygon area
+38007,Tanzania,Tabora,Kaliua,103,hi-lo,15682.1633,Calculated from polygon area
+38008,Tanzania,Tabora,Nzega,203,hi-hi,7944.03125,Calculated from polygon area
+38009,Tanzania,Tabora,Sikonge,103,hi-lo,26537.7956,Calculated from polygon area
+38010,Tanzania,Tabora,Tabora Urban,202,lo-hi,1476.77334,Calculated from polygon area
+38011,Tanzania,Tabora,Urambo,103,hi-lo,5489.37361,Calculated from polygon area
+38012,Tanzania,Tabora,Uyui,102,lo-lo,12077.1786,Calculated from polygon area
+38013,Tanzania,Tanga,Handeni Township Authority,203,hi-hi,836.954552,Calculated from polygon area
+38014,Tanzania,Tanga,Handeni,103,hi-lo,6524.53841,Calculated from polygon area
+38015,Tanzania,Tanga,Kilindi,103,hi-lo,6431.57458,Calculated from polygon area
+38016,Tanzania,Tanga,Korogwe Township Authority,203,hi-hi,225.150417,Calculated from polygon area
+38017,Tanzania,Tanga,Korogwe,103,hi-lo,3200.86049,Calculated from polygon area
+38018,Tanzania,Tanga,Lushoto,102,lo-lo,4088.45579,Calculated from polygon area
+38019,Tanzania,Tanga,Mkinga,103,hi-lo,2800.9769,Calculated from polygon area
+38020,Tanzania,Tanga,Muheza,103,hi-lo,1499.57512,Calculated from polygon area
+38021,Tanzania,Tanga,Pangani,103,hi-lo,1770.08164,Calculated from polygon area
+38022,Tanzania,Tanga,Tanga,203,hi-hi,640.958604,Calculated from polygon area
+38023,Tanzania,Zanzibar North,Kaskazini 'A',203,hi-hi,237.986636,Calculated from polygon area
+38024,Tanzania,Zanzibar North,Kaskazini 'B',202,lo-hi,237.153719,Calculated from polygon area
+38025,Tanzania,Zanzibar South and Central,Kati,202,lo-hi,516.806271,Calculated from polygon area
+38026,Tanzania,Zanzibar South and Central,Kusini,202,lo-hi,381.275971,Calculated from polygon area
+38027,Tanzania,Zanzibar West,Magharibi,202,lo-hi,229.798247,Calculated from polygon area
+38028,Tanzania,Zanzibar West,Mjini,,,16.4823582,Calculated from polygon area

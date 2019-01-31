@@ -1,0 +1,65 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-pivot widget" ng-controller="LocsWidgetPivotCtrl">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading && !noData" md-diameter="250"></md-progress-circular>
+
+    <!-- print -->
+    <div class="print" ng-click="exportPopup()" title="File Download" aria-label="File Download"  ng-show="!loading && !noData"><i class="material-icons">file_download</i></div>
+
+    <!-- widget title -->
+    <div class="title" ng-show="!loading">
+        {{widget.title}}
+        <!-- partner filters (funding, implementing, accountable) -->
+        <md-input-container class="md-block" flex-gt-sm ng-show="widget.params.partner_filters.length > 0">
+            <md-select ng-model="widget.params.org_role_id" ng-change="processPartnerPivotData()" aria-label="partner filter selection">
+                <md-option ng-repeat="filter in widget.params.partner_filters" value="{{filter.org_role_id}}">
+                    {{filter.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+    <!-- widget column label -->
+    <!-- show dropdown is there is more than 2 filter options-->
+    <div class="subtitle" ng-show="widget.params.axis_options.length <= 2 && !loading">{{widget.params.axis_options[col_option_index].label}}</div>
+    <md-select class="column-dropdown" ng-show="widget.params.axis_options.length > 2 && !loading" ng-model="col_option_index" ng-change="updateColumnOption()"
+        aria-label="filter 1 selection">
+        <md-option ng-show="$index != row_option_index" ng-repeat="filter in widget.params.axis_options track by $index" value="{{$index}}">
+            <span>{{filter.label}}</span>
+        </md-option>
+    </md-select>
+
+    <!-- widget row label -->
+    <!-- show dropdown is there is more than 2 filter options-->
+    <div class="row-header" ng-show="widget.params.axis_options.length <= 2 && !loading">{{widget.params.axis_options[row_option_index].label}}</div>
+    <md-select class="row-dropdown" ng-show="widget.params.axis_options.length > 2 && !loading" ng-model="row_option_index" ng-change="updateRowOption()"
+        aria-label="filter 2 selection">
+        <md-option ng-show="$index != col_option_index" ng-repeat="filter in widget.params.axis_options track by $index" value="{{$index}}">
+            <span>{{filter.label}}</span>
+        </md-option>
+    </md-select>
+
+    <!-- table -->
+    <div class="pivot-table-wrapper" ng-show="!loading && !noData">
+        <div class="pivot-table">
+            <table id="locs-partner-pivot">
+                <tr>
+                    <th class="pmt-table-header" ng-repeat="column in headers" ng-show="column.active || widget.params.show_empty_columns">{{column.key}}</th>
+                </tr>
+                <tr ng-repeat="row in chartData track by $index">
+                    <td ng-repeat="cell in row track by $index" ng-show="headers[$index].active || widget.params.show_empty_columns" ng-click="setSelectedCell(cell); showAllPartners(e)">
+                        <div ng-repeat="item in cell track by $index" class="item">
+                            <div class="pivot-cell">
+                                {{item.f1 || widget.params.unspecified_label }}
+                                <div class="pivot-tooltip" ng-hide="item.f3===null || item.overflow">{{item.f3}}</div>
+                                <span ng-hide="$last">,</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- no data message-->
+    <div class="no-data-message" ng-show="noData">There is no data to support this widget</div>
+</div>

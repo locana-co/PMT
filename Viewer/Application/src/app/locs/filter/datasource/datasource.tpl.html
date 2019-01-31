@@ -1,0 +1,9 @@
+<div class="locs-filter-datasource" ng-controller="LocsFilterDataSourceCtrl" ng-show="filter.enable">
+    <div class="checkbox-group">
+        <div ng-repeat="option in filter.params.dataSources">
+            <md-checkbox  aria-label="enable datasource" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)">
+                {{option.label}}
+            </md-checkbox>
+        </div>
+    </div>
+</div>

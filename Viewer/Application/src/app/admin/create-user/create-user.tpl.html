@@ -1,0 +1,126 @@
+<div id="create-user">
+    <md-dialog aria-label="create user dialog">
+        <form name="newUser">
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Create New User Account</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- description -->
+            <md-content class="description md-padding" ng-show="!Loading">
+                <p>
+                    Fill out form to create new user account.
+                    <span ng-show="errorMessage" class="err-message"><br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- submit loading message -->
+            <md-content class="description md-padding" ng-show="Loading">
+                <p>
+                    Your request is currently being processed.
+                    <span ng-show="errorMessage" class="err-message"><br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- loading animation -->
+            <div>
+                <md-progress-circular ng-show="Loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <!-- new user form -->
+            <md-dialog-content ng-show="!Loading">
+                <!-- first & last Name-->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>First name</label>
+                        <input name="firstName" ng-model="user._first_name" ng-required="firstName.touched" ng-focus="setFocused('firstName')" ng-blur="setBlurred('firstName')">
+                        <div ng-messages="newUser.firstName.$error">
+                            <div ng-message="required">First name is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Last Name</label>
+                        <input name="lastName" ng-model="user._last_name" ng-required="lastName.touched" ng-focus="setFocused('lastName')" ng-blur="setBlurred('lastName')">
+                        <div ng-messages="newUser.lastName.$error">
+                            <div ng-message="required">Last name is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- email & phone-->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Email</label>
+                        <input name="email" ng-model="user._email" ng-required="email.touched" ng-focus="setFocused('email')" ng-blur="setBlurred('email')">
+                        <div ng-messages="newUser.email.$error">
+                            <div ng-message-exp="['required','pattern']">Email is required & must be a valid email address.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Phone</label>
+                        <input ng-model="user._phone" name="phone" ng-focus="setFocused('phone')" ng-blur="setBlurred('phone')" ng-pattern="/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/"/>
+                        <div ng-messages="newUser.phone.$error">
+                            <div ng-message="pattern">###-###-#### - Please enter a valid phone number.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                 <!-- username-->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Username</label>
+                        <input ng-model="user._username" name="username" ng-required="username.touched" ng-focus="setFocused('username')" ng-blur="setBlurred('username')">
+                        <div ng-messages="newUser.username.$error">
+                            <div ng-message="required">Username is required.</div>
+                            <div ng-message="unique">Username already exists.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- password-->
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Password</label>
+                        <input type="password" name="password" ng-model="user._password" ng-required="password.touched" ng-focus="setFocused('password')" ng-blur="setBlurred('password')">
+                        <div ng-messages="newUser.password.$error">
+                            <div ng-message="required">Password is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Verify Password</label>
+                        <input type="password" name="verifyPassword" ng-model="user.verify_password" ng-focus="setFocused('verifyPassword')" ng-blur="setBlurred('verifyPassword')">
+                        <div ng-messages="newUser.verifyPassword.$error">
+                            <div class="err-message" ng-message="required">Passwords do not match</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- organization & role -->
+                <div layout-gt-sm="row">
+                    <md-input-container name="org" id="org-dropdown" class="md-block" flex-gt-sm>
+                        <label>Organization</label>
+                        <md-select required ng-model="user.organization_id" md-container-class="create-user-org-select">
+                            <md-option class="org" ng-repeat="org in orgs" value="{{org.id}}">
+                                {{org._name}}
+                            </md-option>
+                        </md-select>
+                        <div ng-show="requiredFieldsError && user.organization_id == undefined">
+                            <div>Organization is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Roles</label>
+                        <md-select required ng-model="user.role_id" md-container-class="create-user-role-select">
+                            <md-option id="create-user-role" ng-click="updateRole(user, role)" ng-repeat="role in roles" value="{{role.id}}">
+                                {{role._name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <!-- buttons -->
+                <div class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                    <md-button ng-disabled="newUser.$invalid" class="save md-raised" ng-click="createNewUser()">Create New User</md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

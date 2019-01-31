@@ -1,0 +1,54 @@
+<div id="acts-child-taxonomy" ng-controller="ActsChildrenTaxonamyCtrl">
+    <div class="section-title">Taxonomies By Region</div>
+    <md-divider></md-divider>
+    <div class="no-info" ng-show="$parent.selectedActivity.childrenTaxonomyCount <= 0">
+        There is no taxonomy information by region.
+    </div>
+    <div ng-show="$parent.selectedActivity.childrenTaxonomyCount > 0">
+        <table>
+            <tr>
+                <th>Region</th>
+                <th>Taxonomies</th>
+                <th>Classification</th>
+            </tr>
+            <tbody ng-repeat="child in $parent.selectedActivity.children | orderBy:'_title'">
+                <!-- activity status-->
+                <tr ng-show="child.selectedActivity.taxonomyDetails.activity_status">
+                    <td>{{child._title}}</td>
+                    <!-- parent -->
+                    <td ng-show="child.selectedActivity.parent_id == null">{{$parent.terminology.activity_terminology.singular}} Status</td>
+                    <!-- child -->
+                    <td ng-show="child.selectedActivity.parent_id != null">Activity Status</td>
+                    <td>{{child.selectedActivity.taxonomyDetails.activity_status}}</td>
+                </tr>
+                <!-- sector category-->
+                <tr ng-show="child.selectedActivity.taxonomyDetails.sector_category">
+                    <td>{{child._title}}</td>
+                    <td>Sector Category</td>
+                    <td>{{child.selectedActivity.taxonomyDetails.sector_category}}</td>
+                </tr>
+                <!-- sector -->
+                <tr ng-show="child.selectedActivity.taxonomyDetails.sector">
+                    <td>{{child._title}}</td>
+                    <td>Sector</td>
+                    <td>{{child.selectedActivity.taxonomyDetails.sector}}</td>
+                </tr>
+                <!--sector category -->
+                <tr ng-show="child.selectedActivity.taxonomyDetails.activity_scope">
+                    <td>{{child._title}}</td>
+                    <!-- parent -->
+                    <td ng-show="child.selectedActivity.parent_id == null">{{$parent.terminology.activity_terminology.singular}} Scope</td>
+                    <!-- child -->
+                    <td ng-show="child.selectedActivity.parent_id != null">Activity Scope</td>
+                    <td>{{child.selectedActivity.taxonomyDetails.activity_scope}}</td>
+                </tr>
+                <!-- custom taxonomy -->
+                <tr ng-repeat="(key,value) in child.selectedActivity.taxonomyDetails.custom_taxonomy">
+                    <td>{{child._title}}</td>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

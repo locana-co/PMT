@@ -1,0 +1,67 @@
+<div id="map-child-partners" ng-controller="MapOrganizationDetailsCtrl">
+    <div class="child-partners-item" ng-repeat="child in $parent.activeDetail.children | orderBy:'_title'">
+        <div class='section-title'>{{child._title}}</div>
+        <md-divider></md-divider>
+        <div class="activity-detail-data" layout="row" flex>
+            <!-- organiation data -->
+            <div class="info-header" ng-show="!(child.activeDetail.organizationDetails.organizationCount > 0)">No additional organization information available for this {{terminology.activity_terminology.singular}}.</div>
+            <div class="info-data" ng-show="child.activeDetail.organizationDetails.implementingOrgs.length > 0">
+                <div class="info-header block"> {{$parent.terminology.implementor_terminology.plural}}: </div>
+                <div ng-repeat="org in child.activeDetail.organizationDetails.implementingOrgs" class="info-content partner-data block">
+                    <div class="link">{{org.organization}}</div>
+                    <div class="org-details">
+                        <!-- org url -->
+                        <div class="info-data" ng-show="org.url">
+                            <div class="info-header">URL:</div>
+                            <div class="info-content"> {{org.url}}</div>
+                            <!-- org address -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="org.address">Address:</div>
+                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="info-data" ng-show="child.activeDetail.organizationDetails.fundingOrgs.length > 0">
+                <div class="info-header block"> {{$parent.terminology.funder_terminology.plural}}: </div>
+                <div ng-repeat="org in child.activeDetail.organizationDetails.fundingOrgs" class="info-content partner-data block">
+                    <div class="link">{{org.organization}}</div>
+                    <div class="org-details">
+                        <!-- org url -->
+                        <div class="info-data" ng-show="org.url">
+                            <div class="info-header">URL:</div>
+                            <div class="info-content"> {{org.url}}</div>
+                            <!-- org address -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="org.address">Address:</div>
+                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="info-data" ng-show="child.activeDetail.organizationDetails.accountableOrgs.length > 0">
+                <div class="info-header block"> Accountable Partners: </div>
+                <div ng-repeat="org in child.activeDetail.organizationDetails.accountableOrgs" class="info-content partner-data block">
+                    <div class="link">{{org.organization}}</div>
+                    <div class="org-details">
+                        <!-- org url -->
+                        <div class="info-data" ng-show="org.url">
+                            <div class="info-header">URL:</div>
+                            <div class="info-content"> {{org.url}}</div>
+                            <!-- org address -->
+                            <div class="info-data">
+                                <div class="info-header" ng-show="org.address">Address:</div>
+                                <div class="info-content" ng-show="org.address"> {{org.address}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>

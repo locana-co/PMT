@@ -1,0 +1,62 @@
+﻿<div id="map-contextual" class="left-panel fade" ng-controller="MapContextualCtrl" ng-class="{active: navTab==='contextual'}">
+    <div class="selection selection-adjustment" ng-class="{active: !sideoutOpen}">
+        <!-- selected contextual layers (only displays when one or more layers are selected)-->
+        <ng-include src="'map/left-panel/contextual/selection/selection.tpl.html'"></ng-include>
+    </div>
+    <!-- contextual layers menu -->
+    <div class="menu" ng-class="{closed: sideoutOpen}">
+        <!-- contextual layer categories -->
+        <div ng-repeat="category in categories" ng-click="onMenuClick(category.alias)" class="menu-option-container">
+            <div class="menu-option" ng-class="{active: activeCategory==category.alias && sideoutOpen}">{{category.label}}</div>
+        </div>
+    </div>
+    <!-- sub-menu panel -->
+    <div class="left-panel-slide-out" ng-class="{open: sideoutOpen}">
+        <div class="wrapper">
+            <div class="selection" ng-class="{active: sideoutOpen}">
+                <!-- selected contextual layers (only displays when one or more layers are selected)-->
+                <ng-include src="'map/left-panel/contextual/selection/selection.tpl.html'"></ng-include>
+            </div>
+            <!-- back to menu link -->
+            <div class="header md-button pmt-back-button" ng-click="closeSlideOut();">
+                <i class="material-icons">arrow_back</i> Back to map layer list
+            </div>
+            <!-- category for sub-menu -->
+            <div class="title">
+                {{activeCategory}}
+                <!--show metadata-->
+                <span ng-mouseover="showTooltip()" ng-mouseout="hideTooltip()">
+                    <i class="material-icons">info_outline</i>
+                    <div ng-show="catTooltip.show" class="cat-tooltip">
+                        <div class="data-element">
+                            <div class="data-title">Source: </div>
+                            <div class="data-value">{{catTooltip.source}}</div>
+                        </div>
+                        <div class="data-element">
+                            <div class="data-title">Reference Period: </div>
+                            <div class="data-value">{{catTooltip.reference_period}}</div>
+                        </div>
+                        <div class="data-element">
+                            <div class="data-title">Link: </div>
+                            <div class="data-value">{{catTooltip.url}}</div>
+                        </div>
+                    </div>
+                    </span>
+            </div>
+            <!-- sub-menu of layers for the selected category -->
+            <div class="sub-menu scrollable">
+                <div class="sub-menu-option-container" ng-repeat="category in categories" ng-class="{active: activeCategory==category.alias}">
+                    <!-- list of layers in the category -->
+                    <div ng-repeat="layer in category.layers" ng-click="optionChanged(layer)" class="menu-option">
+                        <!-- checkbox -->
+                        <md-checkbox class="menu-checkbox" ng-checked="layer.active"></md-checkbox>
+                        <!-- label -->
+                        <div class="menu-label">
+                            <span class="name">{{layer.label}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

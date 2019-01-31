@@ -1,0 +1,49 @@
+﻿#locs-mid-bar {
+    background-color: transparent;
+    padding-top: 15px;
+    width: calc( ~'100% - 220px ');
+    float: right;
+    .title-text {
+        display: inline-block;
+        float: left;
+        .title {
+            .pmt-h1;
+            padding-left: 10px;
+            display: inline-block;
+            background-color: transparent;
+        }
+        .subtitle {
+            font-size: 11px;
+            margin-left: 11px;
+        }
+    }
+    .investment {
+        float: right;
+        margin-top: 9px;
+        .pmt-h2;
+        padding-right: 10px;
+        font-family: @bold-font-family;
+        background-color: transparent;
+        font-size: 15px;
+        line-height: 2;
+        padding-left: 26px;
+    }
+    .investment.col-md-12 {
+        text-align: left;
+    }
+    .loader {
+        position: relative;
+        float: right;
+        margin-top: -16px;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+}

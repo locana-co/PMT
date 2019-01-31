@@ -1,0 +1,35 @@
+#login-timeout {
+    font-family: @reg-font-family;
+    // dialog
+    md-dialog {
+        max-height: 600px;
+        width: 500px;
+        overflow: hidden;
+        margin-left: @width-navigation;
+        // modal header
+        md-toolbar {
+            background-color: @main-bg-color;
+            .sub-header{
+                font-family: @title-font-family;
+                text-transform: uppercase;
+            }
+        }
+        // modal content
+        md-dialog-content {
+            padding: 20px;
+        }
+    }
+
+    button {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+    }
+
+    .modal-footer {
+        padding: 19px 20px 0;
+    }
+}
+
+#login-timeout.modal {
+    height:100%;
+}

@@ -1,0 +1,97 @@
+#org-list {
+    margin-top: @org-top-bar-height; //keeps top scrollbar from being hidden
+    margin-bottom: @height-footer; //keeps bottom rows from being hidden
+    background-color: @background-grey;
+    height: 100%;
+
+    .message {
+        padding-top: 30px;
+        font-size: 14px;
+        font-style: italic;
+        color: #4f4f4f;
+        padding-left: 24px;
+    }
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+    .tools {
+        float: right;
+        margin-right: 20px;
+        margin-top: -9px;
+        .icon-button {
+            color: #fff;
+            i {
+                margin-top: 7px;
+            }
+            &:hover {
+                background-color: @main-font-color;
+            }
+            &:disabled {
+                background-color: rgba(0,0,0,0.12) !important;
+            }
+        }
+        .normal-button {
+            background-color: @main-bg-color;
+        }
+        .selected {
+            background-color: @org-delete-bg-color;
+        }
+        .keep {
+            background-color: @org-keep-bg-color;
+        }
+    }
+    md-input-container.search input {
+        width: calc(100% ~'-' 40px);
+        border-color: @main-bg-color;
+        margin: 20px 20px 0px 20px;
+        padding: 5px;
+        height: 100%;
+    }
+    // organization table list
+    table {
+        width: calc(100% ~'-' 40px);
+        margin: 10px 20px 70px 20px;
+        font-size: 12px;
+        border: 1px solid @element-border-color;
+        cursor: default;
+        thead {
+            text-transform: uppercase;
+            font-family: @title-font-family;
+            background-color: #e6e7e7;
+            line-height: 40px;
+            th {
+                padding: 0 10px;
+                border-bottom: none;
+            }
+        }
+        tbody {
+            tr {
+                line-height: 20px;
+                background-color: #fff;
+                border-top: 1px solid @element-border-color;
+                td:first-child {
+                    color: @main-font-color;
+                    cursor: pointer;
+                    font-family: @title-font-family;
+                    padding: 3px 10px;
+                    font-weight: 600;
+                    width: 40%;
+                    .pmt-hyperlink;
+                }
+                td {
+                    padding: 10px;
+                }
+            }
+        }
+    }
+}

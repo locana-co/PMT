@@ -1,0 +1,29 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-valuable-activity widget" ng-controller="LocsWidgetValuableActivityCtrl">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading && !noData" md-diameter="250"></md-progress-circular>
+    <!-- print -->
+    <div class="print" print="{{widget.id}}" title="File Download" aria-label="File Download"  ng-show="!loading && !noData"><i class="material-icons">file_download</i></div>
+    <!-- widget title -->
+    <div class="title" ng-show="!loading">
+        {{widget.title}}
+    </div>
+    <!-- table -->
+    <div class="pivot-table" ng-show="!loading && !noData">
+        <table>
+            <tr>
+                <th ng-repeat="header in widget.params.table" class="pmt-table-header">{{header.column_header}}</th>
+            </tr>
+            <tr ng-repeat="row in chartData track by $index">
+                <td ng-click="goToActivity(row[row.length-1])" ng-repeat="r in row track by $index" ng-if="$first">{{r}}</td>
+                <td ng-repeat="r in row track by $index" ng-if="!$first" ng-class="{'hidden':$last, 'text-left': widget.params.table[$index].text_align =='left', 'text-right': widget.params.table[$index].text_align =='right', 'text-center': widget.params.table[$index].text_align =='center' }">{{r}}</td>               
+            </tr>
+        </table>
+    </div>
+    <!-- widget footnote -->
+    <div class="footnote" ng-show="!loading && !noData">
+        {{widget.footnote}}
+    </div>
+    <!-- no data message-->
+    <div class="no-data-message" ng-show="noData">There is no data to support this widget</div>
+</div>

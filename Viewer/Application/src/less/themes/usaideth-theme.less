@@ -1,0 +1,58 @@
+﻿/**
+ * Theme Specific Less (Overrides)
+ */
+@import '../app/map/map/less/map-usaideth.less';
+
+/**
+ * Less Variable (Overrides)
+ */
+
+
+/**
+ * Application (Overrides)
+ */
+#app{
+
+}
+/**
+ * Header (Overrides)
+ */
+#header {
+
+}
+/**
+ * Navigation (Overrides)
+ */
+#navigation {
+    font-family: @title-font-family;
+    background-color: @main-bg-color;
+    li {
+        a, a:visited {
+            color: @light-font-color;
+        }
+        &:hover{
+            background-color:@dark-bg-color;
+        }
+        
+        &.active {
+            background-color: @dark-bg-color;
+        }
+    }
+}
+
+
+/**
+ * Footer (Overrides)
+ */
+#footer .social {
+        li {
+
+        a, a:visited {
+            color: @light-font-color;
+
+            &:hover {
+                color: @main-bg-color;
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+<!-- video tutorial modal -->
+<md-dialog id="video-modal" aria-label="List dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header">Video Tutorial</h2>
+            <md-button class="md-icon-button" ng-click="closeDialog()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="video-modal-content">
+    <iframe ng-src="{{videoURL}}" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    </md-dialog-content>
+</md-dialog>

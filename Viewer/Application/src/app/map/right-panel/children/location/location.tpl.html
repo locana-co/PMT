@@ -1,0 +1,55 @@
+<div id="map-child-location" ng-controller="MapChildrenLocationCtrl">
+
+   <!-- locations-->
+   <div ng-repeat="location in $parent.activeDetail.childLocationDetails" class="child-location-item individual-element" ng-show="($parent.activeDetail.childLocationDetails.length > 0)">
+        <div class="info-header">Location [{{$parent.activeDetail.locationDetails.length + $index + 1}}] </div>
+        <!-- country -->
+        <div class="info-data">
+            <div class="info-header">Country:</div>
+            <div class="info-content" ng-show="!location.country">No country data available</div>
+            <div class="info-content" ng-show="location.country">
+                <div class="location-name">{{location.country}}</div>
+            </div>
+        </div>
+        <!-- location national/local -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.national_local">National/Local:</div>
+            <div class="info-content" ng-show="location.national_local"> {{location.national_local}}</div>
+        </div>
+        <!-- location type -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.location_type">Type:</div>
+            <div class="info-content" ng-show="location.location_type"> {{location.location_type}}</div>
+        </div>
+        <!-- flag -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.location_flag">Flag:</div>
+            <div class="info-content" ng-show="location.location_flag"> {{location.location_flag}}</div>
+        </div>
+        <!-- admin 1 -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.admin1">{{$parent.terminology.boundary_terminology.singular.admin1}}:</div>
+            <div class="info-content" ng-show="location.admin1">
+                <div class="key admin1"></div>
+                <div class="location-name">{{location.admin1}}</div>
+            </div>
+        </div>
+        <!-- admin 2 -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.admin2">{{$parent.terminology.boundary_terminology.singular.admin2}}:</div>
+            <div class="info-content" ng-show="location.admin2">
+                <div class="key admin2"></div>
+                <div class="location-name">{{location.admin2}}</div>
+            </div>
+        </div>
+        <!-- admin 3 -->
+        <div class="info-data">
+            <div class="info-header" ng-show="location.admin3">{{$parent.terminology.boundary_terminology.singular.admin3}}:</div>
+            <div class="info-content" ng-show="location.admin3">
+                <div class="key admin3"></div>
+                <div class="location-name">{{location.admin3}}</div>
+            </div>
+        </div>
+    </div>
+
+</div>

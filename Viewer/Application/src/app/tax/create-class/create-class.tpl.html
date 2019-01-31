@@ -1,0 +1,55 @@
+<div id="create-tax">
+    <md-dialog aria-label="create tax dialog">
+        <form name="newClassForm">
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Create New Classification</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- description -->
+            <md-content class="description md-padding" ng-show="!loading">
+                <p>
+                    Fill out form to create a new classification.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- submit loading message -->
+            <md-content class="description md-padding" ng-show="loading">
+                <p>
+                    Your request is currently being processed.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+            <!-- loading animation -->
+            <div>
+                <md-progress-circular ng-show="loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <!-- new org form -->
+            <md-dialog-content ng-show="!loading">
+                <div layout-gt-sm="row">
+                    <!-- name -->
+                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields.classification.name.visible">
+                        <label>{{settings.fields.classification.name.label}}</label>
+                        <input name="c" ng-model="model.c" ng-required="settings.fields.classification.name.required" ng-change="isValid()" />
+                        <div class="instructions red" ng-messages="newClassForm['c'].$error" ng-show="newClassForm['c'].$dirty">
+                            <div ng-message="required">{{settings.fields.classification.name.label}} is required.</div>
+                            <div ng-message="unique">{{settings.fields.classification.name.label}} already exists.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <!-- buttons -->
+                <div class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                    <md-button ng-disabled="newClassForm.$invalid" class="save md-primary md-raised" ng-click="createNewClassification()">Create Classification</md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

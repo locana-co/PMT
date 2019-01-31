@@ -1,0 +1,219 @@
+<div id="admin" ng-controller="AdminCtrl">
+    <div class="wrapper">
+        <!-- page title & sub-title -->
+        <div class="title">{{page.title}}</div>
+        <div class="sub-title-wrapper">
+            <div class="sub-title">{{page.subtitle}}</div>
+            <!-- add existing user button -->
+            <md-button ng-show="!LoadingUsers && currentUser.user.role==='Super'" class="md-raised new-user" ng-click="addExistingUser($event)">Add Existing User</md-button>
+            <!-- create new user button -->
+            <md-button ng-show="!LoadingUsers" class="md-raised new-user" ng-click="createUser($event)">Create New User</md-button>
+            <!-- refresh views button -->
+            <md-button ng-show="!LoadingUsers && currentUser.user.role==='Super'" class="md-raised new-user" ng-click="refreshViews($event)">Refresh Views</md-button>
+        </div>
+        <!-- loading animation -->
+        <div>
+            <!--<md-progress-circular ng-show="LoadingUsers" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>-->
+        </div>
+        <!-- search -->
+        <md-input-container ng-show="!LoadingUsers" md-no-float class="search md-block">
+            <input ng-model="searchQuery" placeholder="Search">
+        </md-input-container>
+        <!-- list of users -->
+        <div ng-show="!LoadingUsers" class="list-wrapper">
+            <!-- header -->
+            <div class="row list-item header">
+                <div class="col-md-12 data">
+                    <div class="row">
+                        <div class="col-md-3 username">Username</div>
+                    </div>
+                </div>
+            </div>
+            <!-- list-->
+            <div ng-repeat="user in users | filterUsers: searchQuery" ng-class="{odd:$index%2!=0}" ng-hide="(!user._active && !user.active)"
+                class="list-item row">
+                <form name="editUser">
+                    <!-- user row -->
+                    <div class="col-md-10 data">
+                        <div class="row">
+                            <!-- username (no editable) -->
+                            <div class="col-md-3 username">{{user._username}}</div>
+                            <!-- first name -->
+                            <div class="col-md-3 item-group">
+                                <div class="data-wrapper">
+                                    <div class="data-label">First Name</div>
+                                    <md-input-container ng-show="user.active" md-no-float class="md-block">
+                                        <input class="data-input" ng-show="user.active" type="text" ng-model="user._first_name" placeholder="First Name" required>
+                                        <div ng-messages="editUser._first_name.$error">
+                                            <div ng-message="required">First name is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div class="data-value" ng-show="!user.active">{{user._first_name}}</div>
+                                </div>
+                            </div>
+                            <!-- last name -->
+                            <div class="col-md-3 item-group">
+                                <div class="data-wrapper">
+                                    <div class="data-label">Last Name</div>
+                                    <md-input-container ng-show="user.active" md-no-float class="md-block">
+                                        <input name="_last_name" class="data-input" type="text" ng-model="user._last_name" placeholder="Last Name" required>
+                                         <div ng-messages="editUser._last_name.$error">
+                                            <div ng-message="required">Last name is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div class="data-value" ng-show="!user.active">{{user._last_name}}</div>
+                                </div>
+                            </div>
+                            <!-- email -->
+                            <div class="col-md-3 item-group">
+                                <div class="data-wrapper">
+                                    <div class="data-label">Email</div>
+                                    <md-input-container ng-show="user.active" md-no-float class="md-block">
+                                        <input name="_email" class="data-input" ng-show="user.active" type="text" ng-model="user._email" placeholder="Email Address" ng-pattern="/^.+@.+\..+$/"
+                                            required>
+                                        <div ng-messages="editUser._email.$error">
+                                            <div ng-message="pattern">Must be a valid email address.</div>
+                                            <div ng-message="required">Email address is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div class="data-value" ng-show="!user.active">{{user._email}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- phone number -->
+                            <div class="col-md-3 item-group">
+                                <div class="data-wrapper">
+                                    <div class="data-label">Phone Number</div>
+                                    <md-input-container ng-show="user.active" md-no-float class="md-block">
+                                        <input name="_phone" class="data-input" type="text" ng-model="user._phone" placeholder="Phone Number" 
+                                             ng-pattern="/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/">
+                                        <div ng-messages="editUser._phone.$error">
+                                            <div ng-message="pattern">###-###-#### - Please enter a valid phone number.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div class="data-value" ng-show="!user.active && user._phone && user._phone !== ''">{{user._phone}}</div>
+                                    <div class="data-value" ng-show="!user.active && (!user._phone || user._phone === '')">No phone number provided</div>
+                                </div>
+                            </div>
+                            <!-- organization -->
+                            <div class="col-md-6 item-group">
+                                <div class="data-wrapper">
+                                    <div class="data-label">Organization</div>
+                                    <md-input-container ng-click="openOrgSelector($event,user)" ng-show="user.active" md-no-float class="md-block md-icon-left">
+                                        <div class="data-value org">
+                                            {{user.organization}}
+                                        </div>
+                                    </md-input-container>
+                                    <div class="data-value" ng-show="!user.active">{{user.organization}}</div>
+                                </div>
+                            </div>
+                            <!-- role -->
+                            <div class="col-md-3">
+                                <div class="data-wrapper">
+                                    <div class="data-label">Role</div>
+                                    <md-input-container ng-show="user.active" class="md-block" flex-gt-sm>
+                                        <md-select aria-label="user role" ng-model="user.role_id">
+                                            <md-option ng-click="updateRole(user, role)" ng-repeat="role in roles" value="{{role.id}}">
+                                                {{role._name}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <div class="data-note" ng-show="user.active && user.role==='Editor' && !hasEditor">NOTE: This instance does not have the editor enabled, so the Editor role provides no additional permissions.</div>
+                                    <div class="data-value" ng-show="!user.active">{{user.role}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- last login -->
+                            <div class="col-md-3 item-group">
+                                <div class="data-wrapper" ng-hide="user._access_date === null">
+                                    <div class="data-label">Last Login</div> <span class="data-value">{{user._access_date}}</span>
+                                </div>
+                                <div class="data-wrapper" ng-show="user._access_date === null">
+                                    <div class="data-label">Last Login</div> <span class="data-value">User has never logged in</span>
+                                </div>
+                            </div>
+                            <!-- permissions -->
+                            <div class="col-md-6 item-group" ng-click="editPermissions($event,user)">
+                                <div class="data-wrapper" ng-show="user.role==='Editor'||user.role==='Curator'">
+                                    <div class="data-label">Permissions</div>
+                                    <div class="permissions">
+                                        <div class="permissions">
+                                            <span class="permissions"  ng-class="{first: hasEditor}">
+                                                <i class="material-icons">thumb_down</i>Cannot manage users
+                                            </span>
+                                        </div>
+                                        <div class="permissions" ng-hide="!hasEditor">
+                                            <i class="material-icons">thumb_up</i>
+                                            <span>
+                                                <span>Can edit</span>
+                                                <span> {{user.authorizations.activity_ids.length || 0}} {{terminology.activity_terminology.plural}} directly</span>
+                                                <span ng-show="user.classifications!==null||user.classifications.length>0"> and </span>
+                                                <span ng-show="user.classifications!==null||user.classifications.length>0"> any project assigned the following taxonomy classifications:</span>
+                                                <span ng-repeat="taxonomy in user.classifications">
+                                                    </br>
+                                                    <span>{{taxonomy.t}}:
+                                                    <span ng-repeat="c in taxonomy.c"> &check; {{c.c}} </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="data-wrapper" ng-show="user.role==='Super'||user.role==='Administrator'">
+                                    <div class="data-label">Permissions</div>
+                                    <div class="permissions" ng-show="hasEditor">
+                                        <i class="material-icons">thumb_up</i><span>Can manage users</span>
+                                        <i class="material-icons">thumb_up</i><span>Can edit any {{terminology.activity_terminology.singular}}</span>
+                                    </div>
+                                     <div class="permissions" ng-show="!hasEditor">
+                                        <i class="material-icons">thumb_up</i><span>Can manage users</span>
+                                    </div>
+                                </div>
+                                <div class="data-wrapper" ng-show="user.role==='Reader'">
+                                    <div class="data-label">Permissions</div>
+                                    <div class="permissions" ng-show="hasEditor">
+                                        <i class="material-icons">thumb_down</i><span>Cannot manage users</span>
+                                        <i class="material-icons">thumb_down</i><span>Cannot edit {{terminology.activity_terminology.plural}}</span>
+                                    </div>
+                                     <div class="permissions" ng-show="!hasEditor">
+                                        <i class="material-icons">thumb_down</i><span>Cannot manage users</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tool buttons (edit, save & reset password) -->
+                    <div class="col-sm-12 col-md-2 tools">
+                        <md-button ng-click="edit(user)" class="edit tool md-fab" aria-label="edit user">
+                            <md-tooltip md-direction="bottom">edit user record</md-tooltip>
+                            <i class="material-icons">mode_edit</i>
+                        </md-button>
+                        <md-button ng-click="cancel(user)" ng-show="user.active" class="tool md-fab" aria-label="cancel user">
+                            <md-tooltip md-direction="bottom">cancel changes</md-tooltip>
+                            <i class="material-icons">refresh</i>
+                        </md-button>
+                        <md-button class="delete tool md-fab" ng-show="user.active" ng-click="deleteUser($event, user)" aria-label="delete user">
+                            <md-tooltip md-direction="bottom">delete user record</md-tooltip>
+                            <i class="material-icons">delete_forever</i>
+                        </md-button>
+                        <md-button class="save tool md-fab" ng-disabled="editUser.$invalid" ng-show="user.active" ng-click="save(user)" aria-label="save user">
+                            <md-tooltip md-direction="bottom">save user record</md-tooltip>
+                            <i class="material-icons">save</i>
+                        </md-button>
+                        <md-button class="reset tool md-fab" ng-show="user.active" ng-click="openPasswordReset($event,user)" aria-label="save user">
+                            <md-tooltip md-direction="bottom">reset user password</md-tooltip>
+                            <i class="material-icons">vpn_key</i>
+                        </md-button>
+                        <md-button class="permissions tool md-fab" ng-show="user.active && user.role==='Editor' && hasEditor" ng-click="editPermissions($event,user)"
+                            aria-label="save user">
+                            <md-tooltip md-direction="bottom">edit user {{terminology.activity_terminology.singular}} permissions</md-tooltip>
+                            <i class="material-icons">playlist_add_check</i>
+                        </md-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

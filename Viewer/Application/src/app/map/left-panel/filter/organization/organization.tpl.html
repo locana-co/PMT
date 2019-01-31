@@ -1,0 +1,16 @@
+<div class="map-filter-organization" ng-controller="MapFilterOrganizationCtrl">
+    <!-- menu index (A-Z) -->
+    <table class="org-index">
+        <tr class="menu-label" ng-repeat="i in index" ng-click="indexClicked(i)">
+            <td>{{i}}</td>
+        </tr>
+    </table>
+    <!-- organization list -->
+    <div class="org-list">
+        <div ng-show="filter.options.length===0">The selected data source(s) do not have any {{filter.label}}</div>
+        <div ng-repeat="option in filter.options" ng-click="orgClicked(option)" class="menu-option">
+            <md-checkbox class="menu-checkbox" ng-checked="option.active"></md-checkbox>
+            <div class="menu-label {{'indexed_' + option.o}}" ng-class="'index_' + option.o">{{option.n}}</div>
+        </div>
+    </div>
+</div>

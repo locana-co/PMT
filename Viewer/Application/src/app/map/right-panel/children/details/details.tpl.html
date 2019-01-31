@@ -1,0 +1,15 @@
+<div id="map-children-details" ng-controller="MapChildrenDetailsCtrl">
+    <div class="children-details-item" ng-repeat="child in $parent.activeDetail.children | orderBy:'_title'">
+        <div ng-if="child.activeDetail.details">
+            <div class='section-title'>{{child._title}}</div>
+            <md-divider></md-divider>
+            <div layout="row" flex>
+                <div class="details">
+                    <ul class="detail-list">
+                        <li ng-repeat="detail in child.activeDetail.details | orderBy:'_title'">{{detail._title}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

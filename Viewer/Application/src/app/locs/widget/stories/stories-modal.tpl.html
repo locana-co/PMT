@@ -1,0 +1,21 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-stories-modal" ng-controller="LocsWidgetStoriesCtrl">
+    <div>
+        <i class="material-icons clear" ng-click="closeDialog()">clear</i>
+        <div class="story">
+            <div class="title">{{story.title}}</div>
+            <div class="sub-title">{{story.subTitle}}</div>
+            <div class="story-body">
+                <div class="story-text"  ng-bind-html="story.story.updatedText"></div>
+                <div class="story-stats" ng-repeat="e in story.details.elements" ng-bind-html="e.updatedText" ng-class="{last:$last}"></div>
+                <!-- show quote on right if no stats-->
+                <div class="story-quote" ng-show="story.details == null && story.quote">{{story.quote.text}}</div>
+            </div>
+            <div class="story-quote" ng-show="!story.details == null && story.quote">{{story.quote.text}}</div>
+        </div>
+        <div class="success-image">
+            <img ng-src="{{story.image.source}}" alt="success story image" class="image" ng-class="{wide: !story.image.caption}">
+            <div class="caption" ng-show="story.image.caption">{{story.image.caption}}</div>
+        </div>
+    </div>
+</div>

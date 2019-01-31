@@ -1,0 +1,470 @@
+﻿#editor-detail{
+    width: 100%;
+    height: calc(100% ~'-' @height-footer);
+    margin-top: @editor-top-bar-height;
+    margin-bottom: @height-footer;
+    //loader
+    .loader {
+        margin: 0 auto;
+        position: relative;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+        border-left-color: #cecece;
+        border-top-color: #cecece;
+        }
+        .md-right .md-half-circle {
+        border-right-color: #cecece;
+        border-top-color: #cecece;
+        }
+    }
+    .version-toggle{
+        margin-top: 0;
+        padding-right: 20px !important;
+        label{
+            font-weight: 400;
+            font-size: 13px;
+        }
+    }
+    // tabs
+    md-tabs {
+        padding: 20px 20px 0 20px;
+        width: 100%;
+        float: left;
+        // active tab
+        .md-tab.md-active {
+            background: white;
+            border: 1px solid @element-border-color;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            color: @main-font-color;
+            font-family: @bold-font-family;
+        }
+        // tab wrapper
+        md-tabs-wrapper {
+            background-color: transparent;
+            border-color: white;
+            md-pagination-wrapper {
+                width: 100% !important;
+            }
+        }
+        // ink bars
+        md-ink-bar {
+            color: transparent;
+            background: transparent;
+        }
+        // content
+        md-content {
+            border: 1px solid @element-border-color;
+            border-radius: 5px;
+            padding: 30;
+            // input container label
+            md-input-container.md-default-theme:not(.md-input-invalid).md-input-has-value label, 
+            md-input-container:not(.md-input-invalid).md-input-has-value label,
+            md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused label, 
+            md-input-container:not(.md-input-invalid).md-input-focused label{
+                text-transform: capitalize;
+                font-family: @bold-font-family;
+                line-height: 1.5;
+                color: @text-color-1;
+                font-size: 16px;  
+            }
+            md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused .md-input, 
+            md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+                border-color: @main-font-color;
+            }
+            md-radio-button.md-default-theme .md-on, md-radio-button .md-on{
+                background-color: @dark-font-color;
+            }
+            md-radio-button.md-default-theme.md-checked .md-off, md-radio-button.md-checked .md-off{
+                border-color: @dark-font-color; 
+            }
+            md-datepicker.md-default-theme, md-datepicker{
+                background-color: transparent;
+            }
+            // button icons
+            .icon-button {
+                color: #fff;
+                background-color: @main-bg-color;
+                // icon
+                i{
+                    margin-top: 7px;
+                }
+                &:hover{
+                    background-color: @main-font-color;
+                }
+            }
+            // regular input label
+            .form-label{
+                font-family: @bold-font-family;
+                line-height: 1.5;
+                color: @text-color-1;
+                font-size: 12px;
+                margin-left: 3px;
+            }
+            .date-label{
+                width: 110px;
+            }
+            // add extra bottom padding
+            .bottom-padding{
+                padding-bottom: 18px;
+            }
+            // add extra right padding
+            .right-padding{
+                padding-right: 36px;
+            }
+            // text align right
+            .align-right{
+                text-align: right;
+            }
+            
+            #taxonomyForm{
+                 // taxonomy label
+                .taxonomy-label{
+                    padding: 10px 0;
+                    margin-left: 22px;
+                }  
+                .taxonomy-list{
+                    padding-left: 10px;
+                }  
+                .instructions {
+                    margin-left: 30px;
+                } 
+                .taxonomyOption{
+                    margin-left: 29px;
+                }
+                .arrow{
+                    display: block;
+                    float: left;
+                    margin-top: -4px;
+                    margin-right: 10px;
+                }
+                //nested taxonomies
+                .nested-column{
+                    margin-left: 40px;
+                }    
+            }
+            
+            // push up
+            .push-up{
+                margin: -12px 0 5px 5px;
+            }
+            // form error mesage
+            .error-message{
+                font-size: 12px;
+                color: rgb(221,44,0);
+            }
+            .md-datepicker-invalid{
+                border-bottom-color: rgba(0, 0, 0, 0.87);
+            }
+            // financial sections
+            .financial, .organization, .contact{
+                padding: 15px 15px 20px 15px;
+            }
+            // odd element
+            .grey-background{
+                background-color: @background-grey;
+            }
+            // disabled organization selector style
+            .organization-selector{
+                background-image: none;
+                border-width: 0 0 1px;
+                border-style: solid;
+                color: rgba(0,0,0,0.87);
+                border-color: rgba(0,0,0,0.12);
+            }
+            .organization-selector-label{
+                font-weight: 400;
+            }
+            label {
+                background-color: transparent !important;
+            }
+            
+        }
+        // locations tab
+        .locations-tab{
+            height: 660px;
+            .form-buttons{
+                position: absolute;
+                z-index: 1000;
+            }
+        }
+       
+        .sub-financial-form{
+            margin-top: 20px;
+            border: 1px solid #dbdbdb;
+            background-color: #f2f2f2;
+            padding: 20px;
+            -webkit-box-shadow: 6px 6px 15px -6px rgba(0,0,0,0.56);
+            -moz-box-shadow: 6px 6px 15px -6px rgba(0,0,0,0.56);
+            box-shadow: 6px 6px 15px -6px rgba(0,0,0,0.56);
+        }
+        .sub-financial-title{
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+    // icon on tabs
+    md-tab-item{
+        i{
+            color: rgb(221,44,0);
+        }
+    }
+    // form buttons
+    .form-buttons{
+        padding-top: 20px;
+        text-align: right;
+        // form button
+        button {
+            font-family: @title-font-family;
+        }
+        // colored form button
+        button.colored {
+            background-color: @main-bg-color;
+            color: @light-font-color;
+        }
+        // financial total
+        .financial-total{
+            float: left;
+            font-family: @title-font-family;
+            font-weight: 600;
+            font-size: 16px;
+        }
+    }
+
+    //special case for org picker on contact form
+    .contact-title{
+        padding-right: 50px;
+    }
+     // form instructions
+    .instructions{
+        color: @dark-text-color;
+        font-size: 11px;
+        font-style: italic;
+    }
+     // add a little extra bottom padding
+    .pad-bottom{
+        padding-bottom: 10px;
+    }
+    // red color
+    .red{
+        color: rgb(221,44,0) !important;
+    }
+    // record information section
+    .record-info{
+        margin: 0 40px;
+        overflow: hidden;
+        md-input-container{
+            padding: 0;
+            margin-bottom: 0;
+            height: 40px;
+        }
+    }
+    // big message
+    .message{
+        padding: 40px;
+        font-size: 24px;
+        color: @dark-text-color;
+    }
+    // map
+    .map-container {
+        display: flex;
+        height: 650px;
+        margin: -660px 28px 50px 27px;
+        background: white;
+        border-radius: 5px;
+        padding-bottom: 16px;
+        border: 1px solid @element-border-color;
+        #editor-map {
+          width: 100%;
+          height: 100%;
+          display: inline-block;
+          background-color: white;
+          margin: 8px;
+           // zoom control placed in bottom left
+            .leaflet-bottom.leaflet-right {
+                margin-right: 0;
+                z-index: 700 !important;
+            }
+
+            .leaflet-control-zoom leaflet-bar leaflet-control {
+                color: #3E7F98;
+            }
+            // zoom in control
+            .leaflet-bar a:first-child {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                font-weight: 100;
+                text-decoration: none;
+            }
+            // zoom out control
+            .leaflet-bar a:last-child {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                font-weight: 100;
+                text-decoration: none;
+            }        
+        }
+        #editor-map * {
+          cursor: auto !important;
+        }
+        //import export buttons
+        //.location-button{
+        //    padding-right: 20px;
+        //}
+        // list of locations
+        .location-list{
+            margin: 5px;
+            max-height: 640px;
+            width: 400px;
+            overflow-y: scroll;
+            md-content{
+                padding: 5px;
+                margin-top: 20px;
+            }
+            // list icon button
+            i:hover{
+                color: @main-font-color;
+            }
+            // list icon button: on
+            .md-button.on i {
+                color: @main-font-color;
+            }
+            // admin level headers
+            .md-subheader{
+                background-color: transparent;
+                text-transform: uppercase;
+                font-weight: 600;
+                .md-subheader-inner{
+                    padding: 16px 5px 18px 5px;
+                }
+                img{
+                    float: left;
+                }
+                button{
+                    float: right;
+                    margin-top: -10px;
+                    margin-right: 2px;
+                }
+            }
+            // location highlight on hover
+            .highlight{
+                background-color: rgba(119,119,119, 0.2);
+            }
+            // flag
+            .flag{
+                max-width: 290px;
+                padding-left: 10px;
+            }
+            // list item: location
+            md-list-item{
+                padding-left: 10px;
+            }
+            // butons (clear all highlights)
+            .form-buttons{
+                position: absolute;
+                z-index: 1000;
+                right: 34px;
+                margin-top: 3px;
+            }
+            // error message on save
+            .instructions{
+                position: absolute;
+                z-index: 1000;
+                margin-left: 9px;
+            }
+           
+        }
+      }
+
+      
+    .location-button{
+        span{
+            font-size: 12px;
+        }
+    }
+
+    .related-activities {
+        .pmt-back-button;
+        cursor: pointer;
+        line-height: 1.5;
+        text-transform: none;
+        .link {
+          padding: 10px 20px;
+        }
+      }
+      .related-activities:hover {
+        background-color: #d5d5d5;
+        border-top: 1px
+      }
+
+      .md-datepicker-input{
+        min-width: 140px;
+      }
+
+      .md-checked{
+        .md-bar, .md-thumb{
+            background-color: @main-bg-color;
+        }
+      }
+
+      .sub-finance-header:not(:first-child){
+        display: none;
+      }
+    
+      .add-sub-record{
+          width: 350px;
+      }
+
+      .sub-finance-amount{
+        margin-left: auto;
+        margin-right: auto;
+        width: 50px;
+          input{
+              width: 50px;
+          }
+          span{
+              display:flex;
+          }
+      }
+
+      table {
+        width: 100%;
+        margin-top: 20px;
+        tr {
+          border-bottom: 1px solid @element-border-color;
+          th {
+            text-align: center;
+            text-transform: uppercase;
+            padding: 5px;
+            background: #fff;
+            color: @secondary-grey;
+            border-top: 1px solid @element-border-color;
+          }
+          td {
+            text-align: center;
+            line-height: 40px;
+            padding: 0 2px;
+          }
+        }
+      }
+
+
+
+      .amount-wrapper{
+          .financial-formatted{
+              display: block;
+              border-width: 0 0 1px;
+              border-style: solid;
+              color: rgba(0, 0, 0, 0.87);
+              border-color: rgba(0, 0, 0, 0.12);
+          }
+          &.md-input-focused{
+            input{
+                display: block;
+            }
+            .financial-formatted{
+                display: none;
+            }
+          }
+      }
+}

@@ -1,0 +1,83 @@
+﻿// basemap menu feature
+#map-basemap {
+    position: absolute;
+    bottom: 133px;
+    right: 9px;
+    z-index: 700;
+    // basemap menu button
+    .menu-button {
+        float: right;
+        color: @dark-font-color;
+        width: 26px;
+        padding: 4px 0 9px 0;
+        background-color: #fff;
+        cursor: pointer;
+        z-index: 950;
+        text-align: center;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+        margin: 0 1px 15px 0;
+    }
+    // basemap menu button: hover state
+    .menu-button:hover {
+        color: #fff;
+        background-color: @main-bg-color;
+    }
+    // basemap menu button: on state (menu open)
+    .menu-button.on {
+        color: #fff;
+        background-color: @main-bg-color;
+    }    
+    // menu container (holds basemap options)
+    .menu {
+        background-color: #fff;
+        color: #fff;
+        width: 0;
+        height: 84px;
+        margin-bottom: -84px;
+        margin-right: 33px;
+        cursor: pointer;
+        overflow: hidden;
+        -webkit-transition: all .5s ease .3s;
+        -moz-transition: all .5s ease .3s;
+        -o-transition: all .5s ease .3s;
+        -ms-transition: all .5s ease .3s;
+        transition: all .5s ease .3s;
+        // single basemap option
+        .menu-option {
+            width: 85px;
+            height: 100%;
+            float: left;
+            font-size: 8pt;
+            padding: 5px;
+            font-family: @title-font-family;
+            color: @h1-color;
+            // basemap image
+            img{
+                height: 50px;
+                width: 50px;
+            }
+            // basemap option table
+            table{
+                text-align: center;
+            }
+        }
+        // single basemap option: hover state
+        .menu-option:hover {
+            background-color: @background-grey;
+        }
+    }
+    // menu container: open state (holds basemap options)
+    .menu.open {
+        width: 596px;
+        height: 84px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+        color: @dark-text-color;
+    }
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+     /* IE10+ CSS styles go here */
+     // basemap menu button
+    .menu-button {
+        margin: 0 4px 21px 0 !important;
+    }
+}

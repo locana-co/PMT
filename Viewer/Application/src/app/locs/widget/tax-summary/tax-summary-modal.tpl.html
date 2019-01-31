@@ -1,0 +1,19 @@
+<md-dialog id="locs-top-summary-modal" aria-label="Activities by top taxonomy dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header"> [{{activities.length}}] {{terminology.activity_terminology.plural}} for {{modalData.data.label}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="closeDialog();">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <!-- loader -->
+        <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+
+        <div ng-click="goToActivity(project.id)" class="activity" ng-repeat="project in activities | orderBy: '_title' ">
+            {{project._title}}
+        </div>
+    </md-dialog-content>
+</md-dialog>

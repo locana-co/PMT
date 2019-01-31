@@ -1,0 +1,11 @@
+<div id="locs-widget" ng-controller="LocsWidgetCtrl">
+    <!-- template for widgets (set in the config) -->
+    <div class="row" ng-repeat="row in widgets">
+        <div class="widget-container" ng-class=" 'col-md-' + widget.colspan" ng-repeat="widget in row">
+            <div ng-include ng-attr-id="{{ widget.id }}" class="widget-tpl" ng-show="widget.tpl!=null && widget.display === activeDisplay"
+                 src="widget.tpl">
+            </div>
+        </div>
+    </div>
+    <div class="notification" ng-show="!widgets">There are currently no widgets configured for this administrative level.</div>
+</div>

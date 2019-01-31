@@ -1,0 +1,102 @@
+<div id="create-tax">
+    <md-dialog aria-label="create tax dialog">
+        <form name="newTaxForm">
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 class="sub-header">Create New Taxonomy</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <i class="material-icons">close</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <!-- description -->
+            <md-content class="description md-padding" ng-show="!loading">
+                <p>
+                    Fill out form to create a new taxonomy.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+
+
+            <!-- submit loading message -->
+            <md-content class="description md-padding" ng-show="loading">
+                <p>
+                    Your request is currently being processed.
+                    <span ng-show="errorMessage" class="err-message">
+                        <br/>{{errorMessage}}</span>
+                </p>
+            </md-content>
+
+            <!-- loading animation -->
+            <div>
+                <md-progress-circular ng-show="loading" class="loading" md-diameter="150" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <!-- new org form -->
+            <md-dialog-content ng-show="!loading">
+                <label ng-show="model._is_category">Parent Taxonomy</label>
+                <div layout-gt-sm="row">
+                    <!-- name -->
+                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._name.visible">
+                        <label>{{settings.fields._name.label}}</label>
+                        <input name="_name" ng-model="model._name" ng-required="settings.fields._name.required" ng-change="isValid()" />
+                        <div class="instructions red" ng-messages="newTaxForm['_name'].$error" ng-show="newTaxForm['_name'].$dirty">
+                            <div ng-message="required">{{settings.fields._name.label}} is required.</div>
+                            <div ng-message="unique">{{settings.fields._name.label}} already exists.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <!-- description -->
+                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._description.visible">
+                        <label>{{settings.fields._description.label}}</label>
+                        <input name="_description" ng-model="model._description" ng-required="settings.fields._description.required" />
+                        <div class="instructions red" ng-messages="newTaxForm['_description'].$error" ng-show="newTaxForm['_description'].$dirty">
+                            <div ng-message="required">This a required field!</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <!-- allow nested taxonomies? -->
+                    <md-checkbox aria-label="Support Child Classifications?" ng-true-value="true" ng-false-value="false" ng-model="model._is_category"
+                        ng-change="columnChecked(column.id)">
+                        <label>Support Child Classifications?</label>
+                    </md-checkbox>
+                </div>
+                <md-divider ng-show="model._is_category"></md-divider>
+                <label ng-show="model._is_category">Child Taxonomy</label>
+                <div layout-gt-sm="row" ng-show="model._is_category">
+                    <!-- name -->
+                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._name.visible">
+                        <label>{{settings.fields._name.label}}</label>
+                        <input name="_child_name" ng-model="model._child_name" ng-required="settings.fields._name.required && model._is_category" ng-change="isValid()" />
+                        <div class="instructions red" ng-messages="newTaxForm['_child_name'].$error" ng-show="newTaxForm['_child_name'].$dirty">
+                            <div ng-message="required">{{settings.fields._name.label}} is required.</div>
+                            <div ng-message="unique">{{settings.fields._name.label}} already exists.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row" ng-show="model._is_category">
+                    <!-- description -->
+                    <md-input-container class="md-block" flex-gt-sm ng-show="settings.fields._description.visible && model._is_category">
+                        <label>{{settings.fields._description.label}}</label>
+                        <input name="_child_description" ng-model="model._child_description" ng-required="settings.fields._description.required" />
+                        <div class="instructions red" ng-messages="newTaxForm['_child_description'].$error" ng-show="newTaxForm['_child_description'].$dirty">
+                            <div ng-message="required">This a required field!</div>
+                        </div>
+                    </md-input-container>
+                </div>
+
+                <!-- buttons -->
+                <div class="modal-footer">
+                    <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+                    <md-button ng-disabled="newTaxForm.$invalid" class="save md-primary md-raised" ng-click="createNewTax()">Create
+                        Taxonomy
+                    </md-button>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

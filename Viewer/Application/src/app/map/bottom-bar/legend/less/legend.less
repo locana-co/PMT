@@ -1,0 +1,118 @@
+#map-legend {
+  //button on the bottom bar
+  .legend-button {
+    display: inline-block;
+    width:150px;
+    background-color: @main-font-color;
+    float: right;
+    height: 43px;
+    cursor:pointer;
+    font-family:@bold-font-family;
+    position: relative;
+    z-index: 800;
+    .legend-label {
+      text-transform: uppercase;
+      color: #ffffff;
+      font-size: 14px;
+      width: 100%;
+       margin-top: 12px;
+       text-align: center;
+    }
+    .arrow-up {
+         width: 0;
+         height: 0;
+         border-left: 10px solid transparent;
+         border-right: 10px solid transparent;
+         border-bottom: 10px solid @main-font-color;
+         position: absolute;
+         top: -10px;
+         right: 66px;
+         display: none;
+    }
+    .arrow-up.on {
+      display: block;
+      z-index: 900;
+    }
+  }
+  //legend box which contains all of the legend info
+  #legend-box{
+
+    width:300px;
+    background-color: #ffffff;
+    float: right;
+    position: absolute;
+    bottom: -350px;
+    height: 300px;
+    border: 1px solid @element-border-color;
+    right: 0;
+    overflow: scroll;
+    z-index: 700;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -ms-transition: all .5s ease;
+    transition: all .5s ease;
+    .top-menu {
+      background: #dddddc;
+      height: 25px;
+      position:absolute;
+      width: 100%;
+      font-family: @title-font-family;
+      cursor:pointer;
+      span {
+        margin: 0 0 0 15px;
+        font-size: 12px;
+        color:@dark-text-color;
+      }
+      .close-button {
+        margin: 2px 3px 0 200px;
+        font-size: 12pt;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-block;
+      }
+    }
+    .legend-message {
+      margin: 40px 0 0 15px;
+      font-family: @reg-font-family;
+    }
+    //boundary legend
+    .boundary-legend {
+      max-width: 160px;
+      margin: 20px 0 0 10px;
+    }
+    .legend-content {
+      margin:45px 15px 15px 15px;
+      //legend for a specific context layer
+      .legend-item {
+        margin-bottom: 15px;
+        .item-label {
+          font-family: @bold-font-family;
+          font-size: 12px;
+        }
+        .item-content {
+          border-bottom: 1px solid @element-border-color;
+          padding-bottom: 15px;
+          font-family: @reg-font-family;
+          font-size: 10px;
+        }
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+    //for legends coming from json
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+    }
+  }
+  #legend-box.on {
+    display: block;
+    bottom: 43px;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -ms-transition: all .5s ease;
+    transition: all .5s ease;
+  }
+}

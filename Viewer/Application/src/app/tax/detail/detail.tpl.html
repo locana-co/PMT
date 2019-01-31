@@ -1,0 +1,119 @@
+<div id="tax-detail" ng-controller="TaxDetailCtrl" class="scrollable ui-layout-center" ng-show="stateService.isParam('tax_id')">
+    <!-- loader-->
+    <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="250"></md-progress-circular>
+    <md-content layout-padding ng-show="!loading && !error">
+        <form name="taxActivityForm" class="taxActivityForm" ng-show="!loading && !error">
+
+            <div>
+                <label>Instructions</label>
+                <p>Perform the following steps to bulk edit any classification(s) for this taxonomy.
+                    <ol>
+                        <li>Select 1 or more classifications.</li>
+                        <li>Click the refresh button to load all records.</li>
+                        <li>Check classification assignments for each {{terminology.activity_terminology.singular}}.</li>
+                    </ol>
+                </p>
+            </div>
+            <md-divider></md-divider>
+            <div>
+                <div class="buttons">
+                    <md-button class="md-mini md-fab icon-button" ng-click="selectAll('selectedClassifications', 'classifications')" title="Select All"
+                        aria-label="Select All">
+                        <md-tooltip md-direction="bottom">Select All</md-tooltip>
+                        <i class="material-icons">add</i>
+                    </md-button>
+                    <md-button class="md-mini md-fab icon-button" tabindex="5" data-type="contact" ng-click="deSelectAll('selectedClassifications')"
+                        title="Deselect All" aria-label="Deselect All">
+                        <md-tooltip md-direction="bottom">Deselect All</md-tooltip>
+                        <i class="material-icons">remove</i>
+                    </md-button>
+                </div>
+                <md-input-container>
+                    <label>Classifications</label>
+                    <md-select ng-model="selectedClassifications" md-on-close="clearClassificationSearchTerm()" data-md-container-class="select-container"
+                        multiple>
+                        <md-select-header class="select-header">
+                            <input ng-model="classificationSearchTerm" type="search" placeholder="Search for classifications..." class="select-searchbox md-text">
+                        </md-select-header>
+                        <md-optgroup label="classification">
+                            <md-option ng-value="classification" ng-repeat="classification in classifications">{{classification.c}}</md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <md-divider></md-divider>
+            <div ng-show="selectedClassifications && selectedClassifications.length > 0">
+                <div class="buttons">
+                    <md-button class="md-mini md-fab icon-button" ng-click="buildTable()" title="Refresh Table" aria-label="Refresh Table">
+                        <md-tooltip md-direction="bottom">Load Table</md-tooltip>
+                        <i class="material-icons">cached</i>
+                    </md-button>
+                </div>
+                <div>
+                    <md-input-container md-no-float="" class="search md-block ng-scope md-input-has-placeholder">
+                        <input ng-model="gridSearchText" ng-keyup="searchTaxList($event)" placeholder="Search..." class="md-input" ng-disabled="!tree || tree.length ===0">
+                    </md-input-container>
+                </div>
+                <md-table-container>
+                    <table md-table class="class-table">
+                        <thead md-head md-order="query.order">
+                            <tr md-row class="header-row" dynamic="headerUI">
+                                <!--<th class="header-data pmt-table-header"></th>-->
+                                <th class="header-data pmt-table-header header-arrow"></th>
+                                <th class="header-data pmt-table-header" md-column md-order-by="_title">{{terminology.activity_terminology.singular}}
+                                    Name
+                                </th>
+                                <th class="header-data pmt-table-header" md-column md-checkbox ng-repeat="column in selectedClassifications">
+                                    <md-checkbox aria-label="Check/Uncheck All" ng-true-value="true" ng-false-value="false" ng-model="query.checks[column.id]" ng-show="column.fetched"
+                                        ng-change="columnChecked(column.id)">
+                                        <label>{{column.c}}</label>
+                                    </md-checkbox>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <!-- list data-->
+                            <tr md-row class="class-row" ng-repeat-start="branch in tree | filter:{_title:gridSearchText} | orderBy: query.order:decending | limitTo: query.limit: (query.page - 1) * query.limit">
+                                <td class="class-data arrow"><span ng-click="toggleActive(branch)" ng-show="branch.children && branch.children.length > 0"
+                                        title="Toggle Children"><i class="material-icons">{{branch.arrow}}</i></span></td>
+                                <td class="class-data title">{{branch._title}}</td>
+                                <td class="class-data" ng-repeat="column in selectedClassifications">
+                                    <md-checkbox aria-label="assign classifcation" ng-true-value="true" ng-false-value="false" ng-model="branch[column.id]" ng-show="column.fetched"
+                                        ng-change="makeDirty(branch); updateChildren(branch,column.id);">
+                                    </md-checkbox>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end ng-show="branch.active" ng-class="{active:branch.active}" class="class-row sub-class">
+                                <td colspan="{{selectedClassifications.length + 2}}">
+                                    <table md-table class="sub-class-table">
+                                        <tbody md-body>
+                                            <!-- list data-->
+                                            <tr md-row class="sub-class-row" ng-repeat="child in branch.children">
+                                                <td class="class-data arrow"></td>
+                                                <td class="class-data child-title">{{child._title}}</td>
+                                                <td class="class-data" ng-repeat="column in selectedClassifications">
+                                                    <md-checkbox aria-label="assign classifcation" ng-true-value="true" ng-false-value="false" ng-model="child[column.id]" ng-show="column.fetched"
+                                                        ng-change="makeDirty(child)">
+                                                    </md-checkbox>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <!-- pagination-->
+                <md-table-pagination md-limit="query.limit" md-limit-options="[25,50,100]" md-page="query.page" md-total="{{treeCount}}"
+                    md-page-select ng-show="!loading && treeCount > 0"></md-table-pagination>
+            </div>
+        </form>
+
+
+    </md-content>
+    <!-- loading error -->
+    <div class="message " ng-show="!loading && error ">The requested activity list does not exist or you do not have the
+        appropriate permissions.</div>
+</div>

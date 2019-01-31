@@ -1,0 +1,51 @@
+<div id="locs-map-summary" ng-controller="LocsMapSummaryCtrl" ng-class="{off:!show}">
+    <div class="title" ng-show="title">{{title}} for {{country._name}}</div>
+    <div layout-xs="column" layout-gt-sm="row" layout-gt-xs="column" class="widget-container">
+        <div flex class="widget-tpl heading">
+            <div class="logo"><span class="icon population icon-population_icon"></span></div>
+            <div class="description">
+                <div class="description-wrapper">
+                    <div class="header">Total Population</div>
+                    <div class="number">{{details.stats.pop}}</div>
+                </div>
+            </div>
+        </div>
+        <div flex class="widget-tpl heading right">
+            <div class="logo"><span class="icon rural icon-rural_icon"></span></div>
+            <div class="description">
+                <div class="description-wrapper">
+                    <div class="header">Rural Population</div>
+                    <div class="number">{{details.stats.rural_pop}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div layout-xs="column" layout-gt-sm="row" layout-gt-xs="column" class="widget-container">
+        <div flex class="widget-tpl heading tall">
+            <div class="description">
+                <div class="description-wrapper">
+                    <div class="number">{{details.stats.num_activities}} <div class="logo"><span class="icon-icon_grants"></span></div></div>
+                    <div class="header">Number of Grants</div>
+                </div>
+            </div>
+        </div>
+        <div flex class="widget-tpl heading tall right">
+            <div class="description">
+                <div class="description-wrapper">
+                    <div class="number">{{details.stats.activity_value}}</div>
+                    <div class="header">Total Value of Grants</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div layout-xs="column" layout-gt-sm="row" layout-gt-xs="column" class="widget-container">
+        <div flex class="widget-tpl heading tall wide">
+            <div class="description">
+                <div class="description-wrapper">
+                    <div class="number"><div class="logo"><span class="icon-icon_seeds"></span></div>{{details.stats.farmers_improved_seeds}}</div>
+                    <div class="header">Farmers using improved seeds</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

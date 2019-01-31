@@ -1,0 +1,146 @@
+#acts-list {
+  width: calc(100% ~'-' @acts-filter-width);
+  min-height: 100vh;
+  background-color: @background-grey;
+  float: right;
+  padding-bottom: 30px;
+  //print
+  .print {
+    float: right;
+    padding: 20px 20px 10px 0;
+    cursor: pointer;
+    i {
+      vertical-align: middle;
+    }
+  }
+  //loader
+  .loader {
+    margin: 0 auto;
+    position: relative;
+    // Overwrite loading animation color
+    .md-left .md-half-circle {
+      border-left-color: #cecece;
+      border-top-color: #cecece;
+    }
+
+    .md-right .md-half-circle {
+      border-right-color: #cecece;
+      border-top-color: #cecece;
+    }
+  }
+  //activiity table
+  md-table-container {
+    width: calc(~"100% - 40px");
+    overflow-x: visible;
+    .acts-table {
+      margin: 20px;
+      font-size: 12px;
+      border: 1px solid @element-border-color;
+      .header-row {
+        font-family: @title-font-family;
+        background-color: #e6e7e7;
+        line-height: 40px;
+        .header-data {
+          text-transform: uppercase;
+          padding: 0 10px;
+          border-bottom: none;
+        }
+        .header-data:last-child {
+          border-right: 1px solid @element-border-color;
+        }
+      }
+      .activity-row {
+        line-height: 20px;
+        background-color: #fff;
+        border-top: 1px solid @element-border-color;
+        .activity-data {
+          padding: 10px;
+          max-width: 100px !important;
+          .pmt-table-body;
+        }
+        .activity-data.sub-activities {
+          .child-activities-label {
+            .pmt-h3;
+            background-color: @background-grey;
+            padding: 4px 10px 0 10px;
+          }
+          .link {
+            color: @main-font-color;
+            cursor: pointer;
+            font-family: @title-font-family;
+            padding: 3px 10px;
+            .pmt-hyperlink;
+          }
+          .link.even {
+            background-color: #f8f8f8;
+          }
+        }
+        //link
+        .activity-data.link {
+          color: @main-font-color;
+          cursor: pointer;
+          font-family: @title-font-family;
+        }
+        .activity-data.link.title {
+          width: 30%;
+          .pmt-hyperlink;
+          // edit icon
+          i {
+            padding: 0 8px;
+            cursor: pointer;
+            &:hover {
+                color: @main-font-color;
+            }
+          }
+        }
+        //download button
+        .activity-data.download {
+          line-height: 0px;
+          text-align: center;
+        }
+        .activity-data.arrow {
+          cursor: pointer;
+          text-align: center;
+          i {
+            border: 1px solid @element-border-color;
+            border-radius: 2px;
+            background: #fff;
+            font-size: 13px;
+          }
+        }
+        .activity-data:last-child {
+          border-right: 1px solid @element-border-color;
+        }
+      }
+      .activity-row:hover {
+        background-color: #f8f8f8;
+      }
+      .activity-row.sub-activities {
+        border-top: none;
+      }
+      .activity-row.sub-activities:hover {
+        background-color: #fff;
+      }
+    }
+  }
+  
+  //no actiivites error message
+  .no-activities {
+    padding: 30px 50px;
+    font-family: @title-font-family;
+    font-size: 18px;
+  }
+
+  md-table-pagination {
+    background: #e6e7e7;
+    bottom: 20px;
+    font-size: 14px;
+    border: 1px solid @element-border-color;
+    width: 575px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    .label {
+      color: #333333;
+    }
+  }
+}

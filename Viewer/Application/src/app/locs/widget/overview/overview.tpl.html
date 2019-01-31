@@ -1,0 +1,22 @@
+<!-- the widget id is assigned in the widget.tpl.html based on the config -->
+<div class="locs-widget-overview widget" ng-controller="LocsWidgetOverviewCtrl">
+    <div id="locs-widget-overview-1" class="quick-stats">
+        <div class="row title">{{widget.title}}</div>
+        <div class="row all-stats">
+            <!-- loader-->
+            <md-progress-circular class="loader" md-mode="indeterminate" ng-show="loading" md-diameter="100"></md-progress-circular>
+
+            <table ng-show="!loading" ng-repeat="overview in widget.params.overview">
+                <tr>
+                    <td class="stat-header" ng-repeat="stats in overview.stats"><div>{{stats.title}}</div></td>
+                </tr>
+                <tr>
+                    <td class="stat-body" ng-repeat="stats in overview.stats"><div>{{stats.count || '--'}}</div></td>
+                </tr>
+                <tr>
+                    <td class="stat-description" ng-repeat="stats in overview.stats"><div>{{stats.description}}</div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

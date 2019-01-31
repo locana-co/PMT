@@ -1,0 +1,6 @@
+<div id="org-list" ng-controller="OrgsListCtrl" class="scrollable ui-layout-center">
+    <!-- user message -->
+    <div class="message" ng-show="!loading && error">You have not been granted access to edit, please contact your administrator.</div>
+    <!-- list of activities editable by the user -->
+    <div class="scrollable" dynamic="htmlList" ng-show="!loading && !error"></div>
+</div>

@@ -1,0 +1,18 @@
+<div id="login-timeout">
+    <md-dialog aria-label="session timeout dialog">
+        <form>
+            <!-- header -->
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Timeout</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div idle-countdown="loginTimeout" ng-init="loginTimeout" class="modal-body">
+                    <uib-progressbar max="5" value="5" animate="false" class="progress-striped active">You have been idle for {{idle}} minutes. {{message}} in {{loginTimeout}} second(s).</uib-progressbar>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</div>

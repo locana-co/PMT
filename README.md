@@ -1,48 +1,17 @@
-﻿# PMT Database Documentation
+﻿# PMT Framework
 
-The following is a listing of PMT Database documentation resources. The
-following resources reflect the most recent iteration of development for
-the database. The PMT Database is currently at version **3.0** iteration 
-**10**.
+The Portfolio Mapping Tool 3.0 (PMT) is a web-based mapping application intended to help visualize where development work is taking place.  The features of this web application allow users to browse, map, add, edit, and share projects without the need for geographic information systems expertise.  It is ultimately intended to help users improve project strategies and partnerships for greater impact in their work. Its features and functions have been designed to provide the following benefits: 
 
-* [Data Dictionary](DataDictionary.md) - A comprehensive documentation of
-all the tables and fields in the PMT Database. This is also available in
-[pdf format](PMT-DataDictionary.pdf).
+* **Inform strategic and project management decisions.** The PMT can help inform decisions by allowing users to take geographic information into account, whether it is the location of markets, related projects and partners, travel time, annual precipitation, or maize crop yields.
+* **Communicate programmatic projects to key stakeholders.** A key benefit to users of the PMT is to see the spatial layout of their projects relative to context. Users can add their projects to the PMT database and then visualize those projects in a variety of ways.
+* **Understand how programmatic efforts relate to other projects as well as to useful agricultural information.** Users are able to browse and map other people’s projects alongside their own projects. This functionality provides the framework for multiple organizations to communicate vital strategic information together in a coordinated fashion.
 
-* [Function Reference](Functions.md) - A comprehensive documentation of
-all the available functions in the PMT Database. This is also available in
-[pdf format](PMT-Functions.pdf). **In the process of 
-updating all functions to iteration 10**
+The PMT framework is comprised of three major components: application, API and database. Each of these three components are required and are dependent on one another. Figure 1 depicts a high level visual diagram of the relationship between them.
 
-* [Schema Diagram](PMT-Schema.pdf) - A entity relationship diagram of the
-tables and their relationships to one another.
+![PMT Framework Image](Images/PMTFramework.png)
 
-* [IATI Compatibility](IATI.md) - Comprehensive documentation of how the PMT 
-database is compatible with the 
-[**IATI (_International Aid Transparency Initiative_) Standards**](http://iatistandard.org/).
-This is also available in [pdf format](PMT-IATICompatability.pdf).
+The PMT database is a PostgreSQL RDBMS utilizing the spatial extender PostGIS for spatial data storage support. The PMT data model is based on the IATI Standard, which provides a technical publishing framework for reporting individual development cooperation activities/projects.  
 
-* [Understanding the Data Model](Understanding the Data Model.pdf) - An 
-explanatory document on some of the key concepts in the data model that 
-makes PMT a powerful, flexible & scalable.
+The PMT application is a highly configurable suite of features and modules that allow users to explore, analyze, query and manage development data. The web application is built using AngularJS and common JavaScript libraries. The PMT database is accessed by the application, through a NodeJs/ExpressJs API which also provides user authentication.
 
-
-## Maintenance Notes
-
-The pdf versions of the documenation resources for the data dictionary and
-the functions reference are created from the markdown source documents, using
-an open source tool called [Pandoc](http://pandoc.org/). From the documenation
-repo folder execute the following from a command prompt with pandoc installed:
-
-```
--- data dictionary
-pandoc -o DataDictionary.docx DataDictionary.md
--- function reference
-pandoc -o Functions.docx Functions.md
--- IAIT documentation
-pandoc -o IATI.docx IATI.md
-
-```
-
-Open the created Word document and save as a pdf with the prefix name "PMT-", 
-replacing existing document.
+For more information on system requirements and installation of a PMT instance please refer to the [PMT Framework Software Requirement Specifications and Installation Instructions](PMT-SRS.pdf).

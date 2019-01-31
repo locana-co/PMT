@@ -1,0 +1,20 @@
+<div class="acts-filter-taxonomy" ng-controller="ActsFilterTaxonomyCtrl">
+    <div class="checkbox-group">
+        <div ng-show="filter.options.length===0 || (filter.options.length===1 && filter.options.unassigned)">The selected data source(s) do not have any {{filter.label}} classifications assigned.</div>
+        <!--option to filter to none/unspecified for a given taxonomy-->
+        <md-checkbox ng-disabled="filter.disabled" ng-true-value="true" ng-false-value="false" ng-model="unassigned.active" ng-show="filter.options.length>1 && filter.params.unassigned" ng-change="unassignedClicked(unassigned)">
+            {{unassigned.name}}
+        </md-checkbox>
+        <!-- list of classifiications-->
+        <div class="option-container" data-id="{{option.id}}" ng-repeat="option in filter.options">
+            <div class="tax-group-wrapper">
+                <md-checkbox class="taxonomy-option" data-id="{{option.id}}" ng-disabled="filter.disabled" ng-true-value="true" ng-false-value="false" ng-model="option.active" ng-change="optionClicked(option)">
+                    {{option.c}}
+                </md-checkbox>
+                <div class="arrows-wrapper" dynamic="arrowUI" ng-if="option.children && option.children.length > 0"></div>
+            </div>
+            
+            <div class="nested-column" layout-gt-sm="column" dynamic="menuUI" ng-show="option.showNest" ng-if="option.children && option.children.length > 0" ></div>
+        </div>
+    </div>
+</div>

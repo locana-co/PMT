@@ -1,0 +1,76 @@
+﻿#editor-location-selector {
+    font-family: @reg-font-family;
+    // dialog
+    md-dialog {
+        max-height: 600px;
+        width: 800px;
+        overflow: hidden;
+        margin-left: @width-navigation;
+        // modal header
+        md-toolbar {
+            background-color: @main-bg-color;
+            .sub-header{
+                font-family: @title-font-family;
+                text-transform: uppercase;
+            }
+        }
+        // modal content
+        md-dialog-content {
+            padding: 20px;
+            // loading animation
+            .loading {
+                margin: auto;
+                .md-left .md-half-circle {
+                    border-top-color: @main-bg-color;
+                    border-left-color: @main-bg-color;
+                }
+                .md-right .md-half-circle {
+                    border-top-color: @main-bg-color;
+                    border-right-color: @main-bg-color;
+                }
+            }
+            // scrollable list of organizations
+            .scrollable {
+                max-height: 300px;
+            }
+            .instructions{
+                padding: 20px 0;
+                color: @light-text-color;
+                font-style: italic;
+            }
+            .sub-section{
+                padding: 0 15px;
+            }
+            .checkbox-section{
+                padding: 10px;
+            }
+            // section headers
+            .md-subheader{
+                background-color: transparent;
+                text-transform: uppercase;
+                font-weight: 600;
+                .md-subheader-inner{
+                    padding: 10px 0;
+                }
+            }
+        }
+    }
+   
+
+    button {
+        font-family: @title-font-family;
+    }
+
+    button.save {
+        background-color: @main-bg-color;
+        color: @light-font-color;
+    }
+
+    .modal-footer {
+        padding: 19px 20px 0;
+    }
+}
+
+#editor-location-selector.modal {
+    height:100%;
+}

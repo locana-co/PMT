@@ -1,0 +1,123 @@
+#map-map {
+    .group-by {
+        float: right;
+        bottom: 94px;
+        position: absolute;
+        height: 91px;
+        right: 52px;
+        width: auto;
+        padding: 5px;
+        color: #263947;
+        background-color: #fff;
+        cursor: pointer;
+        z-index: 501;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.65);
+
+        .group-by-label {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        md-radio-button {
+            font-size: 10px;
+            margin-bottom: 12px;
+
+            .md-label {
+                margin-left: 25px;
+            }
+        }
+    }
+    #interactive-map {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+
+        .point-label {
+            font-weight: 800;
+            font-size: 14px;
+            margin-top: -10px !important;
+            margin-left: -15px !important;
+        }
+
+        .pmtMarker {
+            border-radius: 50%;
+            width: 40px !important;
+            height: 40px !important;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 800;
+            font-size: 14px;
+            color: #fff;
+            background-color: rgba(0, 0, 0,0.4);
+            padding-top: 8px;
+        }
+
+
+
+        .leaflet-layer {
+            z-index: 2 !important;
+        }
+        // leaflet link on map
+        .leaflet-control-attribution {
+            //display: none;
+        }
+        // zoom control placed in bottom left
+        .leaflet-bottom.leaflet-right {
+            margin-right: 0;
+            margin-bottom: 75px;
+            z-index: 700 !important;
+        }
+
+        .leaflet-control-zoom leaflet-bar leaflet-control {
+            color: #3E7F98;
+        }
+        // zoom in control
+        .leaflet-bar a:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            font-weight: 100;
+            text-decoration: none;
+        }
+        // zoom out control
+        .leaflet-bar a:last-child {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            font-weight: 100;
+            text-decoration: none;
+        }        
+
+        // adjust position based on number of icons present
+        .leaflet-marker-icon.plus1 {
+            margin-left: 31px !important;
+        }
+
+        .leaflet-marker-icon.plus2 {
+            margin-left: -43px !important;
+        }
+
+        .leaflet-marker-icon.plus3 {
+            margin-top: 31px !important;
+        }
+
+        .leaflet-marker-icon.plus4 {
+            margin-top: -43px !important;
+        }
+
+        .leaflet-marker-icon.plus5 {
+            margin-left: -45px !important;
+            margin-top: -45px !important;
+        }
+
+        .leaflet-marker-icon.plus6 {
+            margin-left: 82px !important;
+        }
+
+
+        // point cluster selection
+        .pmt-selected {
+            box-shadow: 0 0 30px rgb(235,194,32);
+            border: 2px solid rgb(235,194,32);
+            padding-top: 6px !important;
+            background-color : rgba(235,194,32, 0.9) !important;
+        }
+    }
+}

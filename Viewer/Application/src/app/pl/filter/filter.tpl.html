@@ -1,0 +1,18 @@
+<div id="pl-filter" ng-controller="PLFilterCtrl">
+    <div class="filterType">
+        <div class="label filterBy">Filter By:</div>
+    </div>
+    <!-- partnerlink filters -->
+    <div ng-repeat="filter in filters">
+        <div class="filterType pointer" ng-class="{open:filter.open}" ng-click="onMenuClicked(filter)" ng-show="filter.size > 1">
+            <div class="label">
+                {{filter.label}} ({{filter.size}})
+                <span class="arrow" ng-show="filter.open"><i class="material-icons">keyboard_arrow_up</i></span>
+                <span class="arrow" ng-show="!filter.open"><i class="material-icons">keyboard_arrow_down</i></span>
+            </div>
+        </div>
+        <!-- template for filter (set in the config) -->
+        <div ng-include ng-attr-id="{{ filter.id }}" ng-show="filter.open" src="filter.tpl">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div id="tax-top-bar" ng-controller="TaxTopBarCtrl">
+    <!-- back button-->
+    <div class="back-button" title="Back to List" ng-show="stateService.isParam('tax_id')" ng-click="returnToTaxonomyList($event)">
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+    </div>
+    <!-- title -->
+    <div class="title" ng-show="stateService.isNotParam('tax_id')">
+        Editable Taxonomies ({{taxonomyCount}})
+    </div>
+    <div class="title" ng-show="stateService.isParam('tax_id')">
+        {{_name}}
+    </div>
+    <!-- toolbar -->
+    <div class="toolbar">
+        <md-button class="md-mini md-fab icon-button" aria-label="new" ng-click="createTaxonomy($event)" ng-show="stateService.isNotParam('tax_id')">
+            <md-tooltip md-direction="bottom">Add a New Taxonomy</md-tooltip>
+            <i class="material-icons">add</i>
+        </md-button>
+        <md-button class="md-mini md-fab icon-button" aria-label="save" ng-click="saveTaxonomy($event)">
+            <md-tooltip md-direction="bottom">Save</md-tooltip>
+            <i class="material-icons">save</i>
+        </md-button>
+        <md-button class="md-mini md-fab icon-button" aria-label="cancel" ng-click="cancelTaxonomy()">
+            <md-tooltip md-direction="bottom">Cancel</md-tooltip>
+            <i class="material-icons">refresh</i>
+        </md-button>
+    </div>
+</div>

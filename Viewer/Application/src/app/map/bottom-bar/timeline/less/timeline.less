@@ -1,0 +1,101 @@
+#map-timeline {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+  z-index: 700;
+  background-color: @map-timeline-background-color;
+  position: absolute;
+  .timeline-wrapper {
+    display: inline-block;
+    background-color: transparent;
+    float: right;
+    height: 100%;
+    width: calc(~"100% - 480px");
+    margin-right: 225px;
+    position: relative;
+    bottom: 8px;
+    z-index: 700;
+    //time slider
+    rzslider {
+      //stylizing sliding selector
+      .rz-pointer {
+        top: -7px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        background-color: @primary-color;
+      }
+      .rz-pointer:after {
+        top: 5px;
+        left: 5px;
+        background-color: transparent;
+      }
+      //stylizing button center color
+      .rz-pointer.rz-active:after {
+        background-color: transparent;
+      }
+      //styling ticks
+      .rz-ticks .tick {
+        width: 1px;
+        height: 11px;
+        text-align: center;
+        cursor: pointer;
+        background: @map-timeline-tick-color;
+        border-radius: 0;
+      }
+      //stylizing text labels
+      .rz-bubble {
+        color: @map-timeline-tick-color;
+        cursor: default;
+        margin-bottom: -6px;
+        font-size: 12px;
+        padding: 1px 5px;
+      }
+      //stylize selected line
+      .rz-bar {
+        background-color: @map-timeline-tick-color;
+      }
+      .rz-bar.rz-selection {
+        background-color: @primary-color;
+      }
+    }
+    // time slider
+    rzslider[disabled] {
+      //stylizing sliding selector
+      .rz-pointer {
+        background-color: #7B838E;
+      }
+      .rz-bar.rz-selection {
+        background-color: #7B838E;
+      }
+    }
+  }
+  md-checkbox {
+    position: absolute;
+    right: 170px;
+    top: 7px;
+    font-family: @title-font-family;
+    color: #fff;
+  }
+  md-checkbox .md-icon {
+    width: 15px;
+    height: 15px;
+    border-color: @map-timeline-tick-color;
+  }
+
+  .disable {
+    font-size: 11px;
+    font-family: @title-font-family;
+    color: @map-timeline-tick-color;
+    display: inline-block;
+    position: absolute;
+    right: 173px;
+    top: 26px;
+  }
+
+  md-checkbox.md-checked .md-icon {
+    background-color:@main-bg-color;
+  }
+}

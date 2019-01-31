@@ -1,0 +1,174 @@
+#acts-filter{
+  width:  @acts-filter-width;
+  border: 1px @light-element-bg-color solid;
+  position: fixed;
+  overflow-y: scroll;
+  background-color: #fff;
+  padding-top: 100px;
+  height: calc(100% ~'-' @height-footer);
+  top: 0;
+
+  //selection
+  .selection{
+  background: @background-grey;
+  margin: 10px 5px 5px 5px;
+  .selection-header{
+    margin: 5px 5px -5px 7px;
+    font-size: 12px;
+    padding: 5px 5px 10px 5px;
+    font-family: @title-font-family;
+    .clear-all {
+      display: inline-block;
+      float: right;
+      color: @link-color;
+      font-family: @bold-font-family;
+      cursor: pointer;
+    }
+    .clear-all:hover {
+      color: #000;
+    }
+  }
+  .selected-filters {
+    .selected-filter {
+      .layer-label{
+        margin: 0 5px 5px 10px;
+        .layer-name {
+          overflow: visible;
+          font-size: 12px;
+          max-width: 178px; 
+          display: inline-block;
+        }
+        i {
+          color: @color-button-color;
+          padding-top: 3px;
+          float: right;
+          cursor: pointer;
+          font-size: 14px;
+        }
+      }
+    }
+    .selected-child-filter{
+      padding-left: 15px;
+    }
+  }
+}
+
+  
+
+  //keyword search
+  .keyword-search {
+    padding: 15px;
+    height: 100px;
+    .keyword-label{
+      padding: 3px;
+      font-family: @title-font-family;
+    }
+    // location search
+    .geocoder {
+      float: right;
+      position: relative;
+      padding: 0;
+      display: inline-block;
+      margin: 0;
+      width: 100%;
+      label:not(.md-no-float):not(.md-container-ignore) {
+        color: #efefef;
+        font-weight: 400;
+        font-size: 14px;
+        -moz-transition: none;
+        -o-transition: none;
+        -webkit-transition: none;
+        transition: none;
+        top: -20px;
+        left: 4px;
+      }
+
+      .search {
+        position: absolute;
+        top: 3px;
+        cursor: pointer;
+      }
+    }
+    input {
+      height: 28px;
+      width: 150px;
+      color: @text-color-1;
+      font-family: @reg-font-family;
+    }
+    .keyword-search-button {
+      float: right;
+      padding: 3px 7px;
+      background: @main-font-color;
+      color: @link-color;
+      text-transform: uppercase;
+      font-family: @title-font-family;
+      cursor: pointer;
+    }
+  }
+
+  .geocoder.md-input-focused {
+    .md-input {
+      border-color: @main-bg-color;
+      color: @main-bg-color;
+    }
+    .search {
+      color: @main-bg-color;
+    }
+
+  }
+  // each filter element
+  .filterType{
+    padding: 10px 5px 10px 10px;
+    border-bottom: 1px @light-element-bg-color solid;
+    background-color: #fff;
+    width: @acts-filter-width - 20px; // minus this divs padding (left/right)
+    // filter element label
+    .filter-label{
+      color: @text-color-1;
+      font-family: @title-font-family;
+      font-size: 13px;
+      font-weight: bold;
+      padding: .2em .6em .3em 0;
+    }
+    .filter-toggle {
+      float:right;
+      // dropdown arrow
+      .arrow {
+        float: right;
+      }
+    }
+    //small loader
+    .filter-loading {
+      display: inline-block;
+      // Overwrite loading animation color
+      .md-left .md-half-circle {
+        border-left-color: #cecece;
+        border-top-color: #cecece;
+      }
+
+      .md-right .md-half-circle {
+        border-right-color: #cecece;
+        border-top-color: #cecece;
+      }
+    }
+  }
+  .filterType.disabled {
+    cursor: pointer;
+    .filter-label {
+      color: @light-text-color;
+    }
+  }
+
+
+  .pointer {
+    cursor: pointer;
+  }
+  //no border when filter is open
+  .filterType.open:first-child {
+    border-bottom: none;
+  }
+  //no border on "filter by" label
+  .filterType.filterBy {
+    border-bottom: none;
+  }
+}

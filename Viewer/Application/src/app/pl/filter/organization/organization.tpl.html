@@ -1,0 +1,27 @@
+<div id="pl-filter-organization" ng-controller="PLFilterOrganizationCtrl">
+    <!-- loader for getting orgs-->
+    <md-progress-circular ng-show="loading" class="org-loading loading" md-diameter="50" md-mode="indeterminate"></md-progress-circular>
+
+    <div ng-show="!loading">
+        <md-input-container md-no-float class="md-block org-filter">
+            <input ng-model="searchText" type="text" placeholder="Search">
+        </md-input-container>
+        <!-- selected organizations-->
+        <div class="checkbox-group selected-orgs">
+            <div ng-repeat="option in options">
+                <md-checkbox ng-disabled="LoadingCharts" aria-label="orgs" ng-model="option.active"
+                             ng-change="optionClicked(option)" ng-show="option.active">
+                    {{option.n}}
+                </md-checkbox>
+            </div>
+        </div>
+        <!-- list of organizations -->
+        <div class="checkbox-group un-selected-orgs">
+            <div ng-repeat="option in options | filter:searchText">
+                <md-checkbox ng-disabled="LoadingCharts" aria-label="orgs" ng-model="option.active" ng-change="optionClicked(option)" ng-show="!option.active">
+                    {{option.n}}
+                </md-checkbox>
+            </div>
+        </div>
+    </div>
+</div>

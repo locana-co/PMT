@@ -1,0 +1,16 @@
+<md-dialog class="locs-pivot-modal" aria-label="Partner list dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="sub-header">Partners ({{selectedCell.partners.length}})</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="closeDialog();">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class=partner" ng-repeat="partner in selectedCell.partners">
+            {{partner.f3}}
+        </div>
+    </md-dialog-content>
+</md-dialog>

@@ -1,0 +1,123 @@
+﻿.locs-widget-overview {
+    width: 100%;
+    height: 100%;
+    //loader
+    .loader {
+        position: relative;
+        margin: 0 auto;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: #cecece;
+            border-top-color: #cecece;
+        }
+
+        .md-right .md-half-circle {
+            border-right-color: #cecece;
+            border-top-color: #cecece;
+        }
+    }
+
+    .title {
+        text-align: center;
+        text-transform: uppercase;
+        color: #3B3A3E;
+        font-size: 21px;
+        padding: 15px 0 35px 0;
+        font-family: @title-font-family;
+    }
+
+    .row.all-stats {
+        margin: 10px 0 30px 0;
+    }
+
+    table{
+        margin: 0 auto;
+        margin-bottom: 50px;
+        .stat-header{
+            font-size: 12px;
+            text-transform: uppercase;
+            color: @main-bg-color;
+            padding: 0 0 10px 0;
+            font-family: @title-font-family;
+            text-align: center;
+            vertical-align: bottom;
+            width: 25%;
+            div {
+                border-bottom-style: solid;
+                border-bottom-color: @main-bg-color;
+                margin: 0 18px;
+            }
+        }
+        .stat-body{
+            font-size: 55px;
+            color: #3B3A3E;
+            padding-left: 0;
+            overflow-x: hidden;
+            -ms-word-break: break-word;
+            word-break: break-word;
+            font-family: @title-font-family;
+            text-align: center;
+            overflow: hidden;
+            div {
+                margin: 0 18px;
+                font-size: 40px;
+            }
+        }
+        .stat-description {
+            line-height: 22px;
+            font-size: 14px;
+            color: #3B3A3E;
+            padding: 20px 0 0 0;
+            text-align: center;
+            div {
+                margin: 0 20px;
+            }
+        }
+    }
+}
+
+
+// media specific targets match Material
+// Design's Layout
+// https://material.angularjs.org/latest/api/service/$mdMedia
+// sx
+@media only screen and (max-width: 599px) {
+    .locs-widget-overview {
+        .stat-body {
+            div {
+                font-size: 18px;
+            }
+        }
+    }
+}
+// sm
+@media only screen and (min-width: 600px) {
+    .locs-widget-overview {
+        .stat-body {
+            div {
+                font-size: 26px !important;
+            }
+        }
+    }
+}
+// md
+@media only screen and (min-width: 960px) {
+    .locs-widget-overview {
+        .stat-body {
+            div {
+                font-size: 26px !important;
+            }
+        }
+    }
+}
+// lg
+@media only screen and (min-width: 1280px) {
+    .locs-widget-overview {
+        .stat-body {
+            div {
+                font-size: 40px !important;
+            }
+        }
+    }
+}
+

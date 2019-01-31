@@ -1,0 +1,71 @@
+#agra-integration{
+    //loader
+    .loader {
+        float: left;
+        margin-left: 215px;
+        margin-top: -45px;
+        // Overwrite loading animation color
+        .md-left .md-half-circle {
+            border-left-color: @main-font-color;
+            border-top-color: @main-font-color;
+        }
+        .md-right .md-half-circle {
+            border-right-color: @main-font-color;
+            border-top-color: @main-font-color;
+        }
+    }
+    .buttons{
+        display: inline;
+        .integration-button{
+            color: #fff;
+            background: @main-bg-color;
+        }
+        .icon-button {
+            color: #fff;
+            background-color: @main-bg-color;
+            i {
+                margin-top: 7px;
+            }
+            &:hover{
+                background-color: @main-font-color;
+            }
+        }
+    }
+    .row{
+        padding: 10px 0 10px 20px;
+    }
+    .summary{
+        .row div:nth-child(1) {
+            font-weight: 600;
+        }
+        .row div:nth-child(2) {
+            text-align: center;
+        }
+        .summary-sub-section{
+            padding-left: 20px;
+        }
+    }
+    .padded{
+        padding: 0 24px;
+    }
+    .statistics-summary{
+        padding-bottom: 75px;
+        .start-color{
+            color: @secondary-grey;
+        }
+        .stop-color{
+            color: @main-font-color;
+        }
+
+    }
+
+    md-progress-linear.md-default-theme .md-container, md-progress-linear .md-container {
+        background-color: @main-font-color;
+    }
+    md-progress-linear.md-default-theme .md-bar, md-progress-linear .md-bar {
+        background-color: @secondary-grey;
+    }
+    label{
+        margin-top: 5px;
+    }
+}
