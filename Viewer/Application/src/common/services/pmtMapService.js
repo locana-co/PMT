@@ -963,7 +963,7 @@ angular.module('PMTViewer').service('pmtMapService', function ($q, $http, $rootS
         var dataGroupIds = pmtMapService.getDataGroupIds();
         var options = {
             search_text: search_text, // text value to search activity information for (will search all text fields in activity table)
-            data_group_ids: data_group_ids || dataGroupIds.join(','), // comma delimited list of data group ids to restrict search to
+            data_group_ids: data_group_ids.join(',') || dataGroupIds.join(','), // comma delimited list of data group ids to restrict search to
             pmtId: pmt.id[pmt.env]
         };
         var header = {

@@ -3,17 +3,16 @@
 Change scripts are how we implement change management in the development of the PMT Database. To learn more about 
 this process check out some of the below links:
 
-- [Change Management in the PMT Database](#change_managment)
+- [Change Management in the PMT Database](#change-managment-in-the-pmt-database)
 
-- [Change Script Process](#process)
+- [Change Script Process](#change-script-process)
 
-- [Change Script Log](#log)
+- [Change Script Log](#change-scripts-log)
 
 The current version is: **_3.0_**
 
 The current iteration is: **_10_**
 
-<a name="change_managment"/>
 ## Change Management in the PMT Database
 
 Databases cannot participate in a code repository in the same way that an application does, where the code repository
@@ -37,10 +36,9 @@ PMT changes. The version of the database indicates a major database version. The
 database change. The database changeset is the number of change scripts occurring within a version and iteration of the
 database. All change scripts should be executed in order by version, iteration and changeset.
 
-<a name="process"/>
 ## Change Script Process
 
-Follow the below process for development on the PMT database:\
+Follow the below process for development on the PMT database:
 
 1. Create a copy of the change script template file [cs\_template.3.0](cs_template.3.0).
 2. Place the copy into the current database iteration's "InReview" folder: **3.0.10/InReview**
@@ -72,7 +70,6 @@ Notable information regarding the development process:
 * Changes that target unique aspects of client instance should be in a separate change script.
 * Ensure you local instance of PMT is up-to-date with the latest change scripts.
 
-<a name="log"/>
 ## Change Scripts Log
 
 ### Database Version 3.0

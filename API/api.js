@@ -1,12 +1,13 @@
 //PMT API
+var path = require('path');
 var dotenv = require('dotenv');
+dotenv.config({path: path.join(__dirname, "../.env")});
 
 // Declarations
 var app; // application
 var config; // application configuration information
 // package variables
 var express;
-var path;
 var favicon; // middleware for serving a favicon
 var logger; // HTTP request logger
 var cookieParser; // cookie parsing with signatures
@@ -27,7 +28,7 @@ var taxonomies;
 var partnerlink;
 var utility;
 
-var debug = require('debug')('pmtapi');
+//var debug = require('debug')('pmtapi');
 var args = process.argv.slice(2);
 console.log("Sent arguements: ",args);
 console.log("Sent node env: ",process.env.NODE_ENV);
@@ -44,6 +45,9 @@ try {
 // determine the target environment (first parameter passed to node)
 if (args.length > 0) {
     switch (args[0]) {
+        case 'ata':
+            environment = 'ata';
+            break;
         case 'stage':
             environment = 'stage';
             break;
@@ -61,6 +65,9 @@ if (args.length > 0) {
 // determine the target environment (parameter passed by pm2)
 if (process.env.NODE_ENV) {
     switch (process.env.NODE_ENV) {
+        case 'ata':
+            environment = 'ata';
+            break;
         case 'stage':
             environment = 'stage';
             break;
@@ -79,8 +86,7 @@ console.log('Environment set to: ' + environment);
 
 // load the packages we need (package.json)
 try {
-    express = require("express");
-    path = require('path');
+    express = require("express");    
     favicon = require('serve-favicon');
     logger = require('morgan');
     cookieParser = require('cookie-parser');
@@ -225,5 +231,5 @@ try {
 
 console.log('Magic happens on port ' + config.port[environment]);
 
-app.listen(config.port[environment]);
+app.listen(config.port[environment], "0.0.0.0");
 

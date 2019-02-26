@@ -125,6 +125,7 @@ module.exports = {
             "ethaim": [
                 'src/assets/eth_acc_dissolved.geojson',
                 'src/assets/eth_acc.geojson',
+                'src/assets/gadm0.geojson',
                 'src/assets/eth1.geojson',
                 'src/assets/eth2.geojson',
                 'src/assets/eth3.geojson',                
@@ -137,7 +138,25 @@ module.exports = {
                 'src/assets/icon_key.svg'
             ],
             "agra": [
-                'src/assets/agra-fonts.css'
+                'src/assets/agra-fonts.css',
+                'src/assets/gadm0.geojson',
+                'src/assets/gadm1.geojson',
+                'src/assets/gadm2.geojson',                
+                'src/assets/continent.geojson',
+                'src/assets/font-awesome.min.css',
+                'src/assets/icon_analysis.svg',
+                'src/assets/icon_handshake.svg',
+                'src/assets/icon_globe.svg',
+                'src/assets/icon_orgs.svg',
+                'src/assets/icon_key.svg',
+                'src/assets/century_gothic_bold.eot',
+                'src/assets/century_gothic_bold.ttf',
+                'src/assets/century_gothic.eot',
+                'src/assets/century_gothic.ttf',
+                'src/assets/icomoon-locs.eot',
+                'src/assets/icomoon-locs.ttf',
+                'src/assets/icomoon.eot',
+                'src/assets/icomoon.ttf'
             ]
         }
     }

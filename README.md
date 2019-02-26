@@ -10,7 +10,7 @@ The PMT framework is comprised of three major components: application, API and d
 
 ![PMT Framework Image](Images/PMTFramework.png)
 
-The PMT database is a PostgreSQL RDBMS utilizing the spatial extender PostGIS for spatial data storage support. The PMT data model is based on the IATI Standard, which provides a technical publishing framework for reporting individual development cooperation activities/projects.  
+The PMT database is a PostgreSQL 9.3 RDBMS utilizing the spatial extender PostGIS 2.1 for spatial data storage support. The PMT data model is based on the IATI Standard v 2.01, which provides a technical publishing framework for reporting individual development cooperation activities/projects.  
 
 The PMT application is a highly configurable suite of features and modules that allow users to explore, analyze, query and manage development data. The web application is built using AngularJS and common JavaScript libraries. The PMT database is accessed by the application, through a NodeJs/ExpressJs API which also provides user authentication.
 

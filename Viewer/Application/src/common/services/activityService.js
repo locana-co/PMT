@@ -431,8 +431,17 @@ angular.module('PMTViewer').service('activityService', function ($q, $http, conf
         // check if keyword has changed
         if (keyword != filter.keyword_filter.keyword) {
             filter.keyword_filter.keyword = keyword;
+            // data group ids
+            var data_group_ids = [];
+            var dataGroupFilter = _.find(stateConfig.tools.map.filters, function (f) { return f.type === 'datasource'; });
+            _.each(dataGroupFilter.params.dataSources, function (filter) {
+                var dgs = filter.dataGroupIds.split(',');
+                _.each(dgs, function(dg){
+                    data_group_ids.push(dg);
+                });
+            });
             // call the api to get a list of activities ids matching the keyword
-            pmtMapService.globalSearchText(keyword).then(function (data) {
+            pmtMapService.globalSearchText(keyword, data_group_ids).then(function (data) {
                 // update filter activity_ids list
                 if (data[0].response.ids) { filter.keyword_filter.activity_ids = data[0].response.ids; }
                 else { filter.keyword_filter.activity_ids = []; }

@@ -3,7 +3,7 @@
     "Spatial Development International, LLC"
   ],
   "name": "pmtv",
-  "version": "3.0.2",
+  "version": "3.10.9",
   "license": "MIT",
   "devDependencies": {
     "angular": "1.4.8",
